@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&family=Space+Grotesk:wght@300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f1f0ed; }
+  button, input { font-family: inherit; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  ::selection { background: rgba(37,99,217,.16); }
+  input[type=range].kb { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 99px; outline: none; cursor: pointer; margin: 0; }
+  input[type=range].kb::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 32px; height: 32px; border-radius: 50%; background: #ffffff; box-shadow: 0 2px 6px rgba(15,25,35,.24), 0 0 0 1px rgba(15,25,35,.04), inset 0 0 0 2.5px var(--ac,#2563d9); cursor: grab; border: none; }
+  input[type=range].kb::-moz-range-thumb { width: 32px; height: 32px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(15,25,35,.24), inset 0 0 0 2.5px var(--ac,#2563d9); cursor: grab; border: none; }
+  .ktrait::placeholder { color: #a8acb4; }
+  @keyframes kfade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+
+<div data-screen-label="app" style="min-height:100vh; background:#f1f0ed; color:#17191d; font-family:'Space Grotesk','Anek Bangla',system-ui,sans-serif; {{ accentVars }}">
+
+  <!-- ambient orbs -->
+  <div style="position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;">
+    <div style="position:absolute; top:-180px; right:-140px; width:560px; height:560px; border-radius:50%; background:radial-gradient(circle, var(--orbA), transparent 68%);"></div>
+    <div style="position:absolute; top:36%; left:-240px; width:680px; height:680px; border-radius:50%; background:radial-gradient(circle, var(--orbB), transparent 68%);"></div>
+    <div style="position:absolute; bottom:-240px; right:6%; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, var(--orbC), transparent 68%);"></div>
+  </div>
+
+  <!-- glass header -->
+  <div style="position:sticky; top:0; z-index:60; display:flex; justify-content:center; padding:14px clamp(16px,4vw,40px) 6px;">
+    <div style="width:100%; max-width:1020px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:10px 20px; border-radius:99px; background:rgba(252,252,253,.55); backdrop-filter:blur(26px) saturate(185%); -webkit-backdrop-filter:blur(26px) saturate(185%); border:.5px solid rgba(255,255,255,.8); box-shadow:inset 0 1px 1px rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.3), 0 10px 30px rgba(20,24,32,.09);">
+      <div style="display:flex; align-items:center; gap:9px; min-width:0;">
+        <span style="width:9px; height:9px; border-radius:99px; background:var(--ac); box-shadow:0 0 0 3.5px var(--acsoft); flex-shrink:0;"></span>
+        <span style="font-family:'Anek Bangla'; font-size:16px; font-weight:700; letter-spacing:-.2px; white-space:nowrap;">কোন ফোন?</span>
+        <span style="font-size:12.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">budget-first picks</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:#84878f; white-space:nowrap;">
+        <span style="font-weight:600; color:#565b63;">{{ metaStock }} phones in stock</span>
+        <span style="width:3px; height:3px; border-radius:50%; background:#c9cbd0;"></span>
+        <span>refreshed today</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:relative; z-index:1; padding:18px clamp(16px,4vw,40px) 175px;">
+
+    <!-- ===================== ASK ===================== -->
+    <sc-if value="{{ isAsk }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="ask" style="max-width:680px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;">
+
+      <h1 style="margin:clamp(20px,4vh,46px) 0 0; font-size:clamp(34px,5.2vw,54px); font-weight:600; letter-spacing:-1.5px; line-height:1.06; text-wrap:pretty;">Name your budget,<br><span style="font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd); letter-spacing:-.5px;">we'll do the rest.</span></h1>
+      <p style="margin:16px 0 0; font-size:clamp(14.5px,1.6vw,16.5px); color:#7b818a; line-height:1.55; max-width:480px; text-wrap:pretty;">Live prices across {{ metaStock }} phones in Bangladesh. We find the best one <span style="color:var(--acd); font-weight:600;">closest to your budget</span> — not the cheapest one.</p>
+
+      <!-- NL search -->
+      <div style="margin-top:36px; font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Or just say it in Bangla</div>
+      <div style="margin-top:12px; display:flex; align-items:center; gap:11px; padding:15px 18px; border-radius:18px; background:rgba(255,255,255,.75); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:.5px solid rgba(255,255,255,.9); box-shadow:inset 0 1px 1px rgba(255,255,255,.9), 0 2px 8px rgba(15,25,35,.05), 0 0 0 1px rgba(15,25,35,.04);">
+        <svg width="19" height="19" viewBox="0 0 20 20" fill="none" style="flex-shrink:0;"><circle cx="9" cy="9" r="6.4" stroke="#aab0b8" stroke-width="2"></circle><path d="M14 14l4 4" stroke="#aab0b8" stroke-width="2" stroke-linecap="round"></path></svg>
+        <input class="ktrait" type="text" value="{{ traitText }}" onInput="{{ onTrait }}" placeholder="“আম্মুর জন্য ১৫ হাজারে”" style="border:none; outline:none; background:transparent; flex:1; font-family:'Anek Bangla'; font-size:15px; color:#17191d; min-width:0;">
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:11px;">
+        <sc-for list="{{ examples }}" as="ex" hint-placeholder-count="3">
+          <button onClick="{{ ex.onClick }}" style="font-family:'Anek Bangla'; font-size:13px; color:var(--acd); background:var(--acsoft); border:none; padding:7px 14px; border-radius:99px; cursor:pointer;">{{ ex.label }}</button>
+        </sc-for>
+      </div>
+
+      <!-- budget hero -->
+      <div style="margin-top:46px; font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Your budget</div>
+      <div style="font-size:clamp(60px,10vw,100px); font-weight:300; letter-spacing:-4px; line-height:1.05; color:#17191d; margin-top:6px;">{{ budgetTaka }}</div>
+      <div style="margin-top:26px;">
+        <input class="kb" type="range" min="8000" max="200000" step="1000" value="{{ budget }}" onInput="{{ onBudget }}" style="{{ rangeStyle }}">
+        <div style="position:relative; height:24px; margin-top:20px;">
+          <div style="position:absolute; top:9px; left:0; right:0; height:5px; border-radius:99px; background:rgba(15,25,35,.06);"></div>
+          <div style="position:absolute; top:9px; height:5px; border-radius:99px; left:{{ bandLeft }}%; width:{{ bandWidth }}%; background:linear-gradient(90deg,var(--acsoft2),var(--ac) 72%,var(--acsoft2));"></div>
+          <div style="position:absolute; top:4px; height:15px; width:2.5px; border-radius:99px; left:{{ budgetPct }}%; transform:translateX(-50%); background:var(--acd);"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12.5px; color:#9aa0a8; margin-top:2px;">
+          <span>{{ lowTaka }}</span>
+          <span style="color:var(--acd); font-weight:600;">search band</span>
+          <span>{{ highTaka }}</span>
+        </div>
+      </div>
+
+      <!-- priorities -->
+      <div style="margin-top:48px; font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">What's it for?</div>
+      <div style="display:flex; flex-wrap:wrap; gap:9px; margin-top:15px;">
+        <sc-for list="{{ archetypes }}" as="a" hint-placeholder-count="8">
+          <button onClick="{{ a.onClick }}" style="{{ a.chipStyle }}">{{ a.bn }}</button>
+        </sc-for>
+      </div>
+
+      <!-- channel -->
+      <div style="margin-top:48px; font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Which channel?</div>
+      <div style="margin-top:15px; display:flex; gap:4px; padding:5px; border-radius:18px; background:rgba(252,252,253,.5); backdrop-filter:blur(22px) saturate(180%); -webkit-backdrop-filter:blur(22px) saturate(180%); border:.5px solid rgba(255,255,255,.85); box-shadow:inset 0 1px 1px rgba(255,255,255,.9), 0 6px 18px rgba(15,25,35,.06);">
+        <sc-for list="{{ channelOpts }}" as="c" hint-placeholder-count="3">
+          <button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button>
+        </sc-for>
+      </div>
+      <p style="margin:12px 2px 0; font-size:13px; color:#8a8e96; line-height:1.55;">Unofficial (gray) phones run <span style="color:#17191d; font-weight:600;">23.5% cheaper</span> on average — but the warranty comes from the shop, not the brand.</p>
+
+      <!-- advanced -->
+      <button onClick="{{ toggleAdvanced }}" style="margin-top:32px; width:100%; display:flex; align-items:center; justify-content:space-between; padding:16px 4px 14px; background:none; border:none; border-top:1px solid rgba(15,25,35,.08); cursor:pointer;">
+        <span style="font-size:14px; font-weight:600; color:#41464d;">More options</span>
+        <span style="{{ chevStyle }}">⌄</span>
+      </button>
+      <sc-if value="{{ advancedOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; flex-direction:column; gap:24px; padding-top:6px;">
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px;">
+          <div>
+            <div style="font-size:13px; font-weight:500; color:#8a8e96; margin-bottom:9px;">Platform</div>
+            <div style="display:flex; gap:4px; padding:4px; border-radius:14px; background:rgba(15,25,35,.05);">
+              <sc-for list="{{ platformOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button></sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:13px; font-weight:500; color:#8a8e96; margin-bottom:9px;">Software style</div>
+            <div style="display:flex; gap:4px; padding:4px; border-radius:14px; background:rgba(15,25,35,.05);">
+              <sc-for list="{{ osOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button></sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+          <div>
+            <div style="font-size:14.5px; color:#2c3036; font-weight:500;">Show China-ROM phones</div>
+            <div style="font-size:12.5px; color:#9aa0a8;">May lack Google services or Bangla</div>
+          </div>
+          <button onClick="{{ toggleCn }}" style="{{ cnTrackStyle }}"><span style="{{ cnKnobStyle }}"></span></button>
+        </div>
+
+        <div>
+          <div style="font-size:13px; font-weight:500; color:#8a8e96; margin-bottom:9px;">Exclude these brands</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <sc-for list="{{ brandOpts }}" as="b" hint-placeholder-count="6"><button onClick="{{ b.onClick }}" style="{{ b.style }}">{{ b.label }}</button></sc-for>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:13px; font-weight:500; color:#8a8e96; margin-bottom:9px;">Your current phone <span style="color:#b6bcc4;">(for upgrade comparison)</span></div>
+          <input class="ktrait" type="text" value="{{ currentPhone }}" onInput="{{ onCurrent }}" placeholder="e.g. Redmi Note 11" style="width:100%; border:none; outline:none; padding:14px 16px; border-radius:14px; background:rgba(255,255,255,.8); box-shadow:inset 0 0 0 1px rgba(15,25,35,.08); font-size:14px; color:#17191d;">
+        </div>
+
+      </div>
+      </sc-if>
+
+    </div>
+    </sc-if>
+
+    <!-- ===================== RESULTS ===================== -->
+    <sc-if value="{{ isResults }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="results" style="max-width:860px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;">
+
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:clamp(12px,3vh,34px);">
+        <div>
+          <h1 style="margin:0; font-size:clamp(30px,4.4vw,44px); font-weight:600; letter-spacing:-1.2px; line-height:1.1;">{{ pickCount }} <span style="font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd);">top picks</span></h1>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:13px;">
+            <sc-for list="{{ querySummary }}" as="q" hint-placeholder-count="3">
+              <span style="font-size:12.5px; font-weight:600; color:#565b63; background:rgba(255,255,255,.75); border:.5px solid rgba(15,25,35,.07); padding:6px 13px; border-radius:99px;">{{ q.t }}</span>
+            </sc-for>
+            <button onClick="{{ goAsk }}" style="font-size:12.5px; font-weight:700; color:var(--acd); background:var(--acsoft); border:none; padding:6px 14px; border-radius:99px; cursor:pointer;">Edit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- reasoning -->
+      <div style="display:flex; gap:11px; padding:15px 17px; border-radius:17px; background:var(--acsoft); margin-top:22px;">
+        <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style="flex-shrink:0; margin-top:2px;"><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--ac)"></path></svg>
+        <p style="margin:0; font-size:13.5px; color:#41464d; line-height:1.55; text-wrap:pretty;">{{ topReasoning }}</p>
+      </div>
+
+      <!-- HERO pick -->
+      <sc-if value="{{ firstPick }}" hint-placeholder-val="{{ true }}">
+      <div style="background:rgba(255,255,255,.92); border-radius:26px; padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 16px 40px rgba(15,25,35,.09); margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(18px,3vw,30px);">
+
+        <div>
+          <div style="display:flex; gap:15px;">
+            <div style="width:72px; height:96px; border-radius:14px; background:repeating-linear-gradient(45deg,#eef0f3,#eef0f3 5px,#e6e9ee 5px,#e6e9ee 10px); flex-shrink:0; box-shadow:inset 0 0 0 1px rgba(15,25,35,.06); display:flex; align-items:flex-end; justify-content:center; padding-bottom:6px;">
+              <span style="font-family:ui-monospace,monospace; font-size:8px; color:#aab0b8;">photo</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px;">
+                <div style="min-width:0;">
+                  <div style="font-size:13px; color:#8a8e96; font-weight:500;">{{ firstPick.brand }}</div>
+                  <div style="font-size:clamp(21px,2.4vw,26px); font-weight:700; color:#17191d; line-height:1.12; letter-spacing:-.4px;">{{ firstPick.model }}</div>
+                </div>
+                <span style="font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:99px; white-space:nowrap; flex-shrink:0; {{ firstPick.verdictStyle }}">{{ firstPick.verdictLabel }}</span>
+              </div>
+              <div style="margin-top:7px; font-size:13.5px; color:#5c626a;">{{ firstPick.headline }} · {{ firstPick.axisName }} <span style="color:var(--acd); font-weight:700;">{{ firstPick.axisScore }}</span></div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:flex-end; gap:11px; margin-top:20px;">
+            <span style="font-size:clamp(32px,3.6vw,42px); font-weight:300; letter-spacing:-2px; color:#17191d; line-height:1;">{{ firstPick.priceTaka }}</span>
+            <span style="font-size:11px; font-weight:700; padding:4px 10px; border-radius:99px; margin-bottom:4px; {{ firstPick.channelStyle }}">{{ firstPick.channelLabel }}</span>
+          </div>
+          <sc-if value="{{ firstPick.savingsNote }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:8px; font-size:12.5px; color:#80868f;">{{ firstPick.savingsNote }} · at {{ firstPick.shops }} shops</div>
+          </sc-if>
+
+          <div style="display:flex; flex-wrap:wrap; gap:7px; margin-top:16px;">
+            <sc-for list="{{ firstPick.strengths }}" as="s" hint-placeholder-count="3">
+              <span style="font-size:12.5px; color:#41464d; background:rgba(15,25,35,.055); padding:7px 13px; border-radius:99px;">{{ s.t }}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; justify-content:flex-end;">
+          <div style="padding:15px 16px; border-radius:15px; background:rgba(15,25,35,.035);">
+            <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:10px;">
+              <span style="color:#80868f;">Budget fit</span>
+              <span style="font-weight:600; color:{{ firstPick.fitColor }};">{{ firstPick.fit }}</span>
+            </div>
+            <div style="position:relative; height:8px;">
+              <div style="position:absolute; inset:0; border-radius:99px; background:rgba(15,25,35,.08);"></div>
+              <div style="position:absolute; top:-3px; height:14px; width:2px; border-radius:99px; left:{{ firstPick.budgetPct }}%; transform:translateX(-50%); background:#b6bcc4;"></div>
+              <div style="position:absolute; top:-3px; width:14px; height:14px; border-radius:50%; left:{{ firstPick.pricePct }}%; transform:translateX(-50%); background:var(--ac); box-shadow:0 1px 4px var(--acglow), 0 0 0 2px #fff;"></div>
+            </div>
+          </div>
+
+          <sc-if value="{{ firstPick.caveat }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; gap:9px; margin-top:13px; padding:11px 13px; border-radius:13px; background:rgba(192,137,42,.09);">
+              <span style="width:6px; height:6px; border-radius:50%; background:{{ firstPick.caveatColor }}; margin-top:7px; flex-shrink:0;"></span>
+              <span style="font-size:12.5px; color:#7a6a40; line-height:1.5;">{{ firstPick.caveat }}</span>
+            </div>
+          </sc-if>
+
+          <button onClick="{{ firstPick.onClick }}" style="width:100%; margin-top:15px; padding:15px; border-radius:15px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 14px var(--acglow), inset 0 1px 0 rgba(255,255,255,.3); font-size:14.5px; font-weight:600; color:#fff;">See full breakdown</button>
+        </div>
+
+      </div>
+      </sc-if>
+
+      <!-- rest -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:11px; margin-top:14px;">
+        <sc-for list="{{ restPicks }}" as="r" hint-placeholder-count="3">
+          <button onClick="{{ r.onClick }}" style="text-align:left; display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:19px; border:none; cursor:pointer; background:rgba(255,255,255,.88); box-shadow:0 1px 2px rgba(15,25,35,.05), inset 0 0 0 1px rgba(15,25,35,.05);">
+            <span style="width:27px; height:27px; border-radius:50%; background:rgba(15,25,35,.055); color:#80868f; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ r.rank }}</span>
+            <div style="width:40px; height:53px; border-radius:10px; background:repeating-linear-gradient(45deg,#eef0f3,#eef0f3 4px,#e6e9ee 4px,#e6e9ee 8px); flex-shrink:0; box-shadow:inset 0 0 0 1px rgba(15,25,35,.06);"></div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:15px; font-weight:600; color:#17191d; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.name }}</div>
+              <div style="font-size:12.5px; color:#80868f; margin-top:1px;">{{ r.headline }} · {{ r.axisName }} {{ r.axisScore }}</div>
+              <div style="display:flex; align-items:center; gap:8px; margin-top:5px;">
+                <span style="font-size:14.5px; font-weight:600; color:#17191d;">{{ r.priceTaka }}</span>
+                <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; {{ r.channelStyle }}">{{ r.channelLabel }}</span>
+              </div>
+            </div>
+            <span style="font-size:12px; font-weight:700; color:{{ r.fitColor }}; text-align:right; flex-shrink:0; max-width:90px; line-height:1.35;">{{ r.fit }}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <!-- stretch -->
+      <sc-if value="{{ stretch }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ stretch.onClick }}" style="width:100%; text-align:left; display:flex; align-items:center; gap:14px; padding:16px 18px; margin-top:12px; border-radius:19px; border:1.5px dashed rgba(15,25,35,.16); background:rgba(255,255,255,.45); cursor:pointer;">
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:11px; font-weight:700; color:#8a8e96; letter-spacing:1.2px; text-transform:uppercase;">If you stretch ↗</div>
+            <div style="font-size:15.5px; font-weight:600; color:#17191d; margin-top:3px;">{{ stretch.name }}</div>
+            <div style="font-size:13px; color:#80868f; margin-top:2px;">{{ stretch.priceTaka }} · {{ stretch.fit }}</div>
+          </div>
+          <svg width="9" height="15" viewBox="0 0 9 15" fill="none" style="flex-shrink:0;"><path d="M1.5 1.5l6 6-6 6" stroke="#b6bcc4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </button>
+      </sc-if>
+
+    </div>
+    </sc-if>
+
+    <!-- ===================== DETAIL ===================== -->
+    <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="detail" style="max-width:880px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;">
+
+      <button onClick="{{ goResults }}" style="display:flex; align-items:center; gap:9px; margin-top:clamp(10px,2.5vh,28px); padding:9px 16px 9px 12px; border-radius:99px; border:none; cursor:pointer; background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(15,25,35,.06); font-size:13px; font-weight:600; color:#41464d;">
+        <svg width="8" height="13" viewBox="0 0 9 15" fill="none"><path d="M7.5 1.5l-6 6 6 6" stroke="#41464d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        Back to results
+      </button>
+
+      <!-- hero -->
+      <div style="background:rgba(255,255,255,.92); border-radius:26px; padding:clamp(20px,3vw,32px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 16px 40px rgba(15,25,35,.09); margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(20px,3vw,32px);">
+        <div style="display:flex; gap:18px;">
+          <div style="width:clamp(84px,9vw,108px); height:clamp(112px,12vw,144px); border-radius:16px; background:repeating-linear-gradient(45deg,#eef0f3,#eef0f3 5px,#e6e9ee 5px,#e6e9ee 10px); flex-shrink:0; box-shadow:inset 0 0 0 1px rgba(15,25,35,.06); display:flex; align-items:flex-end; justify-content:center; padding-bottom:7px;">
+            <span style="font-family:ui-monospace,monospace; font-size:8px; color:#aab0b8;">product shot</span>
+          </div>
+          <div style="min-width:0;">
+            <div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap;">
+              <span style="font-size:13px; color:#8a8e96; font-weight:500;">{{ d.brand }}</span>
+              <span style="font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:99px; {{ d.verdictStyle }}">{{ d.verdictLabel }}</span>
+            </div>
+            <h1 style="margin:4px 0 0; font-size:clamp(26px,3.6vw,38px); font-weight:700; letter-spacing:-1.2px; line-height:1.1;">{{ d.model }}</h1>
+            <div style="margin-top:8px; font-size:14px; color:#5c626a;">{{ d.headline }} · {{ d.axisName }} <span style="color:var(--acd); font-weight:700;">{{ d.axisScore }}</span></div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:13px;">
+              <sc-for list="{{ d.traits }}" as="t" hint-placeholder-count="4">
+                <span style="font-size:11.5px; font-weight:600; color:#565b63; background:rgba(15,25,35,.05); padding:5px 11px; border-radius:99px;">{{ t.t }}</span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; justify-content:center;">
+          <div style="display:flex; align-items:flex-end; gap:11px;">
+            <span style="font-size:clamp(36px,4.2vw,48px); font-weight:300; letter-spacing:-2.5px; line-height:1;">{{ d.priceTaka }}</span>
+            <span style="font-size:11px; font-weight:700; padding:4px 10px; border-radius:99px; margin-bottom:5px; {{ d.channelStyle }}">{{ d.channelLabel }}</span>
+          </div>
+          <div style="margin-top:12px; font-size:13px; color:#80868f; line-height:1.7;">Official <span style="color:#41464d; font-weight:600;">{{ d.officialTaka }}</span> · Unofficial <span style="color:#41464d; font-weight:600;">{{ d.unofficialTaka }}</span><br>Carried by {{ d.shops }} shops · <span style="color:{{ d.fitColor }}; font-weight:600;">{{ d.fit }}</span></div>
+        </div>
+      </div>
+
+      <!-- axes -->
+      <div style="background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); margin-top:14px;">
+        <div style="font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Scores</div>
+        <div style="display:flex; flex-direction:column; gap:17px; margin-top:18px;">
+          <sc-for list="{{ d.axes }}" as="ax" hint-placeholder-count="5">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px;">
+                <span style="font-size:14.5px; font-weight:600; color:#2c3036;">{{ ax.name }}</span>
+                <span style="font-size:14px; font-weight:700; color:var(--acd);">{{ ax.score }}</span>
+              </div>
+              <div style="position:relative; height:6px; border-radius:99px; background:rgba(15,25,35,.06); margin-top:8px; overflow:hidden;">
+                <div style="position:absolute; top:0; bottom:0; left:0; width:{{ ax.pct }}%; border-radius:99px; background:linear-gradient(90deg,var(--acsoft2),var(--ac));"></div>
+              </div>
+              <div style="font-size:12.5px; color:#84878f; margin-top:7px; line-height:1.5;">{{ ax.reason }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px; margin-top:14px;">
+
+        <!-- specs -->
+        <div style="background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07);">
+          <div style="font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Specs</div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:15px 18px; margin-top:18px;">
+            <sc-for list="{{ d.specs }}" as="sp" hint-placeholder-count="10">
+              <div>
+                <div style="font-size:11.5px; color:#9a9da4;">{{ sp.k }}</div>
+                <div style="font-size:13.5px; font-weight:600; color:#2c3036; margin-top:3px; line-height:1.35;">{{ sp.v }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- opinion -->
+        <div style="background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07);">
+          <div style="font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Owner voices</div>
+          <p style="margin:15px 0 0; font-size:14px; color:#41464d; line-height:1.6; text-wrap:pretty;">{{ d.opSummary }}</p>
+          <div style="margin-top:15px; padding:15px 17px; border-radius:15px; background:var(--acsoft); font-family:'Instrument Serif','Anek Bangla',serif; font-style:italic; font-size:17px; color:#2c3036; line-height:1.5;">“{{ d.opQuote }}”</div>
+          <div style="display:flex; flex-wrap:wrap; gap:7px; margin-top:15px;">
+            <sc-for list="{{ d.praise }}" as="pr" hint-placeholder-count="3">
+              <span style="font-size:12px; font-weight:600; color:#0a7d57; background:rgba(10,157,106,.1); padding:6px 12px; border-radius:99px;">+ {{ pr.t }}</span>
+            </sc-for>
+            <sc-for list="{{ d.complaints }}" as="co" hint-placeholder-count="2">
+              <span style="font-size:12px; font-weight:600; color:#a8761a; background:rgba(192,137,42,.12); padding:6px 12px; border-radius:99px;">− {{ co.t }}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- price history -->
+        <div style="background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
+            <div style="font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Price history</div>
+            <span style="font-size:12.5px; font-weight:700; color:#0a7d57;">{{ d.histDrop }}</span>
+          </div>
+          <div style="display:flex; align-items:flex-end; gap:12px; height:120px; margin-top:20px;">
+            <sc-for list="{{ d.history }}" as="h" hint-placeholder-count="4">
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:7px; height:100%; justify-content:flex-end;">
+                <span style="font-size:10.5px; color:#9a9da4; font-weight:600;">{{ h.priceTaka }}</span>
+                <div style="width:100%; max-width:54px; height:{{ h.pct }}%; border-radius:9px 9px 4px 4px; background:linear-gradient(180deg,var(--ac),var(--acsoft2)); opacity:{{ h.op }};"></div>
+                <span style="font-size:11.5px; color:#84878f;">{{ h.d }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- offers -->
+        <div style="background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07);">
+          <div style="font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Where to buy</div>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
+            <sc-for list="{{ d.offers }}" as="of" hint-placeholder-count="4">
+              <div style="display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:14px; background:{{ of.bg }};">
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ of.shop }}</div>
+                  <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; {{ of.chStyle }}">{{ of.chLabel }}</span>
+                </div>
+                <span style="font-size:15px; font-weight:600; color:#17191d;">{{ of.priceTaka }}</span>
+                <sc-if value="{{ of.best }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:10px; font-weight:700; color:var(--acd); background:rgba(255,255,255,.85); padding:3px 9px; border-radius:99px;">Best price</span>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <p style="margin:13px 0 0; font-size:11.5px; color:#9a9da4; line-height:1.5;">Call the shop to confirm price and stock before buying.</p>
+        </div>
+
+        <!-- ownership -->
+        <div style="background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07);">
+          <div style="font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Brand & ownership</div>
+          <div style="display:flex; flex-direction:column; gap:13px; margin-top:18px;">
+            <sc-for list="{{ d.brandBars }}" as="bb" hint-placeholder-count="3">
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+                  <span style="color:#565b63; font-weight:500;">{{ bb.k }}</span>
+                  <span style="font-weight:700; color:#2c3036;">{{ bb.v }}/10</span>
+                </div>
+                <div style="position:relative; height:5px; border-radius:99px; background:rgba(15,25,35,.06); overflow:hidden;">
+                  <div style="position:absolute; top:0; bottom:0; left:0; width:{{ bb.pct }}%; border-radius:99px; background:var(--ac); opacity:.75;"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:18px; padding:13px 15px; border-radius:14px; background:rgba(15,25,35,.035); font-size:13px; color:#41464d; line-height:1.55;">{{ d.coo }}</div>
+        </div>
+
+        <!-- best for / avoid -->
+        <div style="background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07);">
+          <div style="font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;">Who it's for</div>
+          <div style="display:flex; flex-direction:column; gap:9px; margin-top:16px;">
+            <sc-for list="{{ d.bestFor }}" as="bf" hint-placeholder-count="2">
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <span style="width:7px; height:7px; border-radius:50%; background:#0a9d6a; margin-top:7px; flex-shrink:0;"></span>
+                <span style="font-size:14px; color:#2c3036;">{{ bf.t }}</span>
+              </div>
+            </sc-for>
+            <sc-for list="{{ d.avoidIf }}" as="av" hint-placeholder-count="2">
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <span style="width:7px; height:7px; border-radius:50%; background:#c4503c; margin-top:7px; flex-shrink:0;"></span>
+                <span style="font-size:14px; color:#5c626a;">Skip it if {{ av.t }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ d.hasCaveats }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
+              <sc-for list="{{ d.caveats }}" as="cv" hint-placeholder-count="1">
+                <div style="display:flex; gap:9px; padding:11px 13px; border-radius:13px; background:rgba(192,137,42,.09);">
+                  <span style="width:6px; height:6px; border-radius:50%; background:{{ cv.c }}; margin-top:7px; flex-shrink:0;"></span>
+                  <span style="font-size:12.5px; color:#7a6a40; line-height:1.5;">{{ cv.t }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+      </div>
+
+    </div>
+    </sc-if>
+
+  </div>
+
+  <!-- ===================== LIQUID GLASS DOCK ===================== -->
+  <div style="position:fixed; left:0; right:0; bottom:0; z-index:80; display:flex; justify-content:center; align-items:stretch; gap:12px; padding:0 16px max(20px, env(safe-area-inset-bottom, 20px)); pointer-events:none;">
+
+    <div style="pointer-events:auto; display:flex; align-items:center; gap:3px; padding:7px; border-radius:99px; background:rgba(250,250,251,.36); backdrop-filter:blur(28px) saturate(190%); -webkit-backdrop-filter:blur(28px) saturate(190%); border:.5px solid rgba(255,255,255,.6); box-shadow:inset 0 1.5px 1.5px rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.25), inset 1.5px 0 2px rgba(255,255,255,.4), inset -1.5px 0 2px rgba(255,255,255,.4), 0 24px 55px rgba(20,24,32,.22), 0 4px 12px rgba(20,24,32,.1);">
+      <sc-for list="{{ dockItems }}" as="it" hint-placeholder-count="3">
+        <button onClick="{{ it.onClick }}" style="{{ it.style }}">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="{{ it.path }}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span style="font-size:11px; font-weight:600; letter-spacing:.3px;">{{ it.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ isAsk }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ goResults }}" style="pointer-events:auto; display:flex; align-items:center; gap:12px; padding:0 24px; border-radius:99px; border:.5px solid rgba(255,255,255,.45); cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:inset 0 1.5px 1px rgba(255,255,255,.55), inset 0 -10px 18px rgba(255,255,255,.14), 0 20px 45px var(--acglow), 0 4px 10px rgba(20,24,32,.12); color:#fff;">
+        <span style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+          <span style="font-size:11px; font-weight:500; opacity:.85;">{{ matchCount }} matches</span>
+          <span style="font-size:15px; font-weight:700;">See results</span>
+        </span>
+        <svg width="17" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+    </sc-if>
+    <sc-if value="{{ notAsk }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ goAsk }}" title="New search" style="pointer-events:auto; width:66px; border-radius:50%; border:.5px solid rgba(255,255,255,.6); cursor:pointer; display:flex; align-items:center; justify-content:center; background:rgba(250,250,251,.36); backdrop-filter:blur(28px) saturate(190%); -webkit-backdrop-filter:blur(28px) saturate(190%); box-shadow:inset 0 1.5px 1.5px rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.25), 0 24px 55px rgba(20,24,32,.22), 0 4px 12px rgba(20,24,32,.1);">
+        <svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M11 5a6.5 6.5 0 110 13 6.5 6.5 0 010-13zM15.8 15.8L21 21" stroke="var(--acd)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </button>
+    </sc-if>
+
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;cobalt&quot;,&quot;emerald&quot;,&quot;teal&quot;,&quot;violet&quot;,&quot;sunset&quot;],&quot;default&quot;:&quot;cobalt&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'ask',
+    budget: 95000,
+    archetype: 'photographer',
+    channel: 'any',
+    platform: 'any',
+    osStyle: 'any',
+    includeCn: false,
+    excludeBrands: [],
+    currentPhone: '',
+    traitText: '',
+    advancedOpen: false,
+    selectedId: 'vivo-x300pro',
+  };
+
+  pal() {
+    const P = {
+      cobalt:  { name: 'Cobalt', main: '#2563d9', dark: '#1c4eae', g1: '#3b7bf0', g2: '#1f56c2', soft: 'rgba(37,99,217,.10)', soft2: 'rgba(37,99,217,.30)', glow: 'rgba(31,86,194,.34)', orbA: 'rgba(37,99,217,.16)', orbB: 'rgba(120,90,232,.13)', orbC: 'rgba(40,180,200,.11)' },
+      emerald: { name: 'Emerald', main: '#0b9f73', dark: '#0a6e58', g1: '#14b487', g2: '#0a8a64', soft: 'rgba(11,159,115,.10)', soft2: 'rgba(11,159,115,.30)', glow: 'rgba(10,138,100,.34)', orbA: 'rgba(11,159,115,.16)', orbB: 'rgba(86,132,232,.12)', orbC: 'rgba(232,178,86,.11)' },
+      teal:    { name: 'Ocean Teal', main: '#0e9b97', dark: '#0a716e', g1: '#16b3ae', g2: '#0c8581', soft: 'rgba(14,155,151,.10)', soft2: 'rgba(14,155,151,.30)', glow: 'rgba(12,133,129,.34)', orbA: 'rgba(14,155,151,.16)', orbB: 'rgba(60,140,230,.12)', orbC: 'rgba(120,200,180,.12)' },
+      violet:  { name: 'Violet', main: '#6d4bd6', dark: '#5234ab', g1: '#8160e8', g2: '#5e3fc4', soft: 'rgba(109,75,214,.10)', soft2: 'rgba(109,75,214,.30)', glow: 'rgba(94,63,196,.34)', orbA: 'rgba(109,75,214,.15)', orbB: 'rgba(220,120,200,.12)', orbC: 'rgba(90,140,235,.11)' },
+      sunset:  { name: 'Sunset', main: '#d2643a', dark: '#a8492a', g1: '#e87b4d', g2: '#c2532e', soft: 'rgba(210,100,58,.10)', soft2: 'rgba(210,100,58,.30)', glow: 'rgba(194,83,46,.34)', orbA: 'rgba(210,100,58,.15)', orbB: 'rgba(210,160,70,.13)', orbC: 'rgba(120,170,140,.10)' },
+    };
+    return P[this.props.accent] || P.cobalt;
+  }
+
+  fmt(n) {
+    const s = String(Math.round(n));
+    if (s.length <= 3) return s;
+    const l3 = s.slice(-3);
+    return s.slice(0, -3).replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + l3;
+  }
+  taka(n) { return '৳' + this.fmt(n); }
+
+  data() {
+    return [
+      { id: 'vivo-x300pro', brand: 'vivo', model: 'X300 Pro', official: 95999, unofficial: 78500, shopsOff: 4, shopsUn: 2, overall: 9.2, verdict: 'buy', headlineAxis: 'camera', headline: 'Night camera king',
+        scores: { camera: 9.6, battery: 8.5, gaming: 8.8, performance: 9.0, ease: 7.8 },
+        reasons: { camera: '200MP periscope telephoto + a huge sensor; the camera line carries a 10/10 prior.', battery: '5440mAh with 90W charging — a full day, easily.', gaming: 'Dimensity 9400 stays cool, minimal throttling.', performance: 'Flagship chip, fast and fluid for years.', ease: 'Some ads in Funtouch — most can be turned off.' },
+        strengths: ['200MP telephoto', 'Night portraits', 'IP69 rated'],
+        caveats: [{ t: 'Some ads in Funtouch OS (can be disabled)', sev: 'low' }],
+        specs: { chipset: 'Dimensity 9400', battery: '5440 mAh', charge: '90W wired + 40W wireless', display: '6.78″ LTPO AMOLED', refresh: '120Hz', cam: '50 + 200MP tele + 50MP ultra', ois: 'Yes', weight: '221 g', os: 'Funtouch 15 · Android 15', net: '5G' },
+        traits: ['IP69', '4500 nits', 'Glass back', 'Stereo'],
+        opinion: { summary: 'Owners rave about the night shots and display; a few find it heavy in hand.', praise: ['Camera', 'Display', 'Battery'], complaints: ['Heavy (221g)', 'Funtouch ads'], quote: 'Night shots feel almost DSLR-grade — but it sits heavy in the hand.' },
+        brandSummary: { service: 8, updates: 7, resale: 7 }, coo: { years: 4, perYear: 24000 },
+        bestFor: ['Camera-first buyers', 'Content creators'], avoidIf: ['you want clean stock Android', 'you want a light phone'],
+        history: [{ d: 'Mar', p: 99999 }, { d: 'Apr', p: 98500 }, { d: 'May', p: 96999 }, { d: 'Jun', p: 95999 }],
+        offers: [{ shop: 'Pickaboo', price: 95999, official: true }, { shop: 'GadgetAndGear', price: 96500, official: true }, { shop: 'Rio International', price: 78500, official: false }, { shop: 'SMSGadget', price: 80000, official: false }],
+        platform: 'android', cn: false },
+
+      { id: 'samsung-s24fe', brand: 'Samsung', model: 'Galaxy S24 FE', official: 82000, unofficial: 74000, shopsOff: 6, shopsUn: 1, overall: 8.6, verdict: 'buy', headlineAxis: 'balanced', headline: '7 years of updates',
+        scores: { camera: 8.4, battery: 8.2, gaming: 8.0, performance: 8.3, ease: 9.2 },
+        reasons: { camera: 'Reliable 50MP with strong processing.', battery: '4700mAh, lasts the day.', gaming: 'Exynos 2400e handles heavy titles fine.', performance: 'Smooth One UI experience.', ease: 'One UI + 7-year updates + the best service network in BD.' },
+        strengths: ['7-year updates', 'Best service network', 'Clean One UI'],
+        caveats: [],
+        specs: { chipset: 'Exynos 2400e', battery: '4700 mAh', charge: '25W', display: '6.7″ AMOLED', refresh: '120Hz', cam: '50 + 8MP tele + 12MP ultra', ois: 'Yes', weight: '213 g', os: 'One UI 7 · Android 15', net: '5G' },
+        traits: ['IP68', '1900 nits', 'Glass back', 'Stereo'],
+        opinion: { summary: 'Praised for long updates and service reach; some call it slightly overpriced.', praise: ['Updates', 'Service', 'Software'], complaints: ['Slow charging'], quote: 'You can run it worry-free for four or five years.' },
+        brandSummary: { service: 10, updates: 10, resale: 8 }, coo: { years: 7, perYear: 11700 },
+        bestFor: ['Long-term use', 'The safe pick'], avoidIf: ['you want fast charging'],
+        history: [{ d: 'Mar', p: 86000 }, { d: 'Apr', p: 84000 }, { d: 'May', p: 82999 }, { d: 'Jun', p: 82000 }],
+        offers: [{ shop: 'Samsung Store', price: 82000, official: true }, { shop: 'Pickaboo', price: 82500, official: true }, { shop: 'Dazzle', price: 74000, official: false }],
+        platform: 'android', cn: false },
+
+      { id: 'pixel-9', brand: 'Google', model: 'Pixel 9', official: null, unofficial: 89500, shopsOff: 0, shopsUn: 2, overall: 8.8, verdict: 'consider', headlineAxis: 'camera', headline: 'AI camera',
+        scores: { camera: 9.2, battery: 7.6, gaming: 7.8, performance: 8.4, ease: 8.6 },
+        reasons: { camera: 'Pixel computational photography — the best point-and-shoot.', battery: 'Tensor G4 sips more than it should.', gaming: 'Mid-tier; Tensor is not gaming-focused.', performance: 'Fast, clean Android.', ease: 'Stock Android, 7 years of updates.' },
+        strengths: ['Computational camera', 'Clean Android', '7-year updates'],
+        caveats: [{ t: 'Unofficial only — warranty from the shop, not the brand', sev: 'med' }, { t: 'Tensor modem can drain battery', sev: 'low' }],
+        specs: { chipset: 'Tensor G4', battery: '4700 mAh', charge: '27W', display: '6.3″ OLED', refresh: '120Hz', cam: '50 + 48MP ultra', ois: 'Yes', weight: '198 g', os: 'Android 15 (stock)', net: '5G' },
+        traits: ['IP68', '2700 nits', 'Glass back', 'Stereo'],
+        opinion: { summary: 'Loved for camera and software; the missing official warranty makes some cautious.', praise: ['Camera', 'Updates'], complaints: ['Battery', 'No official channel'], quote: 'Image quality is stunning — but the warranty makes you think twice.' },
+        brandSummary: { service: 4, updates: 10, resale: 6 }, coo: { years: 7, perYear: 12800 },
+        bestFor: ['Photography', 'Stock Android fans'], avoidIf: ['official warranty is a must'],
+        history: [{ d: 'Mar', p: 94000 }, { d: 'Apr', p: 92000 }, { d: 'May', p: 90500 }, { d: 'Jun', p: 89500 }],
+        offers: [{ shop: 'GadgetAndGear', price: 89500, official: false }, { shop: 'Rio International', price: 91000, official: false }],
+        platform: 'android', cn: false },
+
+      { id: 'oneplus-13r', brand: 'OnePlus', model: '13R', official: 72000, unofficial: 64000, shopsOff: 3, shopsUn: 2, overall: 8.3, verdict: 'consider', headlineAxis: 'performance', headline: 'Raw performance',
+        scores: { camera: 8.0, battery: 9.0, gaming: 9.1, performance: 9.0, ease: 8.0 },
+        reasons: { camera: 'Good 50MP, but no telephoto.', battery: '6000mAh — up to two days.', gaming: 'SD 8 Gen 3 at high refresh — superb gaming.', performance: 'Very fast, very smooth.', ease: 'OxygenOS is clean, with a few ads.' },
+        strengths: ['6000mAh battery', 'SD 8 Gen 3', '120Hz'],
+        caveats: [{ t: 'OnePlus has a history of green-line display issues', sev: 'med' }],
+        specs: { chipset: 'Snapdragon 8 Gen 3', battery: '6000 mAh', charge: '80W', display: '6.78″ AMOLED', refresh: '120Hz', cam: '50 + 8MP ultra', ois: 'Yes', weight: '206 g', os: 'OxygenOS 15 · Android 15', net: '5G' },
+        traits: ['IP65', '4500 nits', 'Glass back', 'Stereo'],
+        opinion: { summary: 'Praised for battery and speed; the green-line history worries some owners.', praise: ['Battery', 'Speed', 'Gaming'], complaints: ['Green-line risk', 'No telephoto'], quote: 'The king of gaming and battery at this price.' },
+        brandSummary: { service: 6, updates: 7, resale: 6 }, coo: { years: 4, perYear: 18000 },
+        bestFor: ['Gamers', 'Heavy users'], avoidIf: ['you want a zoom camera'],
+        history: [{ d: 'Mar', p: 75000 }, { d: 'Apr', p: 74000 }, { d: 'May', p: 73000 }, { d: 'Jun', p: 72000 }],
+        offers: [{ shop: 'GadgetAndGear', price: 72000, official: true }, { shop: 'Pickaboo', price: 72500, official: true }, { shop: 'Dazzle', price: 64000, official: false }],
+        platform: 'android', cn: false },
+
+      { id: 'iphone-16', brand: 'Apple', model: 'iPhone 16', official: 135000, unofficial: 118000, shopsOff: 5, shopsUn: 2, overall: 9.0, verdict: 'consider', headlineAxis: 'ease', headline: 'iOS ecosystem',
+        scores: { camera: 8.8, battery: 8.4, gaming: 9.3, performance: 9.5, ease: 9.4 },
+        reasons: { camera: 'Consistent 48MP, best-in-class video.', battery: 'Lasts the day.', gaming: 'A18 — top gaming performance.', performance: 'A18 chip, smooth for years.', ease: 'iOS, long updates, dead simple.' },
+        strengths: ['A18 chip', 'Best video', '6+ years of updates'],
+        caveats: [{ t: 'Above budget — a stretch pick', sev: 'low' }],
+        specs: { chipset: 'Apple A18', battery: '3561 mAh', charge: '25W', display: '6.1″ OLED', refresh: '60Hz', cam: '48 + 12MP ultra', ois: 'Yes', weight: '170 g', os: 'iOS 18', net: '5G' },
+        traits: ['IP68', '2000 nits', 'Glass back', 'Stereo'],
+        opinion: { summary: 'Wins on long updates and resale value; the 60Hz display disappoints some.', praise: ['Performance', 'Video', 'Resale'], complaints: ['60Hz display', 'Price'], quote: 'Buy it once and relax for years.' },
+        brandSummary: { service: 7, updates: 10, resale: 10 }, coo: { years: 6, perYear: 22500 },
+        bestFor: ['iOS fans', 'Long-term keepers'], avoidIf: ['budget is tight', 'you want high refresh'],
+        history: [{ d: 'Mar', p: 139000 }, { d: 'Apr', p: 137000 }, { d: 'May', p: 136000 }, { d: 'Jun', p: 135000 }],
+        offers: [{ shop: 'AppleGadgets', price: 135000, official: true }, { shop: 'Pickaboo', price: 136500, official: true }, { shop: 'Rio International', price: 118000, official: false }],
+        platform: 'ios', cn: false },
+
+      { id: 'redmi-note14pro', brand: 'Xiaomi', model: 'Redmi Note 14 Pro', official: 28000, unofficial: 24500, shopsOff: 5, shopsUn: 3, overall: 7.8, verdict: 'buy', headlineAxis: 'balanced', headline: 'Budget all-rounder',
+        scores: { camera: 7.6, battery: 8.4, gaming: 7.4, performance: 7.6, ease: 7.8 },
+        reasons: { camera: 'Strong 200MP main, great in daylight.', battery: '5500mAh, long backup.', gaming: 'Fine for mid-weight titles.', performance: 'Plenty for daily use.', ease: 'Some ads in HyperOS.' },
+        strengths: ['200MP camera', '5500mAh', 'AMOLED 120Hz'],
+        caveats: [{ t: 'Ads and bloatware in HyperOS', sev: 'low' }],
+        specs: { chipset: 'Helio G100 Ultra', battery: '5500 mAh', charge: '45W', display: '6.67″ AMOLED', refresh: '120Hz', cam: '200 + 8MP ultra', ois: 'Yes', weight: '190 g', os: 'HyperOS · Android 14', net: '4G' },
+        traits: ['IP68', '1800 nits', 'Glass back', 'Stereo'],
+        opinion: { summary: 'Happy with camera and battery for the money; the ads annoy some owners.', praise: ['Camera', 'Battery', 'Price'], complaints: ['Ads', '4G only'], quote: '200MP at this price — a steal.' },
+        brandSummary: { service: 7, updates: 6, resale: 6 }, coo: { years: 3, perYear: 9300 },
+        bestFor: ['Budget buyers', 'Students'], avoidIf: ['5G is a must', 'you want a clean UI'],
+        history: [{ d: 'Mar', p: 30000 }, { d: 'Apr', p: 29000 }, { d: 'May', p: 28500 }, { d: 'Jun', p: 28000 }],
+        offers: [{ shop: 'Pickaboo', price: 28000, official: true }, { shop: 'ExcelTech', price: 28500, official: true }, { shop: 'Dazzle', price: 24500, official: false }],
+        platform: 'android', cn: false },
+
+      { id: 'samsung-a16', brand: 'Samsung', model: 'Galaxy A16 5G', official: 18500, unofficial: 16500, shopsOff: 7, shopsUn: 2, overall: 7.2, verdict: 'buy', headlineAxis: 'ease', headline: 'Made for parents',
+        scores: { camera: 6.6, battery: 8.0, gaming: 6.0, performance: 6.4, ease: 8.8 },
+        reasons: { camera: 'Decent 50MP in daylight.', battery: '5000mAh, long backup.', gaming: 'Light titles only.', performance: 'Enough for everyday use.', ease: 'One UI, big clear text, 6 years of updates.' },
+        strengths: ['6-year updates', 'Big battery', 'Simple One UI'],
+        caveats: [],
+        specs: { chipset: 'Exynos 1330', battery: '5000 mAh', charge: '25W', display: '6.7″ AMOLED', refresh: '90Hz', cam: '50 + 5MP ultra', ois: 'No', weight: '200 g', os: 'One UI 6 · Android 14', net: '5G' },
+        traits: ['800 nits', 'Plastic back'],
+        opinion: { summary: 'A favourite for older users and first-time smartphone owners.', praise: ['Simple', 'Battery', 'Updates'], complaints: ['Slow', 'Average camera'], quote: 'Perfect for my mother — simple and durable.' },
+        brandSummary: { service: 10, updates: 9, resale: 6 }, coo: { years: 6, perYear: 3100 },
+        bestFor: ['Parents', 'First smartphone'], avoidIf: ['gaming or camera is the priority'],
+        history: [{ d: 'Mar', p: 20000 }, { d: 'Apr', p: 19500 }, { d: 'May', p: 19000 }, { d: 'Jun', p: 18500 }],
+        offers: [{ shop: 'Samsung Store', price: 18500, official: true }, { shop: 'Pickaboo', price: 18999, official: true }, { shop: 'Gazi', price: 16500, official: false }],
+        platform: 'android', cn: false },
+
+      { id: 'realme-c75', brand: 'realme', model: 'C75', official: 16000, unofficial: 14500, shopsOff: 4, shopsUn: 3, overall: 6.9, verdict: 'consider', headlineAxis: 'battery', headline: 'Massive battery',
+        scores: { camera: 6.2, battery: 9.2, gaming: 6.2, performance: 6.2, ease: 7.0 },
+        reasons: { camera: 'Basic 50MP.', battery: '6000mAh — two days, plus IP69.', gaming: 'Light titles.', performance: 'Everyday tasks.', ease: 'realme UI, some ads.' },
+        strengths: ['6000mAh', 'IP69 durable', '45W charging'],
+        caveats: [{ t: 'Ads in realme UI', sev: 'low' }],
+        specs: { chipset: 'Helio G92', battery: '6000 mAh', charge: '45W', display: '6.72″ LCD', refresh: '90Hz', cam: '50MP main', ois: 'No', weight: '196 g', os: 'realme UI 6 · Android 15', net: '4G' },
+        traits: ['IP69', '625 nits', 'Plastic back'],
+        opinion: { summary: 'Owners love the battery and durability; the LCD panel disappoints some.', praise: ['Battery', 'Durability'], complaints: ['LCD display', '4G only'], quote: 'Made for riders — the charge just refuses to die.' },
+        brandSummary: { service: 7, updates: 5, resale: 5 }, coo: { years: 3, perYear: 5300 },
+        bestFor: ['Riders', 'Battery-first buyers'], avoidIf: ['you want a better display'],
+        history: [{ d: 'Mar', p: 17000 }, { d: 'Apr', p: 16500 }, { d: 'May', p: 16200 }, { d: 'Jun', p: 16000 }],
+        offers: [{ shop: 'Pickaboo', price: 16000, official: true }, { shop: 'ExcelTech', price: 16300, official: true }, { shop: 'Gazi', price: 14500, official: false }],
+        platform: 'android', cn: false },
+    ];
+  }
+
+  setScreen(s) { this.setState({ screen: s }); window.scrollTo({ top: 0 }); }
+  goDetail(id) { this.setState({ screen: 'detail', selectedId: id }); window.scrollTo({ top: 0 }); }
+
+  segStyle(sel) {
+    return `flex:1; padding:10px 4px; border-radius:12px; border:none; cursor:pointer; font-size:13.5px; font-weight:600; transition:all .15s ease; background:${sel ? '#fff' : 'transparent'}; color:${sel ? 'var(--acd)' : '#80868f'}; box-shadow:${sel ? '0 1px 3px rgba(15,25,35,.14)' : 'none'};`;
+  }
+  toggleStyles(on) {
+    return {
+      track: `position:relative; width:48px; height:29px; border-radius:99px; border:none; cursor:pointer; flex-shrink:0; transition:background .2s ease; background:${on ? 'var(--ac)' : '#dadde2'};`,
+      knob: `position:absolute; top:3px; left:${on ? 22 : 3}px; width:23px; height:23px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(15,25,35,.3); transition:left .2s ease;`,
+    };
+  }
+
+  axisLabel(a) { return { camera: 'Camera', battery: 'Battery', gaming: 'Gaming', performance: 'Performance', ease: 'Ease of use', balanced: 'Balance' }[a] || a; }
+  verdictMeta(v) { const M = { buy: { label: 'Top pick', c: '#0a7d57', bg: 'rgba(10,157,106,.12)' }, consider: { label: 'Worth a look', c: '#a8761a', bg: 'rgba(192,137,42,.14)' }, avoid: { label: 'Avoid', c: '#c4503c', bg: 'rgba(196,80,60,.12)' } }; return M[v] || M.consider; }
+  archAxis(a) { return { photographer: 'camera', gamer: 'gaming', vlogger: 'camera', battery: 'battery', parents: 'ease', student: 'balanced', professional: 'performance', balanced: 'balanced' }[a] || 'balanced'; }
+  sevColor(s) { return { low: '#a8761a', med: '#c47a1e', high: '#c4503c' }[s] || '#a8761a'; }
+  archLabel(a) { return { photographer: 'photography', gamer: 'gaming', vlogger: 'video & vlogging', battery: 'long battery life', parents: 'parents', student: 'students', professional: 'pro work', balanced: 'all-round balance' }[a] || a; }
+
+  effPrice(ph) {
+    const ch = this.state.channel;
+    return ch === 'unofficial' ? ph.unofficial : ch === 'official' ? ph.official : (ph.official != null ? ph.official : ph.unofficial);
+  }
+
+  fitOf(price, b) {
+    const ratio = price / b;
+    if (ratio >= 0.92 && ratio <= 1.12) return { fit: 'Uses your full budget', fitColor: 'var(--acd)' };
+    if (ratio < 0.92) return { fit: 'Saves you ' + this.taka(b - price), fitColor: '#0a7d57' };
+    return { fit: Math.round((ratio - 1) * 100) + '% over budget', fitColor: '#a8761a' };
+  }
+
+  pickView(ph, i, b, pct) {
+    const price = this.effPrice(ph);
+    const vm = this.verdictMeta(ph.verdict);
+    const cav = ph.caveats[0];
+    const { fit, fitColor } = this.fitOf(price, b);
+    const isUnofficial = price === ph.unofficial && (ph.official == null || this.state.channel === 'unofficial');
+    const savePct = (ph.official != null && ph.unofficial != null) ? Math.round((1 - ph.unofficial / ph.official) * 100) : 0;
+    return {
+      savingsNote: (ph.official != null && ph.unofficial != null) ? (this.taka(ph.unofficial) + ' unofficial — ' + savePct + '% less') : null,
+      id: ph.id, brand: ph.brand, model: ph.model, name: ph.brand + ' ' + ph.model,
+      rank: i >= 0 ? String(i + 1) : '↗',
+      priceTaka: this.taka(price),
+      channelLabel: isUnofficial ? 'UNOFFICIAL' : 'OFFICIAL',
+      channelStyle: isUnofficial ? 'color:#a8761a; background:rgba(192,137,42,.13);' : 'color:#0a7d57; background:rgba(10,157,106,.12);',
+      shops: String((ph.shopsOff || 0) + (ph.shopsUn || 0)),
+      verdictLabel: vm.label, verdictStyle: `color:${vm.c}; background:${vm.bg};`,
+      headline: ph.headline, axisName: this.axisLabel(ph.headlineAxis), axisScore: String(ph.scores[ph.headlineAxis] ?? ph.overall),
+      strengths: ph.strengths.map(s => ({ t: s })),
+      caveat: cav ? cav.t : null, caveatColor: cav ? this.sevColor(cav.sev) : '',
+      pricePct: pct(price), budgetPct: pct(b),
+      fit, fitColor,
+      onClick: () => this.goDetail(ph.id),
+    };
+  }
+
+  buildResults(b) {
+    const low = Math.round(b * 0.55), high = Math.round(b * 1.12);
+    const domain = b * 1.45;
+    const pct = v => Math.max(0, Math.min(100, v / domain * 100));
+    const axis = this.archAxis(this.state.archetype);
+    const pool = this.data().filter(ph => {
+      if (this.effPrice(ph) == null) return false;
+      if (this.state.platform !== 'any' && ph.platform !== this.state.platform) return false;
+      if (this.state.excludeBrands.includes(ph.brand)) return false;
+      if (!this.state.includeCn && ph.cn) return false;
+      return true;
+    });
+    const rel = ph => ph.overall + 0.5 * (axis === 'balanced' ? 0 : (ph.scores[axis] || 0)) - Math.abs(this.effPrice(ph) - b) / b * 1.6;
+    const inBand = pool.filter(ph => { const e = this.effPrice(ph); return e >= low && e <= high; }).sort((a, c) => rel(c) - rel(a));
+    const picks = inBand.slice(0, 5).map((ph, i) => this.pickView(ph, i, b, pct));
+    const stretchPh = pool.filter(ph => this.effPrice(ph) > high).sort((a, c) => this.effPrice(a) - this.effPrice(c))[0];
+    const stretch = stretchPh && this.effPrice(stretchPh) < high * 1.5 ? this.pickView(stretchPh, -1, b, pct) : null;
+    const ch = this.state.channel;
+    return {
+      firstPick: picks[0] || null, restPicks: picks.slice(1), stretch,
+      pickCount: String(picks.length),
+      querySummary: [
+        { t: this.taka(b) }, { t: this.archLabel(this.state.archetype) },
+        { t: ch === 'any' ? 'any channel' : ch === 'official' ? 'official only' : 'unofficial only' },
+      ],
+      topReasoning: 'Prioritising ' + this.archLabel(this.state.archetype) + ', these are the closest matches to ' + this.taka(b) + ' — phones that use your full budget, not cheap midrangers.',
+    };
+  }
+
+  buildDetail(b) {
+    const ph = this.data().find(x => x.id === this.state.selectedId) || this.data()[0];
+    const price = this.effPrice(ph) ?? ph.unofficial;
+    const vm = this.verdictMeta(ph.verdict);
+    const { fit, fitColor } = this.fitOf(price, b);
+    const isUnofficial = price === ph.unofficial && (ph.official == null || this.state.channel === 'unofficial');
+    const axes = ['camera', 'battery', 'gaming', 'performance', 'ease'].map(k => ({
+      name: this.axisLabel(k),
+      score: ph.scores[k].toFixed(1) + ' / 10',
+      pct: ph.scores[k] * 10,
+      reason: ph.reasons[k],
+    }));
+    const specLabels = [['Chipset', ph.specs.chipset], ['Battery', ph.specs.battery], ['Charging', ph.specs.charge], ['Display', ph.specs.display], ['Refresh rate', ph.specs.refresh], ['Camera', ph.specs.cam], ['OIS', ph.specs.ois], ['Weight', ph.specs.weight], ['Software', ph.specs.os], ['Network', ph.specs.net]];
+    const hp = ph.history.map(h => h.p);
+    const hmin = Math.min(...hp), hmax = Math.max(...hp);
+    const history = ph.history.map((h, i) => ({
+      d: h.d, priceTaka: this.taka(h.p),
+      pct: hmax === hmin ? 70 : Math.round(34 + (h.p - hmin) / (hmax - hmin) * 62),
+      op: i === ph.history.length - 1 ? 1 : 0.45,
+    }));
+    const drop = ph.history[0].p - ph.history[ph.history.length - 1].p;
+    const bestOffer = Math.min(...ph.offers.map(o => o.price));
+    const offers = [...ph.offers].sort((a, c) => a.price - c.price).map(o => ({
+      shop: o.shop, priceTaka: this.taka(o.price), best: o.price === bestOffer,
+      bg: o.price === bestOffer ? 'var(--acsoft)' : 'rgba(15,25,35,.035)',
+      chLabel: o.official ? 'OFFICIAL' : 'UNOFFICIAL',
+      chStyle: o.official ? 'color:#0a7d57; background:rgba(10,157,106,.12);' : 'color:#a8761a; background:rgba(192,137,42,.13);',
+    }));
+    return {
+      d: {
+        brand: ph.brand, model: ph.model,
+        verdictLabel: vm.label, verdictStyle: `color:${vm.c}; background:${vm.bg};`,
+        headline: ph.headline, axisName: this.axisLabel(ph.headlineAxis), axisScore: String(ph.scores[ph.headlineAxis] ?? ph.overall),
+        priceTaka: this.taka(price),
+        channelLabel: isUnofficial ? 'UNOFFICIAL' : 'OFFICIAL',
+        channelStyle: isUnofficial ? 'color:#a8761a; background:rgba(192,137,42,.13);' : 'color:#0a7d57; background:rgba(10,157,106,.12);',
+        officialTaka: ph.official != null ? this.taka(ph.official) : '—',
+        unofficialTaka: ph.unofficial != null ? this.taka(ph.unofficial) : '—',
+        shops: String((ph.shopsOff || 0) + (ph.shopsUn || 0)),
+        fit, fitColor,
+        traits: ph.traits.filter(t => t && t !== '—').map(t => ({ t })),
+        axes, specs: specLabels.map(([k, v]) => ({ k, v })),
+        opSummary: ph.opinion.summary, opQuote: ph.opinion.quote,
+        praise: ph.opinion.praise.map(t => ({ t })), complaints: ph.opinion.complaints.map(t => ({ t })),
+        history, histDrop: drop > 0 ? (this.taka(drop) + ' drop in 4 months') : '',
+        offers,
+        brandBars: [['BD service network', ph.brandSummary.service], ['Update record', ph.brandSummary.updates], ['Resale value', ph.brandSummary.resale]].map(([k, v]) => ({ k, v: String(v), pct: v * 10 })),
+        coo: '~' + ph.coo.years + ' years of software support — ownership costs about ' + this.taka(ph.coo.perYear) + ' per year.',
+        bestFor: ph.bestFor.map(t => ({ t })), avoidIf: ph.avoidIf.map(t => ({ t })),
+        caveats: ph.caveats.map(c => ({ t: c.t, c: this.sevColor(c.sev) })),
+        hasCaveats: ph.caveats.length > 0,
+      },
+    };
+  }
+
+  renderVals() {
+    const p = this.pal();
+    const accentVars = `--ac:${p.main};--acd:${p.dark};--acg1:${p.g1};--acg2:${p.g2};--acsoft:${p.soft};--acsoft2:${p.soft2};--acglow:${p.glow};--orbA:${p.orbA};--orbB:${p.orbB};--orbC:${p.orbC};`;
+
+    const b = this.state.budget;
+    const low = Math.round(b * 0.55), high = Math.round(b * 1.12);
+    const domain = b * 1.45;
+    const pct = v => Math.max(0, Math.min(100, v / domain * 100));
+    const sliderPct = (b - 8000) / (200000 - 8000) * 100;
+    const scr = this.state.screen;
+
+    const dockDefs = [
+      { key: 'ask', label: 'Ask', path: 'M4 8h8M17 8h3M4 16h3M12 16h8M14.5 5.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5M7.5 13.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5' },
+      { key: 'results', label: 'Results', path: 'M4 6h2M4 12h2M4 18h2M10 6h10M10 12h10M10 18h10' },
+      { key: 'detail', label: 'Detail', path: 'M8.5 3.5h7a1.5 1.5 0 011.5 1.5v14a1.5 1.5 0 01-1.5 1.5h-7A1.5 1.5 0 017 19V5a1.5 1.5 0 011.5-1.5zM10.5 17.5h3' },
+    ];
+    const dockItems = dockDefs.map(it => {
+      const active = it.key === scr;
+      return { ...it, onClick: () => this.setScreen(it.key),
+        style: `display:flex; flex-direction:column; align-items:center; gap:3px; padding:9px 20px 7px; border-radius:99px; border:none; cursor:pointer; transition:all .22s cubic-bezier(.2,.7,.2,1); background:${active ? 'rgba(255,255,255,.85)' : 'transparent'}; color:${active ? 'var(--acd)' : '#565b63'}; box-shadow:${active ? 'inset 0 1px 1px rgba(255,255,255,1), 0 2px 8px rgba(20,24,32,.12)' : 'none'};` };
+    });
+
+    const archDefs = [
+      { key: 'photographer', bn: 'ছবি তোলা' }, { key: 'gamer', bn: 'গেমিং' },
+      { key: 'vlogger', bn: 'ভিডিও / ভ্লগ' }, { key: 'battery', bn: 'লম্বা ব্যাটারি' },
+      { key: 'parents', bn: 'আম্মু-আব্বুর জন্য' }, { key: 'student', bn: 'শিক্ষার্থী' },
+      { key: 'professional', bn: 'পেশাদার কাজ' }, { key: 'balanced', bn: 'সব দিকেই ভালো' },
+    ];
+    const archetypes = archDefs.map(a => {
+      const sel = a.key === this.state.archetype;
+      return { ...a, onClick: () => this.setState({ archetype: a.key }),
+        chipStyle: `padding:11px 18px; border-radius:99px; cursor:pointer; font-family:'Anek Bangla'; font-size:14.5px; font-weight:${sel ? 600 : 500}; transition:all .15s ease; background:${sel ? 'var(--ac)' : 'rgba(255,255,255,.72)'}; color:${sel ? '#fff' : '#3c4148'}; border:.5px solid ${sel ? 'transparent' : 'rgba(15,25,35,.1)'}; box-shadow:${sel ? '0 3px 12px var(--acglow)' : '0 1px 2px rgba(15,25,35,.04)'};` };
+    });
+
+    const mkSeg = (defs, val, field) => defs.map(o => ({ ...o, onClick: () => this.setState({ [field]: o.key }), style: this.segStyle(o.key === val) }));
+    const channelOpts = mkSeg([{ key: 'any', label: 'Any' }, { key: 'official', label: 'Official' }, { key: 'unofficial', label: 'Unofficial' }], this.state.channel, 'channel');
+    const platformOpts = mkSeg([{ key: 'any', label: 'Any' }, { key: 'android', label: 'Android' }, { key: 'ios', label: 'iOS' }], this.state.platform, 'platform');
+    const osOpts = mkSeg([{ key: 'any', label: 'Any' }, { key: 'clean', label: 'Clean' }, { key: 'feature', label: 'Feature-rich' }], this.state.osStyle, 'osStyle');
+
+    const brandDefs = ['Samsung', 'Xiaomi', 'vivo', 'OnePlus', 'realme', 'Apple'];
+    const brandOpts = brandDefs.map(bd => {
+      const sel = this.state.excludeBrands.includes(bd);
+      return { label: bd, onClick: () => this.setState(s => ({ excludeBrands: sel ? s.excludeBrands.filter(x => x !== bd) : [...s.excludeBrands, bd] })),
+        style: `padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13px; font-weight:500; transition:all .15s ease; background:${sel ? '#fde8e4' : 'rgba(255,255,255,.8)'}; color:${sel ? '#c4503c' : '#5c626a'}; border:.5px solid ${sel ? 'rgba(196,80,60,.3)' : 'rgba(15,25,35,.1)'}; text-decoration:${sel ? 'line-through' : 'none'};` };
+    });
+
+    const cn = this.toggleStyles(this.state.includeCn);
+    const matchCount = Math.max(5, Math.round(42 - b / 3200));
+
+    return {
+      accentVars,
+      isAsk: scr === 'ask', isResults: scr === 'results', isDetail: scr === 'detail', notAsk: scr !== 'ask',
+      dockItems,
+      budget: b, budgetTaka: this.taka(b), lowTaka: this.taka(low), highTaka: this.taka(high),
+      bandLeft: pct(low), bandWidth: pct(high) - pct(low), budgetPct: pct(b),
+      rangeStyle: `background:linear-gradient(90deg,var(--ac) ${sliderPct}%,rgba(15,25,35,.07) ${sliderPct}%);`,
+      onBudget: e => this.setState({ budget: +e.target.value }),
+      archetypes, channelOpts, platformOpts, osOpts, brandOpts,
+      matchCount: String(matchCount), metaStock: '954',
+      traitText: this.state.traitText, onTrait: e => this.setState({ traitText: e.target.value }),
+      currentPhone: this.state.currentPhone, onCurrent: e => this.setState({ currentPhone: e.target.value }),
+      examples: ['আম্মুর জন্য ১৫ হাজারে', 'গেমিং ফোন ৩০ হাজারে', 'সেরা ক্যামেরা, অফিসিয়াল'].map(x => ({ label: x, onClick: () => this.setState({ traitText: x }) })),
+      advancedOpen: this.state.advancedOpen, toggleAdvanced: () => this.setState(s => ({ advancedOpen: !s.advancedOpen })),
+      chevStyle: `font-size:18px; color:#a0a6ae; transition:transform .2s ease; display:inline-block; transform:rotate(${this.state.advancedOpen ? 180 : 0}deg);`,
+      toggleCn: () => this.setState(s => ({ includeCn: !s.includeCn })), cnTrackStyle: cn.track, cnKnobStyle: cn.knob,
+      goResults: () => this.setScreen('results'),
+      goAsk: () => this.setScreen('ask'),
+      ...this.buildResults(b),
+      ...this.buildDetail(b),
+    };
+  }
+}
+</script>
+</body>
+</html>
