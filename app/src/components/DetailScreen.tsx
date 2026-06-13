@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 import { AXES, axisLabel, channelStyle, fitOf, headlinePhrase, isUnofficialPrice, sevColor, st, taka, verdictMeta } from "../theme";
 import { t } from "../i18n";
-import type { Offer, OpinionProfile, PhoneDetail } from "../api";
+import type { Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
 import type { Form } from "../App";
 import { PhonePhoto } from "./PhonePhoto";
 
 interface Props {
   detail: PhoneDetail | null;
+  hint?: Pick | null;          // the result pick — renders the hero instantly
   loading: boolean;
   error: string | null;
   budget: number;
@@ -16,29 +17,30 @@ interface Props {
 }
 
 /** distinct owner quotes — real aspect quotes first, then standout praise.
-    Quotes already shown inside a caveat box are skipped so the same sentence
-    never appears twice on one screen. */
+    Quotes already shown inside a caveat box are skipped. */
 function ownerQuotes(op: OpinionProfile, caveatTexts: string[], max = 3): string[] {
   const out: string[] = [];
   const seen = new Set<string>();
   const cavBlob = caveatTexts.join(" ").toLowerCase();
   const add = (s?: unknown) => {
-    const t = (typeof s === "string" ? s : "").trim();
-    if (!t) return;
-    const norm = t.toLowerCase();
+    const tx = (typeof s === "string" ? s : "").trim();
+    if (!tx) return;
+    const norm = tx.toLowerCase();
     if (seen.has(norm)) return;
     if (norm.length >= 20 && cavBlob.includes(norm.slice(0, 60))) return;
-    seen.add(norm); out.push(t);
+    seen.add(norm); out.push(tx);
   };
   for (const a of Object.values(op.aspects || {})) (a.quotes || []).forEach(add);
   (op.standout_praise || []).forEach(add);
   return out.slice(0, max);
 }
 
-function effPrice(d: PhoneDetail, channel: Form["channel"]): number | null {
-  if (channel === "official") return d.best_official_price ?? d.best_price;
-  if (channel === "unofficial") return d.best_unofficial_price ?? d.best_price;
-  return d.best_price;
+/** effective channel price from any object carrying the three price fields */
+function effPriceOf(o: { best_official_price?: number | null; best_unofficial_price?: number | null; best_price?: number | null } | null, channel: Form["channel"]): number | null {
+  if (!o) return null;
+  if (channel === "official") return o.best_official_price ?? o.best_price ?? null;
+  if (channel === "unofficial") return o.best_unofficial_price ?? o.best_price ?? null;
+  return o.best_price ?? null;
 }
 
 function domAxis(scores: Record<string, number | null | undefined>): string {
@@ -67,61 +69,83 @@ function buildSpecs(s: Record<string, any> | undefined): { k: string; v: string 
   return out;
 }
 
-function buildTraits(t: Record<string, any> | undefined): string[] {
-  if (!t) return [];
+function buildTraits(tr: Record<string, any> | undefined): string[] {
+  if (!tr) return [];
   const out: string[] = [];
-  if (t.ip_rating) out.push(String(t.ip_rating).toUpperCase());
-  else if (t.water_resistant) out.push("Water-resistant");
-  if (t.peak_nits) out.push(`${t.peak_nits} nits`);
-  out.push(t.glass_back ? "Glass back" : "Plastic back");
-  if (t.stereo_speakers) out.push("Stereo");
-  if (t.headphone_jack) out.push("3.5mm jack");
-  if (t.main_video_4k) out.push("4K video");
+  if (tr.ip_rating) out.push(String(tr.ip_rating).toUpperCase());
+  else if (tr.water_resistant) out.push("Water-resistant");
+  if (tr.peak_nits) out.push(`${tr.peak_nits} nits`);
+  out.push(tr.glass_back ? "Glass back" : "Plastic back");
+  if (tr.stereo_speakers) out.push("Stereo");
+  if (tr.headphone_jack) out.push("3.5mm jack");
+  if (tr.main_video_4k) out.push("4K video");
   return out.slice(0, 5);
 }
 
-export function DetailScreen({ detail, loading, error, budget, channel, onBack, onRetry }: Props) {
-  if (loading) return <Wrap onBack={onBack}><div style={st("padding:60px 0; text-align:center; color:#80868f;")}>Loading…</div></Wrap>;
+export function DetailScreen({ detail, hint, loading, error, budget, channel, onBack, onRetry }: Props) {
   if (error) return <Wrap onBack={onBack}><div style={st("padding:60px 0; text-align:center; color:#c4503c;")}>{error}<br /><button onClick={onRetry} style={st("margin-top:16px; padding:10px 20px; border-radius:99px; border:none; cursor:pointer; background:var(--ac); color:#fff; font-weight:600;")}>Retry</button></div></Wrap>;
-  if (!detail) return <Wrap onBack={onBack}><div style={st("padding:60px 0; text-align:center; color:#80868f;")}>Pick a phone from the results to see its full breakdown.</div></Wrap>;
 
   const d = detail;
-  const scores = d.blended_scores || d.scores || {};
-  const dom = domAxis(scores);
-  const price = effPrice(d, channel);
-  const un = isUnofficialPrice(d, price, channel);
-  const vm = verdictMeta(d.ai_verdict?.recommendation);
+  const h = hint || null;
+  const any = d || h;
+  if (!any) {
+    if (loading) return <Wrap onBack={onBack}><LoadingDetail /></Wrap>;
+    return <Wrap onBack={onBack}><div style={st("padding:60px 0; text-align:center; color:#80868f;")}>Pick a phone from the results to see its full breakdown.</div></Wrap>;
+  }
+
+  // merged hero view-model: prefer full detail, fall back to the result pick
+  const brand = d?.brand ?? h?.brand ?? "";
+  const model = d?.model ?? h?.model ?? "";
+  const image = d?.image ?? h?.image ?? null;
+  const scores = (d?.blended_scores && Object.keys(d.blended_scores).length ? d.blended_scores : null)
+    || (h?.blended_scores && Object.keys(h.blended_scores).length ? h.blended_scores : null)
+    || d?.scores || {};
+  const dom = h?.headline_axis || domAxis(scores);
+  const price = effPriceOf(d ?? h, channel);
+  const priceObj = { best_official_price: d?.best_official_price ?? h?.best_official_price ?? null, best_unofficial_price: d?.best_unofficial_price ?? h?.best_unofficial_price ?? null, best_price: d?.best_price ?? h?.best_price ?? null };
+  const un = isUnofficialPrice(priceObj as any, price, channel);
+  const rec = d?.ai_verdict?.recommendation ?? h?.verdict?.recommendation;
+  const vm = verdictMeta(rec);
   const { fit, fitColor } = fitOf(price ?? budget, budget);
-  const traits = buildTraits(d.traits);
-  const specs = buildSpecs(d.specs);
-  const op = d.opinion_profile || {};
-  const quotes = ownerQuotes(op, (d.caveats || []).map((c) => c.text));
-  const bestFor = (op.best_for?.length ? op.best_for : d.ai_verdict?.best_for) || [];
+  const traits = buildTraits(d?.traits);
+  const ourTake = h?.smart_verdict || d?.ai_verdict?.verdict || null;
+  const bestOff = d?.best_official_price ?? h?.best_official_price ?? null;
+  const bestUnoff = d?.best_unofficial_price ?? h?.best_unofficial_price ?? null;
+  const offVar = d?.best_official_variant ?? h?.best_official_variant;
+  const unoffVar = d?.best_unofficial_variant ?? h?.best_unofficial_variant;
+  const inStock = d?.in_stock_shops ?? h?.in_stock_shops ?? 0;
+
+  // sections that require the full DB record
+  const op = d?.opinion_profile || {};
+  const caveats = d?.caveats ?? h?.caveats ?? [];
+  const quotes = ownerQuotes(op, caveats.map((c) => c.text));
+  const bestFor = (op.best_for?.length ? op.best_for : d?.ai_verdict?.best_for) || [];
   const avoidIf = op.avoid_if || [];
-  const caveats = d.caveats || [];
-  const coo = d.cost_of_ownership;
-  const bs = d.brand_summary;
-  const offers = [...(d.offers || [])].sort((a, b) => a.price - b.price);
+  const specs = buildSpecs(d?.specs);
+  const bs = d?.brand_summary;
+  const offers = [...(d?.offers || [])].sort((a, b) => a.price - b.price);
   const bestOfferPrice = offers.length ? offers[0].price : null;
 
   return (
     <Wrap onBack={onBack}>
-      {/* hero */}
+      {/* hero (renders instantly from the pick hint) */}
       <div style={st("background:rgba(255,255,255,.92); border-radius:26px; padding:clamp(20px,3vw,32px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 16px 40px rgba(15,25,35,.09); margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(20px,3vw,32px);")}>
         <div style={st("display:flex; gap:18px;")}>
-          <PhonePhoto src={d.image} w="clamp(84px,9vw,108px)" h="clamp(112px,12vw,144px)" radius={16} label="product shot" />
+          <PhonePhoto src={image} w="clamp(84px,9vw,108px)" h="clamp(112px,12vw,144px)" radius={16} label="product shot" />
           <div style={st("min-width:0;")}>
             <div style={st("display:flex; align-items:center; gap:9px; flex-wrap:wrap;")}>
-              <span style={st("font-size:13px; color:#8a8e96; font-weight:500;")}>{d.brand}</span>
-              <span style={st(`font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:99px; color:${vm.c}; background:${vm.bg};`)}>{vm.label}</span>
+              <span style={st("font-size:13px; color:#8a8e96; font-weight:500;")}>{brand}</span>
+              {rec && <span style={st(`font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:99px; color:${vm.c}; background:${vm.bg};`)}>{vm.label}</span>}
             </div>
-            <h1 style={st("margin:4px 0 0; font-size:clamp(26px,3.6vw,38px); font-weight:700; letter-spacing:-1.2px; line-height:1.1;")}>{d.model}</h1>
+            <h1 style={st("margin:4px 0 0; font-size:clamp(26px,3.6vw,38px); font-weight:700; letter-spacing:-1.2px; line-height:1.1;")}>{model}</h1>
             <div style={st("margin-top:8px; font-size:14px; color:#5c626a;")}>{headlinePhrase(dom)}{scores[dom] != null && <> · {axisLabel(dom)} <span style={st("color:var(--acd); font-weight:700;")}>{scores[dom]}</span></>}</div>
-            <div style={st("display:flex; flex-wrap:wrap; gap:6px; margin-top:13px;")}>
-              {traits.map((t, i) => (
-                <span key={i} style={st("font-size:11.5px; font-weight:600; color:#565b63; background:rgba(15,25,35,.05); padding:5px 11px; border-radius:99px;")}>{t}</span>
-              ))}
-            </div>
+            {traits.length > 0 && (
+              <div style={st("display:flex; flex-wrap:wrap; gap:6px; margin-top:13px;")}>
+                {traits.map((tx, i) => (
+                  <span key={i} style={st("font-size:11.5px; font-weight:600; color:#565b63; background:rgba(15,25,35,.05); padding:5px 11px; border-radius:99px;")}>{tx}</span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         <div style={st("display:flex; flex-direction:column; justify-content:center;")}>
@@ -130,13 +154,12 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
             <span style={st("font-size:11px; font-weight:700; padding:4px 10px; border-radius:99px; margin-bottom:5px; " + channelStyle(un))}>{un ? "UNOFFICIAL" : "OFFICIAL"}</span>
           </div>
           <div style={st("margin-top:12px; font-size:13px; color:#80868f; line-height:1.7;")}>
-            Official <span style={st("color:#41464d; font-weight:600;")}>{taka(d.best_official_price)}</span>{d.best_official_variant ? ` (${d.best_official_variant})` : ""} · Unofficial <span style={st("color:#41464d; font-weight:600;")}>{taka(d.best_unofficial_price)}</span>{d.best_unofficial_variant ? ` (${d.best_unofficial_variant})` : ""}<br />
-            Carried by {d.in_stock_shops ?? 0} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
-            {d.best_official_price != null && d.best_unofficial_price != null
-              && d.best_official_variant !== d.best_unofficial_variant && (
-              <><br /><span style={st("font-size:12px; color:#a8761a;")}>Note: the official and unofficial prices may be different storage variants — compare carefully.</span></>
+            Official <span style={st("color:#41464d; font-weight:600;")}>{taka(bestOff)}</span>{offVar ? ` (${offVar})` : ""} · Unofficial <span style={st("color:#41464d; font-weight:600;")}>{taka(bestUnoff)}</span>{unoffVar ? ` (${unoffVar})` : ""}<br />
+            Carried by {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
+            {bestOff != null && bestUnoff != null && offVar !== unoffVar && (
+              <><br /><span style={st("font-size:12px; color:#a8761a;")}>Note: official and unofficial prices may be different storage variants — compare carefully.</span></>
             )}
-            {d.price_trend && (d.price_trend.trend === "down" || d.price_trend.trend === "up") && (
+            {d?.price_trend && (d.price_trend.trend === "down" || d.price_trend.trend === "up") && (
               <><br /><span style={st(`font-size:12px; font-weight:600; color:${d.price_trend.trend === "down" ? "#0a7d57" : "#a8761a"};`)}>
                 Price {d.price_trend.trend === "down" ? "dropped" : "rose"} {taka(Math.abs(d.price_trend.delta))} recently
               </span></>
@@ -145,30 +168,45 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
         </div>
       </div>
 
-      {/* axes */}
-      <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); margin-top:14px;")}>
-        <SectionLabel>{t("scores")}</SectionLabel>
-        <div style={st("display:flex; flex-direction:column; gap:17px; margin-top:18px;")}>
-          {AXES.map((k) => {
-            const v = scores[k];
-            if (v == null) return null;
-            const reason = (d.score_reasons?.[k] || []).join("; ");
-            return (
-              <div key={k}>
-                <div style={st("display:flex; justify-content:space-between; align-items:baseline; gap:12px;")}>
-                  <span style={st("font-size:14.5px; font-weight:600; color:#2c3036;")}>{axisLabel(k)}</span>
-                  <span style={st("font-size:14px; font-weight:700; color:var(--acd);")}>{v.toFixed(1)} / 10</span>
-                </div>
-                <div style={st("position:relative; height:6px; border-radius:99px; background:rgba(15,25,35,.06); margin-top:8px; overflow:hidden;")}>
-                  <div style={st(`position:absolute; top:0; bottom:0; left:0; width:${v * 10}%; border-radius:99px; background:linear-gradient(90deg,var(--acsoft2),var(--ac));`)} />
-                </div>
-                {reason && <div style={st("font-size:12.5px; color:#84878f; margin-top:7px; line-height:1.5;")}>{reason}</div>}
-              </div>
-            );
-          })}
+      {/* our take — the RAG verdict, grounded in real evidence */}
+      {ourTake && (
+        <div style={st("background:var(--acsoft); border-radius:20px; padding:clamp(16px,2.5vw,22px); margin-top:14px; display:flex; gap:12px;")}>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:2px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--ac)" /></svg>
+          <div>
+            <div style={st("font-size:11.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:var(--acd); margin-bottom:5px;")}>{t("our_take")}</div>
+            <p style={st("margin:0; font-size:14.5px; color:#2c3036; line-height:1.6; text-wrap:pretty;")}>{ourTake}</p>
+          </div>
         </div>
-      </div>
+      )}
 
+      {/* axes */}
+      {Object.values(scores).some((v) => v != null) && (
+        <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); margin-top:14px;")}>
+          <SectionLabel>{t("scores")}</SectionLabel>
+          <div style={st("display:flex; flex-direction:column; gap:17px; margin-top:18px;")}>
+            {AXES.map((k) => {
+              const v = scores[k];
+              if (v == null) return null;
+              const reason = (d?.score_reasons?.[k] || []).join("; ");
+              return (
+                <div key={k}>
+                  <div style={st("display:flex; justify-content:space-between; align-items:baseline; gap:12px;")}>
+                    <span style={st("font-size:14.5px; font-weight:600; color:#2c3036;")}>{axisLabel(k)}</span>
+                    <span style={st("font-size:14px; font-weight:700; color:var(--acd);")}>{v.toFixed(1)} / 10</span>
+                  </div>
+                  <div style={st("position:relative; height:6px; border-radius:99px; background:rgba(15,25,35,.06); margin-top:8px; overflow:hidden;")}>
+                    <div style={st(`position:absolute; top:0; bottom:0; left:0; width:${v * 10}%; border-radius:99px; background:linear-gradient(90deg,var(--acsoft2),var(--ac));`)} />
+                  </div>
+                  {reason && <div style={st("font-size:12.5px; color:#84878f; margin-top:7px; line-height:1.5;")}>{reason}</div>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* full-record sections, or a skeleton while they load */}
+      {!d ? <LoadingDetail compact /> : (
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px; margin-top:14px;")}>
         {/* specs */}
         <Card>
@@ -196,11 +234,11 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
               </div>
             )}
             <div style={st("display:flex; flex-wrap:wrap; gap:7px; margin-top:15px;")}>
-              {(op.praise_flags || []).map((t, i) => (
-                <span key={"p" + i} style={st("font-size:12px; font-weight:600; color:#0a7d57; background:rgba(10,157,106,.1); padding:6px 12px; border-radius:99px;")}>+ {t}</span>
+              {(op.praise_flags || []).map((tx, i) => (
+                <span key={"p" + i} style={st("font-size:12px; font-weight:600; color:#0a7d57; background:rgba(10,157,106,.1); padding:6px 12px; border-radius:99px;")}>+ {tx}</span>
               ))}
-              {(op.complaint_flags || []).map((t, i) => (
-                <span key={"c" + i} style={st("font-size:12px; font-weight:600; color:#a8761a; background:rgba(192,137,42,.12); padding:6px 12px; border-radius:99px;")}>− {t}</span>
+              {(op.complaint_flags || []).map((tx, i) => (
+                <span key={"c" + i} style={st("font-size:12px; font-weight:600; color:#a8761a; background:rgba(192,137,42,.12); padding:6px 12px; border-radius:99px;")}>− {tx}</span>
               ))}
             </div>
           </Card>
@@ -218,11 +256,11 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
         )}
 
         {/* ownership */}
-        {(bs || coo) && (
+        {bs && (
           <Card>
             <SectionLabel>{t("brand_ownership")}</SectionLabel>
             <div style={st("display:flex; flex-direction:column; gap:13px; margin-top:18px;")}>
-              {bs && ([["BD service network", bs.bd_service], ["Update record", bs.update_record], ["Resale value", bs.resale]] as const).map(([k, v]) =>
+              {([["BD service network", bs.bd_service], ["Update record", bs.update_record], ["Resale value", bs.resale]] as const).map(([k, v]) =>
                 v == null ? null : (
                   <div key={k}>
                     <div style={st("display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;")}>
@@ -236,11 +274,6 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
                 )
               )}
             </div>
-            {coo?.cost_per_year != null && (
-              <div style={st("margin-top:18px; padding:13px 15px; border-radius:14px; background:rgba(15,25,35,.035); font-size:13px; color:#41464d; line-height:1.55;")}>
-                ~{coo.support_years ?? "?"} years of software support — ownership costs about {taka(coo.cost_per_year)} per year.
-              </div>
-            )}
           </Card>
         )}
 
@@ -249,16 +282,16 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
           <Card>
             <SectionLabel>{t("who_its_for")}</SectionLabel>
             <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:16px;")}>
-              {bestFor.map((t, i) => (
+              {bestFor.map((tx, i) => (
                 <div key={"b" + i} style={st("display:flex; gap:10px; align-items:flex-start;")}>
                   <span style={st("width:7px; height:7px; border-radius:50%; background:#0a9d6a; margin-top:7px; flex-shrink:0;")} />
-                  <span style={st("font-size:14px; color:#2c3036;")}>{t}</span>
+                  <span style={st("font-size:14px; color:#2c3036;")}>{tx}</span>
                 </div>
               ))}
-              {avoidIf.map((t, i) => (
+              {avoidIf.map((tx, i) => (
                 <div key={"a" + i} style={st("display:flex; gap:10px; align-items:flex-start;")}>
                   <span style={st("width:7px; height:7px; border-radius:50%; background:#c4503c; margin-top:7px; flex-shrink:0;")} />
-                  <span style={st("font-size:14px; color:#5c626a;")}>Skip it if {t}</span>
+                  <span style={st("font-size:14px; color:#5c626a;")}>Skip it if {tx}</span>
                 </div>
               ))}
             </div>
@@ -275,6 +308,7 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
           </Card>
         )}
       </div>
+      )}
     </Wrap>
   );
 }
@@ -295,6 +329,31 @@ function OfferRow({ o, best }: { o: Offer; best: boolean }) {
   return o.url
     ? <a href={o.url} target="_blank" rel="noopener noreferrer" style={style}>{row}</a>
     : <div style={style}>{row}</div>;
+}
+
+/* ---------- loading ---------- */
+function LoadingDetail({ compact }: { compact?: boolean }) {
+  const block = (w: string, h = "13px") =>
+    st(`width:${w}; height:${h}; border-radius:7px; background:rgba(15,25,35,.07); animation:kpulse 1.4s ease-in-out infinite;`);
+  return (
+    <div style={st(`margin-top:14px;`)}>
+      <style>{`@keyframes kpulse{0%,100%{opacity:.5}50%{opacity:1}}`}</style>
+      {!compact && (
+        <div style={st("display:flex; align-items:center; gap:13px; padding:17px 20px; border-radius:18px; background:var(--acsoft); margin-bottom:14px;")}>
+          <span style={st("width:20px; height:20px; border-radius:50%; border:2.5px solid var(--acsoft2); border-top-color:var(--ac); animation:kspin .8s linear infinite; flex-shrink:0;")} />
+          <span style={st("font-size:14px; font-weight:600; color:#2c3036;")}>{t("loading_detail")}</span>
+          <style>{`@keyframes kspin{to{transform:rotate(360deg)}}`}</style>
+        </div>
+      )}
+      <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px;")}>
+        {[0, 1].map((c) => (
+          <div key={c} style={st("background:rgba(255,255,255,.8); border-radius:24px; padding:24px; display:flex; flex-direction:column; gap:12px;")}>
+            <div style={block("40%")} /><div style={block("90%")} /><div style={block("80%")} /><div style={block("60%")} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /* ---------- layout helpers ---------- */

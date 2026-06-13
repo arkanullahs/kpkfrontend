@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { axisLabel, channelStyle, fitOf, headlinePhrase, isUnofficialPrice, st, taka, verdictMeta } from "../theme";
 import { t } from "../i18n";
 import { PhonePhoto } from "./PhonePhoto";
@@ -21,10 +21,14 @@ function effPrice(p: Pick, channel: Form["channel"]): number | null {
   return p.best_price;
 }
 
+// RAG ranker confidence (high/medium/low); legacy strong/good/backup kept for
+// any cached older responses
 const CONF_COLOR: Record<string, string> = {
+  high: "#0a7d57", medium: "#1c4eae", low: "#a8761a",
   strong: "#0a7d57", good: "#1c4eae", backup: "#a8761a", fallback: "#a8761a",
 };
 const CONF_KEY: Record<string, string> = {
+  high: "conf_strong", medium: "conf_good", low: "conf_backup",
   strong: "conf_strong", good: "conf_good", backup: "conf_backup", fallback: "conf_backup",
 };
 
@@ -35,7 +39,7 @@ export function ResultsScreen({ result, loading, error, form, onEdit, onPick, on
   const domain = b * 1.45;
   const pct = (v: number) => Math.max(0, Math.min(100, (v / domain) * 100));
 
-  if (loading) return <Centered>Finding the closest matches…</Centered>;
+  if (loading) return <LoadingResults />;
   if (error) return <ErrorBox msg={error} onRetry={onRetry} />;
   if (!result) return <Centered>Set your budget, then tap “See results”.</Centered>;
 
@@ -179,6 +183,10 @@ function HeroPick({ p, price, budget, channel, pct, onClick }: {
             <span key={i} style={st("font-size:12.5px; color:#41464d; background:rgba(15,25,35,.055); padding:7px 13px; border-radius:99px;")}>{axisLabel(s.axis)} {s.score}</span>
           ))}
         </div>
+
+        {p.smart_verdict && (
+          <p style={st("margin:15px 0 0; font-size:13.5px; color:#41464d; line-height:1.6; text-wrap:pretty;")}>{p.smart_verdict}</p>
+        )}
       </div>
 
       <div style={st("display:flex; flex-direction:column; justify-content:flex-end;")}>
@@ -218,6 +226,62 @@ function StretchCard({ s, budget, onClick }: { s: Stretch; budget: number; onCli
       </div>
       <svg width="9" height="15" viewBox="0 0 9 15" fill="none" style={st("flex-shrink:0;")}><path d="M1.5 1.5l6 6-6 6" stroke="#b6bcc4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
     </button>
+  );
+}
+
+/* ---------- loading ---------- */
+function LoadingResults() {
+  const lines = ["loading_l1", "loading_l2", "loading_l3", "loading_l4"];
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const id = window.setInterval(() => setI((x) => (x + 1) % lines.length), 1600);
+    return () => window.clearInterval(id);
+  }, []);
+  const block = (w: string, h = "13px") =>
+    st(`width:${w}; height:${h}; border-radius:7px; background:rgba(15,25,35,.07); animation:kpulse 1.4s ease-in-out infinite;`);
+  return (
+    <div style={st("max-width:860px; margin:0 auto; animation:kfade .4s cubic-bezier(.2,.7,.2,1) both;")}>
+      <style>{`@keyframes kpulse{0%,100%{opacity:.5}50%{opacity:1}}@keyframes kspin{to{transform:rotate(360deg)}}`}</style>
+
+      {/* live status */}
+      <div style={st("display:flex; align-items:center; gap:14px; margin-top:clamp(12px,3vh,34px); padding:17px 20px; border-radius:18px; background:var(--acsoft);")}>
+        <span style={st("width:22px; height:22px; border-radius:50%; border:2.5px solid var(--acsoft2); border-top-color:var(--ac); animation:kspin .8s linear infinite; flex-shrink:0;")} />
+        <div style={st("min-width:0;")}>
+          <div style={st("font-size:14.5px; font-weight:600; color:#2c3036;")}>{t("finding_picks")}</div>
+          <div key={i} style={st("font-size:13px; color:#5c626a; margin-top:2px; animation:kfade .4s ease both;")}>{t(lines[i])}</div>
+        </div>
+      </div>
+
+      {/* skeleton hero */}
+      <div style={st("background:rgba(255,255,255,.85); border-radius:26px; padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 16px 40px rgba(15,25,35,.07); margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:24px;")}>
+        <div>
+          <div style={st("display:flex; gap:15px;")}>
+            <div style={block("72px", "96px")} />
+            <div style={st("flex:1; display:flex; flex-direction:column; gap:9px;")}>
+              <div style={block("45%")} /><div style={block("75%", "22px")} /><div style={block("60%")} />
+            </div>
+          </div>
+          <div style={st("display:flex; gap:8px; margin-top:22px;")}>
+            <div style={block("80px", "30px")} /><div style={block("80px", "30px")} /><div style={block("80px", "30px")} />
+          </div>
+        </div>
+        <div style={st("display:flex; flex-direction:column; gap:12px; justify-content:flex-end;")}>
+          <div style={block("100%", "60px")} /><div style={block("100%", "48px")} />
+        </div>
+      </div>
+
+      {/* skeleton rows */}
+      <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:11px; margin-top:14px;")}>
+        {[0, 1, 2].map((k) => (
+          <div key={k} style={st("display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:19px; background:rgba(255,255,255,.7);")}>
+            <div style={block("40px", "53px")} />
+            <div style={st("flex:1; display:flex; flex-direction:column; gap:7px;")}><div style={block("70%")} /><div style={block("40%")} /></div>
+          </div>
+        ))}
+      </div>
+
+      <p style={st("text-align:center; margin:22px 0 0; font-size:12px; color:#9a9da4; line-height:1.5;")}>{t("takes_a_moment")}</p>
+    </div>
   );
 }
 

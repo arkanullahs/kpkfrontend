@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { api, type Archetype, type Meta, type PhoneDetail, type RecommendResp, type RecParams } from "./api";
+import { api, type Archetype, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
 import { accentVars, st, type Accent } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
 import { AskScreen } from "./components/AskScreen";
@@ -59,6 +59,7 @@ export default function App() {
   const [matchCount, setMatchCount] = useState<number | null>(null);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [pickHint, setPickHint] = useState<Pick | null>(null);
   const [detail, setDetail] = useState<PhoneDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState<string | null>(null);
@@ -106,6 +107,9 @@ export default function App() {
   const openDetail = useCallback(async (id: string) => {
     setScreen("detail");
     setSelectedId(id);
+    // instant hero/scores/verdict from the result pick while the full
+    // DB-backed detail (specs, offers, owner voices) loads behind it
+    setPickHint(result?.picks.find((p) => p.id === id) ?? null);
     window.scrollTo({ top: 0 });
     setDetail(null);
     setDetailLoading(true);
@@ -117,7 +121,7 @@ export default function App() {
     } finally {
       setDetailLoading(false);
     }
-  }, []);
+  }, [result]);
 
   const goAsk = () => { setScreen("ask"); window.scrollTo({ top: 0 }); };
   const goResults = () => { setScreen("results"); window.scrollTo({ top: 0 }); };
@@ -184,7 +188,7 @@ export default function App() {
         )}
         {screen === "detail" && (
           <DetailScreen
-            detail={detail} loading={detailLoading} error={detailError}
+            detail={detail} hint={pickHint} loading={detailLoading} error={detailError}
             budget={form.budget} channel={form.channel} onBack={goResults}
             onRetry={() => selectedId && openDetail(selectedId)}
           />
