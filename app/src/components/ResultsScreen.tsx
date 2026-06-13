@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { axisLabel, channelStyle, fitOf, headlinePhrase, isUnofficialPrice, st, taka, verdictMeta } from "../theme";
+import { t } from "../i18n";
 import { PhonePhoto } from "./PhonePhoto";
 import type { Pick, RecommendResp, Stretch } from "../api";
 import type { Form } from "../App";
@@ -20,11 +21,11 @@ function effPrice(p: Pick, channel: Form["channel"]): number | null {
   return p.best_price;
 }
 
-const CONF_LABEL: Record<string, { t: string; c: string }> = {
-  strong: { t: "top tier", c: "#0a7d57" },
-  good: { t: "solid match", c: "#1c4eae" },
-  backup: { t: "backup option", c: "#a8761a" },
-  fallback: { t: "closest available", c: "#a8761a" },
+const CONF_COLOR: Record<string, string> = {
+  strong: "#0a7d57", good: "#1c4eae", backup: "#a8761a", fallback: "#a8761a",
+};
+const CONF_KEY: Record<string, string> = {
+  strong: "conf_strong", good: "conf_good", backup: "conf_backup", fallback: "conf_backup",
 };
 
 export function ResultsScreen({ result, loading, error, form, onEdit, onPick, onRetry }: Props) {
@@ -46,9 +47,9 @@ export function ResultsScreen({ result, loading, error, form, onEdit, onPick, on
   // hide the form's channel chip when the trait text set its own channel —
   // the server-side mapping is what actually ran
   const channelFromTraits = (meta.mapped_from_traits || "").includes("channel=");
-  const channelLabel = channelFromTraits ? "" : form.channel === "any" ? "any channel" : form.channel === "official" ? "official only" : "unofficial only";
+  const channelLabel = channelFromTraits ? "" : form.channel === "any" ? t("any_channel") : form.channel === "official" ? t("official_only") : t("unofficial_only");
   const querySummary = [taka(b), meta.label || form.archetype, channelLabel].filter(Boolean) as string[];
-  if (meta.mapped_from_traits) querySummary.push(`understood: ${meta.mapped_from_traits}`);
+  if (meta.mapped_from_traits) querySummary.push(`${t("understood")}: ${meta.mapped_from_traits}`);
   const reasoning = (result.top_reasoning || []).join(" ");
 
   const first = picks[0];
@@ -60,13 +61,13 @@ export function ResultsScreen({ result, loading, error, form, onEdit, onPick, on
       <div style={st("display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:clamp(12px,3vh,34px);")}>
         <div>
           <h1 style={st("margin:0; font-size:clamp(30px,4.4vw,44px); font-weight:600; letter-spacing:-1.2px; line-height:1.1;")}>
-            {picks.length} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd);")}>top picks</span>
+            {picks.length} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd);")}>{t("top_picks")}</span>
           </h1>
           <div style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:13px;")}>
             {querySummary.map((q, i) => (
               <span key={i} style={st("font-size:12.5px; font-weight:600; color:#565b63; background:rgba(255,255,255,.75); border:.5px solid rgba(15,25,35,.07); padding:6px 13px; border-radius:99px;")}>{q}</span>
             ))}
-            <button onClick={onEdit} style={st("font-size:12.5px; font-weight:700; color:var(--acd); background:var(--acsoft); border:none; padding:6px 14px; border-radius:99px; cursor:pointer;")}>Edit</button>
+            <button onClick={onEdit} style={st("font-size:12.5px; font-weight:700; color:var(--acd); background:var(--acsoft); border:none; padding:6px 14px; border-radius:99px; cursor:pointer;")}>{t("edit")}</button>
           </div>
         </div>
       </div>
@@ -114,8 +115,8 @@ export function ResultsScreen({ result, loading, error, form, onEdit, onPick, on
               </div>
               <span style={st("display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; max-width:96px;")}>
                 <span style={st(`font-size:12px; font-weight:700; color:${fitColor}; text-align:right; line-height:1.35;`)}>{fit}</span>
-                {r.confidence && CONF_LABEL[r.confidence] && (
-                  <span style={st(`font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:${CONF_LABEL[r.confidence].c}; opacity:.85;`)}>{CONF_LABEL[r.confidence].t}</span>
+                {r.confidence && CONF_KEY[r.confidence] && (
+                  <span style={st(`font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:${CONF_COLOR[r.confidence]}; opacity:.85;`)}>{t(CONF_KEY[r.confidence])}</span>
                 )}
               </span>
             </button>
@@ -183,7 +184,7 @@ function HeroPick({ p, price, budget, channel, pct, onClick }: {
       <div style={st("display:flex; flex-direction:column; justify-content:flex-end;")}>
         <div style={st("padding:15px 16px; border-radius:15px; background:rgba(15,25,35,.035);")}>
           <div style={st("display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:10px;")}>
-            <span style={st("color:#80868f;")}>Budget fit</span>
+            <span style={st("color:#80868f;")}>{t("budget_fit")}</span>
             <span style={st(`font-weight:600; color:${fitColor};`)}>{fit}</span>
           </div>
           <div style={st("position:relative; height:8px;")}>
@@ -200,7 +201,7 @@ function HeroPick({ p, price, budget, channel, pct, onClick }: {
           </div>
         )}
 
-        <button onClick={onClick} style={st("width:100%; margin-top:15px; padding:15px; border-radius:15px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 14px var(--acglow), inset 0 1px 0 rgba(255,255,255,.3); font-size:14.5px; font-weight:600; color:#fff;")}>See full breakdown</button>
+        <button onClick={onClick} style={st("width:100%; margin-top:15px; padding:15px; border-radius:15px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 14px var(--acglow), inset 0 1px 0 rgba(255,255,255,.3); font-size:14.5px; font-weight:600; color:#fff;")}>{t("see_breakdown")}</button>
       </div>
     </div>
   );
@@ -211,7 +212,7 @@ function StretchCard({ s, budget, onClick }: { s: Stretch; budget: number; onCli
   return (
     <button onClick={onClick} style={st("width:100%; text-align:left; display:flex; align-items:center; gap:14px; padding:16px 18px; margin-top:12px; border-radius:19px; border:1.5px dashed rgba(15,25,35,.16); background:rgba(255,255,255,.45); cursor:pointer;")}>
       <div style={st("flex:1; min-width:0;")}>
-        <div style={st("font-size:11px; font-weight:700; color:#8a8e96; letter-spacing:1.2px; text-transform:uppercase;")}>If you stretch ↗</div>
+        <div style={st("font-size:11px; font-weight:700; color:#8a8e96; letter-spacing:1.2px; text-transform:uppercase;")}>{t("if_stretch")}</div>
         <div style={st("font-size:15.5px; font-weight:600; color:#17191d; margin-top:3px;")}>{s.brand} {s.model}</div>
         <div style={st("font-size:13px; color:#80868f; margin-top:2px;")}>{taka(s.best_price)} · {s.reason || fit}</div>
       </div>

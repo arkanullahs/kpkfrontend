@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { bnNum } from "./i18n";
 
 /* ---------- accent palette (ported verbatim from the DC mockup) ---------- */
 
@@ -62,7 +63,7 @@ export function fmt(n: number): string {
 }
 export function taka(n: number | null | undefined): string {
   if (n == null) return "—";
-  return "৳" + fmt(n);
+  return "৳" + bnNum(fmt(n));
 }
 
 /* ---------- domain label / style maps (from the DC logic) ---------- */

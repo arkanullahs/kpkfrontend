@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { AXES, axisLabel, channelStyle, fitOf, headlinePhrase, isUnofficialPrice, sevColor, st, taka, verdictMeta } from "../theme";
+import { t } from "../i18n";
 import type { Offer, OpinionProfile, PhoneDetail } from "../api";
 import type { Form } from "../App";
 import { PhonePhoto } from "./PhonePhoto";
@@ -146,7 +147,7 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
 
       {/* axes */}
       <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); margin-top:14px;")}>
-        <SectionLabel>Scores</SectionLabel>
+        <SectionLabel>{t("scores")}</SectionLabel>
         <div style={st("display:flex; flex-direction:column; gap:17px; margin-top:18px;")}>
           {AXES.map((k) => {
             const v = scores[k];
@@ -171,7 +172,7 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px; margin-top:14px;")}>
         {/* specs */}
         <Card>
-          <SectionLabel>Specs</SectionLabel>
+          <SectionLabel>{t("specs")}</SectionLabel>
           <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:15px 18px; margin-top:18px;")}>
             {specs.map((sp, i) => (
               <div key={i}>
@@ -185,7 +186,7 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
         {/* opinion */}
         {(op.llm_summary || quotes.length || op.praise_flags?.length || op.complaint_flags?.length) && (
           <Card>
-            <SectionLabel>Owner voices</SectionLabel>
+            <SectionLabel>{t("owner_voices")}</SectionLabel>
             {op.llm_summary && <p style={st("margin:15px 0 0; font-size:14px; color:#41464d; line-height:1.6; text-wrap:pretty;")}>{op.llm_summary}</p>}
             {quotes.length > 0 && (
               <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:15px;")}>
@@ -208,18 +209,18 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
         {/* offers */}
         {offers.length > 0 && (
           <Card>
-            <SectionLabel>Where to buy</SectionLabel>
+            <SectionLabel>{t("where_to_buy")}</SectionLabel>
             <div style={st("display:flex; flex-direction:column; gap:8px; margin-top:16px;")}>
               {offers.map((o, i) => <OfferRow key={i} o={o} best={o.price === bestOfferPrice} />)}
             </div>
-            <p style={st("margin:13px 0 0; font-size:11.5px; color:#9a9da4; line-height:1.5;")}>Call the shop to confirm price and stock before buying.</p>
+            <p style={st("margin:13px 0 0; font-size:11.5px; color:#9a9da4; line-height:1.5;")}>{t("confirm_price")}</p>
           </Card>
         )}
 
         {/* ownership */}
         {(bs || coo) && (
           <Card>
-            <SectionLabel>Brand &amp; ownership</SectionLabel>
+            <SectionLabel>{t("brand_ownership")}</SectionLabel>
             <div style={st("display:flex; flex-direction:column; gap:13px; margin-top:18px;")}>
               {bs && ([["BD service network", bs.bd_service], ["Update record", bs.update_record], ["Resale value", bs.resale]] as const).map(([k, v]) =>
                 v == null ? null : (
@@ -246,7 +247,7 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
         {/* who it's for */}
         {(bestFor.length > 0 || avoidIf.length > 0 || caveats.length > 0) && (
           <Card>
-            <SectionLabel>Who it's for</SectionLabel>
+            <SectionLabel>{t("who_its_for")}</SectionLabel>
             <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:16px;")}>
               {bestFor.map((t, i) => (
                 <div key={"b" + i} style={st("display:flex; gap:10px; align-items:flex-start;")}>
@@ -287,7 +288,7 @@ function OfferRow({ o, best }: { o: Offer; best: boolean }) {
         <span style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; " + channelStyle(!official))}>{official ? "OFFICIAL" : "UNOFFICIAL"}</span>
       </div>
       <span style={st("font-size:15px; font-weight:600; color:#17191d;")}>{taka(o.price)}</span>
-      {best && <span style={st("font-size:10px; font-weight:700; color:var(--acd); background:rgba(255,255,255,.85); padding:3px 9px; border-radius:99px;")}>Best price</span>}
+      {best && <span style={st("font-size:10px; font-weight:700; color:var(--acd); background:rgba(255,255,255,.85); padding:3px 9px; border-radius:99px;")}>{t("best_price")}</span>}
     </>
   );
   const style = st(`display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:14px; text-decoration:none; background:${best ? "var(--acsoft)" : "rgba(15,25,35,.035)"};`);
@@ -302,7 +303,7 @@ function Wrap({ children, onBack }: { children: ReactNode; onBack: () => void })
     <div style={st("max-width:880px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;")}>
       <button onClick={onBack} style={st("display:flex; align-items:center; gap:9px; margin-top:clamp(10px,2.5vh,28px); padding:9px 16px 9px 12px; border-radius:99px; border:none; cursor:pointer; background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(15,25,35,.06); font-size:13px; font-weight:600; color:#41464d;")}>
         <svg width="8" height="13" viewBox="0 0 9 15" fill="none"><path d="M7.5 1.5l-6 6 6 6" stroke="#41464d" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        Back to results
+        {t("back_to_results")}
       </button>
       {children}
     </div>

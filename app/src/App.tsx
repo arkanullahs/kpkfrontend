@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, type Archetype, type Meta, type PhoneDetail, type RecommendResp, type RecParams } from "./api";
 import { accentVars, st, type Accent } from "./theme";
+import { getLang, setLang, t, type Lang } from "./i18n";
 import { AskScreen } from "./components/AskScreen";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { DetailScreen } from "./components/DetailScreen";
@@ -45,6 +46,8 @@ export function toParams(f: Form, top = 5): RecParams {
 
 export default function App() {
   const accent: Accent = "cobalt";
+  const [lang, setLangState] = useState<Lang>(getLang());
+  const toggleLang = () => { const n = lang === "en" ? "bn" : "en"; setLang(n); setLangState(n); };
   const [screen, setScreen] = useState<Screen>("ask");
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
   const [meta, setMeta] = useState<Meta | null>(null);
@@ -132,13 +135,13 @@ export default function App() {
     const d = new Date(meta.last_refresh);
     if (isNaN(d.getTime())) return "live BD prices";
     const days = Math.floor((Date.now() - d.getTime()) / 86400000);
-    if (days <= 0) return "refreshed today";
-    if (days === 1) return "refreshed yesterday";
-    return `refreshed ${d.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`;
+    if (days <= 0) return t("refreshed_today");
+    if (days === 1) return t("refreshed_yesterday");
+    return `${t("refreshed_today").split(" ")[0]} ${d.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`;
   })();
 
   return (
-    <div style={{ ...st("min-height:100vh; background:#f1f0ed; color:#17191d; font-family:'Space Grotesk','Anek Bangla',system-ui,sans-serif;"), ...accentVars(accent) }}>
+    <div key={lang} style={{ ...st("min-height:100vh; background:#f1f0ed; color:#17191d; font-family:'Space Grotesk','Anek Bangla',system-ui,sans-serif;"), ...accentVars(accent) }}>
       {/* ambient orbs */}
       <div style={st("position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;")}>
         <div style={st("position:absolute; top:-180px; right:-140px; width:560px; height:560px; border-radius:50%; background:radial-gradient(circle, var(--orbA), transparent 68%);")} />
@@ -152,12 +155,16 @@ export default function App() {
           <div style={st("display:flex; align-items:center; gap:9px;")}>
             <span style={st("width:9px; height:9px; border-radius:99px; background:var(--ac); box-shadow:0 0 0 3.5px var(--acsoft); flex-shrink:0;")} />
             <span style={st("font-family:'Anek Bangla'; font-size:16px; font-weight:700; letter-spacing:-.2px; white-space:nowrap; flex-shrink:0;")}>কোন ফোন?</span>
-            <span style={st("font-size:12.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;")}>budget-first picks</span>
+            <span style={st("font-size:12.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;")}>{t("budget_first")}</span>
           </div>
           <div style={st("display:flex; align-items:center; gap:8px; font-size:12.5px; color:#84878f; white-space:nowrap; min-width:0; overflow:hidden;")}>
-            <span style={st("font-weight:600; color:#565b63; flex-shrink:0;")}>{metaStock} phones in stock</span>
+            <span style={st("font-weight:600; color:#565b63; flex-shrink:0;")}>{metaStock} {t("in_stock")}</span>
             <span style={st("width:3px; height:3px; border-radius:50%; background:#c9cbd0; flex-shrink:0;")} />
             <span style={st("overflow:hidden; text-overflow:ellipsis; min-width:0;")}>{refreshedLabel}</span>
+            <button onClick={toggleLang} title="Language"
+              style={st("flex-shrink:0; margin-left:2px; padding:4px 11px; border-radius:99px; border:.5px solid rgba(15,25,35,.12); background:rgba(255,255,255,.6); cursor:pointer; font-size:11.5px; font-weight:700; color:var(--acd); font-family:'Anek Bangla',sans-serif;")}>
+              {lang === "en" ? "বাংলা" : "EN"}
+            </button>
           </div>
         </div>
       </div>
