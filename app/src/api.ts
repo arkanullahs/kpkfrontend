@@ -35,10 +35,16 @@ export interface CostOfOwnership {
   support_years?: number; remaining_years?: number; cost_per_year?: number;
 }
 
+export interface VariantSaving {
+  variant: string; official: number; unofficial: number; pct: number;
+}
+
 export interface Pick {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null; best_price_shop?: string; best_price_url?: string;
   best_official_price: number | null; best_unofficial_price: number | null;
+  best_official_variant?: string | null; best_unofficial_variant?: string | null;
+  same_variant_saving?: VariantSaving | null;
   in_stock_shops?: number; age_years?: number;
   overall_score: number;
   confidence?: "strong" | "good" | "backup" | "fallback";
@@ -88,7 +94,7 @@ export interface Meta {
 export interface Offer {
   shop: string; price: number; official?: boolean | null;
   official_final?: string; in_stock?: boolean; url?: string | null;
-  image?: string | null;
+  image?: string | null; variant?: string | null;
 }
 
 export interface OpinionProfile {
@@ -101,6 +107,8 @@ export interface PhoneDetail {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null; best_price_shop?: string;
   best_official_price: number | null; best_unofficial_price: number | null;
+  best_official_variant?: string | null; best_unofficial_variant?: string | null;
+  same_variant_saving?: VariantSaving | null;
   official_status?: string; in_stock_shops?: number; age_years?: number;
   tags?: string[];
   specs?: Record<string, any>;

@@ -14,15 +14,19 @@ interface Props {
   onRetry: () => void;
 }
 
-/** distinct owner quotes — real aspect quotes first, then standout praise */
-function ownerQuotes(op: OpinionProfile, max = 3): string[] {
+/** distinct owner quotes — real aspect quotes first, then standout praise.
+    Quotes already shown inside a caveat box are skipped so the same sentence
+    never appears twice on one screen. */
+function ownerQuotes(op: OpinionProfile, caveatTexts: string[], max = 3): string[] {
   const out: string[] = [];
   const seen = new Set<string>();
+  const cavBlob = caveatTexts.join(" ").toLowerCase();
   const add = (s?: unknown) => {
     const t = (typeof s === "string" ? s : "").trim();
     if (!t) return;
     const norm = t.toLowerCase();
     if (seen.has(norm)) return;
+    if (norm.length >= 20 && cavBlob.includes(norm.slice(0, 60))) return;
     seen.add(norm); out.push(t);
   };
   for (const a of Object.values(op.aspects || {})) (a.quotes || []).forEach(add);
@@ -90,7 +94,7 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
   const traits = buildTraits(d.traits);
   const specs = buildSpecs(d.specs);
   const op = d.opinion_profile || {};
-  const quotes = ownerQuotes(op);
+  const quotes = ownerQuotes(op, (d.caveats || []).map((c) => c.text));
   const bestFor = (op.best_for?.length ? op.best_for : d.ai_verdict?.best_for) || [];
   const avoidIf = op.avoid_if || [];
   const caveats = d.caveats || [];
@@ -125,8 +129,12 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
             <span style={st("font-size:11px; font-weight:700; padding:4px 10px; border-radius:99px; margin-bottom:5px; " + channelStyle(un))}>{un ? "UNOFFICIAL" : "OFFICIAL"}</span>
           </div>
           <div style={st("margin-top:12px; font-size:13px; color:#80868f; line-height:1.7;")}>
-            Official <span style={st("color:#41464d; font-weight:600;")}>{taka(d.best_official_price)}</span> · Unofficial <span style={st("color:#41464d; font-weight:600;")}>{taka(d.best_unofficial_price)}</span><br />
+            Official <span style={st("color:#41464d; font-weight:600;")}>{taka(d.best_official_price)}</span>{d.best_official_variant ? ` (${d.best_official_variant})` : ""} · Unofficial <span style={st("color:#41464d; font-weight:600;")}>{taka(d.best_unofficial_price)}</span>{d.best_unofficial_variant ? ` (${d.best_unofficial_variant})` : ""}<br />
             Carried by {d.in_stock_shops ?? 0} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
+            {d.best_official_price != null && d.best_unofficial_price != null
+              && d.best_official_variant !== d.best_unofficial_variant && (
+              <><br /><span style={st("font-size:12px; color:#a8761a;")}>Note: the official and unofficial prices may be different storage variants — compare carefully.</span></>
+            )}
           </div>
         </div>
       </div>
@@ -270,7 +278,7 @@ function OfferRow({ o, best }: { o: Offer; best: boolean }) {
   const row = (
     <>
       <div style={st("flex:1; min-width:0;")}>
-        <div style={st("font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{o.shop}</div>
+        <div style={st("font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{o.shop}{o.variant ? <span style={st("font-weight:500; color:#8a8e96;")}> · {o.variant}</span> : null}</div>
         <span style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; " + channelStyle(!official))}>{official ? "OFFICIAL" : "UNOFFICIAL"}</span>
       </div>
       <span style={st("font-size:15px; font-weight:600; color:#17191d;")}>{taka(o.price)}</span>

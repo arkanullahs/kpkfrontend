@@ -134,10 +134,16 @@ function HeroPick({ p, price, budget, channel, pct, onClick }: {
   const un = isUnofficialPrice(p, price, channel);
   const { fit, fitColor } = fitOf(price ?? budget, budget);
   const cav = p.caveats && p.caveats[0];
-  const savePct = p.best_official_price != null && p.best_unofficial_price != null
-    ? Math.round((1 - p.best_unofficial_price / p.best_official_price) * 100) : 0;
-  const savingsNote = p.best_official_price != null && p.best_unofficial_price != null
-    ? `${taka(p.best_unofficial_price)} unofficial — ${savePct}% less` : null;
+  // honest savings: only quote a % when both channels sell the SAME variant;
+  // otherwise a 12/256 gray vs 16/512 official comparison inflates the gap
+  const sv = p.same_variant_saving;
+  const crossVariant = p.best_official_variant && p.best_unofficial_variant
+    && p.best_official_variant !== p.best_unofficial_variant;
+  const savingsNote = sv
+    ? `${taka(sv.unofficial)} unofficial (${sv.variant}) — ${sv.pct}% less than official`
+    : p.best_official_price != null && p.best_unofficial_price != null
+      ? `${taka(p.best_unofficial_price)} unofficial${crossVariant ? " (different variant)" : ""}`
+      : null;
 
   return (
     <div style={st("background:rgba(255,255,255,.92); border-radius:26px; padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 16px 40px rgba(15,25,35,.09); margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(18px,3vw,30px);")}>
