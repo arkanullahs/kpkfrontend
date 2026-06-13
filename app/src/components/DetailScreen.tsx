@@ -135,6 +135,11 @@ export function DetailScreen({ detail, loading, error, budget, channel, onBack, 
               && d.best_official_variant !== d.best_unofficial_variant && (
               <><br /><span style={st("font-size:12px; color:#a8761a;")}>Note: the official and unofficial prices may be different storage variants — compare carefully.</span></>
             )}
+            {d.price_trend && (d.price_trend.trend === "down" || d.price_trend.trend === "up") && (
+              <><br /><span style={st(`font-size:12px; font-weight:600; color:${d.price_trend.trend === "down" ? "#0a7d57" : "#a8761a"};`)}>
+                Price {d.price_trend.trend === "down" ? "dropped" : "rose"} {taka(Math.abs(d.price_trend.delta))} recently
+              </span></>
+            )}
           </div>
         </div>
       </div>

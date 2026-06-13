@@ -78,6 +78,7 @@ export interface RecommendResp {
     archetype_blurb: string | null; candidates: number; relaxed: boolean;
     comparing_to: string | null; disclaimer: string;
     mapped_from_traits?: string;
+    pick_logic?: string;
   };
   top_reasoning: string[] | null;
   picks: Pick[];
@@ -124,6 +125,7 @@ export interface PhoneDetail {
   offers?: Offer[];
   flags?: string[];
   price_history?: { date: string; best_price: number; official: number | null; unofficial: number | null; in_stock_shops: number }[];
+  price_trend?: { trend: "up" | "down" | "flat" | "new"; delta: number } | null;
 }
 
 export interface BrowseCard {

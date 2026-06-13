@@ -76,6 +76,11 @@ export function ResultsScreen({ result, loading, error, form, onEdit, onPick, on
           No exact matches in your band — showing the closest phones around your budget instead.
         </div>
       )}
+      {picks.length < 3 && !meta.relaxed && (
+        <div style={st("margin-top:16px; padding:11px 15px; border-radius:13px; background:rgba(192,137,42,.1); font-size:13px; color:#7a6a40; line-height:1.5;")}>
+          Only {picks.length === 1 ? "one phone" : "two phones"} genuinely fit this search — widening the budget or relaxing a filter would show more.
+        </div>
+      )}
 
       {/* reasoning */}
       {reasoning && (
