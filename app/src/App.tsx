@@ -56,6 +56,7 @@ export default function App() {
 
   const [result, setResult] = useState<RecommendResp | null>(null);
   const [recLoading, setRecLoading] = useState(false);
+  const [recReady, setRecReady] = useState(false); // data in, loader playing its finish beat
   const [recError, setRecError] = useState<string | null>(null);
   const [matchCount, setMatchCount] = useState<number | null>(null);
 
@@ -99,21 +100,35 @@ export default function App() {
   // back to Results after editing the query re-runs instead of showing stale picks
   const lastRunKey = useRef<string>("");
 
+  // keep the loader on screen at least this long so a cached/instant result
+  // doesn't flash through the staged animation; the loader then plays a short
+  // completion beat (RagProgress `ready` -> onLoaderDone) before revealing.
+  const MIN_LOADER_MS = 1000;
+
   const runRecommend = useCallback(async () => {
     const params = toParams(form, 8);
     lastRunKey.current = JSON.stringify(params);
     setScreen("results");
     window.scrollTo({ top: 0 });
     setRecLoading(true);
+    setRecReady(false);
     setRecError(null);
+    setResult(null);
+    const t0 = Date.now();
     try {
-      setResult(await api.recommend(params));
+      const r = await api.recommend(params);
+      const wait = MIN_LOADER_MS - (Date.now() - t0);
+      if (wait > 0) await new Promise((res) => setTimeout(res, wait));
+      setResult(r);
+      setRecReady(true);          // loader plays its finish, then calls onLoaderDone
     } catch (e: any) {
       setRecError(e?.message || "Could not load recommendations");
-    } finally {
-      setRecLoading(false);
+      setRecLoading(false);       // errors skip the finish beat
     }
   }, [form]);
+
+  // RagProgress finished its completion beat -> reveal the results
+  const onLoaderDone = useCallback(() => { setRecLoading(false); setRecReady(false); }, []);
 
   const openDetail = useCallback(async (id: string) => {
     setScreen("detail");
@@ -195,7 +210,7 @@ export default function App() {
         {screen === "results" && (
           <ResultsScreen
             result={result} loading={recLoading} error={recError}
-            form={form} matchCount={matchCount}
+            form={form} matchCount={matchCount} ready={recReady} onLoaderDone={onLoaderDone}
             onEdit={goAsk} onPick={openDetail} onRetry={runRecommend}
           />
         )}
@@ -209,9 +224,9 @@ export default function App() {
       </div>
 
       <Dock
-        screen={screen} matchCount={matchCount}
+        screen={screen} matchCount={matchCount} loading={recLoading}
         askStep={askStep} askLast={askStep === ASK_STEPS - 1}
-        onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend}
+        onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
       />
     </div>
   );

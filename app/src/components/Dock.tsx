@@ -5,18 +5,35 @@ import type { Screen } from "../App";
 interface Props {
   screen: Screen;
   matchCount: number | null;
+  loading: boolean;
   askStep: number;
   askLast: boolean;
   onAskNext: () => void;
   onAskBack: () => void;
   onSeeResults: () => void;
+  onHome: () => void;
 }
 
-/* One job, one action. The dock is the wizard's footer: a Back affordance and a
-   single primary button (Continue, or "See results" on the last step). It is
-   hidden once results are loading or shown — those screens carry their own
-   back/edit, and the long RAG call should not be navigable away from mid-flight. */
-export function Dock({ screen, matchCount, askStep, askLast, onAskNext, onAskBack, onSeeResults }: Props) {
+/* One job, one action. On the ask screen the dock is the wizard's footer: a Back
+   affordance and a single primary button (Continue, or "See results" last step).
+   On the results screen it offers one way home to start or tweak a search. It is
+   hidden while the RAG call is loading, so the long request can't be navigated
+   away from mid-flight; the detail screen carries its own back. */
+export function Dock({ screen, matchCount, loading, askStep, askLast, onAskNext, onAskBack, onSeeResults, onHome }: Props) {
+  // results: one clear way back to change a field or start a fresh search
+  if (screen === "results") {
+    if (loading) return null;
+    return (
+      <div style={st("position:fixed; left:0; right:0; bottom:0; z-index:80; display:flex; justify-content:center; padding:0 16px max(18px, env(safe-area-inset-bottom, 18px)); pointer-events:none;")}>
+        <button onClick={onHome}
+          style={st("pointer-events:auto; display:flex; align-items:center; gap:10px; height:54px; padding:0 26px; border-radius:20px; border:.5px solid rgba(255,255,255,.65); cursor:pointer; background:rgba(250,250,251,.62); backdrop-filter:blur(28px) saturate(190%); -webkit-backdrop-filter:blur(28px) saturate(190%); box-shadow:inset 0 1.5px 1.5px rgba(255,255,255,.95), 0 16px 40px rgba(20,24,32,.16), 0 4px 12px rgba(20,24,32,.1); font-size:15px; font-weight:700; color:var(--acd);")}>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M11 5a6.5 6.5 0 110 13 6.5 6.5 0 010-13zM15.8 15.8L21 21" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          {t("new_search")}
+        </button>
+      </div>
+    );
+  }
+
   if (screen !== "ask") return null;
 
   const label = askLast

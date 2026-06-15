@@ -12,6 +12,8 @@ interface Props {
   error: string | null;
   form: Form;
   matchCount: number | null;
+  ready: boolean;
+  onLoaderDone: () => void;
   onEdit: () => void;
   onPick: (id: string) => void;
   onRetry: () => void;
@@ -34,14 +36,14 @@ const CONF_KEY: Record<string, string> = {
   strong: "conf_strong", good: "conf_good", backup: "conf_backup", fallback: "conf_backup",
 };
 
-export function ResultsScreen({ result, loading, error, form, matchCount, onEdit, onPick, onRetry }: Props) {
+export function ResultsScreen({ result, loading, error, form, matchCount, ready, onLoaderDone, onEdit, onPick, onRetry }: Props) {
   // the server is the budget authority: a budget typed in the Bangla trait
   // text ("১৫ হাজারে") overrides the slider, and meta.budget reflects it
   const b = result?.meta.budget ?? form.budget;
   const domain = b * 1.45;
   const pct = (v: number) => Math.max(0, Math.min(100, (v / domain) * 100));
 
-  if (loading) return <RagProgress budget={b} candidates={matchCount} />;
+  if (loading) return <RagProgress budget={b} candidates={matchCount} ready={ready} onDone={onLoaderDone} />;
   if (error) return <ErrorBox msg={error} onRetry={onRetry} />;
   if (!result) return <Centered>Set your budget, then tap “See results”.</Centered>;
 

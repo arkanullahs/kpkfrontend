@@ -30,24 +30,35 @@ const STAGES: Stage[] = [
 
 const REASSURE = ["rag_reassure1", "rag_reassure2", "rag_reassure3"];
 
-export function RagProgress({ budget, candidates }: { budget: number; candidates: number | null }) {
+export function RagProgress({ budget, candidates, ready = false, onDone }:
+  { budget: number; candidates: number | null; ready?: boolean; onDone?: () => void }) {
   const [elapsed, setElapsed] = useState(0); // seconds, float
   const start = useRef(Date.now());
 
   useEffect(() => {
+    if (ready) return;                  // freeze the clock during the finish beat
     const id = window.setInterval(() => {
       setElapsed((Date.now() - start.current) / 1000);
     }, 400);
     return () => window.clearInterval(id);
-  }, []);
+  }, [ready]);
 
-  // active stage = last whose `at` threshold has passed
+  // data is in: hold the completed state briefly, then hand off to the results
+  useEffect(() => {
+    if (!ready) return;
+    const id = window.setTimeout(() => onDone?.(), 520);
+    return () => window.clearTimeout(id);
+  }, [ready, onDone]);
+
+  // active stage = last whose `at` threshold has passed; all done once ready
   let active = 0;
   for (let s = 0; s < STAGES.length; s++) if (elapsed >= STAGES[s].at) active = s;
+  if (ready) active = STAGES.length;
 
-  // eased progress: approaches but never reaches 100 (parent unmounts on done)
-  const pctBar = Math.round(96 * (1 - Math.exp(-elapsed / 19)));
-  const onLast = active === STAGES.length - 1;
+  // eased progress that approaches but never reaches 100 until the data lands,
+  // then snaps to a full bar so the reveal reads as a finish, not a cut
+  const pctBar = ready ? 100 : Math.round(96 * (1 - Math.exp(-elapsed / 19)));
+  const onLast = !ready && active === STAGES.length - 1;
   const reassure = REASSURE[Math.floor(elapsed / 4) % REASSURE.length];
   const secs = bnNum(String(Math.floor(elapsed)));
 
