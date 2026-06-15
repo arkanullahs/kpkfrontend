@@ -49,6 +49,7 @@ export default function App() {
   const [lang, setLangState] = useState<Lang>(getLang());
   const toggleLang = () => { const n = lang === "en" ? "bn" : "en"; setLang(n); setLangState(n); };
   const [screen, setScreen] = useState<Screen>("ask");
+  const [askStep, setAskStep] = useState(0); // wizard step on the ask screen
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [archetypes, setArchetypes] = useState<Archetype[]>([]);
@@ -72,13 +73,23 @@ export default function App() {
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
 
-  // live candidate count for the "See results" badge (debounced)
+  // 4-step ask wizard (budget → purpose → channel → fine-tune). Stepping the
+  // query makes giving the answer feel as considered as the answer we work for,
+  // so the RAG wait reads as care rather than a fast-in / slow-out mismatch.
+  const ASK_STEPS = 4;
+  const askNext = useCallback(() => setAskStep((s) => Math.min(s + 1, ASK_STEPS - 1)), []);
+  const askBack = useCallback(() => setAskStep((s) => Math.max(s - 1, 0)), []);
+
+  // live candidate count for the "See results" badge (debounced). Hits the
+  // lightweight /count endpoint — structured pre-filter only, no embed/LLM —
+  // so editing the form doesn't fire a full 30-60s RAG call (and burn API
+  // quota) on every keystroke just to show a match count.
   const debounceRef = useRef<number | undefined>(undefined);
   useEffect(() => {
     window.clearTimeout(debounceRef.current);
     debounceRef.current = window.setTimeout(() => {
-      api.recommend(toParams(form, 1))
-        .then((r) => setMatchCount(r.meta.candidates))
+      api.count(toParams(form))
+        .then((r) => setMatchCount(r.candidates))
         .catch(() => setMatchCount(null));
     }, 350);
     return () => window.clearTimeout(debounceRef.current);
@@ -123,7 +134,7 @@ export default function App() {
     }
   }, [result]);
 
-  const goAsk = () => { setScreen("ask"); window.scrollTo({ top: 0 }); };
+  const goAsk = () => { setScreen("ask"); setAskStep(0); window.scrollTo({ top: 0 }); };
   const goResults = () => { setScreen("results"); window.scrollTo({ top: 0 }); };
   const goScreen = (s: Screen) => {
     if (s === "results") {
@@ -145,7 +156,7 @@ export default function App() {
   })();
 
   return (
-    <div key={lang} style={{ ...st("min-height:100vh; background:#f1f0ed; color:#17191d; font-family:'Space Grotesk','Anek Bangla',system-ui,sans-serif;"), ...accentVars(accent) }}>
+    <div key={lang} style={{ ...st("min-height:100vh; background:#f1f0ed; color:#17191d; font-family:var(--f-sans);"), ...accentVars(accent) }}>
       {/* ambient orbs */}
       <div style={st("position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;")}>
         <div style={st("position:absolute; top:-180px; right:-140px; width:560px; height:560px; border-radius:50%; background:radial-gradient(circle, var(--orbA), transparent 68%);")} />
@@ -173,17 +184,19 @@ export default function App() {
         </div>
       </div>
 
-      <div style={st("position:relative; z-index:1; padding:18px clamp(16px,4vw,40px) 175px;")}>
+      <div style={st("position:relative; z-index:1; padding:18px clamp(16px,4vw,40px) 130px;")}>
         {screen === "ask" && (
           <AskScreen
             form={form} patch={patch} archetypes={archetypes}
             metaStock={metaStock} onSubmit={runRecommend} matchCount={matchCount}
+            step={askStep} totalSteps={ASK_STEPS} onNext={askNext} onBack={askBack}
           />
         )}
         {screen === "results" && (
           <ResultsScreen
             result={result} loading={recLoading} error={recError}
-            form={form} onEdit={goAsk} onPick={openDetail} onRetry={runRecommend}
+            form={form} matchCount={matchCount}
+            onEdit={goAsk} onPick={openDetail} onRetry={runRecommend}
           />
         )}
         {screen === "detail" && (
@@ -196,8 +209,9 @@ export default function App() {
       </div>
 
       <Dock
-        screen={screen} onScreen={goScreen} onAsk={goAsk}
-        onSeeResults={runRecommend} matchCount={matchCount}
+        screen={screen} matchCount={matchCount}
+        askStep={askStep} askLast={askStep === ASK_STEPS - 1}
+        onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend}
       />
     </div>
   );

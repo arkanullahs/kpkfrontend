@@ -1,7 +1,8 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { axisLabel, channelStyle, fitOf, headlinePhrase, isUnofficialPrice, st, taka, verdictMeta } from "../theme";
 import { t } from "../i18n";
 import { PhonePhoto } from "./PhonePhoto";
+import { RagProgress } from "./RagProgress";
 import type { Pick, RecommendResp, Stretch } from "../api";
 import type { Form } from "../App";
 
@@ -10,6 +11,7 @@ interface Props {
   loading: boolean;
   error: string | null;
   form: Form;
+  matchCount: number | null;
   onEdit: () => void;
   onPick: (id: string) => void;
   onRetry: () => void;
@@ -32,20 +34,20 @@ const CONF_KEY: Record<string, string> = {
   strong: "conf_strong", good: "conf_good", backup: "conf_backup", fallback: "conf_backup",
 };
 
-export function ResultsScreen({ result, loading, error, form, onEdit, onPick, onRetry }: Props) {
+export function ResultsScreen({ result, loading, error, form, matchCount, onEdit, onPick, onRetry }: Props) {
   // the server is the budget authority: a budget typed in the Bangla trait
   // text ("১৫ হাজারে") overrides the slider, and meta.budget reflects it
   const b = result?.meta.budget ?? form.budget;
   const domain = b * 1.45;
   const pct = (v: number) => Math.max(0, Math.min(100, (v / domain) * 100));
 
-  if (loading) return <LoadingResults />;
+  if (loading) return <RagProgress budget={b} candidates={matchCount} />;
   if (error) return <ErrorBox msg={error} onRetry={onRetry} />;
   if (!result) return <Centered>Set your budget, then tap “See results”.</Centered>;
 
   const { picks, stretch, meta } = result;
   if (!picks.length) {
-    return <ErrorBox msg="No phones matched — try widening the budget or channel." onRetry={onEdit} retryLabel="Edit search" />;
+    return <ErrorBox msg="No phones matched. Try widening the budget or channel." onRetry={onEdit} retryLabel="Edit search" />;
   }
 
   // hide the form's channel chip when the trait text set its own channel —
@@ -64,8 +66,8 @@ export function ResultsScreen({ result, loading, error, form, onEdit, onPick, on
     <div style={st("max-width:860px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;")}>
       <div style={st("display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:clamp(12px,3vh,34px);")}>
         <div>
-          <h1 style={st("margin:0; font-size:clamp(30px,4.4vw,44px); font-weight:600; letter-spacing:-1.2px; line-height:1.1;")}>
-            {picks.length} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd);")}>{t("top_picks")}</span>
+          <h1 style={st("font-family:var(--f-display); margin:0; font-size:clamp(30px,4.4vw,44px); font-weight:600; letter-spacing:-1.2px; line-height:1.1;")}>
+            {picks.length} <span style={st("font-family:var(--f-serif); font-style:italic; font-weight:400; color:var(--acd);")}>{t("top_picks")}</span>
           </h1>
           <div style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:13px;")}>
             {querySummary.map((q, i) => (
@@ -78,12 +80,12 @@ export function ResultsScreen({ result, loading, error, form, onEdit, onPick, on
 
       {meta.relaxed && (
         <div style={st("margin-top:16px; padding:11px 15px; border-radius:13px; background:rgba(192,137,42,.1); font-size:13px; color:#7a6a40; line-height:1.5;")}>
-          No exact matches in your band — showing the closest phones around your budget instead.
+          No exact matches in your band, so here are the closest phones around your budget.
         </div>
       )}
       {picks.length < 3 && !meta.relaxed && (
         <div style={st("margin-top:16px; padding:11px 15px; border-radius:13px; background:rgba(192,137,42,.1); font-size:13px; color:#7a6a40; line-height:1.5;")}>
-          Only {picks.length === 1 ? "one phone" : "two phones"} genuinely fit this search — widening the budget or relaxing a filter would show more.
+          Only {picks.length === 1 ? "one phone" : "two phones"} genuinely fit this search. Widening the budget or relaxing a filter would show more.
         </div>
       )}
 
@@ -150,7 +152,7 @@ function HeroPick({ p, price, budget, channel, pct, onClick }: {
   const crossVariant = p.best_official_variant && p.best_unofficial_variant
     && p.best_official_variant !== p.best_unofficial_variant;
   const savingsNote = sv
-    ? `${taka(sv.unofficial)} unofficial (${sv.variant}) — ${sv.pct}% less than official`
+    ? `${taka(sv.unofficial)} unofficial (${sv.variant}), ${sv.pct}% less than official`
     : p.best_official_price != null && p.best_unofficial_price != null
       ? `${taka(p.best_unofficial_price)} unofficial${crossVariant ? " (different variant)" : ""}`
       : null;
@@ -226,62 +228,6 @@ function StretchCard({ s, budget, onClick }: { s: Stretch; budget: number; onCli
       </div>
       <svg width="9" height="15" viewBox="0 0 9 15" fill="none" style={st("flex-shrink:0;")}><path d="M1.5 1.5l6 6-6 6" stroke="#b6bcc4" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
     </button>
-  );
-}
-
-/* ---------- loading ---------- */
-function LoadingResults() {
-  const lines = ["loading_l1", "loading_l2", "loading_l3", "loading_l4"];
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    const id = window.setInterval(() => setI((x) => (x + 1) % lines.length), 1600);
-    return () => window.clearInterval(id);
-  }, []);
-  const block = (w: string, h = "13px") =>
-    st(`width:${w}; height:${h}; border-radius:7px; background:rgba(15,25,35,.07); animation:kpulse 1.4s ease-in-out infinite;`);
-  return (
-    <div style={st("max-width:860px; margin:0 auto; animation:kfade .4s cubic-bezier(.2,.7,.2,1) both;")}>
-      <style>{`@keyframes kpulse{0%,100%{opacity:.5}50%{opacity:1}}@keyframes kspin{to{transform:rotate(360deg)}}`}</style>
-
-      {/* live status */}
-      <div style={st("display:flex; align-items:center; gap:14px; margin-top:clamp(12px,3vh,34px); padding:17px 20px; border-radius:18px; background:var(--acsoft);")}>
-        <span style={st("width:22px; height:22px; border-radius:50%; border:2.5px solid var(--acsoft2); border-top-color:var(--ac); animation:kspin .8s linear infinite; flex-shrink:0;")} />
-        <div style={st("min-width:0;")}>
-          <div style={st("font-size:14.5px; font-weight:600; color:#2c3036;")}>{t("finding_picks")}</div>
-          <div key={i} style={st("font-size:13px; color:#5c626a; margin-top:2px; animation:kfade .4s ease both;")}>{t(lines[i])}</div>
-        </div>
-      </div>
-
-      {/* skeleton hero */}
-      <div style={st("background:rgba(255,255,255,.85); border-radius:26px; padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 16px 40px rgba(15,25,35,.07); margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:24px;")}>
-        <div>
-          <div style={st("display:flex; gap:15px;")}>
-            <div style={block("72px", "96px")} />
-            <div style={st("flex:1; display:flex; flex-direction:column; gap:9px;")}>
-              <div style={block("45%")} /><div style={block("75%", "22px")} /><div style={block("60%")} />
-            </div>
-          </div>
-          <div style={st("display:flex; gap:8px; margin-top:22px;")}>
-            <div style={block("80px", "30px")} /><div style={block("80px", "30px")} /><div style={block("80px", "30px")} />
-          </div>
-        </div>
-        <div style={st("display:flex; flex-direction:column; gap:12px; justify-content:flex-end;")}>
-          <div style={block("100%", "60px")} /><div style={block("100%", "48px")} />
-        </div>
-      </div>
-
-      {/* skeleton rows */}
-      <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:11px; margin-top:14px;")}>
-        {[0, 1, 2].map((k) => (
-          <div key={k} style={st("display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:19px; background:rgba(255,255,255,.7);")}>
-            <div style={block("40px", "53px")} />
-            <div style={st("flex:1; display:flex; flex-direction:column; gap:7px;")}><div style={block("70%")} /><div style={block("40%")} /></div>
-          </div>
-        ))}
-      </div>
-
-      <p style={st("text-align:center; margin:22px 0 0; font-size:12px; color:#9a9da4; line-height:1.5;")}>{t("takes_a_moment")}</p>
-    </div>
   );
 }
 

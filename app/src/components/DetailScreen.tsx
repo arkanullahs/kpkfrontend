@@ -157,7 +157,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, channel, on
             Official <span style={st("color:#41464d; font-weight:600;")}>{taka(bestOff)}</span>{offVar ? ` (${offVar})` : ""} · Unofficial <span style={st("color:#41464d; font-weight:600;")}>{taka(bestUnoff)}</span>{unoffVar ? ` (${unoffVar})` : ""}<br />
             Carried by {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
             {bestOff != null && bestUnoff != null && offVar !== unoffVar && (
-              <><br /><span style={st("font-size:12px; color:#a8761a;")}>Note: official and unofficial prices may be different storage variants — compare carefully.</span></>
+              <><br /><span style={st("font-size:12px; color:#a8761a;")}>Note: official and unofficial prices may be different storage variants, so compare carefully.</span></>
             )}
             {d?.price_trend && (d.price_trend.trend === "down" || d.price_trend.trend === "up") && (
               <><br /><span style={st(`font-size:12px; font-weight:600; color:${d.price_trend.trend === "down" ? "#0a7d57" : "#a8761a"};`)}>
@@ -229,7 +229,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, channel, on
             {quotes.length > 0 && (
               <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:15px;")}>
                 {quotes.map((q, i) => (
-                  <div key={i} style={st("padding:13px 16px; border-radius:15px; background:var(--acsoft); font-family:'Instrument Serif','Anek Bangla',serif; font-style:italic; font-size:16px; color:#2c3036; line-height:1.5;")}>“{q}”</div>
+                  <div key={i} style={st("padding:13px 16px; border-radius:15px; background:var(--acsoft); font-family:var(--f-serif); font-style:italic; font-size:16px; color:#2c3036; line-height:1.5;")}>“{q}”</div>
                 ))}
               </div>
             )}

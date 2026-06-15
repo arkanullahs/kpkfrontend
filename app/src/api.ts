@@ -142,6 +142,9 @@ export interface BrowseCard {
 }
 export interface BrowseResp { total: number; limit: number; offset: number; items: BrowseCard[]; }
 
+/** /count — structured pre-filter only (no LLM); powers the live match badge */
+export interface CountResp { candidates: number; relaxed: boolean; }
+
 /* ---------- recommend params ---------- */
 export interface RecParams {
   budget: number;
@@ -162,6 +165,7 @@ export const api = {
   meta: () => get<Meta>("/meta"),
   archetypes: () => get<Archetype[]>("/archetypes"),
   recommend: (p: RecParams) => get<RecommendResp>("/recommend", p as any),
+  count: (p: RecParams) => get<CountResp>("/count", p as any),
   phone: (id: string) => get<PhoneDetail>("/phones/" + id.split("/").map(encodeURIComponent).join("/")),
   browse: (p: { q?: string; brand?: string; min_price?: number; max_price?: number; in_stock?: boolean; limit?: number; offset?: number }) =>
     get<BrowseResp>("/phones", p as any),

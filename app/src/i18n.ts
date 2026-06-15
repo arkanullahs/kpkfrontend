@@ -34,15 +34,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   conf_backup: { en: "backup option", bn: "বিকল্প" },
   budget_fit: { en: "Budget fit", bn: "বাজেট ফিট" },
   our_take: { en: "Our take", bn: "আমাদের মত" },
-  // loading (RAG ranking takes a few seconds — keep the user informed)
-  finding_picks: { en: "Reading the evidence & ranking…", bn: "তথ্য পড়ে র‍্যাঙ্ক করা হচ্ছে…" },
-  loading_l1: { en: "Pulling the phones in your budget", bn: "আপনার বাজেটের ফোন বাছাই করছি" },
-  loading_l2: { en: "Reading real owner reviews", bn: "আসল ব্যবহারকারীর রিভিউ পড়ছি" },
-  loading_l3: { en: "Weighing gray-import & warranty risk", bn: "গ্রে-ইম্পোর্ট ও ওয়ারেন্টি ঝুঁকি দেখছি" },
-  loading_l4: { en: "Ranking for what you care about", bn: "আপনার প্রয়োজন অনুযায়ী সাজাচ্ছি" },
+  // loading detail screen
   loading_detail: { en: "Loading full breakdown…", bn: "বিস্তারিত লোড হচ্ছে…" },
-  takes_a_moment: { en: "This takes a few seconds — we read actual reviews, not a formula.",
-                    bn: "কয়েক সেকেন্ড লাগে — আমরা ফর্মুলা নয়, আসল রিভিউ পড়ি।" },
   uses_budget: { en: "Uses your full budget", bn: "পুরো বাজেট কাজে লাগে" },
   see_breakdown: { en: "See full breakdown", bn: "বিস্তারিত দেখুন" },
   if_stretch: { en: "If you stretch ↗", bn: "একটু বাড়ালে ↗" },
@@ -61,6 +54,51 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   best_price: { en: "Best price", bn: "সেরা দাম" },
   carried_by: { en: "Carried by", bn: "পাওয়া যায়" },
   shops: { en: "shops", bn: "দোকানে" },
+
+  // ---- ask wizard (stepped query so giving the answer feels as considered
+  //      as the answer we work to produce) ----
+  step: { en: "Step", bn: "ধাপ" },
+  of: { en: "of", bn: "/" },
+  continue: { en: "Continue", bn: "পরবর্তী" },
+  back: { en: "Back", bn: "পিছনে" },
+  q_budget_t: { en: "What's your budget?", bn: "আপনার বাজেট কত?" },
+  q_budget_s: { en: "Type the most you want to spend. We find the phone that makes the most of it.",
+                bn: "সর্বোচ্চ কত খরচ করবেন লিখুন। সেই বাজেটে সেরা ফোনটি আমরা বের করব।" },
+  q_purpose_t: { en: "What will you use it for?", bn: "কী কাজে ব্যবহার করবেন?" },
+  q_purpose_s: { en: "Pick what matters most to you. It shapes how we rank every phone.",
+                 bn: "আপনার কাছে যেটা সবচেয়ে জরুরি বাছুন। এটাই ঠিক করে আমরা কীভাবে ফোন সাজাব।" },
+  q_channel_t: { en: "Official or unofficial?", bn: "অফিসিয়াল নাকি আনঅফিসিয়াল?" },
+  q_channel_s: { en: "Gray-import phones cost less. Their warranty comes from the shop, not the brand.",
+                 bn: "গ্রে-ইম্পোর্ট ফোন কম দামি। তবে ওয়ারেন্টি ব্র্যান্ডের নয়, দোকানের।" },
+  q_tune_t: { en: "Anything else?", bn: "আর কিছু?" },
+  q_tune_s: { en: "Everything here is optional. Tune the match, or jump straight to results.",
+              bn: "এখানে সবকিছু ঐচ্ছিক। আরও নিখুঁত করুন, কিংবা সরাসরি ফলাফলে যান।" },
+  optional: { en: "optional", bn: "ঐচ্ছিক" },
+  see_n_matches: { en: "See", bn: "দেখুন" },
+
+  // ---- staged loading (the answer is slow because it is genuinely worked
+  //      for, so show the work and the wait reads as care, not lag) ----
+  rag_heading: { en: "Building your shortlist", bn: "আপনার শর্টলিস্ট তৈরি হচ্ছে" },
+  rag1_t: { en: "Filtering by your budget", bn: "বাজেট অনুযায়ী বাছাই" },
+  rag1_s: { en: "Checking every live listing in Bangladesh for phones that fit your budget.",
+            bn: "আপনার বাজেটে মানানসই ফোনের জন্য সব লাইভ লিস্টিং দেখা হচ্ছে।" },
+  rag2_t: { en: "Matching what you need", bn: "আপনার চাহিদা মেলানো হচ্ছে" },
+  rag2_s: { en: "Turning your answers into a search and finding the closest-fit phones.",
+            bn: "আপনার উত্তরকে সার্চে রূপ দিয়ে সবচেয়ে মানানসই ফোন খোঁজা হচ্ছে।" },
+  rag3_t: { en: "Reading real reviews", bn: "আসল রিভিউ পড়া হচ্ছে" },
+  rag3_s: { en: "Pulling owner reviews, specs and warranty notes for each phone.",
+            bn: "প্রতিটি ফোনের ব্যবহারকারীর রিভিউ, স্পেক ও ওয়ারেন্টি তথ্য আনা হচ্ছে।" },
+  rag4_t: { en: "Ranking your matches", bn: "মিলগুলো সাজানো হচ্ছে" },
+  rag4_s: { en: "An AI reads all that evidence and writes a plain, honest verdict for each one.",
+            bn: "একটি AI সব তথ্য পড়ে প্রতিটির জন্য সহজ, সৎ একটি রায় লেখে।" },
+  rag_worth: { en: "This is free and unbiased. No paid rankings, no formula, just what real owners reported.",
+               bn: "এটি ফ্রি ও নিরপেক্ষ। কোনো টাকার র‍্যাঙ্কিং বা ফর্মুলা নেই, শুধু আসল ব্যবহারকারীদের কথা।" },
+  rag_reassure1: { en: "Almost there. The model is weighing the trade-offs for you.",
+                   bn: "প্রায় শেষ। মডেল আপনার জন্য সুবিধা-অসুবিধা মেপে দেখছে।" },
+  rag_reassure2: { en: "Still reading reviews so you don't have to.",
+                   bn: "রিভিউ পড়া চলছে, যাতে আপনাকে পড়তে না হয়।" },
+  rag_reassure3: { en: "Good answers take a few seconds. Thanks for waiting.",
+                   bn: "ভালো উত্তরে কয়েক সেকেন্ড লাগে। অপেক্ষার জন্য ধন্যবাদ।" },
 };
 
 const BN_DIGITS = "০১২৩৪৫৬৭৮৯";
