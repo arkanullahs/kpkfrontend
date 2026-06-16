@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { api, type Archetype, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
 import { accentVars, st, type Accent } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
@@ -68,8 +69,8 @@ export default function App() {
 
   // one-time loads
   useEffect(() => {
-    api.meta().then(setMeta).catch(() => {});
-    api.archetypes().then(setArchetypes).catch(() => {});
+    api.meta().then(setMeta).catch(() => { });
+    api.archetypes().then(setArchetypes).catch(() => { });
   }, []);
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
@@ -202,9 +203,9 @@ export default function App() {
             {meta
               ? <span style={st("font-weight:600; color:#565b63; flex-shrink:0;")}>{metaStock} {t("in_stock")}</span>
               : <span style={st("display:inline-flex; align-items:center; gap:6px; color:#84878f; flex-shrink:0;")}>
-                  <span style={st("width:11px; height:11px; border-radius:99px; border:2px solid rgba(15,25,35,.16); border-top-color:var(--ac); animation:kspin .7s linear infinite;")} />
-                  {t("prices_loading")}
-                </span>}
+                <span style={st("width:11px; height:11px; border-radius:99px; border:2px solid rgba(15,25,35,.16); border-top-color:var(--ac); animation:kspin .7s linear infinite;")} />
+                {t("prices_loading")}
+              </span>}
             <button onClick={toggleLang} title="Language" className="k-press"
               style={st("flex-shrink:0; margin-left:2px; padding:4px 11px; border-radius:99px; border:.5px solid rgba(15,25,35,.12); background:rgba(255,255,255,.6); cursor:pointer; font-size:11.5px; font-weight:700; color:var(--acd); font-family:'Anek Bangla',sans-serif;")}>
               {lang === "en" ? "বাংলা" : "EN"}
@@ -242,8 +243,7 @@ export default function App() {
         askStep={askStep} askLast={askStep === ASK_STEPS - 1}
         onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
       />
-
-      {showNotice && <ResultsNotice onClose={dismissNotice} />}
+      <Analytics />
     </div>
   );
 }
