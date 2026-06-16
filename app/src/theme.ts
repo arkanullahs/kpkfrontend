@@ -90,39 +90,47 @@ export function verdictMeta(v: string | null | undefined): VerdictMeta {
   const M: Record<string, VerdictMeta> = {
     buy: { label: "Top pick", c: "#0a7d57", bg: "rgba(10,157,106,.12)" },
     consider: { label: "Worth a look", c: "#a8761a", bg: "rgba(192,137,42,.14)" },
-    avoid: { label: "Avoid", c: "#c4503c", bg: "rgba(196,80,60,.12)" },
+    avoid: { label: "Has trade-offs", c: "#c4503c", bg: "rgba(196,80,60,.12)" },
   };
   return M[v || ""] || M.consider;
+}
+
+/** Badge for OUR top recommendation. It is the #1 we picked, so it never reads
+    as a lukewarm "worth a look" — confidence only tunes how strongly we say it. */
+export function topPickBadge(confidence: string | null | undefined): VerdictMeta {
+  const c = (confidence || "").toLowerCase();
+  if (c === "low" || c === "unranked")
+    return { label: "Closest match", c: "var(--acd)", bg: "var(--acsoft)" };
+  if (c === "medium")
+    return { label: "Best match", c: "#0a7d57", bg: "rgba(10,157,106,.12)" };
+  return { label: "Our top pick", c: "#0a7d57", bg: "rgba(10,157,106,.12)" };
 }
 
 export function sevColor(s: string | undefined): string {
   return ({ low: "#a8761a", med: "#c47a1e", high: "#c4503c" } as Record<string, string>)[s || ""] || "#a8761a";
 }
 
-export function channelStyle(unofficial: boolean): string {
-  return unofficial
-    ? "color:#a8761a; background:rgba(192,137,42,.13);"
-    : "color:#0a7d57; background:rgba(10,157,106,.12);";
-}
-
-/** Is the displayed price an unofficial (gray) one? Matches the price against
-    the phone's official/unofficial bests — best_price alone is just the
-    cheapest offer, which is usually the gray one. */
-export function isUnofficialPrice(
-  p: { best_official_price?: number | null; best_unofficial_price?: number | null },
-  price: number | null,
-  channel: "any" | "official" | "unofficial",
-): boolean {
-  if (channel === "unofficial") return true;
-  if (channel === "official") return false;
-  if (p.best_official_price == null && p.best_unofficial_price != null) return true;
-  return price != null && price === p.best_unofficial_price && price !== p.best_official_price;
-}
+/** Soft "maybe official" chip — used only when GadgetGear carries the phone,
+    the single BD shop we trust as an official channel. */
+export const MAYBE_OFFICIAL_STYLE = "color:#0a7d57; background:rgba(10,157,106,.1);";
 
 export interface Fit { fit: string; fitColor: string; }
+/** Budget fit, framed so that USING the budget is the win and leaving money on
+    the table is neutral-at-best — never the green "you saved!" that nudges
+    buyers toward a weaker, cheaper phone. */
 export function fitOf(price: number, budget: number): Fit {
   const ratio = price / budget;
-  if (ratio >= 0.92 && ratio <= 1.12) return { fit: "Uses your full budget", fitColor: "var(--acd)" };
-  if (ratio < 0.92) return { fit: "Saves you " + taka(budget - price), fitColor: "#0a7d57" };
-  return { fit: Math.round((ratio - 1) * 100) + "% over budget", fitColor: "#a8761a" };
+  if (ratio >= 0.9 && ratio <= 1.12) return { fit: "Uses your full budget", fitColor: "var(--acd)" };
+  if (ratio < 0.9) return { fit: taka(budget - price) + " under budget", fitColor: "#80868f" };
+  return { fit: taka(price - budget) + " over budget", fitColor: "#a8761a" };
+}
+
+/** Estimated value-retention curve from a brand's BD resale reputation (1-10).
+    NOT a market quote — a reputation-based estimate, labelled as such in the UI.
+    Returns % of today's price retained at year 0..3. Higher resale score → a
+    flatter curve (holds value); a weak brand sheds value fast. */
+export function retentionCurve(resale: number): number[] {
+  const r = Math.max(1, Math.min(10, resale));
+  const yearlyDrop = 0.40 - 0.025 * r;        // resale 10 → 15%/yr, resale 2 → 35%/yr
+  return [0, 1, 2, 3].map((y) => Math.round(100 * Math.pow(1 - yearlyDrop, y)));
 }

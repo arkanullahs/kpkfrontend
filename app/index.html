@@ -26,6 +26,37 @@
     .ktrait::placeholder, .kbudget::placeholder { color: #b4b8bf; }
     @keyframes kfade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
     @keyframes kpop { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes krise { from { opacity: 0; transform: translateY(13px); } to { opacity: 1; transform: none; } }
+
+    /* interaction layer — the inline styles set the look, these add the feel.
+       Pressable elements lift on hover, depress on click, and brighten if they
+       carry a gradient. Keeps the whole app feeling alive without per-component
+       hover state. */
+    .k-press { transition: transform .16s cubic-bezier(.2,.7,.2,1), box-shadow .2s ease, filter .16s ease; will-change: transform; }
+    @media (hover: hover) {
+      .k-press:hover { transform: translateY(-2px); }
+      .k-lift:hover { box-shadow: 0 16px 38px rgba(15,25,35,.14) !important; }
+      .k-glow:hover { filter: brightness(1.05) saturate(1.03); }
+    }
+    .k-press:active { transform: translateY(0) scale(.99); transition-duration: .05s; }
+
+    /* staggered entrance for a list of cards */
+    .k-stagger > * { animation: krise .5s cubic-bezier(.2,.7,.2,1) both; }
+    .k-stagger > *:nth-child(1){animation-delay:.02s}
+    .k-stagger > *:nth-child(2){animation-delay:.07s}
+    .k-stagger > *:nth-child(3){animation-delay:.12s}
+    .k-stagger > *:nth-child(4){animation-delay:.17s}
+    .k-stagger > *:nth-child(5){animation-delay:.22s}
+    .k-stagger > *:nth-child(6){animation-delay:.27s}
+    .k-stagger > *:nth-child(7){animation-delay:.32s}
+
+    /* keyboard accessibility — visible focus ring that respects the accent */
+    :focus { outline: none; }
+    :focus-visible { outline: 2.5px solid #2563d9; outline-offset: 3px; border-radius: 8px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
   </style>
 </head>
 <body>

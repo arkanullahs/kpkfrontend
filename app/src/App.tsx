@@ -11,8 +11,7 @@ export type Screen = "ask" | "results" | "detail";
 
 export interface Form {
   budget: number;
-  archetype: string;
-  channel: "any" | "official" | "unofficial";
+  archetypes: string[];          // multi-select: the buyer can pick several needs
   platform: "any" | "android" | "ios";
   osStyle: "any" | "clean" | "feature";
   includeCn: boolean;
@@ -22,7 +21,7 @@ export interface Form {
 }
 
 const DEFAULT_FORM: Form = {
-  budget: 95000, archetype: "photographer", channel: "any", platform: "any",
+  budget: 95000, archetypes: ["photographer"], platform: "any",
   osStyle: "any", includeCn: false, excludeBrands: [], currentPhone: "", traitText: "",
 };
 
@@ -32,10 +31,10 @@ export function toParams(f: Form, top = 5): RecParams {
   // NL trait text takes over (server maps it to archetype/priorities/filters)
   if (f.traitText.trim()) {
     p.traits = f.traitText.trim();
-  } else if (f.archetype) {
-    p.archetype = f.archetype;
+  } else if (f.archetypes.length) {
+    // multiple selected needs merge server-side (engine.resolve_intent)
+    p.archetype = f.archetypes.join(",");
   }
-  if (f.channel !== "any") p.channel = f.channel;
   if (f.platform !== "any") p.platform = f.platform;
   if (f.osStyle !== "any") p.os_style = f.osStyle;
   if (f.includeCn) p.include_cn = true;
@@ -74,10 +73,12 @@ export default function App() {
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
 
-  // 4-step ask wizard (budget → purpose → channel → fine-tune). Stepping the
-  // query makes giving the answer feel as considered as the answer we work for,
-  // so the RAG wait reads as care rather than a fast-in / slow-out mismatch.
-  const ASK_STEPS = 4;
+  // 3-step ask wizard (budget → purpose → fine-tune). Stepping the query makes
+  // giving the answer feel as considered as the answer we work for, so the RAG
+  // wait reads as care rather than a fast-in / slow-out mismatch. (The old
+  // official/unofficial step is gone — those flags proved too unreliable to ask
+  // buyers to choose on.)
+  const ASK_STEPS = 3;
   const askNext = useCallback(() => setAskStep((s) => Math.min(s + 1, ASK_STEPS - 1)), []);
   const askBack = useCallback(() => setAskStep((s) => Math.max(s - 1, 0)), []);
 
@@ -106,7 +107,7 @@ export default function App() {
   const MIN_LOADER_MS = 1000;
 
   const runRecommend = useCallback(async () => {
-    const params = toParams(form, 8);
+    const params = toParams(form, 5);
     lastRunKey.current = JSON.stringify(params);
     setScreen("results");
     window.scrollTo({ top: 0 });
@@ -153,7 +154,7 @@ export default function App() {
   const goResults = () => { setScreen("results"); window.scrollTo({ top: 0 }); };
   const goScreen = (s: Screen) => {
     if (s === "results") {
-      const stale = lastRunKey.current !== JSON.stringify(toParams(form, 8));
+      const stale = lastRunKey.current !== JSON.stringify(toParams(form, 5));
       if (!recLoading && (!result || stale)) { runRecommend(); return; }
     }
     setScreen(s); window.scrollTo({ top: 0 });
@@ -191,7 +192,7 @@ export default function App() {
             <span style={st("font-weight:600; color:#565b63; flex-shrink:0;")}>{metaStock} {t("in_stock")}</span>
             <span style={st("width:3px; height:3px; border-radius:50%; background:#c9cbd0; flex-shrink:0;")} />
             <span style={st("overflow:hidden; text-overflow:ellipsis; min-width:0;")}>{refreshedLabel}</span>
-            <button onClick={toggleLang} title="Language"
+            <button onClick={toggleLang} title="Language" className="k-press"
               style={st("flex-shrink:0; margin-left:2px; padding:4px 11px; border-radius:99px; border:.5px solid rgba(15,25,35,.12); background:rgba(255,255,255,.6); cursor:pointer; font-size:11.5px; font-weight:700; color:var(--acd); font-family:'Anek Bangla',sans-serif;")}>
               {lang === "en" ? "বাংলা" : "EN"}
             </button>
@@ -217,7 +218,7 @@ export default function App() {
         {screen === "detail" && (
           <DetailScreen
             detail={detail} hint={pickHint} loading={detailLoading} error={detailError}
-            budget={form.budget} channel={form.channel} onBack={goResults}
+            budget={form.budget} onBack={goResults}
             onRetry={() => selectedId && openDetail(selectedId)}
           />
         )}

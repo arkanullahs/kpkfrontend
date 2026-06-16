@@ -55,6 +55,40 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   carried_by: { en: "Carried by", bn: "পাওয়া যায়" },
   shops: { en: "shops", bn: "দোকানে" },
 
+  // ---- official signal (GadgetGear is the one shop we trust as official) ----
+  maybe_official: { en: "Maybe official", bn: "অফিসিয়াল হতে পারে" },
+  gng_note: { en: "GadgetGear — the one seller we trust as official — lists it at this price.",
+              bn: "গ্যাজেটগিয়ার — আমরা যে একমাত্র অফিসিয়াল বিক্রেতা মানি — এই দামে রেখেছে।" },
+  // ---- results: stretch ----
+  worth_stretch: { en: "Worth the stretch", bn: "একটু বাড়ালেই মূল্যবান" },
+  // ---- current-phone comparison ----
+  upgrade: { en: "Upgrade", bn: "আপগ্রেড" },
+  downgrade: { en: "Downgrade", bn: "ডাউনগ্রেড" },
+  sidegrade: { en: "Sidegrade", bn: "একই মানের" },
+  vs_your: { en: "Compared to your", bn: "আপনার ফোনের তুলনায়" },
+  your_phone: { en: "Your phone", bn: "আপনার ফোন" },
+  live_from_gng: { en: "Live from GadgetGear — not in our database", bn: "গ্যাজেটগিয়ার থেকে লাইভ — আমাদের ডেটাবেসে নেই" },
+  pricier: { en: "pricier", bn: "বেশি দামি" },
+  cheaper: { en: "cheaper", bn: "সস্তা" },
+  // ---- detail: who it's for ----
+  great_for: { en: "Great for", bn: "যাদের জন্য দারুণ" },
+  think_twice: { en: "Think twice if", bn: "ভেবে দেখুন যদি" },
+  owners_flag: { en: "Owners flag", bn: "ব্যবহারকারীরা যা বলেন" },
+  // ---- detail: value retention graph ----
+  value_retention: { en: "Holds its value?", bn: "দাম ধরে রাখে?" },
+  holds_better: { en: "Holds value better than most", bn: "অধিকাংশের চেয়ে ভালো দাম ধরে রাখে" },
+  holds_worse: { en: "Loses value faster than most", bn: "অধিকাংশের চেয়ে দ্রুত দাম হারায়" },
+  holds_typical: { en: "Holds value about average", bn: "গড়পড়তা দাম ধরে রাখে" },
+  est_resale_left: { en: "Estimated resale value left:", bn: "আনুমানিক রিসেল মূল্য থাকবে:" },
+  after_3y: { en: "after 3 years", bn: "৩ বছর পরে" },
+  typical_phone: { en: "Typical phone", bn: "সাধারণ ফোন" },
+  updates: { en: "Updates", bn: "আপডেট" },
+  retention_disclaimer: { en: "Estimate based on the brand's resale reputation in Bangladesh — a guide, not a market quote.",
+                          bn: "ব্র্যান্ডের রিসেল সুনামের ভিত্তিতে আনুমানিক — দিকনির্দেশনা মাত্র, বাজারদর নয়।" },
+  // ---- detail: where to buy warning ----
+  price_warning: { en: "These are prices listed on shop websites. The real in-store price in Bangladesh is often different — sometimes by a lot. Always call or visit to confirm before you buy.",
+                   bn: "এগুলো দোকানের ওয়েবসাইটের দাম। বাস্তবে দোকানের দাম প্রায়ই আলাদা — কখনো অনেক বেশি। কেনার আগে ফোন করে বা গিয়ে দাম নিশ্চিত করুন।" },
+
   // ---- ask wizard (stepped query so giving the answer feels as considered
   //      as the answer we work to produce) ----
   step: { en: "Step", bn: "ধাপ" },
@@ -65,8 +99,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   q_budget_s: { en: "Type the most you want to spend. We find the phone that makes the most of it.",
                 bn: "সর্বোচ্চ কত খরচ করবেন লিখুন। সেই বাজেটে সেরা ফোনটি আমরা বের করব।" },
   q_purpose_t: { en: "What will you use it for?", bn: "কী কাজে ব্যবহার করবেন?" },
-  q_purpose_s: { en: "Pick what matters most to you. It shapes how we rank every phone.",
-                 bn: "আপনার কাছে যেটা সবচেয়ে জরুরি বাছুন। এটাই ঠিক করে আমরা কীভাবে ফোন সাজাব।" },
+  q_purpose_s: { en: "Pick everything that matters — choose as many as you like. It shapes how we rank every phone.",
+                 bn: "যা যা জরুরি সব বাছুন — যত খুশি বাছতে পারেন। এটাই ঠিক করে আমরা কীভাবে ফোন সাজাব।" },
   q_channel_t: { en: "Official or unofficial?", bn: "অফিসিয়াল নাকি আনঅফিসিয়াল?" },
   q_channel_s: { en: "Gray-import phones cost less. Their warranty comes from the shop, not the brand.",
                  bn: "গ্রে-ইম্পোর্ট ফোন কম দামি। তবে ওয়ারেন্টি ব্র্যান্ডের নয়, দোকানের।" },

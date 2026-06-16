@@ -57,7 +57,6 @@ function seg(sel: boolean): string {
 const STEP_COPY = [
   { tt: "q_budget_t", ss: "q_budget_s" },
   { tt: "q_purpose_t", ss: "q_purpose_s" },
-  { tt: "q_channel_t", ss: "q_channel_s" },
   { tt: "q_tune_t", ss: "q_tune_s" },
 ];
 
@@ -88,8 +87,7 @@ export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps
       <div key={step} style={st("animation:kpop .42s cubic-bezier(.2,.7,.2,1) both;")}>
         {step === 0 && <BudgetStep form={form} patch={patch} metaStock={metaStock} onNext={onNext} />}
         {step === 1 && <PurposeStep form={form} patch={patch} archKeys={archKeys} />}
-        {step === 2 && <ChannelStep form={form} patch={patch} />}
-        {step === 3 && <TuneStep form={form} patch={patch} />}
+        {step === 2 && <TuneStep form={form} patch={patch} />}
       </div>
     </div>
   );
@@ -111,7 +109,7 @@ function BudgetStep({ form, patch, metaStock, onNext }: { form: Form; patch: Pro
           onFocus={(e) => e.target.select()}
           onKeyDown={(e) => { if (e.key === "Enter" && b >= BUDGET_MIN) onNext(); }}
           style={st("flex:1; min-width:0; border:none; outline:none; background:transparent; font-family:var(--f-display); font-size:clamp(40px,8vw,72px); font-weight:400; letter-spacing:-2px; color:#17191d; line-height:1;")} />
-        <button onClick={() => b >= BUDGET_MIN && onNext()} aria-label="Continue" disabled={b < BUDGET_MIN}
+        <button onClick={() => b >= BUDGET_MIN && onNext()} aria-label="Continue" disabled={b < BUDGET_MIN} className="k-press k-glow"
           style={st(`flex-shrink:0; width:clamp(54px,9vw,64px); height:clamp(54px,9vw,64px); border-radius:50%; border:none; cursor:${b < BUDGET_MIN ? "not-allowed" : "pointer"}; display:flex; align-items:center; justify-content:center; transition:opacity .2s ease, transform .15s ease; opacity:${b < BUDGET_MIN ? 0.4 : 1}; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 8px 20px var(--acglow), inset 0 1px 0 rgba(255,255,255,.4);`)}>
           <svg width="24" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
@@ -122,7 +120,7 @@ function BudgetStep({ form, patch, metaStock, onNext }: { form: Form; patch: Pro
         {QUICK.map((q) => {
           const sel = b === q;
           return (
-            <button key={q} onClick={() => patch({ budget: q })}
+            <button key={q} onClick={() => patch({ budget: q })} className="k-press"
               style={st(`padding:10px 17px; border-radius:99px; cursor:pointer; font-size:14px; font-weight:600; transition:all .15s ease; background:${sel ? "var(--ac)" : "rgba(255,255,255,.75)"}; color:${sel ? "#fff" : "#41464d"}; border:.5px solid ${sel ? "transparent" : "rgba(15,25,35,.1)"}; box-shadow:${sel ? "0 3px 12px var(--acglow)" : "0 1px 2px rgba(15,25,35,.04)"};`)}>
               {taka(q)}
             </button>
@@ -137,65 +135,70 @@ function BudgetStep({ form, patch, metaStock, onNext }: { form: Form; patch: Pro
   );
 }
 
-/* ---------- step 2: purpose (rich cards) ---------- */
+/* ---------- step 2: purpose (rich cards, multi-select) ----------
+   Buyers rarely want exactly one thing — let them pick every need that matters.
+   "balanced" (no strong preference) is exclusive: choosing it clears the rest,
+   and choosing a specific need clears "balanced". */
 function PurposeStep({ form, patch, archKeys }: { form: Form; patch: Props["patch"]; archKeys: string[] }) {
+  const sel = form.archetypes;
+  const toggle = (key: string) => {
+    if (key === "balanced") { patch({ archetypes: ["balanced"] }); return; }
+    const next = sel.includes(key)
+      ? sel.filter((k) => k !== key)
+      : [...sel.filter((k) => k !== "balanced"), key];
+    patch({ archetypes: next.length ? next : ["balanced"] });
+  };
   return (
-    <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:11px; margin-top:32px;")}>
-      {archKeys.map((key) => {
-        const sel = key === form.archetype;
-        return (
-          <button key={key} onClick={() => patch({ archetype: key })}
-            style={st(`text-align:left; padding:17px 17px 16px; border-radius:20px; cursor:pointer; transition:all .18s cubic-bezier(.2,.7,.2,1); background:${sel ? "var(--ac)" : "rgba(255,255,255,.8)"}; border:.5px solid ${sel ? "transparent" : "rgba(15,25,35,.08)"}; box-shadow:${sel ? "0 10px 26px var(--acglow), inset 0 1px 1px rgba(255,255,255,.25)" : "0 1px 2px rgba(15,25,35,.05)"}; transform:translateY(${sel ? "-2px" : "0"});`)}>
-            <span style={st(`display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:13px; margin-bottom:12px; transition:all .18s ease; background:${sel ? "rgba(255,255,255,.2)" : "var(--acsoft)"}; color:${sel ? "#fff" : "var(--acd)"};`)}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d={ARCH_ICON[key] || ARCH_ICON.balanced} stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </span>
-            <div style={st(`font-family:var(--f-bn); font-size:16px; font-weight:600; line-height:1.2; color:${sel ? "#fff" : "#17191d"};`)}>{ARCH_BN[key] || key}</div>
-            <div style={st(`font-size:12px; line-height:1.4; margin-top:4px; color:${sel ? "rgba(255,255,255,.85)" : "#8a8e96"};`)}>{ARCH_DESC[key] || ""}</div>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ---------- step 3: channel + origin ---------- */
-function ChannelStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
-  const cnOn = form.includeCn;
-  return (
-    <div style={st("margin-top:34px;")}>
-      <div style={st("display:flex; gap:5px; padding:5px; border-radius:18px; background:rgba(252,252,253,.5); backdrop-filter:blur(22px) saturate(180%); -webkit-backdrop-filter:blur(22px) saturate(180%); border:.5px solid rgba(255,255,255,.85); box-shadow:inset 0 1px 1px rgba(255,255,255,.9), 0 6px 18px rgba(15,25,35,.06);")}>
-        {([["any", "Any"], ["official", "Official"], ["unofficial", "Unofficial"]] as const).map(([k, l]) => (
-          <button key={k} onClick={() => patch({ channel: k })} style={st(seg(form.channel === k))}>{l}</button>
-        ))}
-      </div>
-      <p style={st("margin:16px 2px 0; font-size:13.5px; color:#8a8e96; line-height:1.6;")}>
-        On average, unofficial phones cost about <span style={st("color:#17191d; font-weight:600;")}>23.5% less</span>. Their warranty comes from the shop, not the brand.
+    <>
+      <p style={st("margin:14px 2px 0; font-size:13px; font-weight:600; color:var(--acd);")}>
+        Pick all that apply{sel.length ? ` — ${sel.length} selected` : ""}.
       </p>
-
-      <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; margin-top:30px; padding:17px 19px; border-radius:18px; background:rgba(255,255,255,.7); border:.5px solid rgba(15,25,35,.06);")}>
-        <div>
-          <div style={st("font-size:14.5px; color:#2c3036; font-weight:600;")}>Show China-ROM phones</div>
-          <div style={st("font-size:12.5px; color:#9aa0a8; margin-top:1px;")}>These may lack Google services or Bangla.</div>
-        </div>
-        <button onClick={() => patch({ includeCn: !cnOn })} aria-label="Toggle China-ROM phones"
-          style={st(`position:relative; width:50px; height:30px; border-radius:99px; border:none; cursor:pointer; flex-shrink:0; transition:background .2s ease; background:${cnOn ? "var(--ac)" : "#dadde2"};`)}>
-          <span style={st(`position:absolute; top:3px; left:${cnOn ? 23 : 3}px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(15,25,35,.3); transition:left .2s ease;`)} />
-        </button>
+      <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:11px; margin-top:14px;")}>
+        {archKeys.map((key) => {
+          const on = sel.includes(key);
+          return (
+            <button key={key} onClick={() => toggle(key)} className="k-press"
+              style={st(`position:relative; text-align:left; padding:17px 17px 16px; border-radius:20px; cursor:pointer; transition:all .18s cubic-bezier(.2,.7,.2,1); background:${on ? "var(--ac)" : "rgba(255,255,255,.8)"}; border:.5px solid ${on ? "transparent" : "rgba(15,25,35,.08)"}; box-shadow:${on ? "0 10px 26px var(--acglow), inset 0 1px 1px rgba(255,255,255,.25)" : "0 1px 2px rgba(15,25,35,.05)"}; transform:translateY(${on ? "-2px" : "0"});`)}>
+              {on && (
+                <span style={st("position:absolute; top:13px; right:13px; width:19px; height:19px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center;")}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="var(--ac)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </span>
+              )}
+              <span style={st(`display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:13px; margin-bottom:12px; transition:all .18s ease; background:${on ? "rgba(255,255,255,.2)" : "var(--acsoft)"}; color:${on ? "#fff" : "var(--acd)"};`)}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d={ARCH_ICON[key] || ARCH_ICON.balanced} stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </span>
+              <div style={st(`font-family:var(--f-bn); font-size:16px; font-weight:600; line-height:1.2; color:${on ? "#fff" : "#17191d"};`)}>{ARCH_BN[key] || key}</div>
+              <div style={st(`font-size:12px; line-height:1.4; margin-top:4px; color:${on ? "rgba(255,255,255,.85)" : "#8a8e96"};`)}>{ARCH_DESC[key] || ""}</div>
+            </button>
+          );
+        })}
       </div>
-    </div>
+    </>
   );
 }
 
-/* ---------- step 4: fine-tune (all optional) ---------- */
+/* ---------- step 3: fine-tune (all optional) ---------- */
 function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
+  // framed as a "hide" switch: ON (default) keeps China-ROM gray imports out
+  const hide = !form.includeCn;
   return (
     <div style={st("display:flex; flex-direction:column; gap:26px; margin-top:34px;")}>
+      <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; padding:17px 19px; border-radius:18px; background:rgba(255,255,255,.7); border:.5px solid rgba(15,25,35,.06);")}>
+        <div>
+          <div style={st("font-size:14.5px; color:#2c3036; font-weight:600;")}>Don't show China-ROM phones</div>
+          <div style={st("font-size:12.5px; color:#9aa0a8; margin-top:1px;")}>They often lack Google services or Bangla. On by default.</div>
+        </div>
+        <button onClick={() => patch({ includeCn: !form.includeCn })} aria-label="Hide China-ROM phones"
+          style={st(`position:relative; width:50px; height:30px; border-radius:99px; border:none; cursor:pointer; flex-shrink:0; transition:background .2s ease; background:${hide ? "var(--ac)" : "#dadde2"};`)}>
+          <span style={st(`position:absolute; top:3px; left:${hide ? 23 : 3}px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(15,25,35,.3); transition:left .2s ease;`)} />
+        </button>
+      </div>
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:18px;")}>
         <div>
           <div style={st(LABEL)}>Platform</div>
           <div style={st("margin-top:10px; display:flex; gap:5px; padding:4px; border-radius:14px; background:rgba(15,25,35,.05);")}>
             {([["any", "Any"], ["android", "Android"], ["ios", "iOS"]] as const).map(([k, l]) => (
-              <button key={k} onClick={() => patch({ platform: k })} style={st(seg(form.platform === k))}>{l}</button>
+              <button key={k} onClick={() => patch({ platform: k })} className="k-press" style={st(seg(form.platform === k))}>{l}</button>
             ))}
           </div>
         </div>
@@ -203,7 +206,7 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
           <div style={st(LABEL)}>Software</div>
           <div style={st("margin-top:10px; display:flex; gap:5px; padding:4px; border-radius:14px; background:rgba(15,25,35,.05);")}>
             {([["any", "Any"], ["clean", "Clean"], ["feature", "Rich"]] as const).map(([k, l]) => (
-              <button key={k} onClick={() => patch({ osStyle: k })} style={st(seg(form.osStyle === k))}>{l}</button>
+              <button key={k} onClick={() => patch({ osStyle: k })} className="k-press" style={st(seg(form.osStyle === k))}>{l}</button>
             ))}
           </div>
         </div>
@@ -215,7 +218,7 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
           {BRANDS.map((bd) => {
             const sel = form.excludeBrands.includes(bd);
             return (
-              <button key={bd} onClick={() => patch({ excludeBrands: sel ? form.excludeBrands.filter((x) => x !== bd) : [...form.excludeBrands, bd] })}
+              <button key={bd} onClick={() => patch({ excludeBrands: sel ? form.excludeBrands.filter((x) => x !== bd) : [...form.excludeBrands, bd] })} className="k-press"
                 style={st(`padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13px; font-weight:500; transition:all .15s ease; background:${sel ? "#fde8e4" : "rgba(255,255,255,.8)"}; color:${sel ? "#c4503c" : "#5c626a"}; border:.5px solid ${sel ? "rgba(196,80,60,.3)" : "rgba(15,25,35,.1)"}; text-decoration:${sel ? "line-through" : "none"};`)}>{bd}</button>
             );
           })}

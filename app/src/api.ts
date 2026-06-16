@@ -39,12 +39,29 @@ export interface VariantSaving {
   variant: string; official: number; unofficial: number; pct: number;
 }
 
+/** GadgetGear (GadgetAndGear) listing — the one BD shop we treat as a
+    confirmed-official channel. Present only when GNG actually carries the phone. */
+export interface OfficialRef { price: number; url?: string | null; }
+
+/** Deterministic upgrade read of a pick vs the buyer's current phone. */
+export interface UpgradeRow { label: string; dir: "up" | "down" | "same"; from: string; to: string; }
+export interface Upgrade {
+  verdict: "upgrade" | "sidegrade" | "downgrade";
+  rows: UpgradeRow[]; ups: number; downs: number; current_name: string;
+}
+/** The buyer's current phone, resolved from our DB or a live GadgetGear search. */
+export interface CompareFrom {
+  name: string; found: boolean; source?: string;
+  price?: number | null; image?: string | null; url?: string | null;
+}
+
 export interface Pick {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null; best_price_shop?: string; best_price_url?: string;
   best_official_price: number | null; best_unofficial_price: number | null;
   best_official_variant?: string | null; best_unofficial_variant?: string | null;
   same_variant_saving?: VariantSaving | null;
+  official_ref?: OfficialRef | null;
   in_stock_shops?: number; age_years?: number;
   overall_score?: number;
   confidence?: "high" | "medium" | "low" | string;
@@ -66,6 +83,7 @@ export interface Pick {
   superseded_by?: unknown;
   preorder_deal?: unknown;
   niche?: boolean;
+  upgrade?: Upgrade | null;
 }
 
 export interface Stretch {
@@ -78,7 +96,7 @@ export interface RecommendResp {
   meta: {
     budget: number; label: string; archetype: string | null;
     archetype_blurb: string | null; candidates: number; relaxed: boolean;
-    comparing_to: string | null; disclaimer: string;
+    comparing_to: string | null; compare_from?: CompareFrom | null; disclaimer: string;
     mapped_from_traits?: string;
     pick_logic?: string;
     ranking?: string;
@@ -115,6 +133,7 @@ export interface PhoneDetail {
   best_official_price: number | null; best_unofficial_price: number | null;
   best_official_variant?: string | null; best_unofficial_variant?: string | null;
   same_variant_saving?: VariantSaving | null;
+  official_ref?: OfficialRef | null;
   official_status?: string; in_stock_shops?: number; age_years?: number;
   tags?: string[];
   specs?: Record<string, any>;
@@ -167,6 +186,7 @@ export const api = {
   recommend: (p: RecParams) => get<RecommendResp>("/recommend", p as any),
   count: (p: RecParams) => get<CountResp>("/count", p as any),
   phone: (id: string) => get<PhoneDetail>("/phones/" + id.split("/").map(encodeURIComponent).join("/")),
+  phoneImage: (id: string) => get<{ url: string | null }>("/phone-image/" + id.split("/").map(encodeURIComponent).join("/")),
   browse: (p: { q?: string; brand?: string; min_price?: number; max_price?: number; in_stock?: boolean; limit?: number; offset?: number }) =>
     get<BrowseResp>("/phones", p as any),
 };
