@@ -7,10 +7,12 @@ import { getLang, setLang, t, type Lang } from "./i18n";
 import { AskScreen } from "./components/AskScreen";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { DetailScreen } from "./components/DetailScreen";
+import { MethodScreen } from "./components/MethodScreen";
 import { ResultsNotice } from "./components/ResultsNotice";
+import { PriceAlert } from "./components/PriceAlert";
 import { Dock } from "./components/Dock";
 
-export type Screen = "ask" | "results" | "detail";
+export type Screen = "ask" | "results" | "detail" | "method";
 
 export interface Form {
   budget: number;
@@ -155,6 +157,7 @@ export default function App() {
 
   const goAsk = () => { setScreen("ask"); setAskStep(0); window.scrollTo({ top: 0 }); };
   const goResults = () => { setScreen("results"); window.scrollTo({ top: 0 }); };
+  const goMethod = () => { setScreen("method"); window.scrollTo({ top: 0 }); };
   const goScreen = (s: Screen) => {
     if (s === "results") {
       const stale = lastRunKey.current !== JSON.stringify(toParams(form, 5));
@@ -173,6 +176,19 @@ export default function App() {
   const dismissNotice = useCallback(() => {
     setShowNotice(false);
     try { sessionStorage.setItem("kpk_notice", "1"); } catch { /* ignore */ }
+  }, []);
+
+  // attention popup (+ sound) about shop-website vs in-store prices, the first
+  // time a phone's detail is opened this session
+  const [showPriceAlert, setShowPriceAlert] = useState(false);
+  useEffect(() => {
+    if (screen === "detail") {
+      try { if (!sessionStorage.getItem("kpk_pricealert")) setShowPriceAlert(true); } catch { /* ignore */ }
+    }
+  }, [screen, selectedId]);
+  const dismissPriceAlert = useCallback(() => {
+    setShowPriceAlert(false);
+    try { sessionStorage.setItem("kpk_pricealert", "1"); } catch { /* ignore */ }
   }, []);
 
   const metaStock = meta ? String(meta.in_stock) : "—";
@@ -241,7 +257,7 @@ export default function App() {
           <ResultsScreen
             result={result} loading={recLoading} error={recError}
             form={form} matchCount={matchCount} ready={recReady} onLoaderDone={onLoaderDone}
-            onEdit={goAsk} onPick={openDetail} onRetry={runRecommend}
+            onEdit={goAsk} onPick={openDetail} onRetry={runRecommend} onHowItWorks={goMethod}
           />
         )}
         {screen === "detail" && (
@@ -251,6 +267,7 @@ export default function App() {
             onRetry={() => selectedId && openDetail(selectedId)}
           />
         )}
+        {screen === "method" && <MethodScreen onBack={goResults} />}
       </div>
 
       <Dock
@@ -258,6 +275,7 @@ export default function App() {
         askStep={askStep} askLast={askStep === ASK_STEPS - 1}
         onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
       />
+      {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
       <Analytics />
       <SpeedInsights />
     </div>

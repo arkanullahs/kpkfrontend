@@ -18,6 +18,7 @@ interface Props {
   onEdit: () => void;
   onPick: (id: string) => void;
   onRetry: () => void;
+  onHowItWorks: () => void;
 }
 
 // RAG ranker confidence (high/medium/low); legacy strong/good/backup kept for
@@ -41,7 +42,7 @@ function MaybeOfficial({ price, small }: { price: number; small?: boolean }) {
   );
 }
 
-export function ResultsScreen({ result, loading, error, form, matchCount, ready, onLoaderDone, onEdit, onPick, onRetry }: Props) {
+export function ResultsScreen({ result, loading, error, form, matchCount, ready, onLoaderDone, onEdit, onPick, onRetry, onHowItWorks }: Props) {
   // the server is the budget authority: a budget typed in the Bangla trait
   // text ("১৫ হাজারে") overrides the slider, and meta.budget reflects it
   const b = result?.meta.budget ?? form.budget;
@@ -80,16 +81,18 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
         </div>
       </div>
 
-      {/* lively, always-on explainer: how this list was built, in plain words */}
-      <div style={st("display:flex; gap:13px; align-items:flex-start; margin-top:18px; padding:16px 18px; border-radius:18px; background:linear-gradient(110deg, var(--acsoft), rgba(255,255,255,.55)); border:.5px solid var(--acsoft2); animation:kpop .35s cubic-bezier(.2,.7,.2,1) both;")}>
-        <span style={st("display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:12px; background:var(--ac); flex-shrink:0; box-shadow:0 4px 12px var(--acglow);")}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 00-3.8 10.6c.5.5.8 1.1.8 1.8V16h6v-.6c0-.7.3-1.3.8-1.8A6 6 0 0012 3z" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      {/* teaser linking to the full "how it works" page */}
+      <button onClick={onHowItWorks} className="k-press k-lift"
+        style={st("width:100%; text-align:left; display:flex; gap:13px; align-items:center; margin-top:18px; padding:16px 18px; border-radius:18px; border:none; cursor:pointer; background:linear-gradient(110deg, var(--acsoft), rgba(255,255,255,.55)); box-shadow:inset 0 0 0 1px var(--acsoft2); animation:kpop .35s cubic-bezier(.2,.7,.2,1) both;")}>
+        <span style={st("display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px; background:var(--ac); flex-shrink:0; box-shadow:0 4px 12px var(--acglow);")}>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 00-3.8 10.6c.5.5.8 1.1.8 1.8V16h6v-.6c0-.7.3-1.3.8-1.8A6 6 0 0012 3z" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </span>
-        <div style={st("min-width:0;")}>
-          <div style={st("font-weight:700; font-size:15px; color:var(--acd);")}>{t("results_how_t")}</div>
-          <p style={st("margin:4px 0 0; font-size:14px; color:#41464d; line-height:1.55; text-wrap:pretty;")}>{t("results_how")}</p>
+        <div style={st("flex:1; min-width:0;")}>
+          <div style={st("font-weight:700; font-size:15.5px; color:var(--acd);")}>{t("results_how_t")}</div>
+          <div style={st("margin-top:2px; font-size:13.5px; font-weight:600; color:#5c626a;")}>{t("read_how")} →</div>
         </div>
-      </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; color:var(--acd);")}><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </button>
 
       {meta.ranking === "unavailable" && (
         <div style={st("display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:16px; padding:13px 16px; border-radius:14px; background:rgba(192,137,42,.12);")}>

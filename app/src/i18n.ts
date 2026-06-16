@@ -281,6 +281,10 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "Everything below is in plain words. Take your time — no rush.",
     bn: "নিচের সবকিছু সহজ ভাষায় লেখা। ধীরে দেখুন — কোনো তাড়া নেই।"
   },
+  pricealert_t: { en: "Before you trust this price", bn: "দাম বিশ্বাস করার আগে" },
+  pricealert_ok: { en: "Got it", bn: "বুঝেছি" },
+  method_steps_h: { en: "Step by step", bn: "ধাপে ধাপে" },
+  read_how: { en: "Read how it works", bn: "কীভাবে কাজ করে দেখুন" },
 };
 
 const BN_DIGITS = "০১২৩৪৫৬৭৮৯";
