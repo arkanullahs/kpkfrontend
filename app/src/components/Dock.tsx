@@ -35,6 +35,7 @@ export function Dock({ screen, matchCount, loading, askStep, askLast, onAskNext,
   }
 
   if (screen !== "ask") return null;
+  if (askStep === 0) return null; // step 0 has inline arrow in the budget input
 
   const label = askLast
     ? (matchCount != null ? `${t("see_n_matches")} ${bnNum(String(matchCount))} ${t("matches")}` : t("see_results"))
