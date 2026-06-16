@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { api, type Archetype, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
 import { accentVars, st, type Accent } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
@@ -244,6 +245,7 @@ export default function App() {
         onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
       />
       <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
