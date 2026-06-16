@@ -194,9 +194,9 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   choices_banner_t: { en: "Here's how your picks shape the results:",
                       bn: "আপনার পছন্দ যেভাবে ফলাফল ঠিক করে:" },
   // ---- site-wide explainer banners (lively, always-on, plain grammar) ----
-  results_how_t: { en: "How we picked these", bn: "আমরা যেভাবে বেছেছি" },
-  results_how: { en: "An AI read real owner reviews and full specs for every phone in your budget, then ranked them for what you asked for. It's free and unbiased — no paid rankings. Tap any phone to see the full reason.",
-                 bn: "একটি AI আপনার বাজেটের প্রতিটি ফোনের আসল ব্যবহারকারীর রিভিউ আর পুরো স্পেক পড়েছে, তারপর আপনার চাহিদা অনুযায়ী সাজিয়েছে। এটি ফ্রি ও নিরপেক্ষ — কোনো টাকার র‍্যাঙ্কিং নেই। পুরো কারণ দেখতে যেকোনো ফোনে চাপ দিন।" },
+  results_how_t: { en: "How we actually rank these", bn: "আমরা আসলে যেভাবে সাজাই" },
+  results_how: { en: "No sponsored rankings, no crude price formula. For your exact budget and needs we run a retrieval-augmented (RAG) pipeline: semantic search over a per-phone evidence file — real owner reviews, editorial verdicts, reported faults, live BD prices and full specs — and then a large language model weighs that evidence to rank every match and write each verdict. Tap a phone to read its reasoning.",
+                 bn: "কোনো স্পনসরড র‍্যাঙ্কিং নেই, সাধারণ দামের ফর্মুলাও নেই। আপনার বাজেট ও চাহিদা অনুযায়ী আমরা একটি RAG (রিট্রিভাল-অগমেন্টেড) পাইপলাইন চালাই: প্রতিটি ফোনের একটি এভিডেন্স ফাইল — আসল ব্যবহারকারীর রিভিউ, এডিটোরিয়াল রায়, রিপোর্ট করা সমস্যা, লাইভ দাম ও পুরো স্পেক — এর ওপর সিমান্টিক সার্চ চালিয়ে একটি বড় ল্যাঙ্গুয়েজ মডেল সব তথ্য যাচাই করে প্রতিটি ফোন সাজায় ও রায় লেখে। কারণ দেখতে যেকোনো ফোনে চাপ দিন।" },
   scores_help: { en: "Each score is our honest read out of 10, from real reviews and specs — higher is better.",
                  bn: "প্রতিটি স্কোর আসল রিভিউ আর স্পেক থেকে ১০-এ আমাদের সৎ মূল্যায়ন — বেশি মানে ভালো।" },
   detail_intro: { en: "Everything below is in plain words. Take your time — no rush.",
