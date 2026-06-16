@@ -1,6 +1,6 @@
 import { st, taka } from "../theme";
 import { t } from "../i18n";
-import type { CompareFrom, Upgrade } from "../api";
+import type { CompareFrom, Upgrade, UpgradeRow } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 
 interface VMeta { label: string; c: string; bg: string; arrow: string; }
@@ -8,6 +8,19 @@ export function upgradeMeta(v: string): VMeta {
   if (v === "upgrade") return { label: t("upgrade"), c: "#0a7d57", bg: "rgba(10,157,106,.12)", arrow: "↑" };
   if (v === "downgrade") return { label: t("downgrade"), c: "#c4503c", bg: "rgba(196,80,60,.12)", arrow: "↓" };
   return { label: t("sidegrade"), c: "#5c626a", bg: "rgba(15,25,35,.07)", arrow: "→" };
+}
+
+/** Loud "this has a known defect" callout — shown even on our top pick. */
+export function JustSoYouKnow({ text }: { text: string }) {
+  return (
+    <div style={st("display:flex; gap:10px; padding:12px 14px; border-radius:14px; background:rgba(196,80,60,.09); border:.5px solid rgba(196,80,60,.22);")}>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#c4503c" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <div style={st("min-width:0;")}>
+        <div style={st("font-size:10.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#c4503c; margin-bottom:2px;")}>{t("just_so_you_know")}</div>
+        <span style={st("font-size:12.5px; color:#7a3b30; line-height:1.5;")}>{text}</span>
+      </div>
+    </div>
+  );
 }
 
 const DIR_COLOR: Record<string, string> = { up: "#0a7d57", down: "#c4503c", same: "#9aa0a8" };
@@ -28,26 +41,60 @@ export function CompareCard({ up, pickName }: { up: Upgrade; pickName: string })
   const m = upgradeMeta(up.verdict);
   return (
     <div style={st(`border-radius:20px; padding:18px 20px; margin-top:12px; background:linear-gradient(110deg, ${m.bg}, rgba(255,255,255,.6)); box-shadow:inset 0 0 0 1px ${m.bg};`)}>
-      <div style={st("display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;")}>
+      <div style={st("display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;")}>
         <div style={st("font-size:13px; color:#5c626a;")}>
           {t("vs_your")} <span style={st("font-weight:700; color:#2c3036;")}>{up.current_name}</span>
           {" → "}<span style={st("font-weight:700; color:#2c3036;")}>{pickName}</span>
         </div>
-        <span style={st(`font-size:13px; font-weight:800; padding:5px 13px; border-radius:99px; color:${m.c}; background:#fff; box-shadow:0 1px 4px rgba(15,25,35,.08);`)}>{m.arrow} {m.label}</span>
+        <div style={st("display:flex; align-items:center; gap:7px;")}>
+          {up.experimental && (
+            <span style={st("font-size:9.5px; font-weight:800; letter-spacing:.6px; padding:4px 9px; border-radius:99px; color:#7a4ec2; background:rgba(122,78,194,.12);")}>⚗ {t("experimental")}</span>
+          )}
+          <span style={st(`font-size:13px; font-weight:800; padding:5px 13px; border-radius:99px; color:${m.c}; background:#fff; box-shadow:0 1px 4px rgba(15,25,35,.08);`)}>{m.arrow} {m.label}</span>
+        </div>
       </div>
       {up.rows.length > 0 && (
-        <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:9px 16px; margin-top:14px;")}>
-          {up.rows.map((r, i) => (
-            <div key={i} style={st("display:flex; align-items:center; gap:8px;")}>
-              <span style={st(`width:18px; text-align:center; font-weight:800; color:${DIR_COLOR[r.dir]};`)}>{DIR_ARROW[r.dir]}</span>
-              <span style={st("flex:1; min-width:0;")}>
-                <span style={st("font-size:12.5px; font-weight:600; color:#2c3036;")}>{r.label}</span>
-                <span style={st("display:block; font-size:11.5px; color:#80868f;")}>{r.from} → <span style={st(`color:${DIR_COLOR[r.dir]}; font-weight:600;`)}>{r.to}</span></span>
-              </span>
-            </div>
-          ))}
+        <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px 22px; margin-top:16px;")}>
+          {up.rows.map((r, i) => <CompareRow key={i} r={r} />)}
         </div>
       )}
+      {up.experimental && (
+        <p style={st("margin:14px 0 0; font-size:11px; color:#9a9da4; line-height:1.5;")}>{t("experimental_note")}</p>
+      )}
+    </div>
+  );
+}
+
+/** One axis: label + arrow, then twin bars (your phone vs the pick) scaled to
+    the larger value so the size of the jump is visible at a glance. */
+function CompareRow({ r }: { r: UpgradeRow }) {
+  const c = DIR_COLOR[r.dir];
+  const hasBars = r.fromN != null && r.toN != null && Math.max(r.fromN, r.toN) > 0;
+  return (
+    <div style={st("min-width:0;")}>
+      <div style={st("display:flex; align-items:center; justify-content:space-between; gap:8px;")}>
+        <span style={st("font-size:12.5px; font-weight:600; color:#2c3036;")}>{r.label}</span>
+        <span style={st(`font-size:13px; font-weight:800; color:${c};`)}>{DIR_ARROW[r.dir]}</span>
+      </div>
+      {hasBars ? (
+        <div style={st("margin-top:8px; display:flex; flex-direction:column; gap:5px;")}>
+          <Bar pctv={(r.fromN! / Math.max(r.fromN!, r.toN!)) * 100} label={r.from} color="#c2c6cd" valColor="#80868f" />
+          <Bar pctv={(r.toN! / Math.max(r.fromN!, r.toN!)) * 100} label={r.to} color={c} valColor={c} bold />
+        </div>
+      ) : (
+        <div style={st("margin-top:4px; font-size:11.5px; color:#80868f;")}>{r.from} → <span style={st(`color:${c}; font-weight:600;`)}>{r.to}</span></div>
+      )}
+    </div>
+  );
+}
+
+function Bar({ pctv, label, color, valColor, bold }: { pctv: number; label: string; color: string; valColor: string; bold?: boolean }) {
+  return (
+    <div style={st("display:flex; align-items:center; gap:8px;")}>
+      <div style={st("flex:1; height:7px; border-radius:99px; background:rgba(15,25,35,.06); overflow:hidden;")}>
+        <div style={st(`height:100%; width:${Math.max(4, Math.min(100, pctv))}%; border-radius:99px; background:${color}; transition:width .4s ease;`)} />
+      </div>
+      <span style={st(`font-size:11px; ${bold ? "font-weight:700;" : ""} color:${valColor}; white-space:nowrap; min-width:54px; text-align:right;`)}>{label}</span>
     </div>
   );
 }

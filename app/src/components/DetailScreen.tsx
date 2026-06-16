@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { AXES, axisLabel, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, retentionCurve, sevColor, st, taka, verdictMeta } from "../theme";
+import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, retentionCurve, st, taka, verdictMeta } from "../theme";
 import { t } from "../i18n";
 import type { Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
-import { CompareCard } from "./Compare";
+import { CompareCard, JustSoYouKnow } from "./Compare";
 
 interface Props {
   detail: PhoneDetail | null;
@@ -111,7 +111,8 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const avoidIf = op.avoid_if || [];
   const specs = buildSpecs(d?.specs);
   const bs = d?.brand_summary;
-  const offers = [...(d?.offers || [])].sort((a, b) => a.price - b.price);
+  // only real, priced listings — a price-less offer must never sort to the top
+  const offers = (d?.offers || []).filter((o) => o.price && o.price > 0).sort((a, b) => a.price - b.price);
   const bestOfferPrice = offers.length ? offers[0].price : null;
 
   return (
@@ -148,17 +149,22 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           </div>
           <div style={st("margin-top:12px; font-size:13px; color:#80868f; line-height:1.7;")}>
             Cheapest of {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
-            {officialRef && (
-              <><br /><span style={st("font-size:12px; color:#5c626a;")}>{t("gng_note")}</span></>
-            )}
             {d?.price_trend && (d.price_trend.trend === "down" || d.price_trend.trend === "up") && (
               <><br /><span style={st(`font-size:12px; font-weight:600; color:${d.price_trend.trend === "down" ? "#0a7d57" : "#a8761a"};`)}>
                 Price {d.price_trend.trend === "down" ? "dropped" : "rose"} {taka(Math.abs(d.price_trend.delta))} recently
               </span></>
             )}
           </div>
+          {officialRef && (
+            <div style={st("display:flex; gap:9px; margin-top:14px; padding:11px 13px; border-radius:13px; background:rgba(10,157,106,.08); border:.5px solid rgba(10,157,106,.18);")}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3zM9 12l2 2 4-4" stroke="#0a9d6a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span style={st("font-size:12.5px; color:#2c3036; line-height:1.55;")}>{t("official_pitch")} <b style={st("color:#0a7d57;")}>GadgetGear</b> {t("official_pitch2")} <b>{taka(officialRef.price)}</b>.</span>
+            </div>
+          )}
         </div>
       </div>
+
+      {(() => { const m = classifyCaveats(caveats).major[0]; return m ? <div style={st("margin-top:14px;")}><JustSoYouKnow text={m.text} /></div> : null; })()}
 
       {/* our take — the RAG verdict, grounded in real evidence */}
       {ourTake && (
@@ -224,7 +230,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
 
         {/* value retention (estimated from brand resale reputation) */}
         {bs?.resale != null && (
-          <Card><ValueRetention brand={brand} resale={bs.resale} updateRecord={bs.update_record ?? null} ageYears={d?.age_years ?? h?.age_years ?? null} /></Card>
+          <Card><ValueRetention brand={brand} resale={bs.resale} updateRecord={bs.update_record ?? null} ageYears={d?.age_years ?? h?.age_years ?? null} price={price} /></Card>
         )}
 
         {/* opinion */}
@@ -270,54 +276,80 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   );
 }
 
-/* ---------- who it's for — two-sided, scannable ---------- */
+/* ---------- who it's for — persona chips + classified caveats ---------- */
+const PERSONA_ICON: { re: RegExp; d: string }[] = [
+  { re: /game|gaming/, d: "M6 11h12a3 3 0 110 6H6a3 3 0 110-6zM7.5 13v2.2M6.4 14.1h2.2M16 13.4h.01M17.6 15h.01" },
+  { re: /camera|photo|shoot|picture/, d: "M4 8h3l1.5-2h7L17 8h3v10H4V8zM12 11a3 3 0 100 6 3 3 0 000-6z" },
+  { re: /video|vlog|creat|film/, d: "M3 7h11v10H3V7zM14 10.5l7-3v9l-7-3" },
+  { re: /student|study|school|exam/, d: "M12 4l10 5-10 5L2 9l10-5zM6 11v5c0 1.4 3 3 6 3s6-1.6 6-3v-5" },
+  { re: /senior|parent|elder|simple|easy|read/, d: "M12 20s-7-4.3-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.7-7 9-7 9z" },
+  { re: /value|budget|money|afford|cheap/, d: "M20.5 11.5L12.5 3.5H4v8.5l8 8 8.5-8.5zM7.5 7.5h.01" },
+  { re: /work|professional|office|business|productiv/, d: "M4 8h16v11H4V8zM9 8V6h6v2" },
+  { re: /ride|driv|deliver|battery|all-?day|endur|travel/, d: "M4 8h13v8H4zM17 11h2v2h-2M7.5 10.5v3" },
+  { re: /daily|everyday|general|balanc|reliab/, d: "M12 3v2M12 19v2M5 12H3M21 12h-2M6 6l1.4 1.4M16.6 16.6L18 18M6 18l1.4-1.4M16.6 7.4L18 6M12 8.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z" },
+];
+function personaIcon(label: string): string {
+  const l = label.toLowerCase();
+  return (PERSONA_ICON.find((p) => p.re.test(l)) || { d: "M12 8v5M12 16v.01M12 3a9 9 0 100 18 9 9 0 000-18z" }).d;
+}
+
 function WhoFor({ bestFor, avoidIf, caveats }: {
   bestFor: string[]; avoidIf: string[]; caveats: { text: string; sev?: string }[];
 }) {
+  const { major, notes } = classifyCaveats(caveats);
   return (
     <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); margin-top:14px;")}>
       <SectionLabel>{t("who_its_for")}</SectionLabel>
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:18px;")}>
         {bestFor.length > 0 && (
-          <div style={st("border-radius:18px; padding:16px 17px; background:rgba(10,157,106,.07); border:.5px solid rgba(10,157,106,.16);")}>
+          <div style={st("border-radius:18px; padding:17px 18px; background:linear-gradient(160deg, rgba(10,157,106,.1), rgba(10,157,106,.04)); border:.5px solid rgba(10,157,106,.16);")}>
             <div style={st("display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#0a7d57;")}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="#0a9d6a" strokeWidth="1.8" /><path d="M8 12.5l2.5 2.5L16 9" stroke="#0a9d6a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               {t("great_for")}
             </div>
-            <div style={st("display:flex; flex-direction:column; gap:8px; margin-top:13px;")}>
+            <div style={st("display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;")}>
               {bestFor.map((tx, i) => (
-                <div key={i} style={st("display:flex; gap:9px; align-items:flex-start;")}>
-                  <span style={st("color:#0a9d6a; font-weight:700; line-height:1.4;")}>✓</span>
-                  <span style={st("font-size:13.5px; color:#2c3036; line-height:1.4; text-transform:capitalize;")}>{tx}</span>
-                </div>
+                <span key={i} style={st("display:inline-flex; align-items:center; gap:7px; padding:8px 13px 8px 10px; border-radius:99px; background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(10,157,106,.18);")}>
+                  <span style={st("display:flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:rgba(10,157,106,.14); color:#0a8a5e; flex-shrink:0;")}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d={personaIcon(tx)} stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </span>
+                  <span style={st("font-size:13px; font-weight:600; color:#1f5e48; line-height:1.2; text-transform:capitalize;")}>{tx}</span>
+                </span>
               ))}
             </div>
           </div>
         )}
         {avoidIf.length > 0 && (
-          <div style={st("border-radius:18px; padding:16px 17px; background:rgba(192,137,42,.07); border:.5px solid rgba(192,137,42,.18);")}>
+          <div style={st("border-radius:18px; padding:17px 18px; background:linear-gradient(160deg, rgba(192,137,42,.1), rgba(192,137,42,.03)); border:.5px solid rgba(192,137,42,.18);")}>
             <div style={st("display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#a8761a;")}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="#c47a1e" strokeWidth="1.8" /><path d="M12 7.5v5.5M12 16v.5" stroke="#c47a1e" strokeWidth="2" strokeLinecap="round" /></svg>
               {t("think_twice")}
             </div>
-            <div style={st("display:flex; flex-direction:column; gap:8px; margin-top:13px;")}>
+            <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:14px;")}>
               {avoidIf.map((tx, i) => (
                 <div key={i} style={st("display:flex; gap:9px; align-items:flex-start;")}>
-                  <span style={st("color:#c47a1e; font-weight:700; line-height:1.3;")}>—</span>
-                  <span style={st("font-size:13.5px; color:#5c626a; line-height:1.4;")}>{tx}</span>
+                  <span style={st("display:flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; background:rgba(192,137,42,.14); color:#a8761a; flex-shrink:0; margin-top:1px;")}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" /></svg>
+                  </span>
+                  <span style={st("font-size:13.5px; color:#5c626a; line-height:1.45;")}>{tx}</span>
                 </div>
               ))}
             </div>
           </div>
         )}
       </div>
-      {caveats.length > 0 && (
+      {major.length > 0 && (
+        <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:14px;")}>
+          {major.map((cv, i) => <JustSoYouKnow key={i} text={cv.text} />)}
+        </div>
+      )}
+      {notes.length > 0 && (
         <>
           <div style={st("font-size:11.5px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:#a8761a; margin:20px 0 0;")}>{t("owners_flag")}</div>
           <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:9px; margin-top:11px;")}>
-            {caveats.map((cv, i) => (
+            {notes.map((cv, i) => (
               <div key={i} style={st("display:flex; gap:10px; padding:12px 14px; border-radius:14px; background:rgba(192,137,42,.08);")}>
-                <span style={st(`width:7px; height:7px; border-radius:50%; background:${sevColor(cv.sev)}; margin-top:6px; flex-shrink:0;`)} />
+                <span style={st("width:7px; height:7px; border-radius:50%; background:#a8761a; margin-top:6px; flex-shrink:0;")} />
                 <span style={st("font-size:12.5px; color:#6f5f38; line-height:1.5;")}>{cv.text}</span>
               </div>
             ))}
@@ -328,16 +360,18 @@ function WhoFor({ bestFor, avoidIf, caveats }: {
   );
 }
 
-/* ---------- value retention — estimated depreciation vs a typical phone ---------- */
-function ValueRetention({ brand, resale, updateRecord, ageYears }: {
-  brand: string; resale: number; updateRecord: number | null; ageYears: number | null;
+/* ---------- value retention — estimated depreciation + resale ৳ vs typical ---------- */
+function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
+  brand: string; resale: number; updateRecord: number | null; ageYears: number | null; price: number | null;
 }) {
   const mine = retentionCurve(resale);
   const market = retentionCurve(5);
-  const W = 300, H = 140, padL = 30, padR = 12, padT = 12, padB = 24;
+  const taTaka = (pctv: number) => price ? taka(Math.round(price * pctv / 100)) : null;
+  const W = 300, H = 150, padL = 30, padR = 14, padT = 16, padB = 24;
   const x = (yr: number) => padL + (yr / 3) * (W - padL - padR);
   const y = (pctv: number) => padT + (1 - pctv / 100) * (H - padT - padB);
   const path = (arr: number[]) => arr.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(p).toFixed(1)}`).join(" ");
+  const area = `${path(mine)} L${x(3).toFixed(1)} ${y(0).toFixed(1)} L${x(0).toFixed(1)} ${y(0).toFixed(1)} Z`;
   const yr3 = mine[3] - market[3];
   const verdict = yr3 >= 6 ? t("holds_better") : yr3 <= -6 ? t("holds_worse") : t("holds_typical");
   const verdictColor = yr3 >= 6 ? "#0a7d57" : yr3 <= -6 ? "#a8761a" : "#5c626a";
@@ -347,9 +381,18 @@ function ValueRetention({ brand, resale, updateRecord, ageYears }: {
     <>
       <SectionLabel>{t("value_retention")}</SectionLabel>
       <div style={st(`font-size:14px; font-weight:700; color:${verdictColor}; margin-top:12px;`)}>{verdict}</div>
-      <div style={st("font-size:12.5px; color:#80868f; margin-top:3px; line-height:1.5;")}>{t("est_resale_left")} <span style={st("font-weight:700; color:#2c3036;")}>~{mine[3]}%</span> {t("after_3y")}.</div>
+      <div style={st("font-size:12.5px; color:#80868f; margin-top:3px; line-height:1.5;")}>
+        {t("est_resale_left")} <span style={st("font-weight:700; color:#2c3036;")}>~{mine[3]}%</span>
+        {taTaka(mine[3]) && <> (<span style={st("font-weight:700; color:var(--acd);")}>≈ {taTaka(mine[3])}</span>)</>} {t("after_3y")}.
+      </div>
 
       <svg viewBox={`0 0 ${W} ${H}`} style={st("width:100%; margin-top:14px; overflow:visible;")}>
+        <defs>
+          <linearGradient id="vrfill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--ac)" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="var(--ac)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
         {[100, 75, 50, 25].map((g) => (
           <g key={g}>
             <line x1={padL} y1={y(g)} x2={W - padR} y2={y(g)} stroke="rgba(15,25,35,.07)" strokeWidth="1" />
@@ -359,11 +402,17 @@ function ValueRetention({ brand, resale, updateRecord, ageYears }: {
         {[0, 1, 2, 3].map((yr) => (
           <text key={yr} x={x(yr)} y={H - 6} textAnchor="middle" style={st("font-size:8px; fill:#b6bcc4;")}>{yr === 0 ? "now" : `${yr}y`}</text>
         ))}
-        {/* market typical (dashed gray) */}
+        <path d={area} fill="url(#vrfill)" />
         <path d={path(market)} fill="none" stroke="#c2c6cd" strokeWidth="1.6" strokeDasharray="3 3" strokeLinecap="round" strokeLinejoin="round" />
-        {/* this phone (accent) */}
         <path d={path(mine)} fill="none" stroke="var(--ac)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-        {mine.map((p, i) => <circle key={i} cx={x(i)} cy={y(p)} r="2.6" fill="var(--ac)" />)}
+        {/* ৳ value labels at year 1/2/3 */}
+        {[1, 2, 3].map((yr) => (
+          <g key={yr}>
+            <circle cx={x(yr)} cy={y(mine[yr])} r="2.8" fill="var(--ac)" />
+            {taTaka(mine[yr]) && <text x={x(yr)} y={y(mine[yr]) - 7} textAnchor="middle" style={st("font-size:7.5px; font-weight:700; fill:var(--acd);")}>{taTaka(mine[yr])}</text>}
+          </g>
+        ))}
+        <circle cx={x(0)} cy={y(mine[0])} r="2.8" fill="var(--ac)" />
         {ageMark != null && (
           <line x1={x(ageMark)} y1={padT} x2={x(ageMark)} y2={H - padB} stroke="#a8761a" strokeWidth="1.2" strokeDasharray="2 2" />
         )}

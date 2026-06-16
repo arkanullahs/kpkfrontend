@@ -44,14 +44,15 @@ export interface VariantSaving {
 export interface OfficialRef { price: number; url?: string | null; }
 
 /** Deterministic upgrade read of a pick vs the buyer's current phone. */
-export interface UpgradeRow { label: string; dir: "up" | "down" | "same"; from: string; to: string; }
+export interface UpgradeRow { label: string; dir: "up" | "down" | "same"; from: string; to: string; fromN?: number; toN?: number; }
 export interface Upgrade {
   verdict: "upgrade" | "sidegrade" | "downgrade";
   rows: UpgradeRow[]; ups: number; downs: number; current_name: string;
+  experimental?: boolean;
 }
-/** The buyer's current phone, resolved from our DB or a live GadgetGear search. */
+/** The buyer's current phone, resolved from our DB, live GSMArena specs, or GadgetGear. */
 export interface CompareFrom {
-  name: string; found: boolean; source?: string;
+  name: string; found: boolean; source?: string; experimental?: boolean;
   price?: number | null; image?: string | null; url?: string | null;
 }
 
@@ -180,8 +181,11 @@ export interface RecParams {
   top?: number;
 }
 
+export interface QueueStatus { processing: number; waiting: number; }
+
 export const api = {
   meta: () => get<Meta>("/meta"),
+  status: () => get<QueueStatus>("/status"),
   archetypes: () => get<Archetype[]>("/archetypes"),
   recommend: (p: RecParams) => get<RecommendResp>("/recommend", p as any),
   count: (p: RecParams) => get<CountResp>("/count", p as any),

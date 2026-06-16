@@ -110,6 +110,21 @@ export function sevColor(s: string | undefined): string {
   return ({ low: "#a8761a", med: "#c47a1e", high: "#c4503c" } as Record<string, string>)[s || ""] || "#a8761a";
 }
 
+// Gray-market / warranty-channel noise — buyers here don't care, so drop it.
+const GRAY_RE = /gray|grey|gray-?import|\bimport\b|unofficial|shop warranty|warranty.{0,12}(shop|seller)|imei|btrc|official channel/i;
+// Genuinely important hardware defects — surfaced loudly even on a top pick.
+const MAJOR_RE = /green ?line|dead pixel|burn-?in|boot ?loop|motherboard|board fail|swell|bulg|catch fire|overheat|won'?t turn on|brick/i;
+
+export interface Caveatish { text: string; sev?: string; id?: string }
+/** Split a phone's caveats into the must-see defects and the ordinary notes,
+    dropping gray-market warranty chatter entirely. */
+export function classifyCaveats(caveats?: Caveatish[] | null): { major: Caveatish[]; notes: Caveatish[] } {
+  const kept = (caveats || []).filter((c) => c && c.text && !GRAY_RE.test(c.text));
+  const major = kept.filter((c) => c.sev === "high" || MAJOR_RE.test(c.text));
+  const notes = kept.filter((c) => !major.includes(c));
+  return { major, notes };
+}
+
 /** Soft "maybe official" chip — used only when GadgetGear carries the phone,
     the single BD shop we trust as an official channel. */
 export const MAYBE_OFFICIAL_STYLE = "color:#0a7d57; background:rgba(10,157,106,.1);";

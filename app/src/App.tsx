@@ -5,6 +5,7 @@ import { getLang, setLang, t, type Lang } from "./i18n";
 import { AskScreen } from "./components/AskScreen";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { DetailScreen } from "./components/DetailScreen";
+import { ResultsNotice } from "./components/ResultsNotice";
 import { Dock } from "./components/Dock";
 
 export type Screen = "ask" | "results" | "detail";
@@ -160,15 +161,25 @@ export default function App() {
     setScreen(s); window.scrollTo({ top: 0 });
   };
 
+  // one-time "prices are a guide" notice when results first appear this session
+  const [showNotice, setShowNotice] = useState(false);
+  useEffect(() => {
+    if (screen === "results" && result && !recLoading && !recError) {
+      try { if (!sessionStorage.getItem("kpk_notice")) setShowNotice(true); } catch { /* ignore */ }
+    }
+  }, [screen, result, recLoading, recError]);
+  const dismissNotice = useCallback(() => {
+    setShowNotice(false);
+    try { sessionStorage.setItem("kpk_notice", "1"); } catch { /* ignore */ }
+  }, []);
+
   const metaStock = meta ? String(meta.in_stock) : "—";
-  const refreshedLabel = (() => {
-    if (!meta?.last_refresh) return "live BD prices";
+  // knowledge-base freshness = the day we last scraped every BD shop
+  const updatedLabel = (() => {
+    if (!meta?.last_refresh) return "";
     const d = new Date(meta.last_refresh);
-    if (isNaN(d.getTime())) return "live BD prices";
-    const days = Math.floor((Date.now() - d.getTime()) / 86400000);
-    if (days <= 0) return t("refreshed_today");
-    if (days === 1) return t("refreshed_yesterday");
-    return `${t("refreshed_today").split(" ")[0]} ${d.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`;
+    if (isNaN(d.getTime())) return "";
+    return `${t("updated_on")} ${d.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`;
   })();
 
   return (
@@ -184,14 +195,16 @@ export default function App() {
       <div style={st("position:sticky; top:0; z-index:60; display:flex; justify-content:center; padding:14px clamp(16px,4vw,40px) 6px;")}>
         <div style={st("width:100%; max-width:1020px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:10px 20px; border-radius:99px; background:rgba(252,252,253,.55); backdrop-filter:blur(26px) saturate(185%); -webkit-backdrop-filter:blur(26px) saturate(185%); border:.5px solid rgba(255,255,255,.8); box-shadow:inset 0 1px 1px rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.3), 0 10px 30px rgba(20,24,32,.09);")}>
           <div style={st("display:flex; align-items:center; gap:9px;")}>
-            <span style={st("width:9px; height:9px; border-radius:99px; background:var(--ac); box-shadow:0 0 0 3.5px var(--acsoft); flex-shrink:0;")} />
-            <span style={st("font-family:'Anek Bangla'; font-size:16px; font-weight:700; letter-spacing:-.2px; white-space:nowrap; flex-shrink:0;")}>কোন ফোন?</span>
-            <span style={st("font-size:12.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;")}>{t("budget_first")}</span>
+            <img src="/kfk-logo-on-light.svg" alt="কি ফোন কিনবো" style={st("height:50px; width:auto; display:block; flex-shrink:0; margin:-11px 0;")} />
+            {updatedLabel && <span style={st("font-size:12.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;")}>{updatedLabel}</span>}
           </div>
           <div style={st("display:flex; align-items:center; gap:8px; font-size:12.5px; color:#84878f; white-space:nowrap; min-width:0; overflow:hidden;")}>
-            <span style={st("font-weight:600; color:#565b63; flex-shrink:0;")}>{metaStock} {t("in_stock")}</span>
-            <span style={st("width:3px; height:3px; border-radius:50%; background:#c9cbd0; flex-shrink:0;")} />
-            <span style={st("overflow:hidden; text-overflow:ellipsis; min-width:0;")}>{refreshedLabel}</span>
+            {meta
+              ? <span style={st("font-weight:600; color:#565b63; flex-shrink:0;")}>{metaStock} {t("in_stock")}</span>
+              : <span style={st("display:inline-flex; align-items:center; gap:6px; color:#84878f; flex-shrink:0;")}>
+                  <span style={st("width:11px; height:11px; border-radius:99px; border:2px solid rgba(15,25,35,.16); border-top-color:var(--ac); animation:kspin .7s linear infinite;")} />
+                  {t("prices_loading")}
+                </span>}
             <button onClick={toggleLang} title="Language" className="k-press"
               style={st("flex-shrink:0; margin-left:2px; padding:4px 11px; border-radius:99px; border:.5px solid rgba(15,25,35,.12); background:rgba(255,255,255,.6); cursor:pointer; font-size:11.5px; font-weight:700; color:var(--acd); font-family:'Anek Bangla',sans-serif;")}>
               {lang === "en" ? "বাংলা" : "EN"}
@@ -229,6 +242,8 @@ export default function App() {
         askStep={askStep} askLast={askStep === ASK_STEPS - 1}
         onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
       />
+
+      {showNotice && <ResultsNotice onClose={dismissNotice} />}
     </div>
   );
 }

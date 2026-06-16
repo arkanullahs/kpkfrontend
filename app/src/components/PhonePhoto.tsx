@@ -16,9 +16,13 @@ export function PhonePhoto({ src, pid, w, h, radius = 14 }: {
   const [failed, setFailed] = useState(false);
   const [resolved, setResolved] = useState<string | null>(() => (pid ? _resolved.get(pid) ?? null : null));
 
-  // no usable image and we have an id → ask the backend to find one
+  // GadgetGear's image host 404s for everything — treat those URLs as no image
+  // so we go straight to the GSMArena resolver instead of flashing a broken img
+  const goodSrc = src && !src.includes("gadgetandgear.com") ? src : null;
+
+  // no usable image and we have an id → ask the backend to find one (GSMArena)
   useEffect(() => {
-    const needsLookup = (!src || failed) && pid && !_resolved.has(pid);
+    const needsLookup = (!goodSrc || failed) && pid && !_resolved.has(pid);
     if (!needsLookup) {
       if (pid && _resolved.has(pid)) setResolved(_resolved.get(pid) ?? null);
       return;
@@ -28,15 +32,15 @@ export function PhonePhoto({ src, pid, w, h, radius = 14 }: {
       .then((r) => { _resolved.set(pid!, r.url); if (alive) setResolved(r.url); })
       .catch(() => { _resolved.set(pid!, null); });
     return () => { alive = false; };
-  }, [src, pid, failed]);
+  }, [goodSrc, pid, failed]);
 
-  const show = (!failed && src) || resolved;
+  const show = (!failed && goodSrc) || resolved;
   const box = `width:${w}; height:${h}; border-radius:${radius}px; flex-shrink:0; box-shadow:inset 0 0 0 1px rgba(15,25,35,.06); overflow:hidden;`;
 
   if (show) {
     return (
       <div style={st(box + " background:#fff; display:flex; align-items:center; justify-content:center;")}>
-        <img src={(failed ? resolved : src) || resolved || undefined} alt="" loading="lazy"
+        <img src={(failed ? resolved : goodSrc) || resolved || undefined} alt="" loading="lazy"
           onError={() => { if (!failed) setFailed(true); else setResolved(null); }}
           style={st("width:100%; height:100%; object-fit:contain; padding:6%;")} />
       </div>

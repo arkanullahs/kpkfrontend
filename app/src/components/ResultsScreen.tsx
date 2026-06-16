@@ -1,8 +1,8 @@
 import { type ReactNode } from "react";
-import { axisLabel, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, st, taka, topPickBadge } from "../theme";
+import { axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, st, taka, topPickBadge } from "../theme";
 import { t } from "../i18n";
 import { PhonePhoto } from "./PhonePhoto";
-import { CompareCard, LiveCompareCard, UpgradeTag } from "./Compare";
+import { CompareCard, JustSoYouKnow, LiveCompareCard, UpgradeTag } from "./Compare";
 import { RagProgress } from "./RagProgress";
 import type { Pick, RecommendResp, Stretch } from "../api";
 import type { Form } from "../App";
@@ -80,6 +80,13 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
         </div>
       </div>
 
+      {meta.ranking === "unavailable" && (
+        <div style={st("display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:16px; padding:13px 16px; border-radius:14px; background:rgba(192,137,42,.12);")}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#a8761a" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <span style={st("flex:1; min-width:180px; font-size:13px; color:#7a6a40; line-height:1.5;")}>The AI ranker was busy, so these are the closest matches by fit — <b>not fully ranked yet</b>. They may not use your full budget. Tap retry for the real ranking.</span>
+          <button onClick={onRetry} className="k-press" style={st("font-size:12.5px; font-weight:700; color:#fff; background:#a8761a; border:none; padding:7px 16px; border-radius:99px; cursor:pointer;")}>Retry ranking</button>
+        </div>
+      )}
       {meta.relaxed && (
         <div style={st("margin-top:16px; padding:11px 15px; border-radius:13px; background:rgba(192,137,42,.1); font-size:13px; color:#7a6a40; line-height:1.5;")}>
           No exact matches in your band, so here are the closest phones around your budget.
@@ -129,6 +136,12 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                   <span style={st("font-size:14.5px; font-weight:600; color:#17191d;")}>{taka(price)}</span>
                   {r.official_ref && <MaybeOfficial price={r.official_ref.price} small />}
                 </div>
+                {/* mini budget-fit bar */}
+                <div style={st("position:relative; height:4px; margin-top:8px;")}>
+                  <div style={st("position:absolute; inset:0; border-radius:99px; background:rgba(15,25,35,.07);")} />
+                  <div style={st(`position:absolute; top:-2px; height:8px; width:1.5px; border-radius:99px; left:${pct(b)}%; transform:translateX(-50%); background:#c2c6cd;`)} />
+                  <div style={st(`position:absolute; top:-2.5px; width:9px; height:9px; border-radius:50%; left:${pct(price ?? b)}%; transform:translateX(-50%); background:var(--ac); box-shadow:0 0 0 2px #fff;`)} />
+                </div>
               </div>
               <span style={st("display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; max-width:96px;")}>
                 <span style={st(`font-size:12px; font-weight:700; color:${fitColor}; text-align:right; line-height:1.35;`)}>{fit}</span>
@@ -155,12 +168,15 @@ function HeroPick({ p, price, budget, pct, onClick }: {
 }) {
   const badge = topPickBadge(p.confidence);
   const { fit, fitColor } = fitOf(price ?? budget, budget);
-  const cav = p.caveats && p.caveats[0];
+  const { major, notes } = classifyCaveats(p.caveats);
+  const note = notes[0];
+  const off = p.official_ref;
 
   return (
     <div style={st("position:relative; background:linear-gradient(165deg, rgba(255,255,255,.96), rgba(255,255,255,.9)); border-radius:26px; padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 18px 44px rgba(15,25,35,.1), inset 0 0 0 1px var(--acsoft2); margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(18px,3vw,30px); overflow:hidden;")}>
       <div style={st("position:absolute; top:-90px; right:-70px; width:240px; height:240px; border-radius:50%; background:radial-gradient(circle, var(--acsoft), transparent 70%); pointer-events:none;")} />
-      <div>
+      {/* LEFT: identity, price, official pitch, strengths, owner note */}
+      <div style={st("min-width:0;")}>
         <div style={st("display:flex; gap:16px;")}>
           <PhonePhoto src={p.image} pid={p.id} w="clamp(88px,11vw,104px)" h="clamp(116px,14vw,136px)" />
           <div style={st("flex:1; min-width:0;")}>
@@ -177,13 +193,14 @@ function HeroPick({ p, price, budget, pct, onClick }: {
 
         <div style={st("display:flex; align-items:flex-end; gap:11px; margin-top:20px;")}>
           <span style={st("font-size:clamp(32px,3.6vw,42px); font-weight:300; letter-spacing:-2px; color:#17191d; line-height:1;")}>{taka(price)}</span>
+          <span style={st("font-size:12.5px; color:#80868f; margin-bottom:5px;")}>at {p.in_stock_shops ?? 0} shops</span>
         </div>
-        <div style={st("display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-top:9px;")}>
-          {p.official_ref && <MaybeOfficial price={p.official_ref.price} />}
-          <span style={st("font-size:12.5px; color:#80868f;")}>at {p.in_stock_shops ?? 0} shops</span>
-        </div>
-        {p.official_ref && (
-          <div style={st("font-size:12px; color:#5c626a; margin-top:6px; line-height:1.5;")}>{t("gng_note")}</div>
+
+        {off && (
+          <div style={st("display:flex; gap:10px; margin-top:14px; padding:12px 14px; border-radius:14px; background:rgba(10,157,106,.08); border:.5px solid rgba(10,157,106,.18);")}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3zM9 12l2 2 4-4" stroke="#0a9d6a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <span style={st("font-size:12.5px; color:#2c3036; line-height:1.55;")}>{t("official_pitch")} <b style={st("color:#0a7d57;")}>GadgetGear</b> {t("official_pitch2")} <b>{taka(off.price)}</b>.</span>
+          </div>
         )}
 
         <div style={st("display:flex; flex-wrap:wrap; gap:7px; margin-top:16px;")}>
@@ -192,12 +209,16 @@ function HeroPick({ p, price, budget, pct, onClick }: {
           ))}
         </div>
 
-        {p.smart_verdict && (
-          <p style={st("margin:15px 0 0; font-size:13.5px; color:#41464d; line-height:1.6; text-wrap:pretty;")}>{p.smart_verdict}</p>
+        {note && (
+          <div style={st("display:flex; gap:9px; margin-top:14px; padding:11px 13px; border-radius:13px; background:rgba(192,137,42,.09);")}>
+            <span style={st("width:6px; height:6px; border-radius:50%; background:#a8761a; margin-top:7px; flex-shrink:0;")} />
+            <span style={st("font-size:12.5px; color:#7a6a40; line-height:1.5;")}>{note.text}</span>
+          </div>
         )}
       </div>
 
-      <div style={st("display:flex; flex-direction:column; justify-content:flex-end;")}>
+      {/* RIGHT: budget fit, must-know defect, our take, CTA pinned bottom */}
+      <div style={st("display:flex; flex-direction:column; gap:13px; min-width:0;")}>
         <div style={st("padding:15px 16px; border-radius:15px; background:rgba(15,25,35,.035);")}>
           <div style={st("display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:10px;")}>
             <span style={st("color:#80868f;")}>{t("budget_fit")}</span>
@@ -210,18 +231,18 @@ function HeroPick({ p, price, budget, pct, onClick }: {
           </div>
         </div>
 
-        {cav && (
-          <div style={st("display:flex; gap:9px; margin-top:13px; padding:11px 13px; border-radius:13px; background:rgba(192,137,42,.09);")}>
-            <span style={st("width:6px; height:6px; border-radius:50%; background:#a8761a; margin-top:7px; flex-shrink:0;")} />
-            <span style={st("font-size:12.5px; color:#7a6a40; line-height:1.5;")}>{cav.text}</span>
-          </div>
+        {major[0] && <JustSoYouKnow text={major[0].text} />}
+
+        {p.smart_verdict && (
+          <p style={st("margin:2px 0 0; font-size:13.5px; color:#41464d; line-height:1.6; text-wrap:pretty;")}>{p.smart_verdict}</p>
         )}
 
-        <button onClick={onClick} className="k-press k-glow" style={st("width:100%; margin-top:15px; padding:15px; border-radius:15px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 14px var(--acglow), inset 0 1px 0 rgba(255,255,255,.3); font-size:14.5px; font-weight:600; color:#fff;")}>{t("see_breakdown")}</button>
+        <button onClick={onClick} className="k-press k-glow" style={st("width:100%; margin-top:auto; padding:15px; border-radius:15px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 14px var(--acglow), inset 0 1px 0 rgba(255,255,255,.3); font-size:14.5px; font-weight:600; color:#fff;")}>{t("see_breakdown")}</button>
       </div>
     </div>
   );
 }
+
 
 function StretchCard({ s, budget, onClick }: { s: Stretch; budget: number; onClick: () => void }) {
   const over = Math.max(0, s.best_price - budget);

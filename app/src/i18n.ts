@@ -10,7 +10,8 @@ export type Lang = "en" | "bn";
 
 const STRINGS: Record<string, { en: string; bn: string }> = {
   // header / nav
-  in_stock: { en: "phones in stock", bn: "ফোন স্টকে আছে" },
+  in_stock: { en: "phones tracked", bn: "ফোন ট্র্যাক করছি" },
+  prices_loading: { en: "live prices", bn: "লাইভ দাম" },
   refreshed_today: { en: "refreshed today", bn: "আজ আপডেট হয়েছে" },
   refreshed_yesterday: { en: "refreshed yesterday", bn: "গতকাল আপডেট হয়েছে" },
   nav_ask: { en: "Ask", bn: "খুঁজুন" },
@@ -22,6 +23,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   new_search: { en: "New search", bn: "নতুন খোঁজ" },
   // ask screen
   budget_first: { en: "budget-first picks", bn: "বাজেট অনুযায়ী পছন্দ" },
+  updated_on: { en: "updated", bn: "আপডেট" },
   // results
   top_picks: { en: "top picks", bn: "সেরা পছন্দ" },
   edit: { en: "Edit", bn: "এডিট" },
@@ -59,6 +61,15 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   maybe_official: { en: "Maybe official", bn: "অফিসিয়াল হতে পারে" },
   gng_note: { en: "GadgetGear — the one seller we trust as official — lists it at this price.",
               bn: "গ্যাজেটগিয়ার — আমরা যে একমাত্র অফিসিয়াল বিক্রেতা মানি — এই দামে রেখেছে।" },
+  official_pitch: { en: "Want full warranty and a 100% genuine unit? Buy official from",
+                    bn: "ওয়ারেন্টি আর ১০০% আসল ইউনিট চাইলে অফিসিয়াল কিনুন" },
+  official_pitch2: { en: "for", bn: "—" },
+  just_so_you_know: { en: "Just so you know", bn: "জেনে রাখুন" },
+  // one-time results notice
+  notice_title: { en: "Before you look —", bn: "দেখার আগে —" },
+  notice_body: { en: "Don't lean on the prices here — they're a guide, they shift daily, and the in-store price often differs. What we're really for: finding the best phone your budget can buy.",
+                 bn: "এখানের দাম শুধু ধারণা — প্রতিদিন বদলায়, দোকানে প্রায়ই আলাদা হয়। আমাদের আসল কাজ: আপনার বাজেটে সেরা ফোনটি খুঁজে দেওয়া।" },
+  notice_ok: { en: "Got it, show my picks", bn: "বুঝেছি, পছন্দ দেখান" },
   // ---- results: stretch ----
   worth_stretch: { en: "Worth the stretch", bn: "একটু বাড়ালেই মূল্যবান" },
   // ---- current-phone comparison ----
@@ -70,6 +81,9 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   live_from_gng: { en: "Live from GadgetGear — not in our database", bn: "গ্যাজেটগিয়ার থেকে লাইভ — আমাদের ডেটাবেসে নেই" },
   pricier: { en: "pricier", bn: "বেশি দামি" },
   cheaper: { en: "cheaper", bn: "সস্তা" },
+  experimental: { en: "EXPERIMENTAL", bn: "পরীক্ষামূলক" },
+  experimental_note: { en: "Experimental — your phone isn't in our database, so these specs were pulled live from GSMArena and matched automatically. Double-check before trusting.",
+                       bn: "পরীক্ষামূলক — আপনার ফোন আমাদের ডেটাবেসে নেই, তাই স্পেক GSMArena থেকে লাইভ আনা ও স্বয়ংক্রিয়ভাবে মেলানো হয়েছে। নির্ভর করার আগে যাচাই করুন।" },
   // ---- detail: who it's for ----
   great_for: { en: "Great for", bn: "যাদের জন্য দারুণ" },
   think_twice: { en: "Think twice if", bn: "ভেবে দেখুন যদি" },
@@ -133,6 +147,12 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
                    bn: "রিভিউ পড়া চলছে, যাতে আপনাকে পড়তে না হয়।" },
   rag_reassure3: { en: "Good answers take a few seconds. Thanks for waiting.",
                    bn: "ভালো উত্তরে কয়েক সেকেন্ড লাগে। অপেক্ষার জন্য ধন্যবাদ।" },
+  // queue / busy indicator
+  queue_busy: { en: "High demand right now —", bn: "এখন অনেক চাপ —" },
+  queue_one_ahead: { en: "1 search is ahead of yours. Hang tight, you're in the queue.",
+                     bn: "আপনার আগে ১টি খোঁজ চলছে। একটু অপেক্ষা করুন, আপনি লাইনে আছেন।" },
+  queue_n_ahead: { en: "searches are ahead of yours. Hang tight, you're in the queue.",
+                   bn: "টি খোঁজ আপনার আগে চলছে। একটু অপেক্ষা করুন, আপনি লাইনে আছেন।" },
 };
 
 const BN_DIGITS = "০১২৩৪৫৬৭৮৯";

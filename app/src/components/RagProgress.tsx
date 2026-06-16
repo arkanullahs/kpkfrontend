@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { st, taka } from "../theme";
 import { bnNum, t } from "../i18n";
+import { api } from "../api";
 
 /* Staged "show the work" loader. The /recommend call genuinely takes 30–60s on
    free APIs (an LLM reads every candidate's review+spec evidence and writes a
@@ -32,12 +33,23 @@ const REASSURE = ["rag_reassure1", "rag_reassure2", "rag_reassure3"];
 export function RagProgress({ budget, candidates, ready = false, onDone }:
   { budget: number; candidates: number | null; ready?: boolean; onDone?: () => void }) {
   const [elapsed, setElapsed] = useState(0);
+  const [waiting, setWaiting] = useState(0);   // ranking requests queued ahead
   const start = useRef(Date.now());
 
   useEffect(() => {
     if (ready) return;
     const id = window.setInterval(() => setElapsed((Date.now() - start.current) / 1000), 250);
     return () => window.clearInterval(id);
+  }, [ready]);
+
+  // poll the server's ranking queue so a busy moment reads as "you're in line"
+  useEffect(() => {
+    if (ready) return;
+    let alive = true;
+    const tick = () => api.status().then((s) => { if (alive) setWaiting(s.waiting); }).catch(() => {});
+    tick();
+    const id = window.setInterval(tick, 2500);
+    return () => { alive = false; window.clearInterval(id); };
   }, [ready]);
 
   useEffect(() => {
@@ -87,6 +99,18 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
           {t("rag_heading")} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd);")}>· {secs}s</span>
         </h1>
       </div>
+
+      {/* busy / queue notice — only when others are ranking ahead of you */}
+      {waiting > 0 && !ready && (
+        <div style={st("display:flex; align-items:center; gap:10px; margin-top:18px; padding:12px 16px; border-radius:14px; background:var(--acsoft); animation:kfade .3s ease both;")}>
+          <span style={st("position:relative; width:18px; height:18px; flex-shrink:0;")}>
+            <span style={st("position:absolute; inset:0; border-radius:50%; border:2px solid var(--acsoft2); border-top-color:var(--ac); animation:kspin .8s linear infinite;")} />
+          </span>
+          <span style={st("font-size:13px; color:var(--acd); font-weight:600; line-height:1.45;")}>
+            {t("queue_busy")} {waiting === 1 ? t("queue_one_ahead") : `${bnNum(String(waiting))} ${t("queue_n_ahead")}`}
+          </span>
+        </div>
+      )}
 
       {/* progress bar */}
       <div style={st("position:relative; height:7px; margin-top:24px; border-radius:99px; background:rgba(15,25,35,.07); overflow:hidden;")}>

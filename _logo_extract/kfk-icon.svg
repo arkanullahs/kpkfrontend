@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <defs>
+    <g id="phoneBody">
+      <rect x="-40" y="-80" width="80" height="160" rx="16"/>
+    </g>
+  </defs>
+
+  <!-- back-left phone -->
+  <g transform="translate(88,120) rotate(-15)">
+    <use href="#phoneBody" fill="#A9C2B8" stroke="#7FA294" stroke-width="2"/>
+  </g>
+
+  <!-- back-right phone -->
+  <g transform="translate(152,120) rotate(15)">
+    <use href="#phoneBody" fill="#A9C2B8" stroke="#7FA294" stroke-width="2"/>
+  </g>
+
+  <!-- hero center phone -->
+  <g transform="translate(120,112)">
+    <use href="#phoneBody" fill="#0E7C66" stroke="#0B5F4F" stroke-width="2"/>
+    <circle cx="0" cy="-73" r="2.6" fill="#0B5F4F"/>
+    <rect x="-31" y="-68" width="62" height="124" rx="10" fill="#F4FAF7"/>
+    <path d="M -15,-7 L -4,5 L 17,-20" fill="none" stroke="#F2A93B" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
