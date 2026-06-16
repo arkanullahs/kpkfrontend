@@ -89,6 +89,8 @@
     .k-live { animation: kdot 1.8s ease-out infinite; }
     /* header tagline + divider collapse on narrow screens to keep the bar clean */
     @media (max-width: 600px) { .khtag, .khdiv { display: none !important; } }
+    /* stock badge overflows into the logo on very narrow phones */
+    @media (max-width: 420px) { .khstock { display: none !important; } }
 
     /* interaction layer — the inline styles set the look, these add the feel.
        Pressable elements lift on hover, depress on click, and brighten if they

@@ -212,11 +212,11 @@ export default function App() {
           {/* RIGHT: live phone-count badge + language toggle */}
           <div style={st("display:flex; align-items:center; gap:9px; flex-shrink:0;")}>
             {meta
-              ? <span style={st("display:inline-flex; align-items:center; gap:8px; padding:7px 13px; border-radius:14px; background:var(--acsoft); border:.5px solid var(--acsoft2);")}>
+              ? <span className="khstock" style={st("display:inline-flex; align-items:center; gap:8px; padding:7px 13px; border-radius:14px; background:var(--acsoft); border:.5px solid var(--acsoft2);")}>
                   <span className="k-live" style={st("width:8px; height:8px; border-radius:50%; background:var(--ac); flex-shrink:0;")} />
                   <span style={st("font-size:13px; font-weight:700; color:var(--acd); white-space:nowrap;")}>{metaStock} <span style={st("font-weight:600; color:#6b7280;")}>{t("in_stock")}</span></span>
                 </span>
-              : <span style={st("display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:14px; background:rgba(15,25,35,.04); color:#84878f;")}>
+              : <span className="khstock" style={st("display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:14px; background:rgba(15,25,35,.04); color:#84878f;")}>
                   <span style={st("width:12px; height:12px; border-radius:99px; border:2px solid rgba(15,25,35,.16); border-top-color:var(--ac); animation:kspin .7s linear infinite;")} />
                   <span style={st("font-size:12.5px; font-weight:600; white-space:nowrap;")}>{t("prices_loading")}</span>
                 </span>}
