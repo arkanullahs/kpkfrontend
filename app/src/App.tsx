@@ -221,7 +221,14 @@ export default function App() {
             <span style={st("display:block; width:1px; height:24px; background:rgba(15,25,35,.1); flex-shrink:0;")} className="khdiv" />
             <div style={st("display:flex; flex-direction:column; min-width:0;")} className="khtag">
               <span style={st("font-family:var(--f-bn); font-size:13.5px; font-weight:600; color:#3a3f46; line-height:1.15; white-space:nowrap;")}>{t("brand_tagline")}</span>
-              {updatedLabel && <span style={st("font-size:11.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{updatedLabel}</span>}
+              <div style={st("display:flex; align-items:center; gap:7px; flex-wrap:nowrap;")}>
+                {updatedLabel && <span style={st("font-size:11.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{updatedLabel}</span>}
+                {updatedLabel && <span style={st("font-size:11px; color:#d0d3d8;")}>·</span>}
+                <a href="https://arkanullah.pro.bd" target="_blank" rel="noopener noreferrer"
+                  style={st("font-size:11.5px; font-weight:700; color:var(--acd); text-decoration:none; white-space:nowrap; flex-shrink:0;")}>
+                  by Arkanullah Saad ↗
+                </a>
+              </div>
             </div>
           </div>
 
@@ -276,6 +283,16 @@ export default function App() {
         onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
       />
       {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
+
+      {/* page footer */}
+      <div style={st("position:relative; z-index:1; padding:20px 24px 96px; text-align:center;")}>
+        <a href="https://arkanullah.pro.bd" target="_blank" rel="noopener noreferrer"
+          style={st("display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--acd); text-decoration:none; padding:9px 20px; border-radius:99px; background:rgba(255,255,255,.7); border:.5px solid rgba(15,25,35,.07); backdrop-filter:blur(8px);")}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20M12 2c-3 3.5-3 15.5 0 20M12 2c3 3.5 3 15.5 0 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+          Made by Arkanullah Saad · arkanullah.pro.bd
+        </a>
+      </div>
+
       <Analytics />
       <SpeedInsights />
     </div>

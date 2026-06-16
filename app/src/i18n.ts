@@ -285,6 +285,15 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   pricealert_ok: { en: "Got it", bn: "বুঝেছি" },
   method_steps_h: { en: "Step by step", bn: "ধাপে ধাপে" },
   read_how: { en: "Read how it works", bn: "কীভাবে কাজ করে দেখুন" },
+
+  // ---- post-results feedback ----
+  feedback_q: { en: "Were these picks right for you?", bn: "এই পছন্দগুলো কি ঠিক ছিল?" },
+  feedback_comment_up: { en: "Anything we could do even better? (optional)", bn: "আরও ভালো করতে পারতাম কোথায়? (ঐচ্ছিক)" },
+  feedback_comment_down: { en: "What were you actually looking for?", bn: "আসলে কী খুঁজছিলেন?" },
+  feedback_placeholder: { en: "e.g. I wanted something with better battery life…", bn: "যেমন: আরও ভালো ব্যাটারির ফোন খুঁজছিলাম…" },
+  feedback_submit: { en: "Send feedback", bn: "মতামত পাঠান" },
+  feedback_thanks: { en: "Thanks! That helps us improve.", bn: "ধন্যবাদ! এটা আমাদের উন্নতিতে সাহায্য করে।" },
+  feedback_skip: { en: "Skip", bn: "বাদ দিন" },
 };
 
 const BN_DIGITS = "০১২৩৪৫৬৭৮৯";

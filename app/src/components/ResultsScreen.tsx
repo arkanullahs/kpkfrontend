@@ -1,6 +1,7 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, st, taka, topPickBadge } from "../theme";
 import { t } from "../i18n";
+import { api } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 import { CompareCard, JustSoYouKnow, LiveCompareCard, UpgradeTag } from "./Compare";
 import { RagProgress } from "./RagProgress";
@@ -172,6 +173,8 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
       {stretch && <StretchCard s={stretch} budget={b} onClick={() => onPick(`${stretch.brand}|${stretch.key}`)} />}
 
       <p style={st("margin:22px 2px 0; font-size:12.5px; color:#9a9da4; line-height:1.5;")}>{meta.disclaimer}</p>
+
+      <FeedbackCard picks={picks} budget={b} archetype={meta.archetype || meta.label || ""} />
     </div>
   );
 }
@@ -275,6 +278,73 @@ function StretchCard({ s, budget, onClick }: { s: Stretch; budget: number; onCli
         <div style={st("font-size:11.5px; font-weight:700; color:var(--acd); margin-top:2px;")}>+{taka(over)}</div>
       </div>
     </button>
+  );
+}
+
+/* ---------- feedback ---------- */
+function FeedbackCard({ picks, budget, archetype }: { picks: Pick[]; budget: number; archetype: string }) {
+  const [phase, setPhase] = useState<"idle" | "comment" | "done">("idle");
+  const [rating, setRating] = useState<"up" | "down" | null>(null);
+  const [comment, setComment] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const rate = (r: "up" | "down") => { setRating(r); setPhase("comment"); };
+
+  const submit = async () => {
+    setBusy(true);
+    try {
+      await api.feedback({
+        rating: rating!,
+        comment: comment.trim() || undefined,
+        budget,
+        archetype,
+        picks: picks.map(p => `${p.brand} ${p.model}`),
+      });
+    } catch { /* silent — feedback loss is fine */ }
+    setPhase("done");
+    setBusy(false);
+  };
+
+  if (phase === "done") return (
+    <div style={st("margin-top:28px; padding:18px 20px; border-radius:18px; background:rgba(10,157,106,.08); border:.5px solid rgba(10,157,106,.18); display:flex; align-items:center; gap:12px;")}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a9d6a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <span style={st("font-size:14.5px; font-weight:600; color:#2c3036;")}>{t("feedback_thanks")}</span>
+    </div>
+  );
+
+  if (phase === "comment") return (
+    <div style={st("margin-top:28px; padding:20px 22px; border-radius:20px; background:rgba(255,255,255,.88); box-shadow:0 1px 2px rgba(15,25,35,.05), inset 0 0 0 1px rgba(15,25,35,.06);")}>
+      <div style={st("display:flex; align-items:center; gap:10px; margin-bottom:14px;")}>
+        <button onClick={() => rate("up")} className="k-press"
+          style={st(`font-size:20px; padding:6px 12px; border-radius:12px; border:none; cursor:pointer; background:${rating === "up" ? "rgba(10,157,106,.15)" : "rgba(15,25,35,.05)"}; transition:background .15s;`)}>👍</button>
+        <button onClick={() => rate("down")} className="k-press"
+          style={st(`font-size:20px; padding:6px 12px; border-radius:12px; border:none; cursor:pointer; background:${rating === "down" ? "rgba(220,60,60,.12)" : "rgba(15,25,35,.05)"}; transition:background .15s;`)}>👎</button>
+        <span style={st("font-size:13.5px; font-weight:600; color:#5c626a;")}>{rating === "up" ? t("feedback_comment_up") : t("feedback_comment_down")}</span>
+      </div>
+      <textarea value={comment} onChange={e => setComment(e.target.value)} rows={3}
+        placeholder={t("feedback_placeholder")}
+        style={st("width:100%; box-sizing:border-box; padding:11px 13px; border-radius:12px; border:.5px solid rgba(15,25,35,.12); background:rgba(15,25,35,.03); font-size:14px; color:#17191d; font-family:inherit; resize:vertical; outline:none;")} />
+      <div style={st("display:flex; gap:9px; margin-top:12px; justify-content:flex-end;")}>
+        <button onClick={() => setPhase("idle")} className="k-press"
+          style={st("font-size:13px; font-weight:600; color:#80868f; background:transparent; border:none; cursor:pointer; padding:9px 14px; border-radius:12px;")}>{t("feedback_skip")}</button>
+        <button onClick={submit} disabled={busy} className="k-press k-glow"
+          style={st("font-size:13.5px; font-weight:700; color:#fff; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 12px var(--acglow); border:none; cursor:pointer; padding:9px 20px; border-radius:12px; opacity:" + (busy ? ".6" : "1") + ";")}>
+          {t("feedback_submit")}
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={st("margin-top:28px; padding:18px 20px; border-radius:20px; background:rgba(255,255,255,.75); box-shadow:inset 0 0 0 1px rgba(15,25,35,.06); display:flex; align-items:center; gap:14px; flex-wrap:wrap;")}>
+      <span style={st("flex:1; min-width:180px; font-size:14.5px; font-weight:600; color:#363b42;")}>{t("feedback_q")}</span>
+      <div style={st("display:flex; gap:8px;")}>
+        <button onClick={() => rate("up")} className="k-press"
+          style={st("font-size:20px; padding:8px 16px; border-radius:13px; border:none; cursor:pointer; background:rgba(15,25,35,.06); transition:background .15s;")}>👍</button>
+        <button onClick={() => rate("down")} className="k-press"
+          style={st("font-size:20px; padding:8px 16px; border-radius:13px; border:none; cursor:pointer; background:rgba(15,25,35,.06); transition:background .15s;")}>👎</button>
+      </div>
+    </div>
   );
 }
 

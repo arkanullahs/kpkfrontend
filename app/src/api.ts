@@ -165,6 +165,14 @@ export interface BrowseResp { total: number; limit: number; offset: number; item
 /** /count — structured pre-filter only (no LLM); powers the live match badge */
 export interface CountResp { candidates: number; relaxed: boolean; }
 
+export interface FeedbackPayload {
+  rating: "up" | "down";
+  comment?: string;
+  budget: number;
+  archetype: string;
+  picks: string[];
+}
+
 /* ---------- recommend params ---------- */
 export interface RecParams {
   budget: number;
@@ -183,6 +191,21 @@ export interface RecParams {
 
 export interface QueueStatus { processing: number; waiting: number; }
 
+async function post<T>(path: string, body: unknown): Promise<T> {
+  const url = new URL(BASE + path, window.location.origin);
+  const res = await fetch(url.toString(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try { detail = (await res.json()).detail ?? detail; } catch { /* ignore */ }
+    throw new Error(detail || `HTTP ${res.status}`);
+  }
+  return res.json() as Promise<T>;
+}
+
 export const api = {
   meta: () => get<Meta>("/meta"),
   status: () => get<QueueStatus>("/status"),
@@ -193,4 +216,5 @@ export const api = {
   phoneImage: (id: string) => get<{ url: string | null }>("/phone-image/" + id.split("/").map(encodeURIComponent).join("/")),
   browse: (p: { q?: string; brand?: string; min_price?: number; max_price?: number; in_stock?: boolean; limit?: number; offset?: number }) =>
     get<BrowseResp>("/phones", p as any),
+  feedback: (p: FeedbackPayload) => post<{ ok: boolean }>("/feedback", p),
 };
