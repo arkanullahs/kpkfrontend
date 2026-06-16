@@ -6,7 +6,56 @@
   <link rel="icon" type="image/svg+xml" href="/kfk-icon.svg" />
   <link rel="alternate icon" href="/kfk-icon.png" />
   <link rel="apple-touch-icon" href="/kfk-icon.png" />
-  <title>কি ফোন কিনবো — best phone for your budget</title>
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <title>কি ফোন কিনবো? — Best phone for your budget in Bangladesh | thikphone</title>
+  <meta name="description" content="Tell us your budget and what matters to you — we rank the best phones you can actually buy in Bangladesh right now, using live shop prices and real owner reviews, not paid ads. Free and unbiased." />
+  <meta name="keywords" content="best phone in bangladesh, phone price bd, mobile price bangladesh, কোন ফোন কিনবো, best phone under budget, smartphone recommendation bangladesh, phone buying guide, thikphone, ki phone kinbo" />
+  <meta name="author" content="thikphone" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#2563d9" />
+  <link rel="canonical" href="https://thikphone.tech/" />
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn link previews) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="thikphone — কি ফোন কিনবো?" />
+  <meta property="og:url" content="https://thikphone.tech/" />
+  <meta property="og:title" content="Find the best phone your budget can buy — in Bangladesh" />
+  <meta property="og:description" content="Live BD prices, ranked by an AI that reads real owner reviews and specs for your exact budget and needs. Free, unbiased, no paid rankings." />
+  <meta property="og:image" content="https://thikphone.tech/og-image.png" />
+  <meta property="og:image:secure_url" content="https://thikphone.tech/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="thikphone — find the best phone your budget can buy in Bangladesh" />
+  <meta property="og:locale" content="bn_BD" />
+  <meta property="og:locale:alternate" content="en_US" />
+
+  <!-- Twitter / X large-image card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Find the best phone your budget can buy — in Bangladesh" />
+  <meta name="twitter:description" content="Live BD prices, ranked by real owner reviews and specs for your budget. Free and unbiased — no paid rankings." />
+  <meta name="twitter:image" content="https://thikphone.tech/og-image.png" />
+  <meta name="twitter:image:alt" content="thikphone — find the best phone your budget can buy in Bangladesh" />
+
+  <!-- structured data: rich result eligibility + brand entity -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "thikphone — কি ফোন কিনবো?",
+    "alternateName": "ki phone kinbo",
+    "url": "https://thikphone.tech/",
+    "description": "Tell us your budget and what matters — we rank the best phones you can buy in Bangladesh using live prices and real owner reviews, not paid ads.",
+    "applicationCategory": "ShoppingApplication",
+    "operatingSystem": "Web",
+    "inLanguage": ["bn", "en"],
+    "areaServed": { "@type": "Country", "name": "Bangladesh" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BDT" },
+    "image": "https://thikphone.tech/og-image.png"
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Fraunces:ital,opsz,wght@1,9..144,400..600&family=Hanken+Grotesk:wght@300..700&display=swap" rel="stylesheet" />
@@ -31,6 +80,15 @@
     @keyframes kpop { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: none; } }
     @keyframes krise { from { opacity: 0; transform: translateY(13px); } to { opacity: 1; transform: none; } }
     @keyframes kspin { to { transform: rotate(360deg); } }
+    /* pulsing "live" dot for the header status badge */
+    @keyframes kdot {
+      0%   { box-shadow: 0 0 0 0 rgba(37,99,217,.5); }
+      70%  { box-shadow: 0 0 0 6px rgba(37,99,217,0); }
+      100% { box-shadow: 0 0 0 0 rgba(37,99,217,0); }
+    }
+    .k-live { animation: kdot 1.8s ease-out infinite; }
+    /* header tagline + divider collapse on narrow screens to keep the bar clean */
+    @media (max-width: 600px) { .khtag, .khdiv { display: none !important; } }
 
     /* interaction layer — the inline styles set the look, these add the feel.
        Pressable elements lift on hover, depress on click, and brighten if they

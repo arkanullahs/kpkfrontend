@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "og": "python scripts/make_og.py",
+    "prebuild": "node scripts/og-build.cjs",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },

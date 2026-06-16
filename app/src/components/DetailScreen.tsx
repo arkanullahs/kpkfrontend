@@ -147,7 +147,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               </span>
             )}
           </div>
-          <div style={st("margin-top:12px; font-size:13px; color:#80868f; line-height:1.7;")}>
+          <div style={st("margin-top:12px; font-size:14px; color:#80868f; line-height:1.7;")}>
             Cheapest of {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
             {d?.price_trend && (d.price_trend.trend === "down" || d.price_trend.trend === "up") && (
               <><br /><span style={st(`font-size:12px; font-weight:600; color:${d.price_trend.trend === "down" ? "#0a7d57" : "#a8761a"};`)}>
@@ -158,7 +158,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           {officialRef && (
             <div style={st("display:flex; gap:9px; margin-top:14px; padding:11px 13px; border-radius:13px; background:rgba(10,157,106,.08); border:.5px solid rgba(10,157,106,.18);")}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3zM9 12l2 2 4-4" stroke="#0a9d6a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              <span style={st("font-size:12.5px; color:#2c3036; line-height:1.55;")}>{t("official_pitch")} <b style={st("color:#0a7d57;")}>GadgetGear</b> {t("official_pitch2")} <b>{taka(officialRef.price)}</b>.</span>
+              <span style={st("font-size:13.5px; color:#2c3036; line-height:1.55;")}>{t("official_pitch")} <b style={st("color:#0a7d57;")}>GadgetGear</b> {t("official_pitch2")} <b>{taka(officialRef.price)}</b>.</span>
             </div>
           )}
         </div>
@@ -184,7 +184,8 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
       {Object.values(scores).some((v) => v != null) && (
         <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); margin-top:14px;")}>
           <SectionLabel>{t("scores")}</SectionLabel>
-          <div style={st("display:flex; flex-direction:column; gap:17px; margin-top:18px;")}>
+          <p style={st("margin:9px 0 0; font-size:13.5px; color:#84878f; line-height:1.5; text-wrap:pretty;")}>{t("scores_help")}</p>
+          <div style={st("display:flex; flex-direction:column; gap:17px; margin-top:16px;")}>
             {AXES.map((k) => {
               const v = scores[k];
               if (v == null) return null;
@@ -192,13 +193,13 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               return (
                 <div key={k}>
                   <div style={st("display:flex; justify-content:space-between; align-items:baseline; gap:12px;")}>
-                    <span style={st("font-size:14.5px; font-weight:600; color:#2c3036;")}>{axisLabel(k)}</span>
-                    <span style={st("font-size:14px; font-weight:700; color:var(--acd);")}>{v.toFixed(1)} / 10</span>
+                    <span style={st("font-size:15.5px; font-weight:600; color:#2c3036;")}>{axisLabel(k)}</span>
+                    <span style={st("font-size:15px; font-weight:700; color:var(--acd);")}>{v.toFixed(1)} / 10</span>
                   </div>
-                  <div style={st("position:relative; height:6px; border-radius:99px; background:rgba(15,25,35,.06); margin-top:8px; overflow:hidden;")}>
+                  <div style={st("position:relative; height:7px; border-radius:99px; background:rgba(15,25,35,.06); margin-top:8px; overflow:hidden;")}>
                     <div style={st(`position:absolute; top:0; bottom:0; left:0; width:${v * 10}%; border-radius:99px; background:linear-gradient(90deg,var(--acsoft2),var(--ac));`)} />
                   </div>
-                  {reason && <div style={st("font-size:12.5px; color:#84878f; margin-top:7px; line-height:1.5;")}>{reason}</div>}
+                  {reason && <div style={st("font-size:13.5px; color:#84878f; margin-top:7px; line-height:1.5;")}>{reason}</div>}
                 </div>
               );
             })}
@@ -221,8 +222,8 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:15px 18px; margin-top:18px;")}>
             {specs.map((sp, i) => (
               <div key={i}>
-                <div style={st("font-size:11.5px; color:#9a9da4;")}>{sp.k}</div>
-                <div style={st("font-size:13.5px; font-weight:600; color:#2c3036; margin-top:3px; line-height:1.35;")}>{sp.v}</div>
+                <div style={st("font-size:12.5px; color:#9a9da4;")}>{sp.k}</div>
+                <div style={st("font-size:14.5px; font-weight:600; color:#2c3036; margin-top:3px; line-height:1.35;")}>{sp.v}</div>
               </div>
             ))}
           </div>
@@ -247,10 +248,10 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             )}
             <div style={st("display:flex; flex-wrap:wrap; gap:7px; margin-top:15px;")}>
               {(op.praise_flags || []).map((tx, i) => (
-                <span key={"p" + i} style={st("font-size:12px; font-weight:600; color:#0a7d57; background:rgba(10,157,106,.1); padding:6px 12px; border-radius:99px;")}>+ {tx}</span>
+                <span key={"p" + i} style={st("font-size:13px; font-weight:600; color:#0a7d57; background:rgba(10,157,106,.1); padding:6px 12px; border-radius:99px;")}>+ {tx}</span>
               ))}
               {(op.complaint_flags || []).map((tx, i) => (
-                <span key={"c" + i} style={st("font-size:12px; font-weight:600; color:#a8761a; background:rgba(192,137,42,.12); padding:6px 12px; border-radius:99px;")}>− {tx}</span>
+                <span key={"c" + i} style={st("font-size:13px; font-weight:600; color:#a8761a; background:rgba(192,137,42,.12); padding:6px 12px; border-radius:99px;")}>− {tx}</span>
               ))}
             </div>
           </Card>
@@ -262,7 +263,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             <SectionLabel>{t("where_to_buy")}</SectionLabel>
             <div style={st("display:flex; gap:9px; margin-top:14px; padding:12px 14px; border-radius:14px; background:rgba(192,137,42,.1);")}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              <span style={st("font-size:12.5px; color:#7a6a40; line-height:1.55;")}>{t("price_warning")}</span>
+              <span style={st("font-size:13.5px; color:#7a6a40; line-height:1.55;")}>{t("price_warning")}</span>
             </div>
             <div style={st("display:flex; flex-direction:column; gap:8px; margin-top:12px;")}>
               {offers.map((o, i) => <OfferRow key={i} o={o} best={o.price === bestOfferPrice} />)}
@@ -313,7 +314,7 @@ function WhoFor({ bestFor, avoidIf, caveats }: {
                   <span style={st("display:flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:rgba(10,157,106,.14); color:#0a8a5e; flex-shrink:0;")}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d={personaIcon(tx)} stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </span>
-                  <span style={st("font-size:13px; font-weight:600; color:#1f5e48; line-height:1.2; text-transform:capitalize;")}>{tx}</span>
+                  <span style={st("font-size:13.5px; font-weight:600; color:#1f5e48; line-height:1.2; text-transform:capitalize;")}>{tx}</span>
                 </span>
               ))}
             </div>
@@ -350,7 +351,7 @@ function WhoFor({ bestFor, avoidIf, caveats }: {
             {notes.map((cv, i) => (
               <div key={i} style={st("display:flex; gap:10px; padding:12px 14px; border-radius:14px; background:rgba(192,137,42,.08);")}>
                 <span style={st("width:7px; height:7px; border-radius:50%; background:#a8761a; margin-top:6px; flex-shrink:0;")} />
-                <span style={st("font-size:12.5px; color:#6f5f38; line-height:1.5;")}>{cv.text}</span>
+                <span style={st("font-size:13.5px; color:#6f5f38; line-height:1.5;")}>{cv.text}</span>
               </div>
             ))}
           </div>

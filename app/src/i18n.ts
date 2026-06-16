@@ -14,6 +14,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   prices_loading: { en: "live prices", bn: "লাইভ দাম" },
   refreshed_today: { en: "refreshed today", bn: "আজ আপডেট হয়েছে" },
   refreshed_yesterday: { en: "refreshed yesterday", bn: "গতকাল আপডেট হয়েছে" },
+  brand_tagline: { en: "The easy way to buy a phone", bn: "ফোন কেনার সহজ উপায়" },
   nav_ask: { en: "Ask", bn: "খুঁজুন" },
   nav_results: { en: "Results", bn: "ফলাফল" },
   nav_detail: { en: "Detail", bn: "বিস্তারিত" },
@@ -153,6 +154,53 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
                      bn: "আপনার আগে ১টি খোঁজ চলছে। একটু অপেক্ষা করুন, আপনি লাইনে আছেন।" },
   queue_n_ahead: { en: "searches are ahead of yours. Hang tight, you're in the queue.",
                    bn: "টি খোঁজ আপনার আগে চলছে। একটু অপেক্ষা করুন, আপনি লাইনে আছেন।" },
+
+  // ---- plain-language helpers (accessibility: a parent or first-time buyer
+  //      should understand what every choice DOES, in one short line) ----
+  whats_this: { en: "What's this?", bn: "এটা কী?" },
+  tap_q_hint: { en: "Not sure what something means? Tap the ? on any card.",
+                bn: "কোনোটা বুঝতে না পারলে? যেকোনো কার্ডের ? এ চাপ দিন।" },
+  // what picking each need actually does to the ranking
+  exp_photographer: { en: "We'll put the phones with the best real cameras for your money first.",
+                      bn: "আপনার বাজেটে সেরা আসল ক্যামেরার ফোনগুলো আগে দেখাবো।" },
+  exp_gamer: { en: "Phones with fast gaming chips and smooth, high-refresh screens come first.",
+               bn: "দ্রুত গেমিং চিপ আর স্মুথ হাই-রিফ্রেশ স্ক্রিনের ফোন আগে আসবে।" },
+  exp_vlogger: { en: "Best for video and selfies — steady footage and a sharp front camera.",
+                 bn: "ভিডিও আর সেলফির জন্য সেরা — স্থির ভিডিও আর পরিষ্কার সামনের ক্যামেরা।" },
+  exp_rider: { en: "All-day battery and a bright screen you can read in direct sunlight.",
+               bn: "সারাদিনের ব্যাটারি আর রোদেও দেখা যায় এমন উজ্জ্বল স্ক্রিন।" },
+  exp_parents: { en: "Simple, easy phones — clear screen, loud sound, no annoying ad spam.",
+                 bn: "সহজ ও সরল ফোন — পরিষ্কার স্ক্রিন, জোরালো শব্দ, বিরক্তিকর বিজ্ঞাপন নেই।" },
+  exp_student: { en: "Best all-round value for the taka, built to stay useful for years.",
+                 bn: "টাকার বিনিময়ে সব দিকে সেরা ভ্যালু, বছরের পর বছর কাজে লাগে।" },
+  exp_professional: { en: "Fast, polished phones with long software support and good resale.",
+                     bn: "দ্রুত ও পরিপাটি ফোন — দীর্ঘ সফটওয়্যার সাপোর্ট আর ভালো রিসেল।" },
+  exp_balanced: { en: "No weak spots — a phone that's good at everything, not just one thing.",
+                  bn: "কোনো দুর্বল দিক নেই — একটি কাজে নয়, সব কাজেই ভালো ফোন।" },
+  // tune step
+  tune_intro: { en: "Already good to go? Skip straight to results — nothing here is required.",
+                bn: "চাইলে এখনই ফলাফলে যান — এখানের কিছুই বাধ্যতামূলক নয়।" },
+  exp_cn: { en: "Some cheap phones are built for China. They often have no Google apps, no Bangla, and miss updates. Best left ON unless you really know the phone.",
+            bn: "কিছু সস্তা ফোন চীনের বাজারের জন্য তৈরি। এগুলোতে প্রায়ই গুগল অ্যাপ বা বাংলা থাকে না, আপডেটও আসে না। ফোনটি ভালো করে না জানলে এটি চালু রাখাই ভালো।" },
+  exp_platform: { en: "Android (Samsung, Xiaomi, etc.) or iPhone (iOS). Choose Any if it doesn't matter.",
+                  bn: "অ্যান্ড্রয়েড (Samsung, Xiaomi…) নাকি আইফোন (iOS)। পার্থক্য না থাকলে Any বাছুন।" },
+  exp_software_t: { en: "How the phone's menus feel", bn: "ফোনের মেনু কেমন লাগবে" },
+  exp_software: { en: "Clean = fewer extra apps and no ads, simple to use (like Pixel or iPhone). Rich = lots of built-in features and customisation (like Samsung or Xiaomi).",
+                  bn: "Clean = কম বাড়তি অ্যাপ, কোনো বিজ্ঞাপন নেই, ব্যবহারে সহজ (Pixel বা iPhone-এর মতো)। Rich = অনেক বিল্ট-ইন ফিচার আর কাস্টমাইজেশন (Samsung বা Xiaomi-এর মতো)।" },
+  exp_exclude: { en: "Tap a brand to hide it from your results.",
+                 bn: "কোনো ব্র্যান্ড লুকাতে চাইলে তাতে চাপ দিন।" },
+  exp_current: { en: "Type the phone you use now and we'll tell you whether each pick is a real upgrade.",
+                 bn: "এখন যে ফোনটি ব্যবহার করছেন লিখুন — প্রতিটি পছন্দ আসল আপগ্রেড কিনা জানিয়ে দেবো।" },
+  choices_banner_t: { en: "Here's how your picks shape the results:",
+                      bn: "আপনার পছন্দ যেভাবে ফলাফল ঠিক করে:" },
+  // ---- site-wide explainer banners (lively, always-on, plain grammar) ----
+  results_how_t: { en: "How we picked these", bn: "আমরা যেভাবে বেছেছি" },
+  results_how: { en: "An AI read real owner reviews and full specs for every phone in your budget, then ranked them for what you asked for. It's free and unbiased — no paid rankings. Tap any phone to see the full reason.",
+                 bn: "একটি AI আপনার বাজেটের প্রতিটি ফোনের আসল ব্যবহারকারীর রিভিউ আর পুরো স্পেক পড়েছে, তারপর আপনার চাহিদা অনুযায়ী সাজিয়েছে। এটি ফ্রি ও নিরপেক্ষ — কোনো টাকার র‍্যাঙ্কিং নেই। পুরো কারণ দেখতে যেকোনো ফোনে চাপ দিন।" },
+  scores_help: { en: "Each score is our honest read out of 10, from real reviews and specs — higher is better.",
+                 bn: "প্রতিটি স্কোর আসল রিভিউ আর স্পেক থেকে ১০-এ আমাদের সৎ মূল্যায়ন — বেশি মানে ভালো।" },
+  detail_intro: { en: "Everything below is in plain words. Take your time — no rush.",
+                  bn: "নিচের সবকিছু সহজ ভাষায় লেখা। ধীরে দেখুন — কোনো তাড়া নেই।" },
 };
 
 const BN_DIGITS = "০১২৩৪৫৬৭৮৯";
@@ -179,4 +227,12 @@ export function t(key: keyof typeof STRINGS | string): string {
 export function bnNum(s: string): string {
   if (_lang !== "bn") return s;
   return s.replace(/[0-9]/g, (d) => BN_DIGITS[+d]);
+}
+
+/** Convert Bangla digits back to ASCII, always (regardless of language). The
+    budget field renders Bangla digits in BN mode, so a user editing it produces
+    a string of Bangla digits — parsing must map them back or the value resets to
+    0. Also lets a user type Bangla numerals directly on either language. */
+export function bnToAscii(s: string): string {
+  return s.replace(/[০-৯]/g, (d) => String(BN_DIGITS.indexOf(d)));
 }

@@ -1,5 +1,6 @@
+import { type ReactNode } from "react";
 import { fmt, st, taka } from "../theme";
-import { bnNum, t } from "../i18n";
+import { bnNum, bnToAscii, t } from "../i18n";
 import type { Archetype } from "../api";
 import type { Form } from "../App";
 
@@ -51,7 +52,7 @@ const BUDGET_MIN = 3000, BUDGET_MAX = 500000;
 const LABEL = "font-size:12px; font-weight:700; letter-spacing:1.6px; text-transform:uppercase; color:#9a9da4;";
 
 function seg(sel: boolean): string {
-  return `flex:1; padding:11px 4px; border-radius:13px; border:none; cursor:pointer; font-size:13.5px; font-weight:600; transition:all .15s ease; background:${sel ? "#fff" : "transparent"}; color:${sel ? "var(--acd)" : "#80868f"}; box-shadow:${sel ? "0 1px 3px rgba(15,25,35,.14)" : "none"};`;
+  return `flex:1; padding:12px 4px; border-radius:13px; border:none; cursor:pointer; font-size:14.5px; font-weight:600; transition:all .15s ease; background:${sel ? "#fff" : "transparent"}; color:${sel ? "var(--acd)" : "#80868f"}; box-shadow:${sel ? "0 1px 3px rgba(15,25,35,.14)" : "none"};`;
 }
 
 const STEP_COPY = [
@@ -97,7 +98,9 @@ export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps
 function BudgetStep({ form, patch, metaStock, onNext }: { form: Form; patch: Props["patch"]; metaStock: string; onNext: () => void }) {
   const b = form.budget;
   const setRaw = (s: string) => {
-    const n = Math.min(BUDGET_MAX, +s.replace(/[^0-9]/g, "") || 0);
+    // map Bangla digits → ASCII first (the field shows Bangla numerals in BN
+    // mode, and some keyboards type them), THEN strip separators/non-digits
+    const n = Math.min(BUDGET_MAX, +bnToAscii(s).replace(/[^0-9]/g, "") || 0);
     patch({ budget: n });
   };
   return (
@@ -150,8 +153,8 @@ function PurposeStep({ form, patch, archKeys }: { form: Form; patch: Props["patc
   };
   return (
     <>
-      <p style={st("margin:14px 2px 0; font-size:13px; font-weight:600; color:var(--acd);")}>
-        Pick all that apply{sel.length ? ` — ${sel.length} selected` : ""}.
+      <p style={st("margin:14px 2px 0; font-size:14.5px; font-weight:600; color:var(--acd);")}>
+        Pick all that matter{sel.length ? ` — ${sel.length} chosen` : ""}.
       </p>
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:11px; margin-top:14px;")}>
         {archKeys.map((key) => {
@@ -167,32 +170,67 @@ function PurposeStep({ form, patch, archKeys }: { form: Form; patch: Props["patc
               <span style={st(`display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:13px; margin-bottom:12px; transition:all .18s ease; background:${on ? "rgba(255,255,255,.2)" : "var(--acsoft)"}; color:${on ? "#fff" : "var(--acd)"};`)}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d={ARCH_ICON[key] || ARCH_ICON.balanced} stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </span>
-              <div style={st(`font-family:var(--f-bn); font-size:16px; font-weight:600; line-height:1.2; color:${on ? "#fff" : "#17191d"};`)}>{ARCH_BN[key] || key}</div>
-              <div style={st(`font-size:12px; line-height:1.4; margin-top:4px; color:${on ? "rgba(255,255,255,.85)" : "#8a8e96"};`)}>{ARCH_DESC[key] || ""}</div>
+              <div style={st(`font-family:var(--f-bn); font-size:17.5px; font-weight:600; line-height:1.2; color:${on ? "#fff" : "#17191d"};`)}>{ARCH_BN[key] || key}</div>
+              <div style={st(`font-size:13px; line-height:1.4; margin-top:4px; color:${on ? "rgba(255,255,255,.85)" : "#8a8e96"};`)}>{ARCH_DESC[key] || ""}</div>
             </button>
           );
         })}
       </div>
+      {/* always-on: every chosen need is spelled out in plain words automatically */}
+      <ChoicesBanner keys={sel} />
     </>
   );
 }
 
-/* ---------- step 3: fine-tune (all optional) ---------- */
+/* Always-visible banner that plainly explains what EACH chosen need does to the
+   ranking — no tap needed, so a first-time or older buyer always understands. */
+function ChoicesBanner({ keys }: { keys: string[] }) {
+  return (
+    <div key={keys.join(",")} style={st("margin-top:18px; padding:17px 19px; border-radius:18px; background:var(--acsoft); border:.5px solid var(--acsoft2); animation:kpop .3s cubic-bezier(.2,.7,.2,1) both;")}>
+      <div style={st("display:flex; align-items:center; gap:9px; margin-bottom:12px;")}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.3" stroke="var(--ac)" strokeWidth="1.7" /><path d="M12 11v5.2M12 7.4v.4" stroke="var(--ac)" strokeWidth="2.1" strokeLinecap="round" /></svg>
+        <span style={st("font-weight:700; font-size:14.5px; color:var(--acd);")}>{t("choices_banner_t")}</span>
+      </div>
+      <div style={st("display:flex; flex-direction:column; gap:9px;")}>
+        {keys.map((k) => (
+          <div key={k} style={st("display:flex; gap:10px; align-items:flex-start;")}>
+            <span style={st("width:7px; height:7px; border-radius:50%; background:var(--ac); margin-top:8px; flex-shrink:0;")} />
+            <p style={st("margin:0; font-size:15px; color:#363b42; line-height:1.5; text-wrap:pretty;")}>
+              <b style={st("font-family:var(--f-bn); color:#17191d;")}>{ARCH_BN[k] || k}</b> — {t("exp_" + k)}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- step 3: fine-tune (all optional) ----------
+   Most buyers tap straight through with defaults, so every control carries a
+   plain one-line "what this does" — and the two jargon-heavy ones (China-ROM,
+   clean-vs-rich software) get a tap-to-open fuller explanation. */
 function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
   // framed as a "hide" switch: ON (default) keeps China-ROM gray imports out
   const hide = !form.includeCn;
   return (
-    <div style={st("display:flex; flex-direction:column; gap:26px; margin-top:34px;")}>
-      <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; padding:17px 19px; border-radius:18px; background:rgba(255,255,255,.7); border:.5px solid rgba(15,25,35,.06);")}>
-        <div>
-          <div style={st("font-size:14.5px; color:#2c3036; font-weight:600;")}>Don't show China-ROM phones</div>
-          <div style={st("font-size:12.5px; color:#9aa0a8; margin-top:1px;")}>They often lack Google services or Bangla. On by default.</div>
+    <div style={st("display:flex; flex-direction:column; gap:24px; margin-top:30px;")}>
+      <p style={st("margin:0; font-size:15px; color:#7b818a; line-height:1.55;")}>{t("tune_intro")}</p>
+
+      {/* China-ROM */}
+      <div>
+        <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; padding:17px 19px; border-radius:18px; background:rgba(255,255,255,.7); border:.5px solid rgba(15,25,35,.06);")}>
+          <div style={st("min-width:0;")}>
+            <span style={st("font-size:15.5px; color:#2c3036; font-weight:600;")}>Don't show China-ROM phones</span>
+            <div style={st("font-size:13.5px; color:#9aa0a8; margin-top:2px;")}>They often lack Google services or Bangla. On by default.</div>
+          </div>
+          <button onClick={() => patch({ includeCn: !form.includeCn })} aria-label="Hide China-ROM phones"
+            style={st(`position:relative; width:50px; height:30px; border-radius:99px; border:none; cursor:pointer; flex-shrink:0; transition:background .2s ease; background:${hide ? "var(--ac)" : "#dadde2"};`)}>
+            <span style={st(`position:absolute; top:3px; left:${hide ? 23 : 3}px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(15,25,35,.3); transition:left .2s ease;`)} />
+          </button>
         </div>
-        <button onClick={() => patch({ includeCn: !form.includeCn })} aria-label="Hide China-ROM phones"
-          style={st(`position:relative; width:50px; height:30px; border-radius:99px; border:none; cursor:pointer; flex-shrink:0; transition:background .2s ease; background:${hide ? "var(--ac)" : "#dadde2"};`)}>
-          <span style={st(`position:absolute; top:3px; left:${hide ? 23 : 3}px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(15,25,35,.3); transition:left .2s ease;`)} />
-        </button>
+        <AlwaysTip>{t("exp_cn")}</AlwaysTip>
       </div>
+
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:18px;")}>
         <div>
           <div style={st(LABEL)}>Platform</div>
@@ -201,6 +239,7 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
               <button key={k} onClick={() => patch({ platform: k })} className="k-press" style={st(seg(form.platform === k))}>{l}</button>
             ))}
           </div>
+          <HelpLine>{t("exp_platform")}</HelpLine>
         </div>
         <div>
           <div style={st(LABEL)}>Software</div>
@@ -209,6 +248,7 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
               <button key={k} onClick={() => patch({ osStyle: k })} className="k-press" style={st(seg(form.osStyle === k))}>{l}</button>
             ))}
           </div>
+          <AlwaysTip>{t("exp_software")}</AlwaysTip>
         </div>
       </div>
 
@@ -219,17 +259,29 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
             const sel = form.excludeBrands.includes(bd);
             return (
               <button key={bd} onClick={() => patch({ excludeBrands: sel ? form.excludeBrands.filter((x) => x !== bd) : [...form.excludeBrands, bd] })} className="k-press"
-                style={st(`padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13px; font-weight:500; transition:all .15s ease; background:${sel ? "#fde8e4" : "rgba(255,255,255,.8)"}; color:${sel ? "#c4503c" : "#5c626a"}; border:.5px solid ${sel ? "rgba(196,80,60,.3)" : "rgba(15,25,35,.1)"}; text-decoration:${sel ? "line-through" : "none"};`)}>{bd}</button>
+                style={st(`padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13.5px; font-weight:500; transition:all .15s ease; background:${sel ? "#fde8e4" : "rgba(255,255,255,.8)"}; color:${sel ? "#c4503c" : "#5c626a"}; border:.5px solid ${sel ? "rgba(196,80,60,.3)" : "rgba(15,25,35,.1)"}; text-decoration:${sel ? "line-through" : "none"};`)}>{bd}</button>
             );
           })}
         </div>
+        <HelpLine>{t("exp_exclude")}</HelpLine>
       </div>
 
       <div>
         <div style={st(LABEL)}>Current phone <span style={st("text-transform:none; letter-spacing:0; font-weight:500; color:#b6bcc4;")}>for upgrade comparison</span></div>
         <input className="ktrait" type="text" value={form.currentPhone} onChange={(e) => patch({ currentPhone: e.target.value })} placeholder="e.g. Redmi Note 11"
-          style={st("margin-top:11px; width:100%; border:none; outline:none; padding:15px 17px; border-radius:15px; background:rgba(255,255,255,.8); box-shadow:inset 0 0 0 1px rgba(15,25,35,.08); font-size:14.5px; color:#17191d;")} />
+          style={st("margin-top:11px; width:100%; border:none; outline:none; padding:15px 17px; border-radius:15px; background:rgba(255,255,255,.8); box-shadow:inset 0 0 0 1px rgba(15,25,35,.08); font-size:15px; color:#17191d;")} />
+        <HelpLine>{t("exp_current")}</HelpLine>
       </div>
     </div>
   );
+}
+
+/* Always-on soft explanation for the jargon-heavy controls (China-ROM, software
+   feel) — shown by default so nobody has to hunt for what a setting means. */
+function AlwaysTip({ children }: { children: ReactNode }) {
+  return <p style={st("margin:10px 0 0; padding:12px 15px; border-radius:13px; background:var(--acsoft); font-size:14.5px; color:#41464d; line-height:1.55; text-wrap:pretty;")}>{children}</p>;
+}
+
+function HelpLine({ children }: { children: ReactNode }) {
+  return <p style={st("margin:9px 2px 0; font-size:14px; color:#9aa0a8; line-height:1.5;")}>{children}</p>;
 }

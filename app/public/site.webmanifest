@@ -1,0 +1,14 @@
+{
+  "name": "কি ফোন কিনবো? — thikphone",
+  "short_name": "thikphone",
+  "description": "Find the best phone your budget can buy in Bangladesh — live prices, ranked by real reviews.",
+  "lang": "bn",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f1f0ed",
+  "theme_color": "#2563d9",
+  "icons": [
+    { "src": "/kfk-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/kfk-icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

@@ -194,20 +194,34 @@ export default function App() {
 
       {/* glass header */}
       <div style={st("position:sticky; top:0; z-index:60; display:flex; justify-content:center; padding:14px clamp(16px,4vw,40px) 6px;")}>
-        <div style={st("width:100%; max-width:1020px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:10px 20px; border-radius:99px; background:rgba(252,252,253,.55); backdrop-filter:blur(26px) saturate(185%); -webkit-backdrop-filter:blur(26px) saturate(185%); border:.5px solid rgba(255,255,255,.8); box-shadow:inset 0 1px 1px rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.3), 0 10px 30px rgba(20,24,32,.09);")}>
-          <div style={st("display:flex; align-items:center; gap:9px;")}>
-            <img src="/kfk-logo-on-light.svg" alt="কি ফোন কিনবো" style={st("height:50px; width:auto; display:block; flex-shrink:0; margin:-11px 0;")} />
-            {updatedLabel && <span style={st("font-size:12.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;")}>{updatedLabel}</span>}
+        <div style={st("position:relative; width:100%; max-width:1080px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:9px 11px 9px 18px; border-radius:21px; background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(250,251,253,.5)); backdrop-filter:blur(28px) saturate(190%); -webkit-backdrop-filter:blur(28px) saturate(190%); border:.5px solid rgba(255,255,255,.85); box-shadow:inset 0 1px 1px rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.3), 0 12px 34px rgba(20,24,32,.1);")}>
+          {/* thin accent sheen along the top edge */}
+          <span style={st("position:absolute; left:18px; right:18px; top:0; height:1px; border-radius:99px; background:linear-gradient(90deg, transparent, var(--acsoft2), transparent); pointer-events:none;")} />
+
+          {/* LEFT: logo + tagline */}
+          <div style={st("display:flex; align-items:center; gap:13px; min-width:0;")}>
+            <img src="/kfk-logo-on-light.svg" alt="কি ফোন কিনবো" style={st("height:46px; width:auto; display:block; flex-shrink:0; margin:-7px 0;")} />
+            <span style={st("display:block; width:1px; height:24px; background:rgba(15,25,35,.1); flex-shrink:0;")} className="khdiv" />
+            <div style={st("display:flex; flex-direction:column; min-width:0;")} className="khtag">
+              <span style={st("font-family:var(--f-bn); font-size:13.5px; font-weight:600; color:#3a3f46; line-height:1.15; white-space:nowrap;")}>{t("brand_tagline")}</span>
+              {updatedLabel && <span style={st("font-size:11.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{updatedLabel}</span>}
+            </div>
           </div>
-          <div style={st("display:flex; align-items:center; gap:8px; font-size:12.5px; color:#84878f; white-space:nowrap; min-width:0; overflow:hidden;")}>
+
+          {/* RIGHT: live phone-count badge + language toggle */}
+          <div style={st("display:flex; align-items:center; gap:9px; flex-shrink:0;")}>
             {meta
-              ? <span style={st("font-weight:600; color:#565b63; flex-shrink:0;")}>{metaStock} {t("in_stock")}</span>
-              : <span style={st("display:inline-flex; align-items:center; gap:6px; color:#84878f; flex-shrink:0;")}>
-                <span style={st("width:11px; height:11px; border-radius:99px; border:2px solid rgba(15,25,35,.16); border-top-color:var(--ac); animation:kspin .7s linear infinite;")} />
-                {t("prices_loading")}
-              </span>}
-            <button onClick={toggleLang} title="Language" className="k-press"
-              style={st("flex-shrink:0; margin-left:2px; padding:4px 11px; border-radius:99px; border:.5px solid rgba(15,25,35,.12); background:rgba(255,255,255,.6); cursor:pointer; font-size:11.5px; font-weight:700; color:var(--acd); font-family:'Anek Bangla',sans-serif;")}>
+              ? <span style={st("display:inline-flex; align-items:center; gap:8px; padding:7px 13px; border-radius:14px; background:var(--acsoft); border:.5px solid var(--acsoft2);")}>
+                  <span className="k-live" style={st("width:8px; height:8px; border-radius:50%; background:var(--ac); flex-shrink:0;")} />
+                  <span style={st("font-size:13px; font-weight:700; color:var(--acd); white-space:nowrap;")}>{metaStock} <span style={st("font-weight:600; color:#6b7280;")}>{t("in_stock")}</span></span>
+                </span>
+              : <span style={st("display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:14px; background:rgba(15,25,35,.04); color:#84878f;")}>
+                  <span style={st("width:12px; height:12px; border-radius:99px; border:2px solid rgba(15,25,35,.16); border-top-color:var(--ac); animation:kspin .7s linear infinite;")} />
+                  <span style={st("font-size:12.5px; font-weight:600; white-space:nowrap;")}>{t("prices_loading")}</span>
+                </span>}
+            <button onClick={toggleLang} title="Language / ভাষা" aria-label="Toggle language" className="k-press k-glow"
+              style={st("display:inline-flex; align-items:center; gap:6px; flex-shrink:0; padding:8px 14px; border-radius:14px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 12px var(--acglow), inset 0 1px 0 rgba(255,255,255,.35); font-size:13px; font-weight:700; color:#fff; font-family:'Anek Bangla',sans-serif;")}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" strokeWidth="1.7" /><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" stroke="#fff" strokeWidth="1.5" /></svg>
               {lang === "en" ? "বাংলা" : "EN"}
             </button>
           </div>
