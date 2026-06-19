@@ -30,10 +30,22 @@ const STAGES: Stage[] = [
 
 const REASSURE = ["rag_reassure1", "rag_reassure2", "rag_reassure3"];
 
+// Friendly display name for a backend provider id (e.g. "ollama cloud" -> "Ollama").
+function prov(name: string): string {
+  const map: Record<string, string> = {
+    groq: "Groq", "ollama cloud": "Ollama", g4f: "g4f", cohere: "Cohere",
+    mistral: "Mistral", gemini: "Gemini", openrouter: "OpenRouter",
+    "local qwen": "local Qwen",
+  };
+  return map[name] ?? (name.charAt(0).toUpperCase() + name.slice(1));
+}
+
 export function RagProgress({ budget, candidates, ready = false, onDone }:
   { budget: number; candidates: number | null; ready?: boolean; onDone?: () => void }) {
   const [elapsed, setElapsed] = useState(0);
   const [waiting, setWaiting] = useState(0);   // ranking requests queued ahead
+  const [provider, setProvider] = useState<string | null>(null);   // live ranker
+  const [failover, setFailover] = useState<string[]>([]);          // rate-limited / skipped
   const start = useRef(Date.now());
 
   useEffect(() => {
@@ -42,11 +54,20 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
     return () => window.clearInterval(id);
   }, [ready]);
 
-  // poll the server's ranking queue so a busy moment reads as "you're in line"
+  // poll the server's ranking queue so a busy moment reads as "you're in line",
+  // and read the live provider trail so we can show WHICH free api is ranking
+  // and whether we auto-switched after one was rate-limited.
   useEffect(() => {
     if (ready) return;
     let alive = true;
-    const tick = () => api.status().then((s) => { if (alive) setWaiting(s.waiting); }).catch(() => {});
+    const tick = () => api.status().then((s) => {
+      if (!alive) return;
+      setWaiting(s.waiting);
+      const p = s.provider;
+      if (p?.used) setProvider(p.used);
+      const skipped = [...(p?.rate_limited ?? []), ...(p?.skipped ?? [])];
+      if (skipped.length) setFailover([...new Set(skipped)]);
+    }).catch(() => {});
     tick();
     const id = window.setInterval(tick, 2500);
     return () => { alive = false; window.clearInterval(id); };
@@ -98,6 +119,17 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
         <h1 style={st("font-family:var(--f-display); margin:10px 0 0; font-size:clamp(26px,4vw,38px); font-weight:600; letter-spacing:-1px; line-height:1.12;")}>
           {t("rag_heading")} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd);")}>· {secs}s</span>
         </h1>
+        {/* live ranker indicator — which free api is doing the ranking, and a
+            quiet note if we auto-switched after one was rate-limited. Muted so
+            it sits under the heading without changing the layout. */}
+        {provider && !ready && (
+          <div style={st("display:inline-flex; align-items:center; gap:7px; margin-top:11px; padding:5px 11px; border-radius:99px; background:var(--acsoft); font-size:11.5px; font-weight:600; color:var(--acd); animation:kfade .3s ease both;")}>
+            <span style={st("width:6px; height:6px; border-radius:50%; background:var(--ac); flex-shrink:0; animation:kfloat 1.6s ease-in-out infinite;")} />
+            {failover.length > 0
+              ? `${failover.map(prov).join(" + ")} busy — using ${prov(provider)}`
+              : `Ranking via ${prov(provider)}`}
+          </div>
+        )}
       </div>
 
       {/* busy / queue notice — only when others are ranking ahead of you */}

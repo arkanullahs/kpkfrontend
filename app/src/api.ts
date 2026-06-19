@@ -189,7 +189,18 @@ export interface RecParams {
   top?: number;
 }
 
-export interface QueueStatus { processing: number; waiting: number; }
+export interface ProviderTrail {
+  used?: string | null;
+  attempts?: string[];
+  rate_limited?: string[];
+  skipped?: string[];
+  breaker?: Record<string, { reason: string; cooldown_s: number }>;
+}
+export interface QueueStatus {
+  processing: number;
+  waiting: number;
+  provider?: ProviderTrail;
+}
 
 async function post<T>(path: string, body: unknown): Promise<T> {
   const url = new URL(BASE + path, window.location.origin);
