@@ -89,11 +89,14 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
   const readPhase = Math.max(0, elapsed - STAGES[2].at);
   const read = ready ? n : Math.min(n, Math.round(n * (1 - Math.exp(-readPhase / 9))));
 
+  const processing = status?.processing ?? 0;
   const waiting = status?.waiting ?? 0;
+  const totalQueue = processing + waiting;
   const rateLimited = status?.rate_limited ?? [];
   const usedProvider = status?.used;
-  const failedOver = rateLimited.length > 0;
   const breakerProviders = Object.keys(status?.breaker ?? {});
+  // Don't show "Using X" if X is also in cooldown (stale info from last call)
+  const activeProvider = usedProvider && !breakerProviders.includes(usedProvider) ? usedProvider : null;
 
   // Stage copy
   const SUB: Record<string, string> = {
@@ -127,51 +130,43 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
         </h1>
       </div>
 
-      {/* ── Queue position banner ─────────────────────────────────────────── */}
-      {waiting > 0 && !ready && (
-        <div style={st("display:flex; align-items:center; gap:12px; margin-top:18px; padding:14px 18px; border-radius:16px; background:linear-gradient(135deg,var(--acsoft),rgba(255,255,255,.6)); border:.5px solid var(--acsoft2); box-shadow:0 4px 16px rgba(15,25,35,.06); animation:kfade .3s ease both;")}>
-          {/* animated ring */}
-          <span style={st("position:relative; width:22px; height:22px; flex-shrink:0;")}>
-            <span style={st("position:absolute; inset:0; border-radius:50%; border:2.5px solid var(--acsoft2); border-top-color:var(--ac); animation:kspin .85s linear infinite;")} />
-          </span>
-          <div style={st("flex:1; min-width:0;")}>
-            <div style={st("font-size:13.5px; font-weight:700; color:var(--acd); line-height:1.3;")}>
-              {waiting === 1
-                ? "1 request ahead of you"
-                : `${bnNum(String(waiting))} requests ahead of you`}
-            </div>
-            <div style={st("font-size:12px; color:#7a808a; margin-top:2px; line-height:1.4;")}>
-              AI ranker is busy — your spot is saved, results coming soon
-            </div>
-          </div>
-          {/* position pill */}
-          <span style={st("flex-shrink:0; font-size:12px; font-weight:800; color:var(--acd); background:var(--acsoft2); padding:5px 10px; border-radius:99px; white-space:nowrap;")}>
-            #{waiting + 1} in line
-          </span>
-        </div>
-      )}
-
-      {/* ── Provider status: failover / active model ──────────────────────── */}
-      {!ready && (failedOver || usedProvider) && (
-        <div style={st("margin-top:10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;")}>
+      {/* ── Queue / server status bar (always visible when polled) ─────────── */}
+      {!ready && status && (
+        <div style={st("margin-top:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center;")}>
+          {/* Users in system */}
+          {totalQueue > 0 && (
+            <span style={st("display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--acd); background:var(--acsoft); border:.5px solid var(--acsoft2); padding:6px 13px; border-radius:99px;")}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              {processing > 0 && <>{bnNum(String(processing))} being served</>}
+              {processing > 0 && waiting > 0 && " · "}
+              {waiting > 0 && <>{bnNum(String(waiting))} waiting</>}
+            </span>
+          )}
+          {/* Queue position (only when you're actually waiting) */}
+          {waiting > 0 && (
+            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:800; color:#fff; background:linear-gradient(135deg,var(--acg1),var(--acg2)); padding:6px 13px; border-radius:99px; box-shadow:0 2px 8px var(--acglow);")}>
+              <span style={st("width:6px; height:6px; border-radius:50%; background:#fff; animation:kpulse 1.2s ease-in-out infinite;")} />
+              #{waiting + 1} in line
+            </span>
+          )}
+          {/* Active / used provider */}
+          {activeProvider && (
+            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#0a7d57; background:rgba(10,157,106,.09); border:.5px solid rgba(10,157,106,.2); padding:5px 11px; border-radius:99px;")}>
+              <span style={st("width:7px; height:7px; border-radius:50%; background:#0a9d6a; animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
+              Using {providerName(activeProvider)}
+            </span>
+          )}
           {/* Rate-limited providers */}
           {rateLimited.map(p => (
             <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#a8761a; background:rgba(192,137,42,.1); border:.5px solid rgba(192,137,42,.22); padding:5px 11px; border-radius:99px;")}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              {providerName(p)} rate-limited
+              {providerName(p)} busy
             </span>
           ))}
-          {/* Active / used provider */}
-          {usedProvider && (
-            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#0a7d57; background:rgba(10,157,106,.09); border:.5px solid rgba(10,157,106,.2); padding:5px 11px; border-radius:99px;")}>
-              <span style={st("width:7px; height:7px; border-radius:50%; background:#0a9d6a; animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
-              Using {providerName(usedProvider)}
-            </span>
-          )}
           {/* Circuit-broken providers */}
           {breakerProviders.filter(p => !rateLimited.includes(p)).map(p => (
             <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600; color:#80868f; background:rgba(15,25,35,.06); padding:5px 10px; border-radius:99px;")}>
-              {providerName(p)} cooling down ({status!.breaker![p].cooldown_s}s)
+              {providerName(p)} resting ({status!.breaker![p].cooldown_s}s)
             </span>
           ))}
         </div>
