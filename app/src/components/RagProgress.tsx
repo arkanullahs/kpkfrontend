@@ -34,6 +34,8 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
   { budget: number; candidates: number | null; ready?: boolean; onDone?: () => void }) {
   const [elapsed, setElapsed] = useState(0);
   const [waiting, setWaiting] = useState(0);   // ranking requests queued ahead
+  const [provider, setProvider] = useState<string | null>(null);   // live ranker
+  const [failover, setFailover] = useState<string[]>([]);          // rate-limited / skipped
   const start = useRef(Date.now());
 
   useEffect(() => {
@@ -42,11 +44,20 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
     return () => window.clearInterval(id);
   }, [ready]);
 
-  // poll the server's ranking queue so a busy moment reads as "you're in line"
+  // poll the server's ranking queue so a busy moment reads as "you're in line",
+  // and read the live provider trail so we can show WHICH free api is ranking
+  // and whether we auto-switched after one was rate-limited.
   useEffect(() => {
     if (ready) return;
     let alive = true;
-    const tick = () => api.status().then((s) => { if (alive) setWaiting(s.waiting); }).catch(() => {});
+    const tick = () => api.status().then((s) => {
+      if (!alive) return;
+      setWaiting(s.waiting);
+      const p = s.provider;
+      if (p?.used) setProvider(p.used);
+      const skipped = [...(p?.rate_limited ?? []), ...(p?.skipped ?? [])];
+      if (skipped.length) setFailover([...new Set(skipped)]);
+    }).catch(() => {});
     tick();
     const id = window.setInterval(tick, 2500);
     return () => { alive = false; window.clearInterval(id); };
