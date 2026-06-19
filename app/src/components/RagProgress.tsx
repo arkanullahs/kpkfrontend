@@ -43,8 +43,8 @@ const PROVIDER_LABEL: Record<string, string> = {
 };
 const providerName = (p: string) => PROVIDER_LABEL[p] ?? p;
 
-export function RagProgress({ budget, candidates, ready = false, onDone }:
-  { budget: number; candidates: number | null; ready?: boolean; onDone?: () => void }) {
+export function RagProgress({ budget, candidates, ready = false, onDone, requestId }:
+  { budget: number; candidates: number | null; ready?: boolean; onDone?: () => void; requestId?: string }) {
   const [elapsed, setElapsed] = useState(0);
   const [status, setStatus] = useState<QueueStatus | null>(null);
   const start = useRef(Date.now());
@@ -57,17 +57,19 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
 
   // Poll the server's ranking queue so we can show queue position AND
   // which provider is currently handling the request / which failed over.
+  // When a request_id is provided, the /status endpoint returns per-request
+  // provider trails so concurrent users each see their own provider.
   useEffect(() => {
     if (ready) return;
     let alive = true;
     const tick = () =>
-      api.status()
+      api.status(requestId)
         .then((s) => { if (alive) setStatus(s); })
         .catch(() => {});
     tick();
     const id = window.setInterval(tick, 2500);
     return () => { alive = false; window.clearInterval(id); };
-  }, [ready]);
+  }, [ready, requestId]);
 
   useEffect(() => {
     if (!ready) return;

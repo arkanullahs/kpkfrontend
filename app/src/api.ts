@@ -101,7 +101,9 @@ export interface RecommendResp {
     mapped_from_traits?: string;
     pick_logic?: string;
     ranking?: string;
+    requested?: boolean;
     cached?: boolean;
+    request_id?: string | null;
   };
   top_reasoning: string[] | null;
   picks: Pick[];
@@ -187,6 +189,8 @@ export interface RecParams {
   channel?: string;
   traits?: string;
   top?: number;
+  /** Client-generated UUID for per-request provider tracking in the /status poll */
+  request_id?: string;
 }
 
 
@@ -224,7 +228,8 @@ async function post<T>(path: string, body: unknown): Promise<T> {
 
 export const api = {
   meta: () => get<Meta>("/meta"),
-  status: () => get<QueueStatus>("/status"),
+  status: (request_id?: string) =>
+    request_id ? get<QueueStatus>("/status", { request_id }) : get<QueueStatus>("/status"),
   archetypes: () => get<Archetype[]>("/archetypes"),
   recommend: (p: RecParams) => get<RecommendResp>("/recommend", p as any),
   count: (p: RecParams) => get<CountResp>("/count", p as any),
