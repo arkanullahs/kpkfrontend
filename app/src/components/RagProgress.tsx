@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { st, taka } from "../theme";
 import { bnNum, t } from "../i18n";
-import { api } from "../api";
+import { api, type QueueStatus } from "../api";
 
 /* Staged "show the work" loader. The /recommend call genuinely takes 30–60s on
    free APIs (an LLM reads every candidate's review+spec evidence and writes a
@@ -30,22 +30,23 @@ const STAGES: Stage[] = [
 
 const REASSURE = ["rag_reassure1", "rag_reassure2", "rag_reassure3"];
 
-// Friendly display name for a backend provider id (e.g. "ollama cloud" -> "Ollama").
-function prov(name: string): string {
-  const map: Record<string, string> = {
-    groq: "Groq", "ollama cloud": "Ollama", g4f: "g4f", cohere: "Cohere",
-    mistral: "Mistral", gemini: "Gemini", openrouter: "OpenRouter",
-    "local qwen": "local Qwen",
-  };
-  return map[name] ?? (name.charAt(0).toUpperCase() + name.slice(1));
-}
+// Human-readable label for provider names
+const PROVIDER_LABEL: Record<string, string> = {
+  groq: "Groq",
+  gemini: "Gemini",
+  "ollama cloud": "Ollama",
+  g4f: "G4F",
+  cohere: "Cohere",
+  mistral: "Mistral",
+  openrouter: "OpenRouter",
+  "local qwen": "Local AI",
+};
+const providerName = (p: string) => PROVIDER_LABEL[p] ?? p;
 
 export function RagProgress({ budget, candidates, ready = false, onDone }:
   { budget: number; candidates: number | null; ready?: boolean; onDone?: () => void }) {
   const [elapsed, setElapsed] = useState(0);
-  const [waiting, setWaiting] = useState(0);   // ranking requests queued ahead
-  const [provider, setProvider] = useState<string | null>(null);   // live ranker
-  const [failover, setFailover] = useState<string[]>([]);          // rate-limited / skipped
+  const [status, setStatus] = useState<QueueStatus | null>(null);
   const start = useRef(Date.now());
 
   useEffect(() => {
@@ -54,20 +55,15 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
     return () => window.clearInterval(id);
   }, [ready]);
 
-  // poll the server's ranking queue so a busy moment reads as "you're in line",
-  // and read the live provider trail so we can show WHICH free api is ranking
-  // and whether we auto-switched after one was rate-limited.
+  // Poll the server's ranking queue so we can show queue position AND
+  // which provider is currently handling the request / which failed over.
   useEffect(() => {
     if (ready) return;
     let alive = true;
-    const tick = () => api.status().then((s) => {
-      if (!alive) return;
-      setWaiting(s.waiting);
-      const p = s.provider;
-      if (p?.used) setProvider(p.used);
-      const skipped = [...(p?.rate_limited ?? []), ...(p?.skipped ?? [])];
-      if (skipped.length) setFailover([...new Set(skipped)]);
-    }).catch(() => {});
+    const tick = () =>
+      api.status()
+        .then((s) => { if (alive) setStatus(s); })
+        .catch(() => {});
     tick();
     const id = window.setInterval(tick, 2500);
     return () => { alive = false; window.clearInterval(id); };
@@ -88,13 +84,18 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
   const reassure = REASSURE[Math.floor(elapsed / 4) % REASSURE.length];
   const secs = bnNum(String(Math.floor(elapsed)));
 
-  // live "reviews read" tally — eases toward the candidate count while the LLM
-  // is reading (stage 3+), so the screen shows real work happening, not a freeze
+  // live "reviews read" tally
   const n = candidates ?? 0;
   const readPhase = Math.max(0, elapsed - STAGES[2].at);
   const read = ready ? n : Math.min(n, Math.round(n * (1 - Math.exp(-readPhase / 9))));
 
-  // accurate, slightly playful per-stage copy with the real numbers baked in
+  const waiting = status?.waiting ?? 0;
+  const rateLimited = status?.rate_limited ?? [];
+  const usedProvider = status?.used;
+  const failedOver = rateLimited.length > 0;
+  const breakerProviders = Object.keys(status?.breaker ?? {});
+
+  // Stage copy
   const SUB: Record<string, string> = {
     rag1: n ? `Sifting every live BD listing down to the ${bnNum(String(n))} that fit your budget and filters.`
             : "Checking every live listing in Bangladesh against your budget and filters.",
@@ -110,47 +111,79 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
 
   return (
     <div style={st("max-width:680px; margin:0 auto; animation:kfade .4s cubic-bezier(.2,.7,.2,1) both;")}>
-      <style>{`@keyframes kspin{to{transform:rotate(360deg)}}@keyframes kbar{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}@keyframes kfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}`}</style>
+      <style>{`
+        @keyframes kspin{to{transform:rotate(360deg)}}
+        @keyframes kbar{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
+        @keyframes kfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+        @keyframes kpulse{0%,100%{opacity:1}50%{opacity:.55}}
+      `}</style>
 
       <div style={st("margin-top:clamp(12px,4vh,42px); text-align:center;")}>
         <div style={st("font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;")}>
           {candidates != null ? `${bnNum(String(candidates))} ${t("matches")} · ${taka(budget)}` : taka(budget)}
         </div>
         <h1 style={st("font-family:var(--f-display); margin:10px 0 0; font-size:clamp(26px,4vw,38px); font-weight:600; letter-spacing:-1px; line-height:1.12;")}>
-          {t("rag_heading")} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd);")}>· {secs}s</span>
+          {t("rag_heading")} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd);")}> · {secs}s</span>
         </h1>
-        {/* live ranker indicator — which free api is doing the ranking, and a
-            quiet note if we auto-switched after one was rate-limited. Muted so
-            it sits under the heading without changing the layout. */}
-        {provider && !ready && (
-          <div style={st("display:inline-flex; align-items:center; gap:7px; margin-top:11px; padding:5px 11px; border-radius:99px; background:var(--acsoft); font-size:11.5px; font-weight:600; color:var(--acd); animation:kfade .3s ease both;")}>
-            <span style={st("width:6px; height:6px; border-radius:50%; background:var(--ac); flex-shrink:0; animation:kfloat 1.6s ease-in-out infinite;")} />
-            {failover.length > 0
-              ? `${failover.map(prov).join(" + ")} busy — using ${prov(provider)}`
-              : `Ranking via ${prov(provider)}`}
-          </div>
-        )}
       </div>
 
-      {/* busy / queue notice — only when others are ranking ahead of you */}
+      {/* ── Queue position banner ─────────────────────────────────────────── */}
       {waiting > 0 && !ready && (
-        <div style={st("display:flex; align-items:center; gap:10px; margin-top:18px; padding:12px 16px; border-radius:14px; background:var(--acsoft); animation:kfade .3s ease both;")}>
-          <span style={st("position:relative; width:18px; height:18px; flex-shrink:0;")}>
-            <span style={st("position:absolute; inset:0; border-radius:50%; border:2px solid var(--acsoft2); border-top-color:var(--ac); animation:kspin .8s linear infinite;")} />
+        <div style={st("display:flex; align-items:center; gap:12px; margin-top:18px; padding:14px 18px; border-radius:16px; background:linear-gradient(135deg,var(--acsoft),rgba(255,255,255,.6)); border:.5px solid var(--acsoft2); box-shadow:0 4px 16px rgba(15,25,35,.06); animation:kfade .3s ease both;")}>
+          {/* animated ring */}
+          <span style={st("position:relative; width:22px; height:22px; flex-shrink:0;")}>
+            <span style={st("position:absolute; inset:0; border-radius:50%; border:2.5px solid var(--acsoft2); border-top-color:var(--ac); animation:kspin .85s linear infinite;")} />
           </span>
-          <span style={st("font-size:13px; color:var(--acd); font-weight:600; line-height:1.45;")}>
-            {t("queue_busy")} {waiting === 1 ? t("queue_one_ahead") : `${bnNum(String(waiting))} ${t("queue_n_ahead")}`}
+          <div style={st("flex:1; min-width:0;")}>
+            <div style={st("font-size:13.5px; font-weight:700; color:var(--acd); line-height:1.3;")}>
+              {waiting === 1
+                ? "1 request ahead of you"
+                : `${bnNum(String(waiting))} requests ahead of you`}
+            </div>
+            <div style={st("font-size:12px; color:#7a808a; margin-top:2px; line-height:1.4;")}>
+              AI ranker is busy — your spot is saved, results coming soon
+            </div>
+          </div>
+          {/* position pill */}
+          <span style={st("flex-shrink:0; font-size:12px; font-weight:800; color:var(--acd); background:var(--acsoft2); padding:5px 10px; border-radius:99px; white-space:nowrap;")}>
+            #{waiting + 1} in line
           </span>
         </div>
       )}
 
+      {/* ── Provider status: failover / active model ──────────────────────── */}
+      {!ready && (failedOver || usedProvider) && (
+        <div style={st("margin-top:10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;")}>
+          {/* Rate-limited providers */}
+          {rateLimited.map(p => (
+            <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#a8761a; background:rgba(192,137,42,.1); border:.5px solid rgba(192,137,42,.22); padding:5px 11px; border-radius:99px;")}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              {providerName(p)} rate-limited
+            </span>
+          ))}
+          {/* Active / used provider */}
+          {usedProvider && (
+            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#0a7d57; background:rgba(10,157,106,.09); border:.5px solid rgba(10,157,106,.2); padding:5px 11px; border-radius:99px;")}>
+              <span style={st("width:7px; height:7px; border-radius:50%; background:#0a9d6a; animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
+              Using {providerName(usedProvider)}
+            </span>
+          )}
+          {/* Circuit-broken providers */}
+          {breakerProviders.filter(p => !rateLimited.includes(p)).map(p => (
+            <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600; color:#80868f; background:rgba(15,25,35,.06); padding:5px 10px; border-radius:99px;")}>
+              {providerName(p)} cooling down ({status!.breaker![p].cooldown_s}s)
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* progress bar */}
-      <div style={st("position:relative; height:7px; margin-top:24px; border-radius:99px; background:rgba(15,25,35,.07); overflow:hidden;")}>
+      <div style={st("position:relative; height:7px; margin-top:22px; border-radius:99px; background:rgba(15,25,35,.07); overflow:hidden;")}>
         <div style={st(`position:absolute; inset:0 auto 0 0; width:${pctBar}%; border-radius:99px; background:linear-gradient(90deg,var(--acg1),var(--acg2)); transition:width .45s cubic-bezier(.3,.8,.4,1);`)} />
         <div style={st("position:absolute; top:0; bottom:0; left:0; width:35%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:kbar 1.6s linear infinite;")} />
       </div>
 
-      {/* live counters — the actual shenanigans, in numbers */}
+      {/* live counters */}
       <div style={st("display:flex; gap:10px; margin-top:18px;")}>
         <Counter big={bnNum(String(n || "—"))} small="phones fit your budget" lit={active >= 0} />
         <Counter big={active >= 2 ? bnNum(String(read)) : "…"} small="reviews read so far" lit={active >= 2} />
@@ -181,7 +214,7 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
         })}
       </div>
 
-      {/* honesty / value note — turns the wait into a trust signal */}
+      {/* honesty / value note */}
       <div style={st("display:flex; gap:11px; padding:15px 17px; border-radius:17px; background:var(--acsoft); margin-top:18px;")}>
         <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--ac)" /></svg>
         <p style={st("margin:0; font-size:13px; color:#41464d; line-height:1.55; text-wrap:pretty;")}>{t("rag_worth")}</p>

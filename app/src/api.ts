@@ -189,17 +189,20 @@ export interface RecParams {
   top?: number;
 }
 
-export interface ProviderTrail {
-  used?: string | null;
-  attempts?: string[];
-  rate_limited?: string[];
-  skipped?: string[];
-  breaker?: Record<string, { reason: string; cooldown_s: number }>;
-}
+
 export interface QueueStatus {
   processing: number;
   waiting: number;
-  provider?: ProviderTrail;
+  /** Which provider answered the last completed request */
+  used?: string | null;
+  /** Every provider tried in order (including the one that succeeded) */
+  attempts?: string[];
+  /** Providers that returned a 429 rate-limit error */
+  rate_limited?: string[];
+  /** Providers skipped because their circuit breaker was still open */
+  skipped?: string[];
+  /** Providers currently in circuit-breaker cooldown with reason + seconds left */
+  breaker?: Record<string, { reason: string; cooldown_s: number }>;
 }
 
 async function post<T>(path: string, body: unknown): Promise<T> {
