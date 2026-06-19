@@ -111,9 +111,16 @@ export default function App() {
   // completion beat (RagProgress `ready` -> onLoaderDone) before revealing.
   const MIN_LOADER_MS = 1000;
 
+  // Client-generated UUID so the /status polling shows THIS request's provider
+  // trail, not whatever finished last globally. Passed through to ResultsScreen
+  // → RagProgress, and sent to /recommend so the backend stores the trail under it.
+  const requestIdRef = useRef<string>("");
+
   const runRecommend = useCallback(async () => {
-    const params = toParams(form, 5);
-    lastRunKey.current = JSON.stringify(params);
+    const requestId = crypto.randomUUID();
+    requestIdRef.current = requestId;
+    const params: RecParams = { ...toParams(form, 5), request_id: requestId };
+    lastRunKey.current = JSON.stringify(toParams(form, 5));
     setScreen("results");
     window.scrollTo({ top: 0 });
     setRecLoading(true);
@@ -258,6 +265,7 @@ export default function App() {
             result={result} loading={recLoading} error={recError}
             form={form} matchCount={matchCount} ready={recReady} onLoaderDone={onLoaderDone}
             onEdit={goAsk} onPick={openDetail} onRetry={runRecommend} onHowItWorks={goMethod}
+            requestId={requestIdRef.current}
           />
         )}
         {screen === "detail" && (

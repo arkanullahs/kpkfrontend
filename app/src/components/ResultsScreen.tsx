@@ -20,6 +20,8 @@ interface Props {
   onPick: (id: string) => void;
   onRetry: () => void;
   onHowItWorks: () => void;
+  /** Client-generated UUID for per-request provider tracking */
+  requestId?: string;
 }
 
 // RAG ranker confidence (high/medium/low); legacy strong/good/backup kept for
@@ -43,14 +45,14 @@ function MaybeOfficial({ price, small }: { price: number; small?: boolean }) {
   );
 }
 
-export function ResultsScreen({ result, loading, error, form, matchCount, ready, onLoaderDone, onEdit, onPick, onRetry, onHowItWorks }: Props) {
+export function ResultsScreen({ result, loading, error, form, matchCount, ready, onLoaderDone, onEdit, onPick, onRetry, onHowItWorks, requestId }: Props) {
   // the server is the budget authority: a budget typed in the Bangla trait
   // text ("১৫ হাজারে") overrides the slider, and meta.budget reflects it
   const b = result?.meta.budget ?? form.budget;
   const domain = b * 1.45;
   const pct = (v: number) => Math.max(0, Math.min(100, (v / domain) * 100));
 
-  if (loading) return <RagProgress budget={b} candidates={matchCount} ready={ready} onDone={onLoaderDone} />;
+  if (loading) return <RagProgress budget={b} candidates={matchCount} ready={ready} onDone={onLoaderDone} requestId={requestId} />;
   if (error) return <ErrorBox msg={error} onRetry={onRetry} />;
   if (!result) return <Centered>Set your budget, then tap “See results”.</Centered>;
 
