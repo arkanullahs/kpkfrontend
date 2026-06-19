@@ -199,7 +199,9 @@ export interface QueueStatus {
   waiting: number;
   /** Which provider answered the last completed request */
   used?: string | null;
-  /** Providers currently handling a request right now */
+  /** The provider currently being tried for THIS request (per-request trail) */
+  current_attempt?: string | null;
+  /** Providers currently handling a request right now (system-wide) */
   active?: string[];
   /** Every provider tried in order (including the one that succeeded) */
   attempts?: string[];

@@ -95,6 +95,7 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
   const waiting = status?.waiting ?? 0;
   const totalQueue = processing + waiting;
   const rateLimited = status?.rate_limited ?? [];
+  const currentAttempt = status?.current_attempt;
   const activeProviders = status?.active ?? [];
   const breakerProviders = Object.keys(status?.breaker ?? {});
 
@@ -149,8 +150,15 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
               #{waiting + 1} in line
             </span>
           )}
-          {/* Active providers in flight across the whole system */}
-          {activeProviders.map(p => (
+          {/* Per-request active provider (from request_id trail) — shows the
+              specific provider handling THIS request, not other users' requests.
+              Falls back to system-wide active providers for backward compat. */}
+          {currentAttempt && !rateLimited.includes(currentAttempt) ? (
+            <span key={"current-attempt"} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#0a7d57; background:rgba(10,157,106,.09); border:.5px solid rgba(10,157,106,.2); padding:5px 11px; border-radius:99px;")}>
+              <span style={st("width:7px; height:7px; border-radius:50%; background:#0a9d6a; animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
+              Using {providerName(currentAttempt)}
+            </span>
+          ) : activeProviders.map(p => (
             <span key={"active-" + p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#0a7d57; background:rgba(10,157,106,.09); border:.5px solid rgba(10,157,106,.2); padding:5px 11px; border-radius:99px;")}>
               <span style={st("width:7px; height:7px; border-radius:50%; background:#0a9d6a; animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
               Using {providerName(p)}
