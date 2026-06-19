@@ -195,6 +195,8 @@ export interface QueueStatus {
   waiting: number;
   /** Which provider answered the last completed request */
   used?: string | null;
+  /** Providers currently handling a request right now */
+  active?: string[];
   /** Every provider tried in order (including the one that succeeded) */
   attempts?: string[];
   /** Providers that returned a 429 rate-limit error */

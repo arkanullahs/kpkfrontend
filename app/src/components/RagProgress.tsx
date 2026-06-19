@@ -93,10 +93,8 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
   const waiting = status?.waiting ?? 0;
   const totalQueue = processing + waiting;
   const rateLimited = status?.rate_limited ?? [];
-  const usedProvider = status?.used;
+  const activeProviders = status?.active ?? [];
   const breakerProviders = Object.keys(status?.breaker ?? {});
-  // Don't show "Using X" if X is also in cooldown (stale info from last call)
-  const activeProvider = usedProvider && !breakerProviders.includes(usedProvider) ? usedProvider : null;
 
   // Stage copy
   const SUB: Record<string, string> = {
@@ -149,13 +147,13 @@ export function RagProgress({ budget, candidates, ready = false, onDone }:
               #{waiting + 1} in line
             </span>
           )}
-          {/* Active / used provider */}
-          {activeProvider && (
-            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#0a7d57; background:rgba(10,157,106,.09); border:.5px solid rgba(10,157,106,.2); padding:5px 11px; border-radius:99px;")}>
+          {/* Active providers in flight across the whole system */}
+          {activeProviders.map(p => (
+            <span key={"active-" + p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#0a7d57; background:rgba(10,157,106,.09); border:.5px solid rgba(10,157,106,.2); padding:5px 11px; border-radius:99px;")}>
               <span style={st("width:7px; height:7px; border-radius:50%; background:#0a9d6a; animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
-              Using {providerName(activeProvider)}
+              Using {providerName(p)}
             </span>
-          )}
+          ))}
           {/* Rate-limited providers */}
           {rateLimited.map(p => (
             <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#a8761a; background:rgba(192,137,42,.1); border:.5px solid rgba(192,137,42,.22); padding:5px 11px; border-radius:99px;")}>
