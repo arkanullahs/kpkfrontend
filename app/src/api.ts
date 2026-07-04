@@ -192,7 +192,16 @@ export interface RecParams {
   include_cn?: boolean;
   /** "only" | "exclude" — brand-origin filter: brands headquartered in China */
   chinese?: string;
+  /** comma list — only these brands */
+  brand?: string;
   exclude_brand?: string;
+  /** hardware dealbreakers — unverified phones still pass unless hw_strict */
+  require_jack?: boolean;
+  require_ir?: boolean;
+  require_fm?: boolean;
+  /** qualcomm | mediatek | ... (snapdragon/dimensity aliases accepted) */
+  soc_vendor?: string;
+  hw_strict?: boolean;
   os_style?: string;
   platform?: string;
   channel?: string;
