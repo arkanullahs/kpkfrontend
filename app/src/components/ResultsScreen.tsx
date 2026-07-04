@@ -5,7 +5,7 @@ import { api } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 import { CompareCard, JustSoYouKnow, LiveCompareCard, UpgradeTag } from "./Compare";
 import { RagProgress } from "./RagProgress";
-import type { Pick, RecommendResp, Stretch } from "../api";
+import type { DataCaution, Pick, RecommendResp, Stretch } from "../api";
 import type { Form } from "../App";
 
 interface Props {
@@ -34,6 +34,19 @@ const CONF_KEY: Record<string, string> = {
   high: "conf_strong", medium: "conf_good", low: "conf_backup",
   strong: "conf_strong", good: "conf_good", backup: "conf_backup", fallback: "conf_backup",
 };
+
+/** Thin/stale listing-data caution (feedback #5). Renders nothing for "low"
+    (single fresh listing on a recent model — half the catalog, would be noise). */
+export function DataCautionChip({ dc, small }: { dc?: DataCaution | null; small?: boolean }) {
+  if (!dc || dc.level === "low") return null;
+  const key = dc.level === "high" ? "data_caution_stale" : "data_caution_few";
+  return (
+    <span style={st(`display:inline-flex; align-items:center; gap:6px; font-size:${small ? 11 : 12.5}px; font-weight:600; color:#a8761a; background:rgba(192,137,42,.12); padding:${small ? "3px 9px" : "5px 11px"}; border-radius:99px;`)}>
+      <svg width={small ? 11 : 13} height={small ? 11 : 13} viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      {t(key)}
+    </span>
+  );
+}
 
 /** Soft "maybe official" hint — shown only when GadgetGear lists the phone. */
 function MaybeOfficial({ price, small }: { price: number; small?: boolean }) {
@@ -149,9 +162,10 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                   {r.upgrade && <UpgradeTag v={r.upgrade.verdict} tiny />}
                 </div>
                 <div style={st("font-size:13.5px; color:#80868f; margin-top:2px;")}>{headlinePhrase(r.headline_axis)}{r.headline_axis && r.headline_value != null ? ` · ${axisLabel(r.headline_axis)} ${r.headline_value}` : ""}</div>
-                <div style={st("display:flex; align-items:center; gap:8px; margin-top:5px;")}>
+                <div style={st("display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap;")}>
                   <span style={st("font-size:15.5px; font-weight:600; color:#17191d;")}>{taka(price)}</span>
                   {r.official_ref && <MaybeOfficial price={r.official_ref.price} small />}
+                  <DataCautionChip dc={r.data_caution} small />
                 </div>
                 {/* mini budget-fit bar */}
                 <div style={st("position:relative; height:4px; margin-top:8px;")}>
@@ -210,10 +224,13 @@ function HeroPick({ p, price, budget, pct, onClick }: {
           </div>
         </div>
 
-        <div style={st("display:flex; align-items:flex-end; gap:11px; margin-top:20px;")}>
+        <div style={st("display:flex; align-items:flex-end; gap:11px; margin-top:20px; flex-wrap:wrap;")}>
           <span style={st("font-size:clamp(32px,3.6vw,42px); font-weight:300; letter-spacing:-2px; color:#17191d; line-height:1;")}>{taka(price)}</span>
           <span style={st("font-size:13.5px; color:#80868f; margin-bottom:5px;")}>at {p.in_stock_shops ?? 0} shops</span>
         </div>
+        {p.data_caution && p.data_caution.level !== "low" && (
+          <div style={st("margin-top:12px;")}><DataCautionChip dc={p.data_caution} /></div>
+        )}
 
         {off && (
           <div style={st("display:flex; gap:10px; margin-top:14px; padding:12px 14px; border-radius:14px; background:rgba(10,157,106,.08); border:.5px solid rgba(10,157,106,.18);")}>
