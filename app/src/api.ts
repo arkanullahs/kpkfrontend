@@ -183,6 +183,8 @@ export interface RecParams {
   current_phone?: string;
   official_only?: boolean;
   include_cn?: boolean;
+  /** "only" | "exclude" — brand-origin filter: brands headquartered in China */
+  chinese?: string;
   exclude_brand?: string;
   os_style?: string;
   platform?: string;

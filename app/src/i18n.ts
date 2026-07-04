@@ -246,6 +246,10 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "Some cheap phones are built for China. They often have no Google apps, no Bangla, and miss updates. Best left ON unless you really know the phone.",
     bn: "কিছু সস্তা ফোন চীনের বাজারের জন্য তৈরি। এগুলোতে প্রায়ই গুগল অ্যাপ বা বাংলা থাকে না, আপডেটও আসে না। ফোনটি ভালো করে না জানলে এটি চালু রাখাই ভালো।"
   },
+  exp_chinese: {
+    en: "This hides every China-headquartered brand — Xiaomi, Redmi, POCO, Oppo, Vivo, OnePlus, Tecno and more — even when the phone is a global version with full Google apps. You'll mostly see Samsung, Apple, Google, Motorola and Nokia. Leave it OFF unless brand origin itself matters to you.",
+    bn: "এটি চীনা কোম্পানির সব ব্র্যান্ড লুকিয়ে দেয় — Xiaomi, Redmi, POCO, Oppo, Vivo, OnePlus, Tecno সহ — ফোনটি গুগল অ্যাপসহ গ্লোবাল ভার্সন হলেও। তখন মূলত Samsung, Apple, Google, Motorola আর Nokia দেখবেন। ব্র্যান্ডের দেশ নিয়ে আপত্তি না থাকলে এটি বন্ধ রাখুন।"
+  },
   exp_platform: {
     en: "Android (Samsung, Xiaomi, etc.) or iPhone (iOS). Choose Any if it doesn't matter.",
     bn: "অ্যান্ড্রয়েড (Samsung, Xiaomi…) নাকি আইফোন (iOS)। পার্থক্য না থাকলে Any বাছুন।"

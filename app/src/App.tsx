@@ -20,6 +20,7 @@ export interface Form {
   platform: "any" | "android" | "ios";
   osStyle: "any" | "clean" | "feature";
   includeCn: boolean;
+  avoidChinese: boolean;         // hide China-HQ brands entirely (Xiaomi, Oppo…)
   excludeBrands: string[];
   currentPhone: string;
   traitText: string;
@@ -27,7 +28,8 @@ export interface Form {
 
 const DEFAULT_FORM: Form = {
   budget: 95000, archetypes: ["photographer"], platform: "any",
-  osStyle: "any", includeCn: false, excludeBrands: [], currentPhone: "", traitText: "",
+  osStyle: "any", includeCn: false, avoidChinese: false,
+  excludeBrands: [], currentPhone: "", traitText: "",
 };
 
 /** form → /recommend query params */
@@ -43,6 +45,7 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.platform !== "any") p.platform = f.platform;
   if (f.osStyle !== "any") p.os_style = f.osStyle;
   if (f.includeCn) p.include_cn = true;
+  if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
   if (f.excludeBrands.length) p.exclude_brand = f.excludeBrands.join(",");
   if (f.currentPhone.trim()) p.current_phone = f.currentPhone.trim();
   return p;
