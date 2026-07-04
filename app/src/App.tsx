@@ -165,13 +165,6 @@ export default function App() {
   const goAsk = () => { setScreen("ask"); setAskStep(0); window.scrollTo({ top: 0 }); };
   const goResults = () => { setScreen("results"); window.scrollTo({ top: 0 }); };
   const goMethod = () => { setScreen("method"); window.scrollTo({ top: 0 }); };
-  const goScreen = (s: Screen) => {
-    if (s === "results") {
-      const stale = lastRunKey.current !== JSON.stringify(toParams(form, 5));
-      if (!recLoading && (!result || stale)) { runRecommend(); return; }
-    }
-    setScreen(s); window.scrollTo({ top: 0 });
-  };
 
   // one-time "prices are a guide" notice when results first appear this session
   const [showNotice, setShowNotice] = useState(false);
@@ -283,6 +276,7 @@ export default function App() {
         askStep={askStep} askLast={askStep === ASK_STEPS - 1}
         onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
       />
+      {showNotice && screen === "results" && <ResultsNotice onClose={dismissNotice} />}
       {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
 
       {/* page footer */}
