@@ -35,6 +35,12 @@ export interface CostOfOwnership {
   support_years?: number; remaining_years?: number; cost_per_year?: number;
 }
 
+export interface Connectivity {
+  has_ir_blaster: boolean | null;
+  has_fm_radio: boolean | null;
+  has_headphone_jack: boolean | null;
+}
+
 export interface VariantSaving {
   variant: string; official: number; unofficial: number; pct: number;
 }
@@ -140,6 +146,7 @@ export interface PhoneDetail {
   official_status?: string; in_stock_shops?: number; age_years?: number;
   tags?: string[];
   specs?: Record<string, any>;
+  connectivity?: Connectivity | null;
   blended_scores?: Scores; scores?: Scores;
   score_reasons?: Record<string, string[]>;
   traits?: Record<string, any>;
