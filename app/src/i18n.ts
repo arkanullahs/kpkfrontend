@@ -60,6 +60,17 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   carried_by: { en: "Carried by", bn: "পাওয়া যায়" },
   shops: { en: "shops", bn: "দোকানে" },
 
+  // ---- listing-data caution (feedback #5) + connectivity (P2 remainder) ----
+  data_caution_few: { en: "Few/old listings — verify at shop", bn: "লিস্টিং কম বা পুরনো — দোকানে যাচাই করুন" },
+  data_caution_stale: { en: "Listings look outdated — confirm price at shop", bn: "লিস্টিং পুরনো হতে পারে — দোকানে দাম নিশ্চিত করুন" },
+  conn_title: { en: "Connectivity", bn: "কানেক্টিভিটি" },
+  conn_jack: { en: "3.5mm jack", bn: "৩.৫ মিমি জ্যাক" },
+  conn_ir: { en: "IR blaster", bn: "আইআর ব্লাস্টার" },
+  conn_fm: { en: "FM radio", bn: "এফএম রেডিও" },
+  conn_yes: { en: "Yes", bn: "আছে" },
+  conn_no: { en: "No", bn: "নেই" },
+  conn_unknown: { en: "Not verified", bn: "যাচাই হয়নি" },
+
   // ---- official signal (GadgetGear is the one shop we trust as official) ----
   maybe_official: { en: "Maybe official", bn: "অফিসিয়াল হতে পারে" },
   gng_note: {

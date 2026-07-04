@@ -41,6 +41,12 @@ export interface Connectivity {
   has_headphone_jack: boolean | null;
 }
 
+/** Thin/stale listing-data flag (feedback #5). The UI badges medium/high only. */
+export interface DataCaution {
+  level: "high" | "medium" | "low";
+  reason: string;
+}
+
 export interface VariantSaving {
   variant: string; official: number; unofficial: number; pct: number;
 }
@@ -70,6 +76,7 @@ export interface Pick {
   same_variant_saving?: VariantSaving | null;
   official_ref?: OfficialRef | null;
   in_stock_shops?: number; age_years?: number;
+  data_caution?: DataCaution | null;
   overall_score?: number;
   confidence?: "high" | "medium" | "low" | string;
   score_gap?: number;
@@ -144,6 +151,7 @@ export interface PhoneDetail {
   same_variant_saving?: VariantSaving | null;
   official_ref?: OfficialRef | null;
   official_status?: string; in_stock_shops?: number; age_years?: number;
+  data_caution?: DataCaution | null;
   tags?: string[];
   specs?: Record<string, any>;
   connectivity?: Connectivity | null;

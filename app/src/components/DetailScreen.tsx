@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, retentionCurve, st, taka, verdictMeta } from "../theme";
 import { t } from "../i18n";
-import type { Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
+import type { Connectivity, Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 import { CompareCard, JustSoYouKnow } from "./Compare";
+import { DataCautionChip } from "./ResultsScreen";
 
 interface Props {
   detail: PhoneDetail | null;
@@ -60,6 +61,18 @@ function buildSpecs(s: Record<string, any> | undefined): { k: string; v: string 
   return out;
 }
 
+/** Verified hardware presence rows (GSMArena-crawled). Hidden when the whole
+    record is unverified (all three null — the no-specs case, pure noise). */
+function connRows(c: Connectivity | null | undefined): { k: string; v: boolean | null }[] {
+  if (!c) return [];
+  const rows = [
+    { k: "conn_jack", v: c.has_headphone_jack },
+    { k: "conn_ir", v: c.has_ir_blaster },
+    { k: "conn_fm", v: c.has_fm_radio },
+  ];
+  return rows.some((r) => r.v != null) ? rows : [];
+}
+
 function buildTraits(tr: Record<string, any> | undefined): string[] {
   if (!tr) return [];
   const out: string[] = [];
@@ -102,6 +115,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const traits = buildTraits(d?.traits);
   const ourTake = h?.smart_verdict || d?.ai_verdict?.verdict || null;
   const inStock = d?.in_stock_shops ?? h?.in_stock_shops ?? 0;
+  const dataCaution = d?.data_caution ?? h?.data_caution ?? null;
 
   // sections that require the full DB record
   const op = d?.opinion_profile || {};
@@ -110,6 +124,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const bestFor = (op.best_for?.length ? op.best_for : d?.ai_verdict?.best_for) || [];
   const avoidIf = op.avoid_if || [];
   const specs = buildSpecs(d?.specs);
+  const conn = connRows(d?.connectivity);
   const bs = d?.brand_summary;
   // only real, priced listings — a price-less offer must never sort to the top
   const offers = (d?.offers || []).filter((o) => o.price && o.price > 0).sort((a, b) => a.price - b.price);
@@ -149,6 +164,9 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           </div>
           <div style={st("margin-top:12px; font-size:14px; color:#80868f; line-height:1.7;")}>
             Cheapest of {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
+            {dataCaution && dataCaution.level !== "low" && (
+              <><br /><span style={st("display:inline-block; margin-top:6px;")}><DataCautionChip dc={dataCaution} /></span></>
+            )}
             {d?.price_trend && (d.price_trend.trend === "down" || d.price_trend.trend === "up") && (
               <><br /><span style={st(`font-size:12px; font-weight:600; color:${d.price_trend.trend === "down" ? "#0a7d57" : "#a8761a"};`)}>
                 Price {d.price_trend.trend === "down" ? "dropped" : "rose"} {taka(Math.abs(d.price_trend.delta))} recently
@@ -227,6 +245,24 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               </div>
             ))}
           </div>
+          {conn.length > 0 && (
+            <>
+              <div style={st("font-size:12.5px; color:#9a9da4; margin-top:20px;")}>{t("conn_title")}</div>
+              <div style={st("display:flex; flex-wrap:wrap; gap:7px; margin-top:9px;")}>
+                {conn.map((c) => (
+                  <span key={c.k} style={st(`display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; padding:6px 12px; border-radius:99px; ${c.v == null ? "color:#9a9da4; background:rgba(15,25,35,.045);" : c.v ? "color:#0a7d57; background:rgba(10,157,106,.1);" : "color:#80868f; background:rgba(15,25,35,.055);"}`)}>
+                    {c.v != null && (
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                        {c.v ? <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                             : <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />}
+                      </svg>
+                    )}
+                    {t(c.k)}{c.v == null ? ` · ${t("conn_unknown")}` : ""}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
         </Card>
 
         {/* value retention (estimated from brand resale reputation) */}
