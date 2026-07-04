@@ -24,12 +24,20 @@ export interface Form {
   excludeBrands: string[];
   currentPhone: string;
   traitText: string;
+  // advanced mode (feedback #2/#7) — hardware dealbreakers + brand whitelist
+  requireJack: boolean;
+  requireIr: boolean;
+  requireFm: boolean;
+  socVendor: "any" | "snapdragon" | "mediatek";
+  includeBrands: string[];       // only these brands (engine `brand` whitelist)
 }
 
 const DEFAULT_FORM: Form = {
   budget: 95000, archetypes: ["photographer"], platform: "any",
   osStyle: "any", includeCn: false, avoidChinese: false,
   excludeBrands: [], currentPhone: "", traitText: "",
+  requireJack: false, requireIr: false, requireFm: false,
+  socVendor: "any", includeBrands: [],
 };
 
 /** form → /recommend query params */
@@ -48,6 +56,11 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
   if (f.excludeBrands.length) p.exclude_brand = f.excludeBrands.join(",");
   if (f.currentPhone.trim()) p.current_phone = f.currentPhone.trim();
+  if (f.requireJack) p.require_jack = true;
+  if (f.requireIr) p.require_ir = true;
+  if (f.requireFm) p.require_fm = true;
+  if (f.socVendor !== "any") p.soc_vendor = f.socVendor;
+  if (f.includeBrands.length) p.brand = f.includeBrands.join(",");
   return p;
 }
 

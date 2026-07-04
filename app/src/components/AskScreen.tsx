@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { fmt, st, taka } from "../theme";
 import { bnNum, bnToAscii, t } from "../i18n";
 import type { Archetype } from "../api";
@@ -273,7 +273,11 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
           {BRANDS.map((bd) => {
             const sel = form.excludeBrands.includes(bd);
             return (
-              <button key={bd} onClick={() => patch({ excludeBrands: sel ? form.excludeBrands.filter((x) => x !== bd) : [...form.excludeBrands, bd] })} className="k-press"
+              <button key={bd} onClick={() => patch({
+                excludeBrands: sel ? form.excludeBrands.filter((x) => x !== bd) : [...form.excludeBrands, bd],
+                // an excluded brand can't simultaneously be whitelisted
+                includeBrands: form.includeBrands.filter((x) => x !== bd),
+              })} className="k-press"
                 style={st(`padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13.5px; font-weight:500; transition:all .15s ease; background:${sel ? "#fde8e4" : "rgba(255,255,255,.8)"}; color:${sel ? "#c4503c" : "#5c626a"}; border:.5px solid ${sel ? "rgba(196,80,60,.3)" : "rgba(15,25,35,.1)"}; text-decoration:${sel ? "line-through" : "none"};`)}>{bd}</button>
             );
           })}
@@ -287,6 +291,85 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
           style={st("margin-top:11px; width:100%; border:none; outline:none; padding:15px 17px; border-radius:15px; background:rgba(255,255,255,.8); box-shadow:inset 0 0 0 1px rgba(15,25,35,.08); font-size:15px; color:#17191d;")} />
         <HelpLine>{t("exp_current")}</HelpLine>
       </div>
+
+      <AdvancedSection form={form} patch={patch} />
+    </div>
+  );
+}
+
+/* ---------- advanced mode (feedback #2/#7): hardware dealbreakers ----------
+   Collapsed by default so the simple flow stays 3 taps; power buyers open it
+   for must-have hardware, chipset brand and a brand whitelist. */
+const HW_TOGGLES: [keyof Form, string, string][] = [
+  ["requireJack", "Headphone jack", "3.5mm"],
+  ["requireIr", "IR blaster", "TV/AC remote"],
+  ["requireFm", "FM radio", ""],
+];
+
+function AdvancedSection({ form, patch }: { form: Form; patch: Props["patch"] }) {
+  const open = form.requireJack || form.requireIr || form.requireFm
+    || form.socVendor !== "any" || form.includeBrands.length > 0;
+  const [show, setShow] = useState(open);
+  const toggleBrand = (bd: string) => {
+    const sel = form.includeBrands.includes(bd);
+    patch({
+      includeBrands: sel ? form.includeBrands.filter((x) => x !== bd) : [...form.includeBrands, bd],
+      // a whitelisted brand can't simultaneously be excluded
+      excludeBrands: form.excludeBrands.filter((x) => x !== bd),
+    });
+  };
+  return (
+    <div>
+      <button onClick={() => setShow(!show)} className="k-press"
+        style={st(`display:flex; align-items:center; gap:10px; width:100%; padding:15px 19px; border-radius:18px; border:.5px solid ${show ? "var(--acsoft2)" : "rgba(15,25,35,.08)"}; cursor:pointer; background:${show ? "var(--acsoft)" : "rgba(255,255,255,.7)"}; transition:all .18s ease;`)}>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 7h9M17 7h3M4 17h3M11 17h9M13 4.5v5M7 14.5v5" stroke={show ? "var(--acd)" : "#5c626a"} strokeWidth="1.8" strokeLinecap="round" /></svg>
+        <span style={st(`font-size:15px; font-weight:700; color:${show ? "var(--acd)" : "#41464d"};`)}>{t("adv_title")}</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style={st(`margin-left:auto; transition:transform .2s ease; transform:rotate(${show ? 180 : 0}deg);`)}><path d="M6 9l6 6 6-6" stroke="#80868f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </button>
+
+      {show && (
+        <div style={st("display:flex; flex-direction:column; gap:22px; margin-top:16px; padding:19px; border-radius:18px; background:rgba(255,255,255,.6); border:.5px solid rgba(15,25,35,.06); animation:kpop .3s cubic-bezier(.2,.7,.2,1) both;")}>
+          <div>
+            <div style={st(LABEL)}>Must-have hardware</div>
+            <div style={st("margin-top:11px; display:flex; flex-wrap:wrap; gap:8px;")}>
+              {HW_TOGGLES.map(([key, label, sub]) => {
+                const on = form[key] as boolean;
+                return (
+                  <button key={key} onClick={() => patch({ [key]: !on } as Partial<Form>)} className="k-press"
+                    style={st(`padding:10px 16px; border-radius:99px; cursor:pointer; font-size:13.5px; font-weight:600; transition:all .15s ease; background:${on ? "var(--ac)" : "rgba(255,255,255,.85)"}; color:${on ? "#fff" : "#41464d"}; border:.5px solid ${on ? "transparent" : "rgba(15,25,35,.1)"}; box-shadow:${on ? "0 3px 12px var(--acglow)" : "none"};`)}>
+                    {label}{sub && <span style={st(`font-weight:500; margin-left:5px; color:${on ? "rgba(255,255,255,.75)" : "#9aa0a8"};`)}>{sub}</span>}
+                  </button>
+                );
+              })}
+            </div>
+            <HelpLine>{t("exp_hw")}</HelpLine>
+          </div>
+
+          <div>
+            <div style={st(LABEL)}>Chipset brand</div>
+            <div style={st("margin-top:10px; display:flex; gap:5px; padding:4px; border-radius:14px; background:rgba(15,25,35,.05); max-width:420px;")}>
+              {([["any", "Any"], ["snapdragon", "Snapdragon"], ["mediatek", "MediaTek"]] as const).map(([k, l]) => (
+                <button key={k} onClick={() => patch({ socVendor: k })} className="k-press" style={st(seg(form.socVendor === k))}>{l}</button>
+              ))}
+            </div>
+            <HelpLine>{t("exp_soc")}</HelpLine>
+          </div>
+
+          <div>
+            <div style={st(LABEL)}>Only these brands</div>
+            <div style={st("margin-top:11px; display:flex; flex-wrap:wrap; gap:8px;")}>
+              {BRANDS.map((bd) => {
+                const sel = form.includeBrands.includes(bd);
+                return (
+                  <button key={bd} onClick={() => toggleBrand(bd)} className="k-press"
+                    style={st(`padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13.5px; font-weight:500; transition:all .15s ease; background:${sel ? "var(--acsoft)" : "rgba(255,255,255,.8)"}; color:${sel ? "var(--acd)" : "#5c626a"}; border:.5px solid ${sel ? "var(--acsoft2)" : "rgba(15,25,35,.1)"}; font-weight:${sel ? 700 : 500};`)}>{bd}</button>
+                );
+              })}
+            </div>
+            <HelpLine>{t("exp_include_brands")}</HelpLine>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
