@@ -21,6 +21,9 @@ const getStoredMode = (): Mode => {
   try { return localStorage.getItem("kpk_mode") === "advanced" ? "advanced" : "simple"; }
   catch { return "simple"; }
 };
+const hasStoredMode = (): boolean => {
+  try { return localStorage.getItem("kpk_mode") !== null; } catch { return true; }
+};
 
 export interface Form {
   budget: number;
@@ -41,6 +44,8 @@ export interface Form {
   hwStrict: boolean;             // unverified hardware also fails must-have filters
   regions: string[];             // accepted import markets (Rio-labeled offers only)
   requireRom: boolean;           // only phones with an official LineageOS build
+  // Simple-mode questionnaire answers (feedback #4) — mapped to archetypes
+  q: { who: string; day: string[]; out: boolean | null };
 }
 
 const DEFAULT_FORM: Form = {
@@ -49,7 +54,23 @@ const DEFAULT_FORM: Form = {
   excludeBrands: [], currentPhone: "", traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
   socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
+  q: { who: "me", day: [], out: null },
 };
+
+/** Simple-mode questionnaire → archetypes. Every answer quietly adds the
+    archetypes it implies; nothing selected means a balanced all-rounder. */
+export function deriveArchetypes(q: Form["q"]): string[] {
+  const out = new Set<string>();
+  if (q.who === "elder") out.add("parents");
+  if (q.who === "student") out.add("student");
+  const dayMap: Record<string, string> = {
+    photos: "photographer", games: "gamer", reels: "vlogger",
+    work: "professional", watch: "rider",
+  };
+  for (const d of q.day) if (dayMap[d]) out.add(dayMap[d]);
+  if (q.out) out.add("rider");
+  return out.size ? [...out] : ["balanced"];
+}
 
 /** form → /recommend query params */
 export function toParams(f: Form, top = 5): RecParams {
@@ -88,13 +109,17 @@ export default function App() {
   // switching to Simple resets the advanced-only fields so no invisible
   // filter keeps shaping results after the controls disappear
   const [mode, setMode] = useState<Mode>(getStoredMode());
+  // first visit: ask Simple-or-Advanced before the wizard (feedback #2/#4)
+  const [modeChosen, setModeChosen] = useState<boolean>(hasStoredMode());
   const changeMode = useCallback((m: Mode) => {
     setMode(m);
+    setModeChosen(true);
     try { localStorage.setItem("kpk_mode", m); } catch { /* ignore */ }
     if (m === "simple") setForm((f) => ({
       ...f, excludeBrands: [], osStyle: "any",
       requireJack: false, requireIr: false, requireFm: false,
       socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
+      archetypes: deriveArchetypes(f.q),
     }));
   }, []);
   const [meta, setMeta] = useState<Meta | null>(null);
@@ -290,8 +315,8 @@ export default function App() {
       <div style={st("position:relative; z-index:1; padding:18px clamp(16px,4vw,40px) 130px;")}>
         {screen === "ask" && (
           <AskScreen
-            form={form} patch={patch} archetypes={archetypes}
-            mode={mode} onMode={changeMode}
+            form={form} patch={patch} archetypes={archetypes} meta={meta}
+            mode={mode} onMode={changeMode} modeChosen={modeChosen}
             metaStock={metaStock} onSubmit={runRecommend} matchCount={matchCount}
             step={askStep} totalSteps={ASK_STEPS} onNext={askNext} onBack={askBack}
           />

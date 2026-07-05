@@ -310,6 +310,50 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   method_steps_h: { en: "Step by step", bn: "ধাপে ধাপে" },
   read_how: { en: "Read how it works", bn: "কীভাবে কাজ করে দেখুন" },
 
+  // ---- first-visit mode gate + Simple questionnaire (feedback #2/#4) ----
+  mode_gate_t: { en: "How do you want to choose?", bn: "কীভাবে ফোন খুঁজবেন?" },
+  mode_gate_s: {
+    en: "Pick a style. You can switch anytime with the toggle at the top.",
+    bn: "একটি ধরন বাছুন। উপরের বোতাম থেকে যেকোনো সময় বদলাতে পারবেন।"
+  },
+  mode_gate_simple_d: {
+    en: "A few easy questions — no tech words. We figure out the rest. Best for most people.",
+    bn: "কয়েকটি সহজ প্রশ্ন — কোনো টেকনিক্যাল শব্দ নেই। বাকিটা আমরা বুঝে নেব। বেশিরভাগ মানুষের জন্য এটাই।"
+  },
+  mode_gate_advanced_d: {
+    en: "Every filter and technical control: hardware must-haves, chipset, brands, import market, data stats.",
+    bn: "সব ফিল্টার আর টেকনিক্যাল কন্ট্রোল: হার্ডওয়্যার, চিপসেট, ব্র্যান্ড, ইমপোর্ট মার্কেট, ডেটার খুঁটিনাটি।"
+  },
+  mode_gate_note: {
+    en: "Not sure? Take Simple — the results are just as good.",
+    bn: "দ্বিধায় আছেন? সহজ-টা নিন — ফলাফল একই রকম ভালো।"
+  },
+  q_you_t: { en: "Tell us about you", bn: "আপনার কথা বলুন" },
+  q_you_s: {
+    en: "Three quick questions. From your answers we work out exactly what to look for.",
+    bn: "তিনটি ছোট প্রশ্ন। আপনার উত্তর থেকেই আমরা বুঝে নেব ঠিক কী খুঁজতে হবে।"
+  },
+  qq_who: { en: "Who will use this phone?", bn: "ফোনটি কে চালাবেন?" },
+  qq_who_me: { en: "Me", bn: "আমি নিজে" },
+  qq_who_elder: { en: "My parents / an elder", bn: "আম্মু-আব্বু / মুরুব্বি" },
+  qq_who_student: { en: "A student", bn: "একজন শিক্ষার্থী" },
+  qq_day: { en: "What fills the day on the phone? Pick all that fit.", bn: "ফোনে সারাদিন কী করা হয়? যা যা মেলে বাছুন।" },
+  qq_day_photos: { en: "Taking photos", bn: "ছবি তোলা" },
+  qq_day_games: { en: "Gaming", bn: "গেমিং" },
+  qq_day_reels: { en: "Making videos / reels", bn: "ভিডিও/রিল বানানো" },
+  qq_day_work: { en: "Office / business work", bn: "অফিস বা ব্যবসার কাজ" },
+  qq_day_chat: { en: "Calls, WhatsApp, Facebook", bn: "কল, WhatsApp, Facebook" },
+  qq_day_watch: { en: "Watching shows & videos", bn: "নাটক-সিনেমা দেখা" },
+  qq_out: { en: "Outside the house a lot?", bn: "বাইরে বাইরে থাকা হয় বেশি?" },
+  qq_out_yes: { en: "Yes, most of the day", bn: "হ্যাঁ, দিনের বেশিরভাগ" },
+  qq_out_no: { en: "Not really", bn: "না, তেমন না" },
+  adv_stats_t: { en: "Our data right now:", bn: "এই মুহূর্তে আমাদের ডেটা:" },
+  adv_stats_phones: { en: "phones tracked", bn: "ফোন ট্র্যাকড" },
+  adv_stats_specs: { en: "with full specs", bn: "পূর্ণ স্পেকসহ" },
+  adv_stats_cards: { en: "evidence cards", bn: "এভিডেন্স কার্ড" },
+  adv_stats_embedded: { en: "embedded for search", bn: "সার্চে এমবেডেড" },
+  adv_stats_stock: { en: "in stock", bn: "স্টকে" },
+
   conn_rom: { en: "Custom ROM (LineageOS)", bn: "কাস্টম রম (LineageOS)" },
   exp_custom_rom: {
     en: "Only phones with an official LineageOS build today — verified from LineageOS itself, not guessed. These phones usually run GCam ports well too. Very few qualify (mostly Pixel, OnePlus, Nothing, a few Samsung/Xiaomi).",
