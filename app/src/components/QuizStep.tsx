@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { st } from "../theme";
 import { bnNum, t } from "../i18n";
 import { deriveIntent, type Form } from "../App";
+import { track } from "../track";
 
 /* One-question-at-a-time quiz (feedback #4 redesign). Each answer re-derives
    the dynamic intent (use_case sentence + weighted priorities) — no archetype
@@ -80,7 +81,7 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
             <p style={WHY}>{t("qz_why_who")}</p>
             <div style={st("display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;")}>
               {WHO.map(([k, icon, lk]) => (
-                <button key={k} onClick={() => { setQ({ who: k }); later(1); }} className="k-press" style={chip(q.who === k, true)}>
+                <button key={k} onClick={() => { track("quiz_answer", { q: "who", value: k }); setQ({ who: k }); later(1); }} className="k-press" style={chip(q.who === k, true)}>
                   <span>{icon}</span>{t(lk)}
                 </button>
               ))}
@@ -102,7 +103,7 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
                 );
               })}
             </div>
-            <button onClick={() => go(2)} className="k-press k-glow" style={PRIMARY}>
+            <button onClick={() => { track("quiz_answer", { q: "day", value: q.day.length ? [...q.day].sort().join(",") : "none" }); go(2); }} className="k-press k-glow" style={PRIMARY}>
               {t("qz_next")}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
@@ -115,7 +116,7 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
             <p style={WHY}>{t("qz_why_out")}</p>
             <div style={st("display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;")}>
               {([[true, "☀️", "qq_out_yes"], [false, "🏠", "qq_out_no"]] as const).map(([v, icon, lk]) => (
-                <button key={String(v)} onClick={() => { setQ({ out: v }); later(3); }} className="k-press" style={chip(q.out === v, true)}>
+                <button key={String(v)} onClick={() => { track("quiz_answer", { q: "out", value: v }); setQ({ out: v }); later(3); }} className="k-press" style={chip(q.out === v, true)}>
                   <span>{icon}</span>{t(lk)}
                 </button>
               ))}
@@ -156,7 +157,7 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
               <EditChip onClick={() => go(2)} label={t("qz_r_out")} value={q.out === null ? "—" : t(q.out ? "qq_out_yes" : "qq_out_no")} />
             </div>
 
-            <button onClick={onNext} className="k-press k-glow" style={PRIMARY}>
+            <button onClick={() => { track("quiz_complete", { who: q.who, day: q.day.length ? [...q.day].sort().join(",") : "none", out: q.out === null ? "skipped" : q.out, priorities: form.priorities.join(",") || "balanced" }); onNext(); }} className="k-press k-glow" style={PRIMARY}>
               {t("qz_done")}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
@@ -172,7 +173,7 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 12H6M12 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             {t("qz_back")}
           </button>
-          <button onClick={() => go(3)} className="k-press"
+          <button onClick={() => { track("quiz_skip", { at: ["who", "day", "out"][sub] }); go(3); }} className="k-press"
             style={st("padding:10px 4px; border:none; cursor:pointer; background:transparent; font-size:13.5px; font-weight:600; color:#9aa0a8; font-family:var(--f-bn); text-decoration:underline; text-underline-offset:3px;")}>
             {t("qz_skip")}
           </button>

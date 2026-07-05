@@ -11,6 +11,7 @@ import { MethodScreen } from "./components/MethodScreen";
 import { ResultsNotice } from "./components/ResultsNotice";
 import { PriceAlert } from "./components/PriceAlert";
 import { Dock } from "./components/Dock";
+import { track } from "./track";
 
 export type Screen = "ask" | "results" | "detail" | "method";
 
@@ -146,6 +147,7 @@ export default function App() {
   // Not persisted — a reload is the way to change modes (v2 decision #1).
   const [modeChosen, setModeChosen] = useState<boolean>(false);
   const changeMode = useCallback((m: Mode) => {
+    track("mode_gate", { mode: m });
     setMode(m);
     setModeChosen(true);
     setForm((f) => m === "simple"
@@ -224,6 +226,7 @@ export default function App() {
   const runRecommend = useCallback(async () => {
     const requestId = crypto.randomUUID();
     requestIdRef.current = requestId;
+    track("see_results", { mode, budget: form.budget, quiz: !!(form.useCase || form.priorities.length) });
     const params: RecParams = { ...toParams(form, 5), request_id: requestId };
     lastRunKey.current = JSON.stringify(toParams(form, 5));
     setScreen("results");
@@ -243,7 +246,7 @@ export default function App() {
       setRecError(e?.message || "Could not load recommendations");
       setRecLoading(false);       // errors skip the finish beat
     }
-  }, [form]);
+  }, [form, mode]);
 
   // RagProgress finished its completion beat -> reveal the results
   const onLoaderDone = useCallback(() => { setRecLoading(false); setRecReady(false); }, []);
@@ -251,6 +254,8 @@ export default function App() {
   const openDetail = useCallback(async (id: string) => {
     setScreen("detail");
     setSelectedId(id);
+    const rank = (result?.picks.findIndex((p) => p.id === id) ?? -1) + 1;
+    track("result_click", { phone: id, rank: rank || null });
     // instant hero/scores/verdict from the result pick while the full
     // DB-backed detail (specs, offers, owner voices) loads behind it
     setPickHint(result?.picks.find((p) => p.id === id) ?? null);
