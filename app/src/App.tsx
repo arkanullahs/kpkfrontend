@@ -39,6 +39,7 @@ export interface Form {
   socVendor: "any" | "snapdragon" | "mediatek";
   includeBrands: string[];       // only these brands (engine `brand` whitelist)
   hwStrict: boolean;             // unverified hardware also fails must-have filters
+  regions: string[];             // accepted import markets (Rio-labeled offers only)
 }
 
 const DEFAULT_FORM: Form = {
@@ -46,7 +47,7 @@ const DEFAULT_FORM: Form = {
   osStyle: "any", avoidChinese: false, officialOnly: false,
   excludeBrands: [], currentPhone: "", traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
-  socVendor: "any", includeBrands: [], hwStrict: false,
+  socVendor: "any", includeBrands: [], hwStrict: false, regions: [],
 };
 
 /** form → /recommend query params */
@@ -71,6 +72,7 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.socVendor !== "any") p.soc_vendor = f.socVendor;
   if (f.includeBrands.length) p.brand = f.includeBrands.join(",");
   if (f.hwStrict) p.hw_strict = true;
+  if (f.regions.length) p.regions = f.regions.join(",");
   return p;
 }
 
@@ -90,7 +92,7 @@ export default function App() {
     if (m === "simple") setForm((f) => ({
       ...f, excludeBrands: [], osStyle: "any",
       requireJack: false, requireIr: false, requireFm: false,
-      socVendor: "any", includeBrands: [], hwStrict: false,
+      socVendor: "any", includeBrands: [], hwStrict: false, regions: [],
     }));
   }, []);
   const [meta, setMeta] = useState<Meta | null>(null);

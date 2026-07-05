@@ -474,6 +474,7 @@ function OfferRow({ o, best }: { o: Offer; best: boolean }) {
       <div style={st("flex:1; min-width:0;")}>
         <div style={st("font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{o.shop}{o.variant ? <span style={st("font-weight:500; color:#8a8e96;")}> · {o.variant}</span> : null}</div>
         {maybeOfficial && <span style={st(`font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; ${MAYBE_OFFICIAL_STYLE}`)}>{t("maybe_official")}</span>}
+        {o.region && <span style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; background:rgba(15,25,35,.06); color:#5c626a;")}>{o.region}</span>}
       </div>
       <span style={st("font-size:15px; font-weight:600; color:#17191d;")}>{taka(o.price)}</span>
       {best && <span style={st("font-size:10px; font-weight:700; color:var(--acd); background:rgba(255,255,255,.85); padding:3px 9px; border-radius:99px;")}>{t("best_price")}</span>}
