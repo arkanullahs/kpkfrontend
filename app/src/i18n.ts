@@ -253,10 +253,6 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "Already good to go? Skip straight to results — nothing here is required.",
     bn: "চাইলে এখনই ফলাফলে যান — এখানের কিছুই বাধ্যতামূলক নয়।"
   },
-  exp_cn: {
-    en: "Some cheap phones are built for China. They often have no Google apps, no Bangla, and miss updates. Best left ON unless you really know the phone.",
-    bn: "কিছু সস্তা ফোন চীনের বাজারের জন্য তৈরি। এগুলোতে প্রায়ই গুগল অ্যাপ বা বাংলা থাকে না, আপডেটও আসে না। ফোনটি ভালো করে না জানলে এটি চালু রাখাই ভালো।"
-  },
   adv_title: { en: "Advanced filters", bn: "অ্যাডভান্সড ফিল্টার" },
   exp_hw: {
     en: "Phones confirmed to lack a must-have are dropped. Phones we haven't verified yet still show — check the spec sheet before buying.",
@@ -271,8 +267,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     bn: "শুধু নির্দিষ্ট ব্র্যান্ড দেখতে চাইলে বেছে নিন। খালি রাখলে সব ব্র্যান্ড দেখাবে।"
   },
   exp_chinese: {
-    en: "This hides every China-headquartered brand — Xiaomi, Redmi, POCO, Oppo, Vivo, OnePlus, Tecno and more — even when the phone is a global version with full Google apps. You'll mostly see Samsung, Apple, Google, Motorola and Nokia. Leave it OFF unless brand origin itself matters to you.",
-    bn: "এটি চীনা কোম্পানির সব ব্র্যান্ড লুকিয়ে দেয় — Xiaomi, Redmi, POCO, Oppo, Vivo, OnePlus, Tecno সহ — ফোনটি গুগল অ্যাপসহ গ্লোবাল ভার্সন হলেও। তখন মূলত Samsung, Apple, Google, Motorola আর Nokia দেখবেন। ব্র্যান্ডের দেশ নিয়ে আপত্তি না থাকলে এটি বন্ধ রাখুন।"
+    en: "This hides every China-headquartered brand — Xiaomi, Redmi, POCO, Oppo, Vivo, OnePlus, Tecno and more — even when the phone is a global version with full Google apps. You'll mostly see Samsung, Apple, Google, Motorola and Nokia. Leave it OFF unless brand origin itself matters to you. China-market ROM units (no Google apps) are always hidden, whatever you choose here.",
+    bn: "এটি চীনা কোম্পানির সব ব্র্যান্ড লুকিয়ে দেয় — Xiaomi, Redmi, POCO, Oppo, Vivo, OnePlus, Tecno সহ — ফোনটি গুগল অ্যাপসহ গ্লোবাল ভার্সন হলেও। তখন মূলত Samsung, Apple, Google, Motorola আর Nokia দেখবেন। ব্র্যান্ডের দেশ নিয়ে আপত্তি না থাকলে এটি বন্ধ রাখুন। চীনের বাজারের ROM ইউনিট (গুগল অ্যাপ ছাড়া) এখানে যা-ই বাছুন সবসময়ই লুকানো থাকে।"
   },
   exp_platform: {
     en: "Android (Samsung, Xiaomi, etc.) or iPhone (iOS). Choose Any if it doesn't matter.",

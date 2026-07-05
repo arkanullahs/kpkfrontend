@@ -27,7 +27,6 @@ export interface Form {
   archetypes: string[];          // multi-select: the buyer can pick several needs
   platform: "any" | "android" | "ios";
   osStyle: "any" | "clean" | "feature";
-  includeCn: boolean;
   avoidChinese: boolean;         // hide China-HQ brands entirely (Xiaomi, Oppo…)
   excludeBrands: string[];
   currentPhone: string;
@@ -43,7 +42,7 @@ export interface Form {
 
 const DEFAULT_FORM: Form = {
   budget: 95000, archetypes: ["photographer"], platform: "any",
-  osStyle: "any", includeCn: false, avoidChinese: false,
+  osStyle: "any", avoidChinese: false,
   excludeBrands: [], currentPhone: "", traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
   socVendor: "any", includeBrands: [], hwStrict: false,
@@ -61,7 +60,6 @@ export function toParams(f: Form, top = 5): RecParams {
   }
   if (f.platform !== "any") p.platform = f.platform;
   if (f.osStyle !== "any") p.os_style = f.osStyle;
-  if (f.includeCn) p.include_cn = true;
   if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
   if (f.excludeBrands.length) p.exclude_brand = f.excludeBrands.join(",");
   if (f.currentPhone.trim()) p.current_phone = f.currentPhone.trim();
@@ -88,7 +86,7 @@ export default function App() {
     setMode(m);
     try { localStorage.setItem("kpk_mode", m); } catch { /* ignore */ }
     if (m === "simple") setForm((f) => ({
-      ...f, avoidChinese: false, excludeBrands: [], osStyle: "any",
+      ...f, excludeBrands: [], osStyle: "any",
       requireJack: false, requireIr: false, requireFm: false,
       socVendor: "any", includeBrands: [], hwStrict: false,
     }));

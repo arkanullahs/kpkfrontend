@@ -226,29 +226,13 @@ function ChoicesBanner({ keys }: { keys: string[] }) {
    clean-vs-rich software) get a tap-to-open fuller explanation. */
 function TuneStep({ form, patch, mode }: { form: Form; patch: Props["patch"]; mode: Mode }) {
   const adv = mode === "advanced";
-  // framed as a "hide" switch: ON (default) keeps China-ROM gray imports out
-  const hide = !form.includeCn;
   return (
     <div style={st("display:flex; flex-direction:column; gap:24px; margin-top:30px;")}>
       <p style={st("margin:0; font-size:15px; color:#7b818a; line-height:1.55;")}>{t("tune_intro")}</p>
 
-      {/* China-ROM */}
+      {/* the one China control: brand origin. China-market ROM units are
+          always hidden regardless (include_cn is never sent anymore). */}
       <div>
-        <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; padding:17px 19px; border-radius:18px; background:rgba(255,255,255,.7); border:.5px solid rgba(15,25,35,.06);")}>
-          <div style={st("min-width:0;")}>
-            <span style={st("font-size:15.5px; color:#2c3036; font-weight:600;")}>Don't show China-ROM phones</span>
-            <div style={st("font-size:13.5px; color:#9aa0a8; margin-top:2px;")}>They often lack Google services or Bangla. On by default.</div>
-          </div>
-          <button onClick={() => patch({ includeCn: !form.includeCn })} aria-label="Hide China-ROM phones"
-            style={st(`position:relative; width:50px; height:30px; border-radius:99px; border:none; cursor:pointer; flex-shrink:0; transition:background .2s ease; background:${hide ? "var(--ac)" : "#dadde2"};`)}>
-            <span style={st(`position:absolute; top:3px; left:${hide ? 23 : 3}px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(15,25,35,.3); transition:left .2s ease;`)} />
-          </button>
-        </div>
-        <AlwaysTip>{t("exp_cn")}</AlwaysTip>
-      </div>
-
-      {/* Chinese brands (company origin — different thing from the ROM above) */}
-      {adv && <div>
         <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; padding:17px 19px; border-radius:18px; background:rgba(255,255,255,.7); border:.5px solid rgba(15,25,35,.06);")}>
           <div style={st("min-width:0;")}>
             <span style={st("font-size:15.5px; color:#2c3036; font-weight:600;")}>Avoid Chinese brands entirely</span>
@@ -260,7 +244,7 @@ function TuneStep({ form, patch, mode }: { form: Form; patch: Props["patch"]; mo
           </button>
         </div>
         <AlwaysTip>{t("exp_chinese")}</AlwaysTip>
-      </div>}
+      </div>
 
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:18px;")}>
         <div>
@@ -282,24 +266,6 @@ function TuneStep({ form, patch, mode }: { form: Form; patch: Props["patch"]; mo
           <AlwaysTip>{t("exp_software")}</AlwaysTip>
         </div>}
       </div>
-
-      {adv && <div>
-        <div style={st(LABEL)}>Exclude brands</div>
-        <div style={st("margin-top:11px; display:flex; flex-wrap:wrap; gap:8px;")}>
-          {BRANDS.map((bd) => {
-            const sel = form.excludeBrands.includes(bd);
-            return (
-              <button key={bd} onClick={() => patch({
-                excludeBrands: sel ? form.excludeBrands.filter((x) => x !== bd) : [...form.excludeBrands, bd],
-                // an excluded brand can't simultaneously be whitelisted
-                includeBrands: form.includeBrands.filter((x) => x !== bd),
-              })} className="k-press"
-                style={st(`padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13.5px; font-weight:500; transition:all .15s ease; background:${sel ? "#fde8e4" : "rgba(255,255,255,.8)"}; color:${sel ? "#c4503c" : "#5c626a"}; border:.5px solid ${sel ? "rgba(196,80,60,.3)" : "rgba(15,25,35,.1)"}; text-decoration:${sel ? "line-through" : "none"};`)}>{bd}</button>
-            );
-          })}
-        </div>
-        <HelpLine>{t("exp_exclude")}</HelpLine>
-      </div>}
 
       <div>
         <div style={st(LABEL)}>Current phone <span style={st("text-transform:none; letter-spacing:0; font-weight:500; color:#b6bcc4;")}>for upgrade comparison</span></div>
@@ -325,13 +291,22 @@ const HW_TOGGLES: [keyof Form, string, string][] = [
 function AdvancedSection({ form, patch }: { form: Form; patch: Props["patch"] }) {
   // advanced mode is an explicit opt-in, so the panel starts expanded
   const [show, setShow] = useState(true);
+  // one brand control (hide vs only) — same chip list, two directions.
+  // Switching direction carries the selection across.
+  const [brandMode, setBrandModeState] = useState<"exclude" | "only">(
+    form.includeBrands.length ? "only" : "exclude");
+  const brandList = brandMode === "only" ? form.includeBrands : form.excludeBrands;
+  const setBrandMode = (m: "exclude" | "only") => {
+    if (m === brandMode) return;
+    setBrandModeState(m);
+    if (m === "only") patch({ includeBrands: form.excludeBrands, excludeBrands: [] });
+    else patch({ excludeBrands: form.includeBrands, includeBrands: [] });
+  };
   const toggleBrand = (bd: string) => {
-    const sel = form.includeBrands.includes(bd);
-    patch({
-      includeBrands: sel ? form.includeBrands.filter((x) => x !== bd) : [...form.includeBrands, bd],
-      // a whitelisted brand can't simultaneously be excluded
-      excludeBrands: form.excludeBrands.filter((x) => x !== bd),
-    });
+    const key = brandMode === "only" ? "includeBrands" : "excludeBrands";
+    patch({ [key]: brandList.includes(bd)
+      ? brandList.filter((x) => x !== bd)
+      : [...brandList, bd] } as Partial<Form>);
   };
   return (
     <div>
@@ -382,17 +357,23 @@ function AdvancedSection({ form, patch }: { form: Form; patch: Props["patch"] })
           </div>
 
           <div>
-            <div style={st(LABEL)}>Only these brands</div>
+            <div style={st(LABEL)}>Brands</div>
+            <div style={st("margin-top:10px; display:flex; gap:5px; padding:4px; border-radius:14px; background:rgba(15,25,35,.05); max-width:420px;")}>
+              {([["exclude", "Hide selected"], ["only", "Show only selected"]] as const).map(([k, l]) => (
+                <button key={k} onClick={() => setBrandMode(k)} className="k-press" style={st(seg(brandMode === k))}>{l}</button>
+              ))}
+            </div>
             <div style={st("margin-top:11px; display:flex; flex-wrap:wrap; gap:8px;")}>
               {BRANDS.map((bd) => {
-                const sel = form.includeBrands.includes(bd);
+                const sel = brandList.includes(bd);
+                const ex = brandMode === "exclude";
                 return (
                   <button key={bd} onClick={() => toggleBrand(bd)} className="k-press"
-                    style={st(`padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13.5px; font-weight:500; transition:all .15s ease; background:${sel ? "var(--acsoft)" : "rgba(255,255,255,.8)"}; color:${sel ? "var(--acd)" : "#5c626a"}; border:.5px solid ${sel ? "var(--acsoft2)" : "rgba(15,25,35,.1)"}; font-weight:${sel ? 700 : 500};`)}>{bd}</button>
+                    style={st(`padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13.5px; transition:all .15s ease; background:${sel ? (ex ? "#fde8e4" : "var(--acsoft)") : "rgba(255,255,255,.8)"}; color:${sel ? (ex ? "#c4503c" : "var(--acd)") : "#5c626a"}; border:.5px solid ${sel ? (ex ? "rgba(196,80,60,.3)" : "var(--acsoft2)") : "rgba(15,25,35,.1)"}; text-decoration:${sel && ex ? "line-through" : "none"}; font-weight:${sel ? 700 : 500};`)}>{bd}</button>
                 );
               })}
             </div>
-            <HelpLine>{t("exp_include_brands")}</HelpLine>
+            <HelpLine>{t(brandMode === "exclude" ? "exp_exclude" : "exp_include_brands")}</HelpLine>
           </div>
         </div>
       )}
