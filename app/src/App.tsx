@@ -38,8 +38,9 @@ export interface Form {
   hwStrict: boolean;             // unverified hardware also fails must-have filters
   regions: string[];             // accepted import markets (Rio-labeled offers only)
   requireRom: boolean;           // only phones with an official LineageOS build
-  // Simple-mode quiz answers (feedback #4) — dynamically weighted, no buckets
-  q: { who: string; day: string[]; out: boolean | null };
+  // Simple-mode quiz answers (feedback #4) — dynamically weighted, no buckets.
+  // `me` is the branch question asked only when the buyer answers "for myself".
+  q: { who: string; me: string; day: string[]; out: boolean | null };
   useCase: string;               // EN sentence sent as use_case (embedded intent)
   priorities: string[];          // ordered axes derived from the quiz answers
 }
@@ -50,7 +51,7 @@ const DEFAULT_FORM: Form = {
   excludeBrands: [], traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
   socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
-  q: { who: "me", day: [], out: null },
+  q: { who: "me", me: "", day: [], out: null },
   useCase: "", priorities: [],
 };
 
@@ -87,7 +88,11 @@ export function deriveIntent(q: Form["q"]): QuizIntent {
     add("ease_of_use", 2.2); add("battery", 0.8);
     bits.push("for an older parent - must be simple and forgiving, loud clear sound, no ad spam");
   }
-  if (q.who === "student") {
+  if (q.who === "other") {
+    add("ease_of_use", 0.6);
+    bits.push("a gift for someone else - safe well-rounded choice that is easy to like");
+  }
+  if (q.who === "me" && q.me === "student") {
     add("performance", 0.8); add("battery", 0.8);
     bits.push("for a student - best value that stays good for years");
   }

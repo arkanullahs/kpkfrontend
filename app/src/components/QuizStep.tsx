@@ -17,7 +17,10 @@ interface Props {
 }
 
 const WHO: [string, string, string][] = [
-  ["me", "🙋", "qq_who_me"], ["elder", "🧓", "qq_who_elder"], ["student", "🎓", "qq_who_student"],
+  ["me", "🙋", "qq_who_me"], ["elder", "🧓", "qq_who_elder"], ["other", "🎁", "qq_who_other"],
+];
+const ME: [string, string, string][] = [
+  ["student", "🎓", "qq_me_student"], ["other", "💼", "qq_me_other"],
 ];
 const DAY: [string, string, string][] = [
   ["photos", "📷", "qq_day_photos"], ["games", "🎮", "qq_day_games"],
@@ -35,17 +38,24 @@ const WHY = st("margin:10px 0 0; font-size:14px; color:#9aa0a8; line-height:1.55
 
 export function QuizStep({ form, patch, onNext, onBack }: Props) {
   const q = form.q;
+  // the step list branches: "for myself" inserts the who-are-you question
+  const steps: string[] = ["who", ...(q.who === "me" ? ["me"] : []), "day", "out"];
+  const SUMMARY = steps.length; // summary sits one past the last question
   // any real answer means a returning visitor — open on the summary, not Q1
-  const answered = q.out !== null || q.day.length > 0 || q.who !== "me";
-  const [sub, setSub] = useState(answered ? 3 : 0);
+  const answered = q.out !== null || q.day.length > 0 || q.who !== "me" || q.me !== "";
+  const [sub, setSub] = useState(answered ? SUMMARY : 0);
   const [dir, setDir] = useState<1 | -1>(1);
   const timer = useRef<number | undefined>(undefined);
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
+  // clamp against the CURRENT list — changing "who" can shrink/grow the branch
+  const cur = Math.min(sub, SUMMARY);
+  const stepName = cur < SUMMARY ? steps[cur] : "summary";
+
   const go = (s: number) => {
     window.clearTimeout(timer.current);
-    setDir(s >= sub ? 1 : -1);
-    setSub(Math.max(0, Math.min(3, s)));
+    setDir(s >= cur ? 1 : -1);
+    setSub(Math.max(0, Math.min(SUMMARY, s)));
   };
   // auto-advance: let the tapped chip paint its selected state first
   const later = (s: number) => {
@@ -63,18 +73,18 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
 @keyframes kqb{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}`}</style>
 
       {/* quiz progress: growing dots + counter, hidden on the summary */}
-      {sub < 3 && (
+      {cur < SUMMARY && (
         <div style={st("display:flex; align-items:center; gap:7px;")}>
-          {[0, 1, 2].map((i) => (
-            <span key={i} style={st(`width:${i === sub ? 22 : 8}px; height:8px; border-radius:99px; transition:all .3s ease; background:${i < sub ? "var(--acd)" : i === sub ? "var(--ac)" : "rgba(15,25,35,.12)"};`)} />
+          {steps.map((_, i) => (
+            <span key={i} style={st(`width:${i === cur ? 22 : 8}px; height:8px; border-radius:99px; transition:all .3s ease; background:${i < cur ? "var(--acd)" : i === cur ? "var(--ac)" : "rgba(15,25,35,.12)"};`)} />
           ))}
-          <span style={st("margin-left:6px; font-size:13px; font-weight:700; color:#9aa0a8;")}>{bnNum(String(sub + 1))} / {bnNum("3")}</span>
+          <span style={st("margin-left:6px; font-size:13px; font-weight:700; color:#9aa0a8;")}>{bnNum(String(cur + 1))} / {bnNum(String(steps.length))}</span>
         </div>
       )}
 
       {/* the active question — re-mounts per sub-step for the slide entrance */}
-      <div key={sub} style={{ ...st("margin-top:18px;"), animation: `${dir === 1 ? "kqf" : "kqb"} .38s cubic-bezier(.2,.7,.2,1) both` }}>
-        {sub === 0 && (
+      <div key={cur} style={{ ...st("margin-top:18px;"), animation: `${dir === 1 ? "kqf" : "kqb"} .38s cubic-bezier(.2,.7,.2,1) both` }}>
+        {stepName === "who" && (
           <div>
             <div style={QTITLE}>{t("qq_who")}</div>
             <p style={WHY}>{t("qz_why_who")}</p>
@@ -88,7 +98,21 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
           </div>
         )}
 
-        {sub === 1 && (
+        {stepName === "me" && (
+          <div>
+            <div style={QTITLE}>{t("qq_me")}</div>
+            <p style={WHY}>{t("qz_why_me")}</p>
+            <div style={st("display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;")}>
+              {ME.map(([k, icon, lk]) => (
+                <button key={k} onClick={() => { setQ({ me: k }); later(2); }} className="k-press" style={chip(q.me === k, true)}>
+                  <span>{icon}</span>{t(lk)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {stepName === "day" && (
           <div>
             <div style={QTITLE}>{t("qq_day")}</div>
             <p style={WHY}>{t("qz_why_day")}</p>
@@ -102,20 +126,20 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
                 );
               })}
             </div>
-            <button onClick={() => go(2)} className="k-press k-glow" style={PRIMARY}>
+            <button onClick={() => go(steps.indexOf("out"))} className="k-press k-glow" style={PRIMARY}>
               {t("qz_next")}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
           </div>
         )}
 
-        {sub === 2 && (
+        {stepName === "out" && (
           <div>
             <div style={QTITLE}>{t("qq_out")}</div>
             <p style={WHY}>{t("qz_why_out")}</p>
             <div style={st("display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;")}>
               {([[true, "☀️", "qq_out_yes"], [false, "🏠", "qq_out_no"]] as const).map(([v, icon, lk]) => (
-                <button key={String(v)} onClick={() => { setQ({ out: v }); later(3); }} className="k-press" style={chip(q.out === v, true)}>
+                <button key={String(v)} onClick={() => { setQ({ out: v }); later(SUMMARY); }} className="k-press" style={chip(q.out === v, true)}>
                   <span>{icon}</span>{t(lk)}
                 </button>
               ))}
@@ -123,7 +147,7 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
           </div>
         )}
 
-        {sub === 3 && (
+        {stepName === "summary" && (
           <div style={st("padding:22px; border-radius:22px; background:var(--acsoft); border:.5px solid var(--acsoft2);")}>
             <div style={st("display:flex; align-items:center; gap:9px;")}>
               <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.3" stroke="var(--ac)" strokeWidth="1.7" /><path d="M8 12.5l2.8 2.8L16.5 9" stroke="var(--ac)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -152,8 +176,11 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
             {/* every answer stays editable from here */}
             <div style={st("display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;")}>
               <EditChip onClick={() => go(0)} label={t("qz_r_who")} value={t("qq_who_" + q.who)} />
-              <EditChip onClick={() => go(1)} label={t("qz_r_day")} value={q.day.length ? q.day.map((d) => DAY_ICON[d]).join(" ") : "—"} />
-              <EditChip onClick={() => go(2)} label={t("qz_r_out")} value={q.out === null ? "—" : t(q.out ? "qq_out_yes" : "qq_out_no")} />
+              {q.who === "me" && (
+                <EditChip onClick={() => go(1)} label={t("qz_r_me")} value={q.me ? t("qq_me_" + q.me) : "—"} />
+              )}
+              <EditChip onClick={() => go(steps.indexOf("day"))} label={t("qz_r_day")} value={q.day.length ? q.day.map((d) => DAY_ICON[d]).join(" ") : "—"} />
+              <EditChip onClick={() => go(steps.indexOf("out"))} label={t("qz_r_out")} value={q.out === null ? "—" : t(q.out ? "qq_out_yes" : "qq_out_no")} />
             </div>
 
             <button onClick={onNext} className="k-press k-glow" style={PRIMARY}>
