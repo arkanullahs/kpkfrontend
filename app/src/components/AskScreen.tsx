@@ -175,7 +175,7 @@ function PurposeStep({ form, patch, archKeys }: { form: Form; patch: Props["patc
         {archKeys.map((key) => {
           const on = sel.includes(key);
           return (
-            <button key={key} onClick={() => toggle(key)} className="k-press"
+            <button key={key} onClick={() => toggle(key)} className="k-press" title={t("exp_" + key)}
               style={st(`position:relative; text-align:left; padding:17px 17px 16px; border-radius:20px; cursor:pointer; transition:all .18s cubic-bezier(.2,.7,.2,1); background:${on ? "var(--ac)" : "rgba(255,255,255,.8)"}; border:.5px solid ${on ? "transparent" : "rgba(15,25,35,.08)"}; box-shadow:${on ? "0 10px 26px var(--acglow), inset 0 1px 1px rgba(255,255,255,.25)" : "0 1px 2px rgba(15,25,35,.05)"}; transform:translateY(${on ? "-2px" : "0"});`)}>
               {on && (
                 <span style={st("position:absolute; top:13px; right:13px; width:19px; height:19px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center;")}>
