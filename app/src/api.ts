@@ -197,6 +197,8 @@ export interface RecParams {
   budget: number;
   archetype?: string;
   priorities?: string;
+  /** free-text buyer situation from the Simple quiz — embedded as the intent */
+  use_case?: string;
   current_phone?: string;
   official_only?: boolean;
   include_cn?: boolean;
