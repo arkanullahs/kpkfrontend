@@ -1,14 +1,16 @@
 import { useState, type ReactNode } from "react";
 import { fmt, st, taka } from "../theme";
 import { bnNum, bnToAscii, t } from "../i18n";
-import type { Archetype } from "../api";
-import type { Form, Mode } from "../App";
+import type { Archetype, Meta } from "../api";
+import { deriveArchetypes, type Form, type Mode } from "../App";
 
 interface Props {
   form: Form;
   patch: (d: Partial<Form>) => void;
   mode: Mode;
   onMode: (m: Mode) => void;
+  modeChosen: boolean;
+  meta: Meta | null;
   archetypes: Archetype[];
   metaStock: string;
   matchCount: number | null;
@@ -65,9 +67,13 @@ const STEP_COPY = [
   { tt: "q_tune_t", ss: "q_tune_s" },
 ];
 
-export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps, onNext, mode, onMode }: Props) {
+export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps, onNext, mode, onMode, modeChosen, meta }: Props) {
+  // first visit: the mode choice IS the first question (feedback #2/#4)
+  if (!modeChosen) return <ModeGate onMode={onMode} />;
   const archKeys = (archetypes.length ? ARCH_ORDER.filter((k) => archetypes.some((a) => a.key === k)) : ARCH_ORDER);
-  const copy = STEP_COPY[step] ?? STEP_COPY[0];
+  const copy = (mode === "simple" && step === 1)
+    ? { tt: "q_you_t", ss: "q_you_s" }
+    : (STEP_COPY[step] ?? STEP_COPY[0]);
   const pad = (n: number) => bnNum(String(n).padStart(2, "0"));
 
   return (
@@ -104,9 +110,104 @@ export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps
       {/* body re-mounts per step for the entrance */}
       <div key={step} style={st("animation:kpop .42s cubic-bezier(.2,.7,.2,1) both;")}>
         {step === 0 && <BudgetStep form={form} patch={patch} metaStock={metaStock} onNext={onNext} />}
-        {step === 1 && <PurposeStep form={form} patch={patch} archKeys={archKeys} />}
+        {step === 1 && (mode === "simple"
+          ? <QuestionnaireStep form={form} patch={patch} />
+          : <PurposeStep form={form} patch={patch} archKeys={archKeys} />)}
         {step === 2 && <TuneStep form={form} patch={patch} mode={mode} />}
       </div>
+
+      {mode === "advanced" && meta && (
+        <div style={st("margin-top:26px; padding:12px 16px; border-radius:14px; background:rgba(15,25,35,.04); font-size:12px; color:#8a8e96; line-height:1.7;")}>
+          <b style={st("color:#5c626a;")}>{t("adv_stats_t")}</b>{" "}
+          {meta.total_phones} {t("adv_stats_phones")} · {meta.with_specs} {t("adv_stats_specs")} · {meta.with_cards ?? "—"} {t("adv_stats_cards")} · {meta.embedded ?? "—"} {t("adv_stats_embedded")} · {meta.in_stock} {t("adv_stats_stock")}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- first-visit gate: Simple or Advanced ---------- */
+function ModeGate({ onMode }: { onMode: (m: Mode) => void }) {
+  const CARDS: [Mode, string, string, string][] = [
+    ["simple", "🙋", "mode_simple", "mode_gate_simple_d"],
+    ["advanced", "🎛️", "mode_advanced", "mode_gate_advanced_d"],
+  ];
+  return (
+    <div style={st("max-width:680px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;")}>
+      <h1 style={st("font-family:var(--f-display); margin:clamp(30px,7vh,70px) 0 0; font-size:clamp(32px,5vw,50px); font-weight:600; letter-spacing:-1.4px; line-height:1.05; text-wrap:balance;")}>{t("mode_gate_t")}</h1>
+      <p style={st("margin:14px 0 0; font-size:clamp(14.5px,1.6vw,16.5px); color:#7b818a; line-height:1.55; max-width:520px;")}>{t("mode_gate_s")}</p>
+      <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:30px;")}>
+        {CARDS.map(([m, icon, titleKey, descKey]) => (
+          <button key={m} onClick={() => onMode(m)} className="k-press"
+            style={st("text-align:left; padding:24px 22px; border-radius:24px; cursor:pointer; background:rgba(255,255,255,.85); border:.5px solid rgba(15,25,35,.08); box-shadow:0 2px 10px rgba(15,25,35,.05); transition:all .18s cubic-bezier(.2,.7,.2,1);")}>
+            <span style={st("font-size:34px; display:block;")}>{icon}</span>
+            <div style={st("font-family:var(--f-bn); font-size:20px; font-weight:700; margin-top:12px; color:#17191d;")}>{t(titleKey)}</div>
+            <div style={st("font-size:14px; color:#7b818a; line-height:1.5; margin-top:6px;")}>{t(descKey)}</div>
+          </button>
+        ))}
+      </div>
+      <p style={st("margin:18px 2px 0; font-size:13px; color:#9aa0a8;")}>{t("mode_gate_note")}</p>
+    </div>
+  );
+}
+
+/* ---------- step 2 (Simple): situational questionnaire (feedback #4) ----------
+   Three plain questions replace the archetype cards. Answers quietly map to
+   archetypes (deriveArchetypes); the banner explains the result in words. */
+const QQ_DAY: [string, string, string][] = [
+  ["photos", "📷", "qq_day_photos"],
+  ["games", "🎮", "qq_day_games"],
+  ["reels", "🎬", "qq_day_reels"],
+  ["work", "💼", "qq_day_work"],
+  ["chat", "💬", "qq_day_chat"],
+  ["watch", "📺", "qq_day_watch"],
+];
+
+function QuestionnaireStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
+  const q = form.q;
+  const setQ = (d: Partial<Form["q"]>) => {
+    const next = { ...q, ...d };
+    patch({ q: next, archetypes: deriveArchetypes(next) });
+  };
+  const chip = (sel: boolean) =>
+    st(`display:inline-flex; align-items:center; gap:8px; padding:12px 17px; border-radius:16px; cursor:pointer; font-size:15px; font-weight:600; transition:all .15s ease; font-family:var(--f-bn); background:${sel ? "var(--ac)" : "rgba(255,255,255,.85)"}; color:${sel ? "#fff" : "#41464d"}; border:.5px solid ${sel ? "transparent" : "rgba(15,25,35,.1)"}; box-shadow:${sel ? "0 4px 14px var(--acglow)" : "0 1px 2px rgba(15,25,35,.04)"};`);
+  const qTitle = st("font-size:16px; font-weight:700; color:#2c3036; font-family:var(--f-bn);");
+  return (
+    <div style={st("display:flex; flex-direction:column; gap:26px; margin-top:30px;")}>
+      <div>
+        <div style={qTitle}>{t("qq_who")}</div>
+        <div style={st("display:flex; flex-wrap:wrap; gap:9px; margin-top:12px;")}>
+          {([["me", "🙋", "qq_who_me"], ["elder", "🧓", "qq_who_elder"], ["student", "🎓", "qq_who_student"]] as const).map(([k, icon, lk]) => (
+            <button key={k} onClick={() => setQ({ who: k })} className="k-press" style={chip(q.who === k)}>
+              <span>{icon}</span>{t(lk)}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div>
+        <div style={qTitle}>{t("qq_day")}</div>
+        <div style={st("display:flex; flex-wrap:wrap; gap:9px; margin-top:12px;")}>
+          {QQ_DAY.map(([k, icon, lk]) => {
+            const sel = q.day.includes(k);
+            return (
+              <button key={k} onClick={() => setQ({ day: sel ? q.day.filter((x) => x !== k) : [...q.day, k] })} className="k-press" style={chip(sel)}>
+                <span>{icon}</span>{t(lk)}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div>
+        <div style={qTitle}>{t("qq_out")}</div>
+        <div style={st("display:flex; flex-wrap:wrap; gap:9px; margin-top:12px;")}>
+          {([[true, "☀️", "qq_out_yes"], [false, "🏠", "qq_out_no"]] as const).map(([v, icon, lk]) => (
+            <button key={String(v)} onClick={() => setQ({ out: v })} className="k-press" style={chip(q.out === v)}>
+              <span>{icon}</span>{t(lk)}
+            </button>
+          ))}
+        </div>
+      </div>
+      <ChoicesBanner keys={form.archetypes} />
     </div>
   );
 }
