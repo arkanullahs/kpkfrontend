@@ -303,6 +303,7 @@ const HW_TOGGLES: [keyof Form, string, string][] = [
   ["requireJack", "Headphone jack", "3.5mm"],
   ["requireIr", "IR blaster", "TV/AC remote"],
   ["requireFm", "FM radio", ""],
+  ["requireRom", "Custom ROM", "LineageOS"],
 ];
 
 function AdvancedSection({ form, patch }: { form: Form; patch: Props["patch"] }) {
@@ -350,6 +351,7 @@ function AdvancedSection({ form, patch }: { form: Form; patch: Props["patch"] })
               })}
             </div>
             <HelpLine>{t("exp_hw")}</HelpLine>
+            {form.requireRom && <AlwaysTip>{t("exp_custom_rom")}</AlwaysTip>}
             <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; margin-top:12px; padding:14px 16px; border-radius:15px; background:rgba(255,255,255,.85); border:.5px solid rgba(15,25,35,.06);")}>
               <div style={st("min-width:0;")}>
                 <span style={st("font-size:14.5px; color:#2c3036; font-weight:600;")}>Strict matching</span>
