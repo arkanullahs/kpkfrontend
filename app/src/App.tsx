@@ -28,6 +28,7 @@ export interface Form {
   platform: "any" | "android" | "ios";
   osStyle: "any" | "clean" | "feature";
   avoidChinese: boolean;         // hide China-HQ brands entirely (Xiaomi, Oppo…)
+  officialOnly: boolean;         // only phones with an official-warranty listing
   excludeBrands: string[];
   currentPhone: string;
   traitText: string;
@@ -42,7 +43,7 @@ export interface Form {
 
 const DEFAULT_FORM: Form = {
   budget: 95000, archetypes: ["photographer"], platform: "any",
-  osStyle: "any", avoidChinese: false,
+  osStyle: "any", avoidChinese: false, officialOnly: false,
   excludeBrands: [], currentPhone: "", traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
   socVendor: "any", includeBrands: [], hwStrict: false,
@@ -61,6 +62,7 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.platform !== "any") p.platform = f.platform;
   if (f.osStyle !== "any") p.os_style = f.osStyle;
   if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
+  if (f.officialOnly) p.official_only = true;
   if (f.excludeBrands.length) p.exclude_brand = f.excludeBrands.join(",");
   if (f.currentPhone.trim()) p.current_phone = f.currentPhone.trim();
   if (f.requireJack) p.require_jack = true;

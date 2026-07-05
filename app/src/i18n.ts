@@ -310,6 +310,11 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   method_steps_h: { en: "Step by step", bn: "ধাপে ধাপে" },
   read_how: { en: "Read how it works", bn: "কীভাবে কাজ করে দেখুন" },
 
+  exp_official: {
+    en: "Heads up: only two of our eight sources actually say this — Rio International's pricelist labels official units, and everything on GadgetAndGear is official. The other shops don't disclose it, so real official phones may be missing here and some labels can be wrong. Treat this as a guide and confirm warranty at the shop.",
+    bn: "সতর্কতা: আমাদের আটটি সোর্সের মাত্র দুটি এই তথ্য দেয় — Rio International-এর প্রাইসলিস্ট অফিসিয়াল ইউনিট চিহ্নিত করে, আর GadgetAndGear-এর সবকিছু অফিসিয়াল। বাকি দোকানগুলো এটা জানায় না, তাই আসল অফিসিয়াল ফোনও এখানে বাদ পড়তে পারে, কিছু লেবেল ভুলও হতে পারে। এটাকে ধারণা হিসেবে নিন, ওয়ারেন্টি দোকানে নিশ্চিত করুন।"
+  },
+
   // ---- Simple/Advanced mode split (feedback #2) ----
   mode_simple: { en: "Simple", bn: "সহজ" },
   mode_advanced: { en: "Advanced", bn: "অ্যাডভান্সড" },
