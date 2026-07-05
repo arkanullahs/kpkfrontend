@@ -246,6 +246,21 @@ function TuneStep({ form, patch, mode }: { form: Form; patch: Props["patch"]; mo
         <AlwaysTip>{t("exp_chinese")}</AlwaysTip>
       </div>
 
+      {/* official channel (feedback #6) — label coverage is thin, the tip says so */}
+      <div>
+        <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; padding:17px 19px; border-radius:18px; background:rgba(255,255,255,.7); border:.5px solid rgba(15,25,35,.06);")}>
+          <div style={st("min-width:0;")}>
+            <span style={st("font-size:15.5px; color:#2c3036; font-weight:600;")}>Official (BD warranty) phones only</span>
+            <div style={st("font-size:13.5px; color:#9aa0a8; margin-top:2px;")}>Only phones with a confirmed official-warranty listing. Off by default.</div>
+          </div>
+          <button onClick={() => patch({ officialOnly: !form.officialOnly })} aria-label="Official phones only"
+            style={st(`position:relative; width:50px; height:30px; border-radius:99px; border:none; cursor:pointer; flex-shrink:0; transition:background .2s ease; background:${form.officialOnly ? "var(--ac)" : "#dadde2"};`)}>
+            <span style={st(`position:absolute; top:3px; left:${form.officialOnly ? 23 : 3}px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(15,25,35,.3); transition:left .2s ease;`)} />
+          </button>
+        </div>
+        {form.officialOnly && <AlwaysTip>{t("exp_official")}</AlwaysTip>}
+      </div>
+
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:18px;")}>
         <div>
           <div style={st(LABEL)}>Platform</div>
