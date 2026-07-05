@@ -2,7 +2,8 @@ import { useState, type ReactNode } from "react";
 import { fmt, st, taka } from "../theme";
 import { bnNum, bnToAscii, t } from "../i18n";
 import type { Archetype, Meta } from "../api";
-import { deriveArchetypes, type Form, type Mode } from "../App";
+import { type Form, type Mode } from "../App";
+import { QuizStep } from "./QuizStep";
 
 interface Props {
   form: Form;
@@ -111,7 +112,7 @@ export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps
       <div key={step} style={st("animation:kpop .42s cubic-bezier(.2,.7,.2,1) both;")}>
         {step === 0 && <BudgetStep form={form} patch={patch} metaStock={metaStock} onNext={onNext} />}
         {step === 1 && (mode === "simple"
-          ? <QuestionnaireStep form={form} patch={patch} />
+          ? <QuizStep form={form} patch={patch} onNext={onNext} />
           : <PurposeStep form={form} patch={patch} archKeys={archKeys} />)}
         {step === 2 && <TuneStep form={form} patch={patch} mode={mode} />}
       </div>
@@ -147,67 +148,6 @@ function ModeGate({ onMode }: { onMode: (m: Mode) => void }) {
         ))}
       </div>
       <p style={st("margin:18px 2px 0; font-size:13px; color:#9aa0a8;")}>{t("mode_gate_note")}</p>
-    </div>
-  );
-}
-
-/* ---------- step 2 (Simple): situational questionnaire (feedback #4) ----------
-   Three plain questions replace the archetype cards. Answers quietly map to
-   archetypes (deriveArchetypes); the banner explains the result in words. */
-const QQ_DAY: [string, string, string][] = [
-  ["photos", "📷", "qq_day_photos"],
-  ["games", "🎮", "qq_day_games"],
-  ["reels", "🎬", "qq_day_reels"],
-  ["work", "💼", "qq_day_work"],
-  ["chat", "💬", "qq_day_chat"],
-  ["watch", "📺", "qq_day_watch"],
-];
-
-function QuestionnaireStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
-  const q = form.q;
-  const setQ = (d: Partial<Form["q"]>) => {
-    const next = { ...q, ...d };
-    patch({ q: next, archetypes: deriveArchetypes(next) });
-  };
-  const chip = (sel: boolean) =>
-    st(`display:inline-flex; align-items:center; gap:8px; padding:12px 17px; border-radius:16px; cursor:pointer; font-size:15px; font-weight:600; transition:all .15s ease; font-family:var(--f-bn); background:${sel ? "var(--ac)" : "rgba(255,255,255,.85)"}; color:${sel ? "#fff" : "#41464d"}; border:.5px solid ${sel ? "transparent" : "rgba(15,25,35,.1)"}; box-shadow:${sel ? "0 4px 14px var(--acglow)" : "0 1px 2px rgba(15,25,35,.04)"};`);
-  const qTitle = st("font-size:16px; font-weight:700; color:#2c3036; font-family:var(--f-bn);");
-  return (
-    <div style={st("display:flex; flex-direction:column; gap:26px; margin-top:30px;")}>
-      <div>
-        <div style={qTitle}>{t("qq_who")}</div>
-        <div style={st("display:flex; flex-wrap:wrap; gap:9px; margin-top:12px;")}>
-          {([["me", "🙋", "qq_who_me"], ["elder", "🧓", "qq_who_elder"], ["student", "🎓", "qq_who_student"]] as const).map(([k, icon, lk]) => (
-            <button key={k} onClick={() => setQ({ who: k })} className="k-press" style={chip(q.who === k)}>
-              <span>{icon}</span>{t(lk)}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div>
-        <div style={qTitle}>{t("qq_day")}</div>
-        <div style={st("display:flex; flex-wrap:wrap; gap:9px; margin-top:12px;")}>
-          {QQ_DAY.map(([k, icon, lk]) => {
-            const sel = q.day.includes(k);
-            return (
-              <button key={k} onClick={() => setQ({ day: sel ? q.day.filter((x) => x !== k) : [...q.day, k] })} className="k-press" style={chip(sel)}>
-                <span>{icon}</span>{t(lk)}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-      <div>
-        <div style={qTitle}>{t("qq_out")}</div>
-        <div style={st("display:flex; flex-wrap:wrap; gap:9px; margin-top:12px;")}>
-          {([[true, "☀️", "qq_out_yes"], [false, "🏠", "qq_out_no"]] as const).map(([v, icon, lk]) => (
-            <button key={String(v)} onClick={() => setQ({ out: v })} className="k-press" style={chip(q.out === v)}>
-              <span>{icon}</span>{t(lk)}
-            </button>
-          ))}
-        </div>
-      </div>
-      <ChoicesBanner keys={form.archetypes} />
     </div>
   );
 }

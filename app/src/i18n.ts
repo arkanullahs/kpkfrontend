@@ -347,6 +347,67 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qq_out: { en: "Outside the house a lot?", bn: "বাইরে বাইরে থাকা হয় বেশি?" },
   qq_out_yes: { en: "Yes, most of the day", bn: "হ্যাঁ, দিনের বেশিরভাগ" },
   qq_out_no: { en: "Not really", bn: "না, তেমন না" },
+
+  // ---- one-by-one quiz redesign (feedback #4): dynamic intent, no buckets ----
+  qz_why_who: {
+    en: "Why we ask — an elder needs simple and clear; a student needs value that lasts. The answer changes what we hunt for.",
+    bn: "কেন জানতে চাই — মুরুব্বিদের দরকার সহজ আর স্পষ্ট; শিক্ষার্থীর দরকার বছর টেকা ভালো দাম। উত্তর বদলালে খোঁজও বদলায়।"
+  },
+  qz_why_day: {
+    en: "Why we ask — what the phone really does all day decides which specs matter, more than any spec sheet.",
+    bn: "কেন জানতে চাই — ফোনে সারাদিন আসলে কী হয়, সেটাই ঠিক করে কোন স্পেক জরুরি — স্পেকশিটের চেয়ে বেশি।"
+  },
+  qz_why_out: {
+    en: "Why we ask — long outdoor days need a screen readable in sunlight and a battery that lasts till night.",
+    bn: "কেন জানতে চাই — সারাদিন বাইরে থাকলে রোদে পড়া যায় এমন স্ক্রিন আর রাত পর্যন্ত চলা ব্যাটারি লাগে।"
+  },
+  qz_next: { en: "Next", bn: "পরের প্রশ্ন" },
+  qz_back: { en: "Back", bn: "আগের প্রশ্ন" },
+  qz_skip: { en: "Skip — just show solid all-rounders", bn: "বাদ দিন — ভালো অলরাউন্ডার দেখান" },
+  qz_done: { en: "Looks right — continue", bn: "ঠিক আছে — এগিয়ে যান" },
+  qz_sum_t: { en: "What we understood", bn: "আমরা যা বুঝলাম" },
+  qz_sum_s: {
+    en: "Your answers set these priorities. Tap any answer below to change it.",
+    bn: "আপনার উত্তর থেকেই এই অগ্রাধিকার ঠিক হলো। বদলাতে নিচের যেকোনো উত্তরে চাপ দিন।"
+  },
+  qz_sum_balanced: {
+    en: "No single strong need — we'll hunt for dependable all-rounders with no weak spot.",
+    bn: "আলাদা কোনো বড় চাহিদা নেই — দুর্বলতা-ছাড়া নির্ভরযোগ্য অলরাউন্ডার খুঁজব।"
+  },
+  qz_sum_note: {
+    en: "Exactly this understanding goes to the ranking engine — in your words, not a preset box.",
+    bn: "ঠিক এই বোঝাটাই র‍্যাঙ্কিং ইঞ্জিনে যায় — আপনার কথায়, কোনো বাঁধা ছকে ফেলে নয়।"
+  },
+  qz_rank_1: { en: "Top priority", bn: "সবচেয়ে জরুরি" },
+  qz_rank_2: { en: "Also important", bn: "এটাও জরুরি" },
+  qz_rank_3: { en: "Nice to have", bn: "থাকলে ভালো" },
+  qz_r_who: { en: "Who", bn: "কার জন্য" },
+  qz_r_day: { en: "Daily use", bn: "দৈনন্দিন ব্যবহার" },
+  qz_r_out: { en: "Outdoors", bn: "বাইরে থাকা" },
+  pw_camera: {
+    en: "Camera — photos that actually look good, not megapixel marketing",
+    bn: "ক্যামেরা — সত্যিই ভালো ছবি, মেগাপিক্সেলের বিজ্ঞাপন নয়"
+  },
+  pw_video: {
+    en: "Video — steady, sharp footage front and back",
+    bn: "ভিডিও — সামনে-পেছনে ঝাঁকুনিহীন, শার্প ফুটেজ"
+  },
+  pw_battery: {
+    en: "Battery — comfortably lasts the whole day",
+    bn: "ব্যাটারি — নিশ্চিন্তে সারাদিন চলে"
+  },
+  pw_gaming: {
+    en: "Gaming — holds high frame rates without overheating",
+    bn: "গেমিং — গরম না হয়ে ফ্রেমরেট ধরে রাখে"
+  },
+  pw_performance: {
+    en: "Speed — stays fast for work and heavy apps",
+    bn: "গতি — কাজ আর ভারী অ্যাপে দ্রুত থাকে"
+  },
+  pw_ease_of_use: {
+    en: "Ease of use — simple, clear, no confusing bloat",
+    bn: "সহজ ব্যবহার — সরল, স্পষ্ট, বিভ্রান্তিকর জঞ্জাল নেই"
+  },
   adv_stats_t: { en: "Our data right now:", bn: "এই মুহূর্তে আমাদের ডেটা:" },
   adv_stats_phones: { en: "phones tracked", bn: "ফোন ট্র্যাকড" },
   adv_stats_specs: { en: "with full specs", bn: "পূর্ণ স্পেকসহ" },
