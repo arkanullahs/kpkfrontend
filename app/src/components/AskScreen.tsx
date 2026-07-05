@@ -48,6 +48,8 @@ const ARCH_ICON: Record<string, string> = {
 const ARCH_ORDER = ["photographer", "gamer", "vlogger", "rider", "parents", "student", "professional", "balanced"];
 
 const BRANDS = ["Samsung", "Xiaomi", "vivo", "OnePlus", "realme", "Apple"];
+// import markets seen on Rio-pricelist offers (the only source that labels them)
+const MARKETS: [string, string][] = [["IN", "India"], ["Global", "Global"], ["CN", "China"], ["US", "USA"], ["JP", "Japan"], ["SG", "Singapore"], ["AU", "Australia"]];
 const QUICK = [15000, 25000, 40000, 70000, 120000];
 const BUDGET_MIN = 3000, BUDGET_MAX = 500000;
 
@@ -390,6 +392,23 @@ function AdvancedSection({ form, patch }: { form: Form; patch: Props["patch"] })
             </div>
             <HelpLine>{t(brandMode === "exclude" ? "exp_exclude" : "exp_include_brands")}</HelpLine>
           </div>
+
+          <div>
+            <div style={st(LABEL)}>Import market</div>
+            <div style={st("margin-top:11px; display:flex; flex-wrap:wrap; gap:8px;")}>
+              {MARKETS.map(([code, label]) => {
+                const sel = form.regions.includes(code);
+                return (
+                  <button key={code} onClick={() => patch({ regions: sel ? form.regions.filter((x) => x !== code) : [...form.regions, code] })} className="k-press"
+                    style={st(`padding:9px 15px; border-radius:99px; cursor:pointer; font-size:13.5px; transition:all .15s ease; background:${sel ? "var(--acsoft)" : "rgba(255,255,255,.8)"}; color:${sel ? "var(--acd)" : "#5c626a"}; border:.5px solid ${sel ? "var(--acsoft2)" : "rgba(15,25,35,.1)"}; font-weight:${sel ? 700 : 500};`)}>{label}</button>
+                );
+              })}
+            </div>
+            {form.regions.length > 0
+              ? <AlwaysTip>{t("exp_regions")}</AlwaysTip>
+              : <HelpLine>{t("exp_regions_off")}</HelpLine>}
+          </div>
+
         </div>
       )}
     </div>

@@ -310,6 +310,15 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   method_steps_h: { en: "Step by step", bn: "ধাপে ধাপে" },
   read_how: { en: "Read how it works", bn: "কীভাবে কাজ করে দেখুন" },
 
+  exp_regions: {
+    en: "Strict filter: import-market labels come only from Rio International's pricelist. Most listings don't say their market, so with this on you'll see only the few phones with a matching labeled unit.",
+    bn: "কড়া ফিল্টার: ইমপোর্ট-মার্কেট তথ্য শুধু Rio International-এর প্রাইসলিস্ট থেকে আসে। বেশিরভাগ লিস্টিং-এ এই তথ্য নেই, তাই এটি চালু করলে কেবল মিল থাকা অল্প কিছু ফোনই দেখবেন।"
+  },
+  exp_regions_off: {
+    en: "Prefer units imported from specific markets. Labeled by only one source — expect few results when on.",
+    bn: "নির্দিষ্ট বাজার থেকে আসা ইউনিট চাইলে বাছুন। মাত্র একটি সোর্স এই তথ্য দেয় — চালু করলে ফলাফল কম আসবে।"
+  },
+
   exp_official: {
     en: "Heads up: only two of our eight sources actually say this — Rio International's pricelist labels official units, and everything on GadgetAndGear is official. The other shops don't disclose it, so real official phones may be missing here and some labels can be wrong. Treat this as a guide and confirm warranty at the shop.",
     bn: "সতর্কতা: আমাদের আটটি সোর্সের মাত্র দুটি এই তথ্য দেয় — Rio International-এর প্রাইসলিস্ট অফিসিয়াল ইউনিট চিহ্নিত করে, আর GadgetAndGear-এর সবকিছু অফিসিয়াল। বাকি দোকানগুলো এটা জানায় না, তাই আসল অফিসিয়াল ফোনও এখানে বাদ পড়তে পারে, কিছু লেবেল ভুলও হতে পারে। এটাকে ধারণা হিসেবে নিন, ওয়ারেন্টি দোকানে নিশ্চিত করুন।"

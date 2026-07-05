@@ -135,6 +135,8 @@ export interface Offer {
   shop: string; price: number; official?: boolean | null;
   official_final?: string; in_stock?: boolean; url?: string | null;
   image?: string | null; variant?: string | null;
+  /** import market (IN/CN/US/JP/SG/AU/Global) — only Rio-pricelist offers carry it */
+  region?: string | null;
 }
 
 export interface OpinionProfile {
@@ -210,6 +212,8 @@ export interface RecParams {
   /** qualcomm | mediatek | ... (snapdragon/dimensity aliases accepted) */
   soc_vendor?: string;
   hw_strict?: boolean;
+  /** comma list of accepted import markets — strict, Rio-labeled offers only */
+  regions?: string;
   os_style?: string;
   platform?: string;
   channel?: string;
