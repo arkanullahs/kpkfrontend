@@ -310,6 +310,12 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   method_steps_h: { en: "Step by step", bn: "ধাপে ধাপে" },
   read_how: { en: "Read how it works", bn: "কীভাবে কাজ করে দেখুন" },
 
+  conn_rom: { en: "Custom ROM (LineageOS)", bn: "কাস্টম রম (LineageOS)" },
+  exp_custom_rom: {
+    en: "Only phones with an official LineageOS build today — verified from LineageOS itself, not guessed. These phones usually run GCam ports well too. Very few qualify (mostly Pixel, OnePlus, Nothing, a few Samsung/Xiaomi).",
+    bn: "শুধু যে ফোনের অফিসিয়াল LineageOS বিল্ড আছে — LineageOS থেকেই যাচাই করা, অনুমান নয়। এই ফোনগুলোতে সাধারণত GCam পোর্টও ভালো চলে। খুব কম ফোনই তালিকায় আছে (মূলত Pixel, OnePlus, Nothing, কিছু Samsung/Xiaomi)।"
+  },
+
   exp_regions: {
     en: "Strict filter: import-market labels come only from Rio International's pricelist. Most listings don't say their market, so with this on you'll see only the few phones with a matching labeled unit.",
     bn: "কড়া ফিল্টার: ইমপোর্ট-মার্কেট তথ্য শুধু Rio International-এর প্রাইসলিস্ট থেকে আসে। বেশিরভাগ লিস্টিং-এ এই তথ্য নেই, তাই এটি চালু করলে কেবল মিল থাকা অল্প কিছু ফোনই দেখবেন।"

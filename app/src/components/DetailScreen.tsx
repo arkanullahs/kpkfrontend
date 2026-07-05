@@ -63,14 +63,16 @@ function buildSpecs(s: Record<string, any> | undefined): { k: string; v: string 
 
 /** Verified hardware presence rows (GSMArena-crawled). Hidden when the whole
     record is unverified (all three null — the no-specs case, pure noise). */
-function connRows(c: Connectivity | null | undefined): { k: string; v: boolean | null }[] {
-  if (!c) return [];
-  const rows = [
+function connRows(c: Connectivity | null | undefined, tr?: Record<string, any> | null): { k: string; v: boolean | null }[] {
+  const rows = c ? [
     { k: "conn_jack", v: c.has_headphone_jack },
     { k: "conn_ir", v: c.has_ir_blaster },
     { k: "conn_fm", v: c.has_fm_radio },
-  ];
-  return rows.some((r) => r.v != null) ? rows : [];
+  ] : [];
+  const base = rows.some((r) => r.v != null) ? rows : [];
+  // positive-only signal: show the chip only when we KNOW there is a build
+  if (tr?.custom_rom) base.push({ k: "conn_rom", v: true });
+  return base;
 }
 
 function buildTraits(tr: Record<string, any> | undefined): string[] {
@@ -124,7 +126,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const bestFor = (op.best_for?.length ? op.best_for : d?.ai_verdict?.best_for) || [];
   const avoidIf = op.avoid_if || [];
   const specs = buildSpecs(d?.specs);
-  const conn = connRows(d?.connectivity);
+  const conn = connRows(d?.connectivity, d?.traits);
   const bs = d?.brand_summary;
   // only real, priced listings — a price-less offer must never sort to the top
   const offers = (d?.offers || []).filter((o) => o.price && o.price > 0).sort((a, b) => a.price - b.price);

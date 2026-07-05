@@ -40,6 +40,7 @@ export interface Form {
   includeBrands: string[];       // only these brands (engine `brand` whitelist)
   hwStrict: boolean;             // unverified hardware also fails must-have filters
   regions: string[];             // accepted import markets (Rio-labeled offers only)
+  requireRom: boolean;           // only phones with an official LineageOS build
 }
 
 const DEFAULT_FORM: Form = {
@@ -47,7 +48,7 @@ const DEFAULT_FORM: Form = {
   osStyle: "any", avoidChinese: false, officialOnly: false,
   excludeBrands: [], currentPhone: "", traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
-  socVendor: "any", includeBrands: [], hwStrict: false, regions: [],
+  socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
 };
 
 /** form → /recommend query params */
@@ -73,6 +74,7 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.includeBrands.length) p.brand = f.includeBrands.join(",");
   if (f.hwStrict) p.hw_strict = true;
   if (f.regions.length) p.regions = f.regions.join(",");
+  if (f.requireRom) p.require_custom_rom = true;
   return p;
 }
 
@@ -92,7 +94,7 @@ export default function App() {
     if (m === "simple") setForm((f) => ({
       ...f, excludeBrands: [], osStyle: "any",
       requireJack: false, requireIr: false, requireFm: false,
-      socVendor: "any", includeBrands: [], hwStrict: false, regions: [],
+      socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
     }));
   }, []);
   const [meta, setMeta] = useState<Meta | null>(null);

@@ -214,6 +214,8 @@ export interface RecParams {
   hw_strict?: boolean;
   /** comma list of accepted import markets — strict, Rio-labeled offers only */
   regions?: string;
+  /** only phones with an official LineageOS build */
+  require_custom_rom?: boolean;
   os_style?: string;
   platform?: string;
   channel?: string;
