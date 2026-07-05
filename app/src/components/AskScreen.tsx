@@ -68,7 +68,7 @@ const STEP_COPY = [
   { tt: "q_tune_t", ss: "q_tune_s" },
 ];
 
-export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps, onNext, mode, onMode, modeChosen, meta }: Props) {
+export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps, onNext, onBack, mode, onMode, modeChosen, meta }: Props) {
   // first visit: the mode choice IS the first question (feedback #2/#4)
   if (!modeChosen) return <ModeGate onMode={onMode} />;
   const archKeys = (archetypes.length ? ARCH_ORDER.filter((k) => archetypes.some((a) => a.key === k)) : ARCH_ORDER);
@@ -89,19 +89,9 @@ export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps
         </span>
       </div>
 
-      {/* Simple/Advanced switch (feedback #2) — Simple stays 3 easy taps,
-          Advanced unlocks the full filter set on the fine-tune step */}
-      <div style={st("margin-top:18px;")}>
-        <div style={st("display:flex; gap:5px; padding:4px; border-radius:14px; background:rgba(15,25,35,.05); max-width:300px;")}>
-          {(["simple", "advanced"] as const).map((m) => (
-            <button key={m} onClick={() => onMode(m)} className="k-press" style={st(seg(mode === m))}>
-              {t(m === "simple" ? "mode_simple" : "mode_advanced")}
-            </button>
-          ))}
-        </div>
-        <HelpLine>{t(mode === "simple" ? "mode_hint_simple" : "mode_hint_advanced")}</HelpLine>
-      </div>
-
+      {/* No Simple/Advanced switch here on purpose (v2 decision #1): the mode
+          picked at the gate is the only one the buyer sees — no pressure to
+          "upgrade". Reloading the page re-offers the gate. */}
       <h1 style={st("font-family:var(--f-display); margin:22px 0 0; font-size:clamp(32px,5vw,50px); font-weight:600; letter-spacing:-1.4px; line-height:1.05; text-wrap:balance;")}>
         {t(copy.tt)}
         {step === totalSteps - 1 && <span style={st("font-family:var(--f-serif); font-style:italic; font-weight:400; font-size:.6em; color:#b6bcc4; margin-left:13px;")}>{t("optional")}</span>}
@@ -112,7 +102,7 @@ export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps
       <div key={step} style={st("animation:kpop .42s cubic-bezier(.2,.7,.2,1) both;")}>
         {step === 0 && <BudgetStep form={form} patch={patch} metaStock={metaStock} onNext={onNext} />}
         {step === 1 && (mode === "simple"
-          ? <QuizStep form={form} patch={patch} onNext={onNext} />
+          ? <QuizStep form={form} patch={patch} onNext={onNext} onBack={onBack} />
           : <PurposeStep form={form} patch={patch} archKeys={archKeys} />)}
         {step === 2 && <TuneStep form={form} patch={patch} mode={mode} />}
       </div>
@@ -323,13 +313,6 @@ function TuneStep({ form, patch, mode }: { form: Form; patch: Props["patch"]; mo
           </div>
           <AlwaysTip>{t("exp_software")}</AlwaysTip>
         </div>}
-      </div>
-
-      <div>
-        <div style={st(LABEL)}>Current phone <span style={st("text-transform:none; letter-spacing:0; font-weight:500; color:#b6bcc4;")}>for upgrade comparison</span></div>
-        <input className="ktrait" type="text" value={form.currentPhone} onChange={(e) => patch({ currentPhone: e.target.value })} placeholder="e.g. Redmi Note 11"
-          style={st("margin-top:11px; width:100%; border:none; outline:none; padding:15px 17px; border-radius:15px; background:rgba(255,255,255,.8); box-shadow:inset 0 0 0 1px rgba(15,25,35,.08); font-size:15px; color:#17191d;")} />
-        <HelpLine>{t("exp_current")}</HelpLine>
       </div>
 
       {adv && <AdvancedSection form={form} patch={patch} />}

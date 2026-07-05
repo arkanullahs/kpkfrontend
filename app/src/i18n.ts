@@ -47,7 +47,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   scores: { en: "Scores", bn: "স্কোর" },
   specs: { en: "Specs", bn: "স্পেক" },
   owner_voices: { en: "Owner voices", bn: "ব্যবহারকারীদের মত" },
-  where_to_buy: { en: "Where to buy", bn: "কোথায় কিনবেন" },
+  where_to_buy: { en: "Prices referenced from", bn: "যেসব দোকান থেকে দাম নেওয়া" },
   brand_ownership: { en: "Brand & ownership", bn: "ব্র্যান্ড ও মালিকানা" },
   who_its_for: { en: "Who it's for", bn: "কাদের জন্য" },
   official: { en: "Official", bn: "অফিসিয়াল" },
@@ -313,8 +313,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   // ---- first-visit mode gate + Simple questionnaire (feedback #2/#4) ----
   mode_gate_t: { en: "How do you want to choose?", bn: "কীভাবে ফোন খুঁজবেন?" },
   mode_gate_s: {
-    en: "Pick a style. You can switch anytime with the toggle at the top.",
-    bn: "একটি ধরন বাছুন। উপরের বোতাম থেকে যেকোনো সময় বদলাতে পারবেন।"
+    en: "Pick a style. To choose again later, just reload the page.",
+    bn: "একটি ধরন বাছুন। পরে বদলাতে চাইলে পেজটি রিলোড করলেই আবার বাছতে পারবেন।"
   },
   mode_gate_simple_d: {
     en: "A few easy questions — no tech words. We figure out the rest. Best for most people.",

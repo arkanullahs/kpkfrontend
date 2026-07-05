@@ -3,7 +3,7 @@ import { axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE
 import { t } from "../i18n";
 import { api } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
-import { CompareCard, JustSoYouKnow, LiveCompareCard, UpgradeTag } from "./Compare";
+import { JustSoYouKnow } from "./Compare";
 import { RagProgress } from "./RagProgress";
 import type { DataCaution, Pick, RecommendResp, Stretch } from "../api";
 import type { Form } from "../App";
@@ -139,13 +139,6 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
       {/* HERO pick */}
       <HeroPick p={first} price={first.best_price} budget={b} pct={pct} onClick={() => onPick(first.id)} />
 
-      {/* current-phone comparison */}
-      {first.upgrade
-        ? <CompareCard up={first.upgrade} pickName={`${first.brand} ${first.model}`} />
-        : meta.compare_from && !meta.compare_from.found
-          ? <LiveCompareCard cf={meta.compare_from} pickPrice={first.best_price} />
-          : null}
-
       {/* rest */}
       <div className="k-stagger" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:11px; margin-top:14px;")}>
         {rest.map((r, i) => {
@@ -159,7 +152,6 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
               <div style={st("flex:1; min-width:0;")}>
                 <div style={st("display:flex; align-items:center; gap:7px;")}>
                   <span style={st("font-size:16px; font-weight:600; color:#17191d; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{r.brand} {r.model}</span>
-                  {r.upgrade && <UpgradeTag v={r.upgrade.verdict} tiny />}
                 </div>
                 <div style={st("font-size:13.5px; color:#80868f; margin-top:2px;")}>{headlinePhrase(r.headline_axis)}{r.headline_axis && r.headline_value != null ? ` · ${axisLabel(r.headline_axis)} ${r.headline_value}` : ""}</div>
                 <div style={st("display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap;")}>

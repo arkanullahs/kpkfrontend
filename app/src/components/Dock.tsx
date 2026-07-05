@@ -8,18 +8,22 @@ interface Props {
   loading: boolean;
   askStep: number;
   askLast: boolean;
+  quizActive: boolean;       // simple-mode quiz carries its own buttons
+  detailReady: boolean;      // results exist to go back to from the detail screen
   onAskNext: () => void;
   onAskBack: () => void;
   onSeeResults: () => void;
   onHome: () => void;
+  onBackResults: () => void;
 }
 
 /* One job, one action. On the ask screen the dock is the wizard's footer: a Back
    affordance and a single primary button (Continue, or "See results" last step).
    On the results screen it offers one way home to start or tweak a search. It is
    hidden while the RAG call is loading, so the long request can't be navigated
-   away from mid-flight; the detail screen carries its own back. */
-export function Dock({ screen, matchCount, loading, askStep, askLast, onAskNext, onAskBack, onSeeResults, onHome }: Props) {
+   away from mid-flight. The detail screen gets a floating "back to results" so
+   moving back and forth between picks never needs a scroll to the top. */
+export function Dock({ screen, matchCount, loading, askStep, askLast, quizActive, detailReady, onAskNext, onAskBack, onSeeResults, onHome, onBackResults }: Props) {
   // results: one clear way back to change a field or start a fresh search
   if (screen === "results") {
     if (loading) return null;
@@ -34,8 +38,23 @@ export function Dock({ screen, matchCount, loading, askStep, askLast, onAskNext,
     );
   }
 
+  // detail: floating way back so picks can be flipped through without scrolling
+  if (screen === "detail") {
+    if (!detailReady) return null;
+    return (
+      <div style={st("position:fixed; left:0; right:0; bottom:0; z-index:80; display:flex; justify-content:center; padding:0 16px max(18px, env(safe-area-inset-bottom, 18px)); pointer-events:none;")}>
+        <button onClick={onBackResults} className="k-press"
+          style={st("pointer-events:auto; display:flex; align-items:center; gap:10px; height:54px; padding:0 26px; border-radius:20px; border:.5px solid rgba(255,255,255,.65); cursor:pointer; background:rgba(250,250,251,.62); backdrop-filter:blur(28px) saturate(190%); -webkit-backdrop-filter:blur(28px) saturate(190%); box-shadow:inset 0 1.5px 1.5px rgba(255,255,255,.95), 0 16px 40px rgba(20,24,32,.16), 0 4px 12px rgba(20,24,32,.1); font-size:15px; font-weight:700; color:var(--acd);")}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="var(--acd)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          {t("back_to_results")}
+        </button>
+      </div>
+    );
+  }
+
   if (screen !== "ask") return null;
   if (askStep === 0) return null; // step 0 has inline arrow in the budget input
+  if (quizActive) return null;    // the quiz owns its buttons — no double controls
 
   const label = askLast
     ? (matchCount != null ? `${t("see_n_matches")} ${bnNum(String(matchCount))} ${t("matches")}` : t("see_results"))

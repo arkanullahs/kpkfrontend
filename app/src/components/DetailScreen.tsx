@@ -3,7 +3,7 @@ import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL
 import { t } from "../i18n";
 import type { Connectivity, Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
-import { CompareCard, JustSoYouKnow } from "./Compare";
+import { JustSoYouKnow } from "./Compare";
 import { DataCautionChip } from "./ResultsScreen";
 
 interface Props {
@@ -104,7 +104,6 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const model = d?.model ?? h?.model ?? "";
   const image = d?.image ?? h?.image ?? null;
   const pid = d?.id ?? h?.id ?? null;
-  const upgrade = h?.upgrade ?? null;   // comes from the result pick (when current phone set)
   const scores = (d?.blended_scores && Object.keys(d.blended_scores).length ? d.blended_scores : null)
     || (h?.blended_scores && Object.keys(h.blended_scores).length ? h.blended_scores : null)
     || d?.scores || {};
@@ -196,9 +195,6 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           </div>
         </div>
       )}
-
-      {/* upgrade vs the buyer's current phone */}
-      {upgrade && <CompareCard up={upgrade} pickName={model} />}
 
       {/* axes */}
       {Object.values(scores).some((v) => v != null) && (
