@@ -14,6 +14,14 @@ import { Dock } from "./components/Dock";
 
 export type Screen = "ask" | "results" | "detail" | "method";
 
+/* Simple/Advanced mode (feedback #2): Simple keeps the ask flow to the
+   essentials a first-time buyer can answer; Advanced unlocks every filter. */
+export type Mode = "simple" | "advanced";
+const getStoredMode = (): Mode => {
+  try { return localStorage.getItem("kpk_mode") === "advanced" ? "advanced" : "simple"; }
+  catch { return "simple"; }
+};
+
 export interface Form {
   budget: number;
   archetypes: string[];          // multi-select: the buyer can pick several needs
@@ -30,6 +38,7 @@ export interface Form {
   requireFm: boolean;
   socVendor: "any" | "snapdragon" | "mediatek";
   includeBrands: string[];       // only these brands (engine `brand` whitelist)
+  hwStrict: boolean;             // unverified hardware also fails must-have filters
 }
 
 const DEFAULT_FORM: Form = {
@@ -37,7 +46,7 @@ const DEFAULT_FORM: Form = {
   osStyle: "any", includeCn: false, avoidChinese: false,
   excludeBrands: [], currentPhone: "", traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
-  socVendor: "any", includeBrands: [],
+  socVendor: "any", includeBrands: [], hwStrict: false,
 };
 
 /** form → /recommend query params */
@@ -61,6 +70,7 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.requireFm) p.require_fm = true;
   if (f.socVendor !== "any") p.soc_vendor = f.socVendor;
   if (f.includeBrands.length) p.brand = f.includeBrands.join(",");
+  if (f.hwStrict) p.hw_strict = true;
   return p;
 }
 
@@ -71,6 +81,18 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>("ask");
   const [askStep, setAskStep] = useState(0); // wizard step on the ask screen
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
+  // switching to Simple resets the advanced-only fields so no invisible
+  // filter keeps shaping results after the controls disappear
+  const [mode, setMode] = useState<Mode>(getStoredMode());
+  const changeMode = useCallback((m: Mode) => {
+    setMode(m);
+    try { localStorage.setItem("kpk_mode", m); } catch { /* ignore */ }
+    if (m === "simple") setForm((f) => ({
+      ...f, avoidChinese: false, excludeBrands: [], osStyle: "any",
+      requireJack: false, requireIr: false, requireFm: false,
+      socVendor: "any", includeBrands: [], hwStrict: false,
+    }));
+  }, []);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [archetypes, setArchetypes] = useState<Archetype[]>([]);
 
@@ -265,6 +287,7 @@ export default function App() {
         {screen === "ask" && (
           <AskScreen
             form={form} patch={patch} archetypes={archetypes}
+            mode={mode} onMode={changeMode}
             metaStock={metaStock} onSubmit={runRecommend} matchCount={matchCount}
             step={askStep} totalSteps={ASK_STEPS} onNext={askNext} onBack={askBack}
           />

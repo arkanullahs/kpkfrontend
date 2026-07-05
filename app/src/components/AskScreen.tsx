@@ -2,11 +2,13 @@ import { useState, type ReactNode } from "react";
 import { fmt, st, taka } from "../theme";
 import { bnNum, bnToAscii, t } from "../i18n";
 import type { Archetype } from "../api";
-import type { Form } from "../App";
+import type { Form, Mode } from "../App";
 
 interface Props {
   form: Form;
   patch: (d: Partial<Form>) => void;
+  mode: Mode;
+  onMode: (m: Mode) => void;
   archetypes: Archetype[];
   metaStock: string;
   matchCount: number | null;
@@ -61,7 +63,7 @@ const STEP_COPY = [
   { tt: "q_tune_t", ss: "q_tune_s" },
 ];
 
-export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps, onNext }: Props) {
+export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps, onNext, mode, onMode }: Props) {
   const archKeys = (archetypes.length ? ARCH_ORDER.filter((k) => archetypes.some((a) => a.key === k)) : ARCH_ORDER);
   const copy = STEP_COPY[step] ?? STEP_COPY[0];
   const pad = (n: number) => bnNum(String(n).padStart(2, "0"));
@@ -78,6 +80,19 @@ export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps
         </span>
       </div>
 
+      {/* Simple/Advanced switch (feedback #2) — Simple stays 3 easy taps,
+          Advanced unlocks the full filter set on the fine-tune step */}
+      <div style={st("margin-top:18px;")}>
+        <div style={st("display:flex; gap:5px; padding:4px; border-radius:14px; background:rgba(15,25,35,.05); max-width:300px;")}>
+          {(["simple", "advanced"] as const).map((m) => (
+            <button key={m} onClick={() => onMode(m)} className="k-press" style={st(seg(mode === m))}>
+              {t(m === "simple" ? "mode_simple" : "mode_advanced")}
+            </button>
+          ))}
+        </div>
+        <HelpLine>{t(mode === "simple" ? "mode_hint_simple" : "mode_hint_advanced")}</HelpLine>
+      </div>
+
       <h1 style={st("font-family:var(--f-display); margin:22px 0 0; font-size:clamp(32px,5vw,50px); font-weight:600; letter-spacing:-1.4px; line-height:1.05; text-wrap:balance;")}>
         {t(copy.tt)}
         {step === totalSteps - 1 && <span style={st("font-family:var(--f-serif); font-style:italic; font-weight:400; font-size:.6em; color:#b6bcc4; margin-left:13px;")}>{t("optional")}</span>}
@@ -88,7 +103,7 @@ export function AskScreen({ form, patch, archetypes, metaStock, step, totalSteps
       <div key={step} style={st("animation:kpop .42s cubic-bezier(.2,.7,.2,1) both;")}>
         {step === 0 && <BudgetStep form={form} patch={patch} metaStock={metaStock} onNext={onNext} />}
         {step === 1 && <PurposeStep form={form} patch={patch} archKeys={archKeys} />}
-        {step === 2 && <TuneStep form={form} patch={patch} />}
+        {step === 2 && <TuneStep form={form} patch={patch} mode={mode} />}
       </div>
     </div>
   );
@@ -209,7 +224,8 @@ function ChoicesBanner({ keys }: { keys: string[] }) {
    Most buyers tap straight through with defaults, so every control carries a
    plain one-line "what this does" — and the two jargon-heavy ones (China-ROM,
    clean-vs-rich software) get a tap-to-open fuller explanation. */
-function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
+function TuneStep({ form, patch, mode }: { form: Form; patch: Props["patch"]; mode: Mode }) {
+  const adv = mode === "advanced";
   // framed as a "hide" switch: ON (default) keeps China-ROM gray imports out
   const hide = !form.includeCn;
   return (
@@ -232,7 +248,7 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
       </div>
 
       {/* Chinese brands (company origin — different thing from the ROM above) */}
-      <div>
+      {adv && <div>
         <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; padding:17px 19px; border-radius:18px; background:rgba(255,255,255,.7); border:.5px solid rgba(15,25,35,.06);")}>
           <div style={st("min-width:0;")}>
             <span style={st("font-size:15.5px; color:#2c3036; font-weight:600;")}>Avoid Chinese brands entirely</span>
@@ -244,7 +260,7 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
           </button>
         </div>
         <AlwaysTip>{t("exp_chinese")}</AlwaysTip>
-      </div>
+      </div>}
 
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:18px;")}>
         <div>
@@ -256,7 +272,7 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
           </div>
           <HelpLine>{t("exp_platform")}</HelpLine>
         </div>
-        <div>
+        {adv && <div>
           <div style={st(LABEL)}>Software</div>
           <div style={st("margin-top:10px; display:flex; gap:5px; padding:4px; border-radius:14px; background:rgba(15,25,35,.05);")}>
             {([["any", "Any"], ["clean", "Clean"], ["feature", "Rich"]] as const).map(([k, l]) => (
@@ -264,10 +280,10 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
             ))}
           </div>
           <AlwaysTip>{t("exp_software")}</AlwaysTip>
-        </div>
+        </div>}
       </div>
 
-      <div>
+      {adv && <div>
         <div style={st(LABEL)}>Exclude brands</div>
         <div style={st("margin-top:11px; display:flex; flex-wrap:wrap; gap:8px;")}>
           {BRANDS.map((bd) => {
@@ -283,7 +299,7 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
           })}
         </div>
         <HelpLine>{t("exp_exclude")}</HelpLine>
-      </div>
+      </div>}
 
       <div>
         <div style={st(LABEL)}>Current phone <span style={st("text-transform:none; letter-spacing:0; font-weight:500; color:#b6bcc4;")}>for upgrade comparison</span></div>
@@ -292,7 +308,7 @@ function TuneStep({ form, patch }: { form: Form; patch: Props["patch"] }) {
         <HelpLine>{t("exp_current")}</HelpLine>
       </div>
 
-      <AdvancedSection form={form} patch={patch} />
+      {adv && <AdvancedSection form={form} patch={patch} />}
     </div>
   );
 }
@@ -307,9 +323,8 @@ const HW_TOGGLES: [keyof Form, string, string][] = [
 ];
 
 function AdvancedSection({ form, patch }: { form: Form; patch: Props["patch"] }) {
-  const open = form.requireJack || form.requireIr || form.requireFm
-    || form.socVendor !== "any" || form.includeBrands.length > 0;
-  const [show, setShow] = useState(open);
+  // advanced mode is an explicit opt-in, so the panel starts expanded
+  const [show, setShow] = useState(true);
   const toggleBrand = (bd: string) => {
     const sel = form.includeBrands.includes(bd);
     patch({
@@ -343,6 +358,17 @@ function AdvancedSection({ form, patch }: { form: Form; patch: Props["patch"] })
               })}
             </div>
             <HelpLine>{t("exp_hw")}</HelpLine>
+            <div style={st("display:flex; align-items:center; justify-content:space-between; gap:14px; margin-top:12px; padding:14px 16px; border-radius:15px; background:rgba(255,255,255,.85); border:.5px solid rgba(15,25,35,.06);")}>
+              <div style={st("min-width:0;")}>
+                <span style={st("font-size:14.5px; color:#2c3036; font-weight:600;")}>Strict matching</span>
+                <div style={st("font-size:13px; color:#9aa0a8; margin-top:2px;")}>verified hardware only</div>
+              </div>
+              <button onClick={() => patch({ hwStrict: !form.hwStrict })} aria-label="Strict matching"
+                style={st(`position:relative; width:50px; height:30px; border-radius:99px; border:none; cursor:pointer; flex-shrink:0; transition:background .2s ease; background:${form.hwStrict ? "var(--ac)" : "#dadde2"};`)}>
+                <span style={st(`position:absolute; top:3px; left:${form.hwStrict ? 23 : 3}px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(15,25,35,.3); transition:left .2s ease;`)} />
+              </button>
+            </div>
+            <HelpLine>{t("exp_strict")}</HelpLine>
           </div>
 
           <div>
