@@ -314,6 +314,22 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   method_steps_h: { en: "Step by step", bn: "ধাপে ধাপে" },
   read_how: { en: "Read how it works", bn: "কীভাবে কাজ করে দেখুন" },
 
+  // ---- Simple/Advanced mode split (feedback #2) ----
+  mode_simple: { en: "Simple", bn: "সহজ" },
+  mode_advanced: { en: "Advanced", bn: "অ্যাডভান্সড" },
+  mode_hint_simple: {
+    en: "Just the essentials — budget, needs and a couple of basics. Best for most buyers.",
+    bn: "শুধু জরুরি প্রশ্ন — বাজেট, চাহিদা আর দু-একটি বেসিক। বেশিরভাগ ক্রেতার জন্য এটাই সেরা।"
+  },
+  mode_hint_advanced: {
+    en: "Every filter unlocked — software style, brand lists, must-have hardware, chipset and strict matching.",
+    bn: "সব ফিল্টার খোলা — সফটওয়্যার স্টাইল, ব্র্যান্ড তালিকা, জরুরি হার্ডওয়্যার, চিপসেট আর কড়া যাচাই।"
+  },
+  exp_strict: {
+    en: "ON: phones we haven't verified for your must-haves are dropped too — only confirmed matches show. Fewer, surer results.",
+    bn: "চালু থাকলে যে ফোনের ফিচার এখনো যাচাই হয়নি সেগুলোও বাদ যাবে — শুধু নিশ্চিত মিলগুলো দেখবেন। ফলাফল কম, কিন্তু নির্ভরযোগ্য।"
+  },
+
   // ---- post-results feedback ----
   feedback_q: { en: "Were these picks right for you?", bn: "এই পছন্দগুলো কি ঠিক ছিল?" },
   feedback_comment_up: { en: "Anything we could do even better? (optional)", bn: "আরও ভালো করতে পারতাম কোথায়? (ঐচ্ছিক)" },
