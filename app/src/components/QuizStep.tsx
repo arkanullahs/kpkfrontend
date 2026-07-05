@@ -13,6 +13,7 @@ interface Props {
   form: Form;
   patch: (d: Partial<Form>) => void;
   onNext: () => void; // leave the quiz for the fine-tune step
+  onBack: () => void; // leave the quiz backwards to the budget step
 }
 
 const WHO: [string, string, string][] = [
@@ -32,7 +33,7 @@ const PRIMARY = st("display:inline-flex; align-items:center; gap:8px; margin-top
 const QTITLE = st("font-size:clamp(20px,3vw,26px); font-weight:700; color:#17191d; font-family:var(--f-bn); line-height:1.25; text-wrap:balance;");
 const WHY = st("margin:10px 0 0; font-size:14px; color:#9aa0a8; line-height:1.55; max-width:480px; text-wrap:pretty;");
 
-export function QuizStep({ form, patch, onNext }: Props) {
+export function QuizStep({ form, patch, onNext, onBack }: Props) {
   const q = form.q;
   // any real answer means a returning visitor — open on the summary, not Q1
   const answered = q.out !== null || q.day.length > 0 || q.who !== "me";
@@ -166,8 +167,8 @@ export function QuizStep({ form, patch, onNext }: Props) {
       {/* back / skip row under the active question */}
       {sub < 3 && (
         <div style={st("display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:26px;")}>
-          <button onClick={() => go(sub - 1)} disabled={sub === 0} className="k-press"
-            style={st(`display:inline-flex; align-items:center; gap:7px; padding:10px 16px; border-radius:13px; border:.5px solid rgba(15,25,35,.1); cursor:${sub === 0 ? "default" : "pointer"}; background:rgba(255,255,255,.7); font-size:13.5px; font-weight:600; color:#5c626a; font-family:var(--f-bn); opacity:${sub === 0 ? 0.35 : 1};`)}>
+          <button onClick={() => (sub === 0 ? onBack() : go(sub - 1))} className="k-press"
+            style={st("display:inline-flex; align-items:center; gap:7px; padding:10px 16px; border-radius:13px; border:.5px solid rgba(15,25,35,.1); cursor:pointer; background:rgba(255,255,255,.7); font-size:13.5px; font-weight:600; color:#5c626a; font-family:var(--f-bn);")}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 12H6M12 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             {t("qz_back")}
           </button>

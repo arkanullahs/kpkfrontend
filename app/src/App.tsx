@@ -15,15 +15,10 @@ import { Dock } from "./components/Dock";
 export type Screen = "ask" | "results" | "detail" | "method";
 
 /* Simple/Advanced mode (feedback #2): Simple keeps the ask flow to the
-   essentials a first-time buyer can answer; Advanced unlocks every filter. */
+   essentials a first-time buyer can answer; Advanced unlocks every filter.
+   The choice is per-visit on purpose — once picked, the other mode's controls
+   never appear (no pressure to "upgrade"); reloading re-offers the gate. */
 export type Mode = "simple" | "advanced";
-const getStoredMode = (): Mode => {
-  try { return localStorage.getItem("kpk_mode") === "advanced" ? "advanced" : "simple"; }
-  catch { return "simple"; }
-};
-const hasStoredMode = (): boolean => {
-  try { return localStorage.getItem("kpk_mode") !== null; } catch { return true; }
-};
 
 export interface Form {
   budget: number;
@@ -33,7 +28,6 @@ export interface Form {
   avoidChinese: boolean;         // hide China-HQ brands entirely (Xiaomi, Oppo…)
   officialOnly: boolean;         // only phones with an official-warranty listing
   excludeBrands: string[];
-  currentPhone: string;
   traitText: string;
   // advanced mode (feedback #2/#7) — hardware dealbreakers + brand whitelist
   requireJack: boolean;
@@ -53,7 +47,7 @@ export interface Form {
 const DEFAULT_FORM: Form = {
   budget: 95000, archetypes: [], platform: "any",
   osStyle: "any", avoidChinese: false, officialOnly: false,
-  excludeBrands: [], currentPhone: "", traitText: "",
+  excludeBrands: [], traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
   socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
   q: { who: "me", day: [], out: null },
@@ -127,7 +121,6 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
   if (f.officialOnly) p.official_only = true;
   if (f.excludeBrands.length) p.exclude_brand = f.excludeBrands.join(",");
-  if (f.currentPhone.trim()) p.current_phone = f.currentPhone.trim();
   if (f.requireJack) p.require_jack = true;
   if (f.requireIr) p.require_ir = true;
   if (f.requireFm) p.require_fm = true;
@@ -148,13 +141,13 @@ export default function App() {
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
   // switching to Simple resets the advanced-only fields so no invisible
   // filter keeps shaping results after the controls disappear
-  const [mode, setMode] = useState<Mode>(getStoredMode());
-  // first visit: ask Simple-or-Advanced before the wizard (feedback #2/#4)
-  const [modeChosen, setModeChosen] = useState<boolean>(hasStoredMode());
+  const [mode, setMode] = useState<Mode>("simple");
+  // every visit: ask Simple-or-Advanced before the wizard (feedback #2/#4).
+  // Not persisted — a reload is the way to change modes (v2 decision #1).
+  const [modeChosen, setModeChosen] = useState<boolean>(false);
   const changeMode = useCallback((m: Mode) => {
     setMode(m);
     setModeChosen(true);
-    try { localStorage.setItem("kpk_mode", m); } catch { /* ignore */ }
     setForm((f) => m === "simple"
       ? {
         ...f, excludeBrands: [], osStyle: "any",
@@ -387,7 +380,10 @@ export default function App() {
       <Dock
         screen={screen} matchCount={matchCount} loading={recLoading}
         askStep={askStep} askLast={askStep === ASK_STEPS - 1}
+        quizActive={screen === "ask" && modeChosen && mode === "simple" && askStep === 1}
+        detailReady={!!result}
         onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
+        onBackResults={goResults}
       />
       {showNotice && screen === "results" && <ResultsNotice onClose={dismissNotice} />}
       {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
