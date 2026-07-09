@@ -258,6 +258,22 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "Phones confirmed to lack a must-have are dropped. Phones we haven't verified yet still show — check the spec sheet before buying.",
     bn: "যে ফোনে নিশ্চিতভাবে এই ফিচার নেই, সেটি বাদ যাবে। যেগুলো এখনো যাচাই হয়নি সেগুলো দেখাবে — কেনার আগে স্পেক দেখে নিন।"
   },
+  exp_hw_simple: {
+    en: "Most people don't need any of these — pick one only if you know you'll use it.",
+    bn: "বেশিরভাগ মানুষের এগুলোর দরকার হয় না — নিশ্চিত হলে তবেই বাছুন।"
+  },
+  exp_jack: {
+    en: "Headphone jack (3.5mm) — plug ordinary wired earphones straight into the phone. No adapter, no charging. Only matters if you actually use wired earphones.",
+    bn: "হেডফোন জ্যাক (৩.৫ মিমি) — সাধারণ তারওয়ালা ইয়ারফোন সরাসরি ফোনে লাগানো যায়। অ্যাডাপ্টার বা চার্জের ঝামেলা নেই। তারওয়ালা ইয়ারফোন ব্যবহার করলেই কেবল দরকার।"
+  },
+  exp_ir: {
+    en: "IR blaster — the phone can work as a remote for the TV or AC. A nice extra at home, but most people live fine without it.",
+    bn: "আইআর ব্লাস্টার — ফোনটাই টিভি বা এসির রিমোট হয়ে যায়। বাসায় কাজে লাগে, তবে না থাকলেও বেশিরভাগ মানুষের দিব্যি চলে।"
+  },
+  exp_fm: {
+    en: "FM radio — live radio without internet or data. Useful where the network is weak or during long power cuts.",
+    bn: "এফএম রেডিও — ইন্টারনেট বা ডেটা ছাড়াই রেডিও শোনা যায়। দুর্বল নেটওয়ার্ক বা লম্বা লোডশেডিংয়ে কাজে লাগে।"
+  },
   exp_soc: {
     en: "Snapdragon (Qualcomm) or MediaTek (Dimensity/Helio). Phones whose chipset we can't identify still show.",
     bn: "Snapdragon (Qualcomm) নাকি MediaTek (Dimensity/Helio)। যে ফোনের চিপসেট শনাক্ত করা যায়নি, সেটিও দেখাবে।"
@@ -333,10 +349,13 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "Three quick questions. From your answers we work out exactly what to look for.",
     bn: "তিনটি ছোট প্রশ্ন। আপনার উত্তর থেকেই আমরা বুঝে নেব ঠিক কী খুঁজতে হবে।"
   },
-  qq_who: { en: "Who will use this phone?", bn: "ফোনটি কে চালাবেন?" },
+  qq_who: { en: "Who is this phone for?", bn: "ফোনটা কার জন্য?" },
   qq_who_me: { en: "Me", bn: "আমি নিজে" },
   qq_who_elder: { en: "My parents / an elder", bn: "আম্মু-আব্বু / মুরুব্বি" },
-  qq_who_student: { en: "A student", bn: "একজন শিক্ষার্থী" },
+  qq_who_other: { en: "Someone else", bn: "অন্য কেউ" },
+  qq_me: { en: "And who are you?", bn: "আর আপনি কে?" },
+  qq_me_student: { en: "A student", bn: "শিক্ষার্থী" },
+  qq_me_other: { en: "Not a student", bn: "শিক্ষার্থী নই" },
   qq_day: { en: "What fills the day on the phone? Pick all that fit.", bn: "ফোনে সারাদিন কী করা হয়? যা যা মেলে বাছুন।" },
   qq_day_photos: { en: "Taking photos", bn: "ছবি তোলা" },
   qq_day_games: { en: "Gaming", bn: "গেমিং" },
@@ -347,6 +366,10 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qq_out: { en: "Outside the house a lot?", bn: "বাইরে বাইরে থাকা হয় বেশি?" },
   qq_out_yes: { en: "Yes, most of the day", bn: "হ্যাঁ, দিনের বেশিরভাগ" },
   qq_out_no: { en: "Not really", bn: "না, তেমন না" },
+  qq_hw: { en: "Any of these extras?", bn: "এগুলোর কোনোটা কি লাগবে?" },
+  qq_hw_jack: { en: "Headphone jack", bn: "হেডফোন জ্যাক" },
+  qq_hw_ir: { en: "TV/AC remote (IR)", bn: "টিভি/এসি রিমোট (IR)" },
+  qq_hw_fm: { en: "FM radio", bn: "এফএম রেডিও" },
 
   // ---- one-by-one quiz redesign (feedback #4): dynamic intent, no buckets ----
   qz_why_who: {
@@ -356,6 +379,10 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qz_why_day: {
     en: "Why we ask — what the phone really does all day decides which specs matter, more than any spec sheet.",
     bn: "কেন জানতে চাই — ফোনে সারাদিন আসলে কী হয়, সেটাই ঠিক করে কোন স্পেক জরুরি — স্পেকশিটের চেয়ে বেশি।"
+  },
+  qz_why_me: {
+    en: "Why we ask — a student needs the best value that lasts years on a tight budget; we tune for that.",
+    bn: "কেন জানতে চাই — শিক্ষার্থীর দরকার কম বাজেটে বছরের পর বছর টেকার মতো সেরা দামের ফোন; আমরা সেভাবেই খুঁজি।"
   },
   qz_why_out: {
     en: "Why we ask — long outdoor days need a screen readable in sunlight and a battery that lasts till night.",
@@ -382,8 +409,10 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qz_rank_2: { en: "Also important", bn: "এটাও জরুরি" },
   qz_rank_3: { en: "Nice to have", bn: "থাকলে ভালো" },
   qz_r_who: { en: "Who", bn: "কার জন্য" },
+  qz_r_me: { en: "You", bn: "আপনি" },
   qz_r_day: { en: "Daily use", bn: "দৈনন্দিন ব্যবহার" },
   qz_r_out: { en: "Outdoors", bn: "বাইরে থাকা" },
+  qz_r_hw: { en: "Extras", bn: "বাড়তি ফিচার" },
   pw_camera: {
     en: "Camera — photos that actually look good, not megapixel marketing",
     bn: "ক্যামেরা — সত্যিই ভালো ছবি, মেগাপিক্সেলের বিজ্ঞাপন নয়"

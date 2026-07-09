@@ -39,8 +39,9 @@ export interface Form {
   hwStrict: boolean;             // unverified hardware also fails must-have filters
   regions: string[];             // accepted import markets (Rio-labeled offers only)
   requireRom: boolean;           // only phones with an official LineageOS build
-  // Simple-mode quiz answers (feedback #4) — dynamically weighted, no buckets
-  q: { who: string; day: string[]; out: boolean | null };
+  // Simple-mode quiz answers (feedback #4) — dynamically weighted, no buckets.
+  // `me` is the branch question asked only when the buyer answers "for myself".
+  q: { who: string; me: string; day: string[]; out: boolean | null; hw: string[] };
   useCase: string;               // EN sentence sent as use_case (embedded intent)
   priorities: string[];          // ordered axes derived from the quiz answers
 }
@@ -51,7 +52,7 @@ const DEFAULT_FORM: Form = {
   excludeBrands: [], traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
   socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
-  q: { who: "me", day: [], out: null },
+  q: { who: "me", me: "", day: [], out: null, hw: [] },
   useCase: "", priorities: [],
 };
 
@@ -88,7 +89,11 @@ export function deriveIntent(q: Form["q"]): QuizIntent {
     add("ease_of_use", 2.2); add("battery", 0.8);
     bits.push("for an older parent - must be simple and forgiving, loud clear sound, no ad spam");
   }
-  if (q.who === "student") {
+  if (q.who === "other") {
+    add("ease_of_use", 0.6);
+    bits.push("a gift for someone else - safe well-rounded choice that is easy to like");
+  }
+  if (q.who === "me" && q.me === "student") {
     add("performance", 0.8); add("battery", 0.8);
     bits.push("for a student - best value that stays good for years");
   }
@@ -99,6 +104,12 @@ export function deriveIntent(q: Form["q"]): QuizIntent {
     add("battery", 1.4);
     bits.push("outdoors most of the day - screen must stay readable in sunlight, battery must last");
   }
+  const hwText: Record<string, string> = {
+    jack: "wants a headphone jack for wired earphones",
+    ir: "wants an IR blaster to control the TV or AC",
+    fm: "wants FM radio that works without internet",
+  };
+  for (const h of q.hw) if (hwText[h]) bits.push(hwText[h]);
   const priorities = Object.keys(w).sort((a, b) => w[b] - w[a]).slice(0, 3);
   return { useCase: bits.join("; "), priorities };
 }
@@ -153,7 +164,7 @@ export default function App() {
     setForm((f) => m === "simple"
       ? {
         ...f, excludeBrands: [], osStyle: "any",
-        requireJack: false, requireIr: false, requireFm: false,
+        requireJack: f.q.hw.includes("jack"), requireIr: f.q.hw.includes("ir"), requireFm: f.q.hw.includes("fm"),
         socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
         archetypes: [],               // quiz intent replaces the purpose cards
         ...deriveIntent(f.q),
