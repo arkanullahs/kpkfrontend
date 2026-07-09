@@ -366,6 +366,10 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qq_out: { en: "Outside the house a lot?", bn: "বাইরে বাইরে থাকা হয় বেশি?" },
   qq_out_yes: { en: "Yes, most of the day", bn: "হ্যাঁ, দিনের বেশিরভাগ" },
   qq_out_no: { en: "Not really", bn: "না, তেমন না" },
+  qq_hw: { en: "Any of these extras?", bn: "এগুলোর কোনোটা কি লাগবে?" },
+  qq_hw_jack: { en: "Headphone jack", bn: "হেডফোন জ্যাক" },
+  qq_hw_ir: { en: "TV/AC remote (IR)", bn: "টিভি/এসি রিমোট (IR)" },
+  qq_hw_fm: { en: "FM radio", bn: "এফএম রেডিও" },
 
   // ---- one-by-one quiz redesign (feedback #4): dynamic intent, no buckets ----
   qz_why_who: {
@@ -408,6 +412,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qz_r_me: { en: "You", bn: "আপনি" },
   qz_r_day: { en: "Daily use", bn: "দৈনন্দিন ব্যবহার" },
   qz_r_out: { en: "Outdoors", bn: "বাইরে থাকা" },
+  qz_r_hw: { en: "Extras", bn: "বাড়তি ফিচার" },
   pw_camera: {
     en: "Camera — photos that actually look good, not megapixel marketing",
     bn: "ক্যামেরা — সত্যিই ভালো ছবি, মেগাপিক্সেলের বিজ্ঞাপন নয়"

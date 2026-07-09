@@ -11,6 +11,7 @@ import { MethodScreen } from "./components/MethodScreen";
 import { ResultsNotice } from "./components/ResultsNotice";
 import { PriceAlert } from "./components/PriceAlert";
 import { Dock } from "./components/Dock";
+import { track } from "./track";
 
 export type Screen = "ask" | "results" | "detail" | "method";
 
@@ -40,7 +41,7 @@ export interface Form {
   requireRom: boolean;           // only phones with an official LineageOS build
   // Simple-mode quiz answers (feedback #4) — dynamically weighted, no buckets.
   // `me` is the branch question asked only when the buyer answers "for myself".
-  q: { who: string; me: string; day: string[]; out: boolean | null };
+  q: { who: string; me: string; day: string[]; out: boolean | null; hw: string[] };
   useCase: string;               // EN sentence sent as use_case (embedded intent)
   priorities: string[];          // ordered axes derived from the quiz answers
 }
@@ -51,7 +52,7 @@ const DEFAULT_FORM: Form = {
   excludeBrands: [], traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
   socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
-  q: { who: "me", me: "", day: [], out: null },
+  q: { who: "me", me: "", day: [], out: null, hw: [] },
   useCase: "", priorities: [],
 };
 
@@ -103,6 +104,12 @@ export function deriveIntent(q: Form["q"]): QuizIntent {
     add("battery", 1.4);
     bits.push("outdoors most of the day - screen must stay readable in sunlight, battery must last");
   }
+  const hwText: Record<string, string> = {
+    jack: "wants a headphone jack for wired earphones",
+    ir: "wants an IR blaster to control the TV or AC",
+    fm: "wants FM radio that works without internet",
+  };
+  for (const h of q.hw) if (hwText[h]) bits.push(hwText[h]);
   const priorities = Object.keys(w).sort((a, b) => w[b] - w[a]).slice(0, 3);
   return { useCase: bits.join("; "), priorities };
 }
@@ -151,12 +158,13 @@ export default function App() {
   // Not persisted — a reload is the way to change modes (v2 decision #1).
   const [modeChosen, setModeChosen] = useState<boolean>(false);
   const changeMode = useCallback((m: Mode) => {
+    track("mode_gate", { mode: m });
     setMode(m);
     setModeChosen(true);
     setForm((f) => m === "simple"
       ? {
         ...f, excludeBrands: [], osStyle: "any",
-        requireJack: false, requireIr: false, requireFm: false,
+        requireJack: f.q.hw.includes("jack"), requireIr: f.q.hw.includes("ir"), requireFm: f.q.hw.includes("fm"),
         socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
         archetypes: [],               // quiz intent replaces the purpose cards
         ...deriveIntent(f.q),
@@ -229,6 +237,7 @@ export default function App() {
   const runRecommend = useCallback(async () => {
     const requestId = crypto.randomUUID();
     requestIdRef.current = requestId;
+    track("see_results", { mode, budget: form.budget, quiz: !!(form.useCase || form.priorities.length) });
     const params: RecParams = { ...toParams(form, 5), request_id: requestId };
     lastRunKey.current = JSON.stringify(toParams(form, 5));
     setScreen("results");
@@ -248,7 +257,7 @@ export default function App() {
       setRecError(e?.message || "Could not load recommendations");
       setRecLoading(false);       // errors skip the finish beat
     }
-  }, [form]);
+  }, [form, mode]);
 
   // RagProgress finished its completion beat -> reveal the results
   const onLoaderDone = useCallback(() => { setRecLoading(false); setRecReady(false); }, []);
@@ -256,6 +265,8 @@ export default function App() {
   const openDetail = useCallback(async (id: string) => {
     setScreen("detail");
     setSelectedId(id);
+    const rank = (result?.picks.findIndex((p) => p.id === id) ?? -1) + 1;
+    track("result_click", { phone: id, rank: rank || null });
     // instant hero/scores/verdict from the result pick while the full
     // DB-backed detail (specs, offers, owner voices) loads behind it
     setPickHint(result?.picks.find((p) => p.id === id) ?? null);
