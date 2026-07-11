@@ -128,6 +128,15 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "These are prices listed on shop websites. The real in-store price in Bangladesh is often different — sometimes by a lot. Always call or visit to confirm before you buy.",
     bn: "এগুলো দোকানের ওয়েবসাইটের দাম। বাস্তবে দোকানের দাম প্রায়ই আলাদা — কখনো অনেক বেশি। কেনার আগে ফোন করে বা গিয়ে দাম নিশ্চিত করুন।"
   },
+  // ---- price provenance / authority (A3) + per-source stock ----
+  price_from: { en: "Price from", bn: "দামের উৎস" },
+  price_unconfirmed: { en: "Unconfirmed price", bn: "দাম অনিশ্চিত" },
+  price_unconfirmed_note: {
+    en: "No shop we keep current (Rio, GadgetGear or Pickaboo) lists this in stock, so this price is from another shop and may be outdated.",
+    bn: "আমরা যেসব দোকানের দাম হালনাগাদ রাখি (Rio, GadgetGear, Pickaboo) তাদের কেউ এটি স্টকে রাখেনি, তাই দামটি অন্য দোকানের — পুরনো হতে পারে।"
+  },
+  stock_in: { en: "In stock", bn: "স্টকে আছে" },
+  stock_out: { en: "Out of stock", bn: "স্টক নেই" },
 
   // ---- ask wizard (stepped query so giving the answer feels as considered
   //      as the answer we work to produce) ----

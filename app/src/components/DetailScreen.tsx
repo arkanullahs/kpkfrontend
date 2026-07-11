@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
-import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, retentionCurve, st, taka, verdictMeta } from "../theme";
+import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, retentionCurve, shopLabel, st, taka, verdictMeta } from "../theme";
 import { t } from "../i18n";
 import type { Connectivity, Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 import { JustSoYouKnow } from "./Compare";
-import { DataCautionChip } from "./ResultsScreen";
+import { DataCautionChip, PriceSource } from "./ResultsScreen";
 
 interface Props {
   detail: PhoneDetail | null;
@@ -117,6 +117,8 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const ourTake = h?.smart_verdict || d?.ai_verdict?.verdict || null;
   const inStock = d?.in_stock_shops ?? h?.in_stock_shops ?? 0;
   const dataCaution = d?.data_caution ?? h?.data_caution ?? null;
+  const bestShop = d?.best_price_shop ?? h?.best_price_shop;
+  const bestPrimary = d?.best_price_primary ?? h?.best_price_primary;
 
   // sections that require the full DB record
   const op = d?.opinion_profile || {};
@@ -129,7 +131,10 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const bs = d?.brand_summary;
   // only real, priced listings — a price-less offer must never sort to the top
   const offers = (d?.offers || []).filter((o) => o.price && o.price > 0).sort((a, b) => a.price - b.price);
-  const bestOfferPrice = offers.length ? offers[0].price : null;
+  // badge the RECOMMENDED price (A3: cheapest kept-current in-stock offer), not
+  // the raw cheapest — else "Best price" lands on an out-of-stock/stale row and
+  // contradicts the hero. Fall back to raw cheapest when no authority price.
+  const bestOfferPrice = price ?? (offers.length ? offers[0].price : null);
 
   return (
     <Wrap onBack={onBack}>
@@ -165,6 +170,9 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           </div>
           <div style={st("margin-top:12px; font-size:14px; color:#80868f; line-height:1.7;")}>
             Cheapest of {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
+            {price != null && bestShop && (
+              <><br /><span style={st("display:inline-block; margin-top:6px;")}><PriceSource shop={bestShop} primary={bestPrimary} /></span></>
+            )}
             {dataCaution && dataCaution.level !== "low" && (
               <><br /><span style={st("display:inline-block; margin-top:6px;")}><DataCautionChip dc={dataCaution} /></span></>
             )}
@@ -467,12 +475,23 @@ function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
 
 function OfferRow({ o, best }: { o: Offer; best: boolean }) {
   const maybeOfficial = o.shop === "GadgetAndGear";
+  const hasChips = maybeOfficial || !!o.region || o.in_stock != null;
   const row = (
     <>
       <div style={st("flex:1; min-width:0;")}>
-        <div style={st("font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{o.shop}{o.variant ? <span style={st("font-weight:500; color:#8a8e96;")}> · {o.variant}</span> : null}</div>
-        {maybeOfficial && <span style={st(`font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; ${MAYBE_OFFICIAL_STYLE}`)}>{t("maybe_official")}</span>}
-        {o.region && <span style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; background:rgba(15,25,35,.06); color:#5c626a;")}>{o.region}</span>}
+        <div style={st("font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{shopLabel(o.shop)}{o.variant ? <span style={st("font-weight:500; color:#8a8e96;")}> · {o.variant}</span> : null}</div>
+        {hasChips && (
+          <div style={st("display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:5px;")}>
+            {maybeOfficial && <span style={st(`font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; ${MAYBE_OFFICIAL_STYLE}`)}>{t("maybe_official")}</span>}
+            {o.region && <span style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; background:rgba(15,25,35,.06); color:#5c626a;")}>{o.region}</span>}
+            {o.in_stock != null && (
+              <span style={st(`display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; ${o.in_stock ? "color:#0a7d57; background:rgba(10,157,106,.1);" : "color:#80868f; background:rgba(15,25,35,.055);"}`)}>
+                <span style={st("width:5px; height:5px; border-radius:50%; background:currentColor;")} />
+                {o.in_stock ? t("stock_in") : t("stock_out")}
+              </span>
+            )}
+          </div>
+        )}
       </div>
       <span style={st("font-size:15px; font-weight:600; color:#17191d;")}>{taka(o.price)}</span>
       {best && <span style={st("font-size:10px; font-weight:700; color:var(--acd); background:rgba(255,255,255,.85); padding:3px 9px; border-radius:99px;")}>{t("best_price")}</span>}

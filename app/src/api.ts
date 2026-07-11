@@ -71,6 +71,9 @@ export interface CompareFrom {
 export interface Pick {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null; best_price_shop?: string; best_price_url?: string;
+  /** true = shown price is from a kept-current shop (Rio/GadgetGear/Pickaboo);
+      false = from a secondary shop and may be outdated (A3 authority). */
+  best_price_primary?: boolean;
   best_official_price: number | null; best_unofficial_price: number | null;
   best_official_variant?: string | null; best_unofficial_variant?: string | null;
   same_variant_saving?: VariantSaving | null;
@@ -133,7 +136,9 @@ export interface Meta {
 
 export interface Offer {
   shop: string; price: number; official?: boolean | null;
-  official_final?: string; in_stock?: boolean; url?: string | null;
+  official_final?: string; in_stock?: boolean | null; url?: string | null;
+  /** shop's price is kept reasonably current (Rio/GadgetGear/Pickaboo) */
+  price_primary?: boolean;
   image?: string | null; variant?: string | null;
   /** import market (IN/CN/US/JP/SG/AU/Global) — only Rio-pricelist offers carry it */
   region?: string | null;
@@ -148,6 +153,7 @@ export interface OpinionProfile {
 export interface PhoneDetail {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null; best_price_shop?: string;
+  best_price_primary?: boolean;
   best_official_price: number | null; best_unofficial_price: number | null;
   best_official_variant?: string | null; best_unofficial_variant?: string | null;
   same_variant_saving?: VariantSaving | null;

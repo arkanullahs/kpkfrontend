@@ -1,5 +1,5 @@
 import { type ReactNode, useState } from "react";
-import { axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, st, taka, topPickBadge } from "../theme";
+import { axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, shopLabel, st, taka, topPickBadge } from "../theme";
 import { t } from "../i18n";
 import { api } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
@@ -44,6 +44,38 @@ export function DataCautionChip({ dc, small }: { dc?: DataCaution | null; small?
     <span style={st(`display:inline-flex; align-items:center; gap:6px; font-size:${small ? 11 : 12.5}px; font-weight:600; color:#a8761a; background:rgba(192,137,42,.12); padding:${small ? "3px 9px" : "5px 11px"}; border-radius:99px;`)}>
       <svg width={small ? 11 : 13} height={small ? 11 : 13} viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       {t(key)}
+    </span>
+  );
+}
+
+/** Price provenance + A3 authority. Primary shops (Rio/GadgetGear/Pickaboo) are
+    kept reasonably current, so their price is shown as plain provenance; a best
+    price from any other shop is flagged "unconfirmed" because it may be stale.
+    `compact` (used on the list cards) renders the amber flag only when
+    unconfirmed, and nothing when the price is confirmed. */
+export function PriceSource({ shop, primary, compact }: { shop?: string; primary?: boolean; compact?: boolean }) {
+  if (!shop) return null;
+  const label = shopLabel(shop);
+  const unconfirmed = primary === false;
+  const warn = (
+    <svg width={compact ? 11 : 12} height={compact ? 11 : 12} viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}>
+      <path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+  if (compact) {
+    if (!unconfirmed) return null;
+    return (
+      <span title={t("price_unconfirmed_note")} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#a8761a; background:rgba(192,137,42,.12); padding:3px 9px; border-radius:99px;")}>
+        {warn}{t("price_unconfirmed")}
+      </span>
+    );
+  }
+  const color = unconfirmed ? "#a8761a" : "#80868f";
+  return (
+    <span title={unconfirmed ? t("price_unconfirmed_note") : undefined}
+      style={st(`display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:${color}; line-height:1.4;`)}>
+      {unconfirmed && warn}
+      {t("price_from")} <span style={st("font-weight:700;")}>{label}</span>{unconfirmed ? <> · {t("price_unconfirmed")}</> : null}
     </span>
   );
 }
@@ -157,6 +189,7 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                 <div style={st("display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap;")}>
                   <span style={st("font-size:15.5px; font-weight:600; color:#17191d;")}>{taka(price)}</span>
                   {r.official_ref && <MaybeOfficial price={r.official_ref.price} small />}
+                  {price != null && <PriceSource shop={r.best_price_shop} primary={r.best_price_primary} compact />}
                   <DataCautionChip dc={r.data_caution} small />
                 </div>
                 {/* mini budget-fit bar */}
@@ -220,6 +253,9 @@ function HeroPick({ p, price, budget, pct, onClick }: {
           <span style={st("font-size:clamp(32px,3.6vw,42px); font-weight:300; letter-spacing:-2px; color:#17191d; line-height:1;")}>{taka(price)}</span>
           <span style={st("font-size:13.5px; color:#80868f; margin-bottom:5px;")}>at {p.in_stock_shops ?? 0} shops</span>
         </div>
+        {price != null && p.best_price_shop && (
+          <div style={st("margin-top:8px;")}><PriceSource shop={p.best_price_shop} primary={p.best_price_primary} /></div>
+        )}
         {p.data_caution && p.data_caution.level !== "low" && (
           <div style={st("margin-top:12px;")}><DataCautionChip dc={p.data_caution} /></div>
         )}

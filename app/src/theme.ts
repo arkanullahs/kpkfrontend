@@ -129,6 +129,23 @@ export function classifyCaveats(caveats?: Caveatish[] | null): { major: Caveatis
     the single BD shop we trust as an official channel. */
 export const MAYBE_OFFICIAL_STYLE = "color:#0a7d57; background:rgba(10,157,106,.1);";
 
+/** Shop key (as stored on offers) → human display name. Unknown keys fall back
+    to the raw key. */
+const SHOP_LABEL: Record<string, string> = {
+  RioInternational: "Rio International",
+  GadgetAndGear: "GadgetGear",
+  Pickaboo: "Pickaboo",
+  Dazzle: "Dazzle",
+  SumashTech: "Sumash Tech",
+  GaziElectronics: "Gazi Electronics",
+  ExcelTech: "Excel Tech",
+  AppleGadgets: "Apple Gadgets",
+};
+export function shopLabel(shop?: string | null): string {
+  if (!shop) return "";
+  return SHOP_LABEL[shop] || shop;
+}
+
 export interface Fit { fit: string; fitColor: string; }
 /** Budget fit, framed so that USING the budget is the win and leaving money on
     the table is neutral-at-best — never the green "you saved!" that nudges
