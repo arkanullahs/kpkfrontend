@@ -411,6 +411,11 @@ export default function App() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20M12 2c-3 3.5-3 15.5 0 20M12 2c3 3.5 3 15.5 0 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
           <span>Made by <b>Arkanullah Saad</b> · <span style={st("text-decoration:underline; text-underline-offset:3px;")}>see my portfolio ↗</span></span>
         </a>
+        <div style={st("margin-top:14px; font-size:13px; color:#6b7280;")}>
+          <a href="/best/" style={st("color:inherit; text-decoration:underline; text-underline-offset:3px;")}>{t("footer_guides")}</a>
+          {" · "}
+          <a href="/support" style={st("color:inherit; text-decoration:underline; text-underline-offset:3px;")}>{t("footer_support")}</a>
+        </div>
       </div>
 
       <Analytics />
