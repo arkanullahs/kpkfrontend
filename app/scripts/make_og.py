@@ -53,12 +53,12 @@ f_sub  = font("seguisb.ttf", 31)
 f_dom  = font("segoeuib.ttf", 30)
 f_tag  = font("seguisb.ttf", 26)
 
-# ---- logo (icon + bangla wordmark) top-left ----
-logo = Image.open(PUB + "/kfk-logo-on-light.png").convert("RGBA")
-lw = 540
-lh = int(logo.height * lw / logo.width)
-logo = logo.resize((lw, lh), Image.LANCZOS)
-img.alpha_composite(logo, (78, 72))
+# ---- logo (bhalophone icon + wordmark) top-left ----
+icon = Image.open(PUB + "/android-chrome-192x192.png").convert("RGBA")
+icon = icon.resize((96, 96), Image.LANCZOS)
+img.alpha_composite(icon, (78, 78))
+draw.text((196, 92), "bhalophone", font=font("segoeuib.ttf", 60),
+          fill=(23, 25, 29, 255))
 
 # ---- headline (wrapped) ----
 head_lines = ["Find the best phone", "your budget can buy."]
@@ -72,7 +72,7 @@ draw.text((82, y + 8), "Live Bangladesh prices, ranked by real reviews — not p
           font=f_sub, fill=(92, 98, 106, 255))
 
 # ---- domain pill (bottom-left) ----
-dom = "thikphone.tech"
+dom = "bhalophone.com"
 bb = draw.textbbox((0, 0), dom, font=f_dom)
 dw, dh = bb[2] - bb[0], bb[3] - bb[1]
 px, py = 80, 540

@@ -1,7 +1,7 @@
 # কোন ফোন? — frontend
 
 React + Vite + TypeScript frontend for the KPK BD phone recommender. Ports the
-`KonFonBD.dc.html` design mockup verbatim (liquid-glass, Bangla-first, ambient
+`bhalophone.dc.html` design mockup verbatim (liquid-glass, Bangla-first, ambient
 orbs, accent palettes) into a real app wired to the FastAPI backend.
 
 ## Screens

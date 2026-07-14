@@ -158,22 +158,6 @@ nav.linkrow a{font-size:13px;font-weight:600;color:#565b63;background:rgba(255,2
 border:.5px solid rgba(15,25,35,.07);border-radius:99px;padding:6px 13px}
 nav.linkrow a:hover{text-decoration:none;color:var(--acd)}
 
-/* hub page: CSS-only tabs (no JS) so one category shows at a time instead of
-   four stacked pill-walls -- owner 2026-07-14: the repeated walls read as
-   noise, and the header brand bar had unused space doing nothing useful. */
-.tabs{margin-top:18px}
-.tabs input{display:none}
-.tabbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.tabs label{font-size:13.5px;font-weight:700;color:#5c626a;background:rgba(255,255,255,.75);
-border:.5px solid rgba(15,25,35,.07);border-radius:99px;padding:8px 17px;cursor:pointer}
-.tabs input:checked+label{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
-border-color:transparent;box-shadow:0 4px 12px var(--acglow)}
-.tabpanel{display:none}
-#hubtab-all:checked~#panel-all,
-#hubtab-camera:checked~#panel-camera,
-#hubtab-gaming:checked~#panel-gaming,
-#hubtab-battery:checked~#panel-battery{display:block}
-
 footer.site{margin-top:28px;padding:18px 0;color:var(--mut);font-size:12.5px;line-height:1.6;
 border-top:1px solid rgba(15,25,35,.08)}
 footer.site a{color:var(--mut);text-decoration:underline}
@@ -202,7 +186,8 @@ footer.site a{color:var(--mut);text-decoration:underline}
 <span class="tag">The phone truth engine for Bangladesh</span></header>
 <div class="wrap">
 <h1>Best phones in Bangladesh, <em>by budget</em></h1>
-<p class="sub">Live shop data, updated 2026-07-14. Pick a category, then your budget:</p>
-<div class="tabs"><div class="tabbar"><input type="radio" name="hubcat" id="hubtab-all" checked><label for="hubtab-all">Best phones</label><input type="radio" name="hubcat" id="hubtab-camera"><label for="hubtab-camera">Best camera phones</label><input type="radio" name="hubcat" id="hubtab-gaming"><label for="hubtab-gaming">Best gaming phones</label><input type="radio" name="hubcat" id="hubtab-battery"><label for="hubtab-battery">Best battery phones</label></div><div class="tabpanel" id="panel-all"><nav class="linkrow"><a href="/best/phone-under-15000">৳15,000</a><a href="/best/phone-under-20000">৳20,000</a><a href="/best/phone-under-25000">৳25,000</a><a href="/best/phone-under-30000">৳30,000</a><a href="/best/phone-under-35000">৳35,000</a><a href="/best/phone-under-40000">৳40,000</a><a href="/best/phone-under-50000">৳50,000</a><a href="/best/phone-under-60000">৳60,000</a><a href="/best/phone-under-80000">৳80,000</a><a href="/best/phone-under-100000">৳1,00,000</a></nav></div><div class="tabpanel" id="panel-camera"><nav class="linkrow"><a href="/best/camera-phone-under-15000">৳15,000</a><a href="/best/camera-phone-under-20000">৳20,000</a><a href="/best/camera-phone-under-25000">৳25,000</a><a href="/best/camera-phone-under-30000">৳30,000</a><a href="/best/camera-phone-under-35000">৳35,000</a><a href="/best/camera-phone-under-40000">৳40,000</a><a href="/best/camera-phone-under-50000">৳50,000</a><a href="/best/camera-phone-under-60000">৳60,000</a><a href="/best/camera-phone-under-80000">৳80,000</a><a href="/best/camera-phone-under-100000">৳1,00,000</a></nav></div><div class="tabpanel" id="panel-gaming"><nav class="linkrow"><a href="/best/gaming-phone-under-15000">৳15,000</a><a href="/best/gaming-phone-under-20000">৳20,000</a><a href="/best/gaming-phone-under-25000">৳25,000</a><a href="/best/gaming-phone-under-30000">৳30,000</a><a href="/best/gaming-phone-under-35000">৳35,000</a><a href="/best/gaming-phone-under-40000">৳40,000</a><a href="/best/gaming-phone-under-50000">৳50,000</a><a href="/best/gaming-phone-under-60000">৳60,000</a><a href="/best/gaming-phone-under-80000">৳80,000</a><a href="/best/gaming-phone-under-100000">৳1,00,000</a></nav></div><div class="tabpanel" id="panel-battery"><nav class="linkrow"><a href="/best/battery-phone-under-15000">৳15,000</a><a href="/best/battery-phone-under-20000">৳20,000</a><a href="/best/battery-phone-under-25000">৳25,000</a><a href="/best/battery-phone-under-30000">৳30,000</a><a href="/best/battery-phone-under-35000">৳35,000</a><a href="/best/battery-phone-under-40000">৳40,000</a><a href="/best/battery-phone-under-50000">৳50,000</a><a href="/best/battery-phone-under-60000">৳60,000</a><a href="/best/battery-phone-under-80000">৳80,000</a><a href="/best/battery-phone-under-100000">৳1,00,000</a></nav></div></div>
+<p class="sub">Live shop data, updated 2026-07-14. Pick your budget - camera,
+gaming and battery guides are linked from every page:</p>
+<nav class="linkrow"><a href="/best/phone-under-15000">৳15,000</a><a href="/best/phone-under-20000">৳20,000</a><a href="/best/phone-under-25000">৳25,000</a><a href="/best/phone-under-30000">৳30,000</a><a href="/best/phone-under-35000">৳35,000</a><a href="/best/phone-under-40000">৳40,000</a><a href="/best/phone-under-50000">৳50,000</a><a href="/best/phone-under-60000">৳60,000</a><a href="/best/phone-under-80000">৳80,000</a><a href="/best/phone-under-100000">৳1,00,000</a></nav>
 <a class="cta" href="/">Get a personal pick &rarr;</a>
 </div></body></html>
