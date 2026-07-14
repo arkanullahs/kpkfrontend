@@ -9,6 +9,9 @@
 export type Lang = "en" | "bn";
 
 const STRINGS: Record<string, { en: string; bn: string }> = {
+  // SP1 static-page footer links
+  footer_guides: { en: "Best phones by budget", bn: "বাজেট অনুযায়ী সেরা ফোন" },
+  footer_support: { en: "Support us", bn: "সাপোর্ট করুন" },
   // header / nav
   in_stock: { en: "phones tracked", bn: "ফোন ট্র্যাক করছি" },
   prices_loading: { en: "live prices", bn: "লাইভ দাম" },
