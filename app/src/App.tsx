@@ -338,8 +338,11 @@ export default function App() {
 
           {/* LEFT: logo + tagline */}
           <div style={st("display:flex; align-items:center; gap:13px; min-width:0;")}>
-            <img src="/android-chrome-192x192.png" alt="bhalophone" style={st("height:34px; width:34px; display:block; flex-shrink:0; border-radius:9px;")} />
-            <span style={st("font-family:var(--f-display); font-size:20px; font-weight:800; letter-spacing:-.4px; color:#171d25; white-space:nowrap;")}>bhalophone</span>
+            {/* brand links to the static SEO homepage; the app itself lives at /pick */}
+            <a href="/" style={st("display:flex; align-items:center; gap:13px; text-decoration:none; flex-shrink:0;")}>
+              <img src="/android-chrome-192x192.png" alt="bhalophone" style={st("height:34px; width:34px; display:block; flex-shrink:0; border-radius:9px;")} />
+              <span style={st("font-family:var(--f-display); font-size:20px; font-weight:800; letter-spacing:-.4px; color:#171d25; white-space:nowrap;")}>bhalophone</span>
+            </a>
             <span style={st("display:block; width:1px; height:24px; background:rgba(15,25,35,.1); flex-shrink:0;")} className="khdiv" />
             <div style={st("display:flex; flex-direction:column; min-width:0;")} className="khtag">
               <span style={st("font-family:var(--f-bn); font-size:13.5px; font-weight:600; color:#3a3f46; line-height:1.15; white-space:nowrap;")}>{t("brand_tagline")}</span>
