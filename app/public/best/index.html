@@ -71,13 +71,20 @@ padding:8px 16px;white-space:nowrap;
 box-shadow:0 4px 12px var(--acglow),inset 0 1px 0 rgba(255,255,255,.35)}
 .hcta:hover{filter:brightness(1.05)}
 @media(max-width:520px){
-.btxt{display:none}
+/* wordmark hides only on BAND pages (header.slim), whose one-row rule needs
+   the room for category pills; home/hub/vs headers have no pill lane, so the
+   brand name stays (owner 2026-07-17: navbar should say bhalophone there) */
+.slim .btxt{display:none}
+/* ...and next to the wordmark the slogan only ever showed as an ugly
+   ellipsis (owner 2026-07-17 round 2) -- drop it; the freed space lets the
+   CTA come back on non-band headers */
+.tag{display:none}
 /* center-justified flex clips BOTH edges once pills overflow -- left-align
    on mobile so the first pill is never cut; the right edge keeps the fade */
 .hnav{justify-content:flex-start}
-/* CTA drops on small screens entirely -- that space plus smaller pills is
-   what lets all 4 categories fit without scroll clipping (owner 2026-07-14). */
-.hcta{display:none}
+/* CTA drops on BAND pages only -- that space plus smaller pills is what
+   lets all 4 category pills fit without scroll clipping (owner 2026-07-14). */
+.slim .hcta{display:none}
 .hnav{gap:5px}
 .hnav a{font-size:12px;padding:8px 13px}
 }
@@ -244,10 +251,31 @@ font-size:16.5px;font-weight:600;letter-spacing:-.3px}
 .mlab .mi{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;
 border-radius:10px;background:var(--acsoft);color:var(--acd);flex:none}
 .mlab .mx{font-size:12px;font-weight:600;color:var(--mut);font-family:var(--f-sans);margin-left:auto;white-space:nowrap}
-.mchips{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 4px;scrollbar-width:none;
+/* owner 2026-07-17: budget chips past the fold were only findable by guessing
+   the sideways scroll (hidden scrollbar + subtle fade = no affordance at all).
+   Desktop now WRAPS so every budget is visible; the compact scroll lane keeps
+   only narrow screens, where swiping a chip row is a natural gesture. */
+.mchips{display:flex;flex-wrap:wrap;gap:8px;padding:10px 2px 4px}
+.mlane{position:relative}
+.mgo{display:none}
+@media(max-width:560px){
+.mchips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
 mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 24px),transparent);
 -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 24px),transparent)}
 .mchips::-webkit-scrollbar{display:none}
+/* owner 2026-07-17: the fade alone wasn't enough of a "more options" hint.
+   Round 2: real BUTTONS (tap scrolls the lane; script fades each at its end
+   of travel). Round 3: the arrows sit in .mlane gutters OUTSIDE the chip
+   row, so chips never slide underneath them. */
+.mlane{padding:0 33px}
+.mgo{display:flex;align-items:center;justify-content:center;position:absolute;
+right:0;top:50%;transform:translateY(-50%);width:28px;height:28px;
+border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.94);
+box-shadow:0 1px 5px rgba(15,25,35,.2);color:var(--acd);font-size:19px;
+font-weight:700;cursor:pointer;transition:opacity .25s}
+.mgo.off{opacity:0;pointer-events:none}
+.mgo.back{right:auto;left:0}
+}
 .mchips a{flex:none;font-size:13px;font-weight:600;color:#565b63;background:rgba(255,255,255,.85);
 border:.5px solid rgba(15,25,35,.08);border-radius:99px;padding:7px 14px}
 .mchips a:hover{text-decoration:none;color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));border-color:transparent}
@@ -267,6 +295,30 @@ background:rgba(255,255,255,.88);box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0
 .tcard{flex-direction:column;align-items:flex-start;gap:9px;padding:13px 14px}
 .tcard img{width:64px;height:84px}
 }
+
+.duel{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:16px}
+.dcard{position:relative;padding:17px 18px;border-radius:19px;
+background:rgba(255,255,255,.88);
+box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
+.dcard.win{background:linear-gradient(165deg,rgba(255,255,255,.96),rgba(255,255,255,.9));
+box-shadow:0 1px 2px rgba(15,25,35,.05),0 14px 34px rgba(15,25,35,.09),inset 0 0 0 1px var(--acsoft2)}
+.dcard .dtop{display:flex;gap:13px;align-items:flex-start}
+.dcard img{width:76px;height:100px;object-fit:contain;border-radius:12px;background:#fafafa;flex:none}
+/* the badge row is reserved on BOTH cards (empty span on the loser) so the
+   two columns' images/prices stay on the same baseline */
+.dcard .badge{float:none;display:block;width:fit-content;margin:0 0 8px;height:24px;line-height:14px}
+.dcard .badge:empty{background:none;padding-left:0}
+.dcard .nm{font-family:var(--f-display);font-size:18px;font-weight:700;
+letter-spacing:-.3px;line-height:1.15}
+.dcard .amt{font-size:23px;font-weight:400;letter-spacing:-.8px;margin-top:9px}
+.dcard .chips{margin-top:11px}
+table.cmp.vs{min-width:420px}
+table.cmp.vs td{white-space:normal}
+.vslink{margin:12px 0 0;font-size:14px;font-weight:600}
+.decide p{margin:8px 0 6px;font-size:14.5px;color:#363b42;line-height:1.6}
+@media(max-width:560px){
+.duel{grid-template-columns:1fr}
+}
 </style></head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt=""><span class="btxt">bhalophone</span></a>
@@ -275,6 +327,23 @@ background:rgba(255,255,255,.88);box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0
 <h1>Best phones in Bangladesh, <em>by budget</em></h1>
 <p class="sub">Live shop data, updated 2026-07-17. Every guide, every budget,
 every use case:</p>
-<section class="matrix"><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M7.5 1.8l1.7 3.6 4 .4-3 2.7.9 3.9-3.6-2.1-3.6 2.1.9-3.9-3-2.7 4-.4z" fill="currentColor"/></svg></span>Best overall<span class="mx">15 guides</span></div><div class="mchips"><a href="/best/phone-under-10000">Under ৳10,000</a><a href="/best/phone-under-12000">Under ৳12,000</a><a href="/best/phone-under-15000">Under ৳15,000</a><a href="/best/phone-under-20000">Under ৳20,000</a><a href="/best/phone-under-25000">Under ৳25,000</a><a href="/best/phone-under-30000">Under ৳30,000</a><a href="/best/phone-under-35000">Under ৳35,000</a><a href="/best/phone-under-40000">Under ৳40,000</a><a href="/best/phone-under-50000">Under ৳50,000</a><a href="/best/phone-under-60000">Under ৳60,000</a><a href="/best/phone-under-80000">Under ৳80,000</a><a href="/best/phone-under-100000">Under ৳1,00,000</a><a href="/best/phone-under-120000">Under ৳1,20,000</a><a href="/best/phone-under-150000">Under ৳1,50,000</a><a href="/best/phone-under-200000">Under ৳2,00,000</a></div></div><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4" width="12" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7.5" cy="8.2" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 4l1-1.7h3L10 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>Best camera phones<span class="mx">16 guides</span></div><div class="mchips"><a href="/best/camera-phone-under-8000">Under ৳8,000</a><a href="/best/camera-phone-under-10000">Under ৳10,000</a><a href="/best/camera-phone-under-12000">Under ৳12,000</a><a href="/best/camera-phone-under-15000">Under ৳15,000</a><a href="/best/camera-phone-under-20000">Under ৳20,000</a><a href="/best/camera-phone-under-25000">Under ৳25,000</a><a href="/best/camera-phone-under-30000">Under ৳30,000</a><a href="/best/camera-phone-under-35000">Under ৳35,000</a><a href="/best/camera-phone-under-40000">Under ৳40,000</a><a href="/best/camera-phone-under-50000">Under ৳50,000</a><a href="/best/camera-phone-under-60000">Under ৳60,000</a><a href="/best/camera-phone-under-80000">Under ৳80,000</a><a href="/best/camera-phone-under-100000">Under ৳1,00,000</a><a href="/best/camera-phone-under-120000">Under ৳1,20,000</a><a href="/best/camera-phone-under-150000">Under ৳1,50,000</a><a href="/best/camera-phone-under-200000">Under ৳2,00,000</a></div></div><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4.5" width="12" height="7" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 6.7v2.6M3.7 8h2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="7.2" r=".9" fill="currentColor"/><circle cx="11.7" cy="8.9" r=".9" fill="currentColor"/></svg></span>Best gaming phones<span class="mx">16 guides</span></div><div class="mchips"><a href="/best/gaming-phone-under-8000">Under ৳8,000</a><a href="/best/gaming-phone-under-10000">Under ৳10,000</a><a href="/best/gaming-phone-under-12000">Under ৳12,000</a><a href="/best/gaming-phone-under-15000">Under ৳15,000</a><a href="/best/gaming-phone-under-20000">Under ৳20,000</a><a href="/best/gaming-phone-under-25000">Under ৳25,000</a><a href="/best/gaming-phone-under-30000">Under ৳30,000</a><a href="/best/gaming-phone-under-35000">Under ৳35,000</a><a href="/best/gaming-phone-under-40000">Under ৳40,000</a><a href="/best/gaming-phone-under-50000">Under ৳50,000</a><a href="/best/gaming-phone-under-60000">Under ৳60,000</a><a href="/best/gaming-phone-under-80000">Under ৳80,000</a><a href="/best/gaming-phone-under-100000">Under ৳1,00,000</a><a href="/best/gaming-phone-under-120000">Under ৳1,20,000</a><a href="/best/gaming-phone-under-150000">Under ৳1,50,000</a><a href="/best/gaming-phone-under-200000">Under ৳2,00,000</a></div></div><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4.5" width="10.5" height="6.5" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M13.5 6.8v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3.2" y="6.1" width="4.4" height="3.3" rx=".8" fill="currentColor"/></svg></span>Best battery life<span class="mx">16 guides</span></div><div class="mchips"><a href="/best/battery-phone-under-8000">Under ৳8,000</a><a href="/best/battery-phone-under-10000">Under ৳10,000</a><a href="/best/battery-phone-under-12000">Under ৳12,000</a><a href="/best/battery-phone-under-15000">Under ৳15,000</a><a href="/best/battery-phone-under-20000">Under ৳20,000</a><a href="/best/battery-phone-under-25000">Under ৳25,000</a><a href="/best/battery-phone-under-30000">Under ৳30,000</a><a href="/best/battery-phone-under-35000">Under ৳35,000</a><a href="/best/battery-phone-under-40000">Under ৳40,000</a><a href="/best/battery-phone-under-50000">Under ৳50,000</a><a href="/best/battery-phone-under-60000">Under ৳60,000</a><a href="/best/battery-phone-under-80000">Under ৳80,000</a><a href="/best/battery-phone-under-100000">Under ৳1,00,000</a><a href="/best/battery-phone-under-120000">Under ৳1,20,000</a><a href="/best/battery-phone-under-150000">Under ৳1,50,000</a><a href="/best/battery-phone-under-200000">Under ৳2,00,000</a></div></div><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M2 12.5a10 10 0 0 1 11-11M4 12.5a7.5 7.5 0 0 1 8.5-8.5M6.2 12.5a5 5 0 0 1 6.3-6.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12.2" cy="12.2" r="1.3" fill="currentColor"/></svg></span>Best 5G phones<span class="mx">13 guides</span></div><div class="mchips"><a href="/best/5g-phone-under-15000">Under ৳15,000</a><a href="/best/5g-phone-under-20000">Under ৳20,000</a><a href="/best/5g-phone-under-25000">Under ৳25,000</a><a href="/best/5g-phone-under-30000">Under ৳30,000</a><a href="/best/5g-phone-under-35000">Under ৳35,000</a><a href="/best/5g-phone-under-40000">Under ৳40,000</a><a href="/best/5g-phone-under-50000">Under ৳50,000</a><a href="/best/5g-phone-under-60000">Under ৳60,000</a><a href="/best/5g-phone-under-80000">Under ৳80,000</a><a href="/best/5g-phone-under-100000">Under ৳1,00,000</a><a href="/best/5g-phone-under-120000">Under ৳1,20,000</a><a href="/best/5g-phone-under-150000">Under ৳1,50,000</a><a href="/best/5g-phone-under-200000">Under ৳2,00,000</a></div></div></section>
+<section class="matrix"><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M7.5 1.8l1.7 3.6 4 .4-3 2.7.9 3.9-3.6-2.1-3.6 2.1.9-3.9-3-2.7 4-.4z" fill="currentColor"/></svg></span>Best overall<span class="mx">15 guides</span></div><div class="mlane"><div class="mchips"><a href="/best/phone-under-10000">Under ৳10,000</a><a href="/best/phone-under-12000">Under ৳12,000</a><a href="/best/phone-under-15000">Under ৳15,000</a><a href="/best/phone-under-20000">Under ৳20,000</a><a href="/best/phone-under-25000">Under ৳25,000</a><a href="/best/phone-under-30000">Under ৳30,000</a><a href="/best/phone-under-35000">Under ৳35,000</a><a href="/best/phone-under-40000">Under ৳40,000</a><a href="/best/phone-under-50000">Under ৳50,000</a><a href="/best/phone-under-60000">Under ৳60,000</a><a href="/best/phone-under-80000">Under ৳80,000</a><a href="/best/phone-under-100000">Under ৳1,00,000</a><a href="/best/phone-under-120000">Under ৳1,20,000</a><a href="/best/phone-under-150000">Under ৳1,50,000</a><a href="/best/phone-under-200000">Under ৳2,00,000</a></div><button class="mgo back off" aria-label="Scroll back">&lsaquo;</button><button class="mgo fwd" aria-label="Scroll for more budgets">&rsaquo;</button></div></div><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4" width="12" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7.5" cy="8.2" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 4l1-1.7h3L10 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>Best camera phones<span class="mx">16 guides</span></div><div class="mlane"><div class="mchips"><a href="/best/camera-phone-under-8000">Under ৳8,000</a><a href="/best/camera-phone-under-10000">Under ৳10,000</a><a href="/best/camera-phone-under-12000">Under ৳12,000</a><a href="/best/camera-phone-under-15000">Under ৳15,000</a><a href="/best/camera-phone-under-20000">Under ৳20,000</a><a href="/best/camera-phone-under-25000">Under ৳25,000</a><a href="/best/camera-phone-under-30000">Under ৳30,000</a><a href="/best/camera-phone-under-35000">Under ৳35,000</a><a href="/best/camera-phone-under-40000">Under ৳40,000</a><a href="/best/camera-phone-under-50000">Under ৳50,000</a><a href="/best/camera-phone-under-60000">Under ৳60,000</a><a href="/best/camera-phone-under-80000">Under ৳80,000</a><a href="/best/camera-phone-under-100000">Under ৳1,00,000</a><a href="/best/camera-phone-under-120000">Under ৳1,20,000</a><a href="/best/camera-phone-under-150000">Under ৳1,50,000</a><a href="/best/camera-phone-under-200000">Under ৳2,00,000</a></div><button class="mgo back off" aria-label="Scroll back">&lsaquo;</button><button class="mgo fwd" aria-label="Scroll for more budgets">&rsaquo;</button></div></div><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4.5" width="12" height="7" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 6.7v2.6M3.7 8h2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="7.2" r=".9" fill="currentColor"/><circle cx="11.7" cy="8.9" r=".9" fill="currentColor"/></svg></span>Best gaming phones<span class="mx">16 guides</span></div><div class="mlane"><div class="mchips"><a href="/best/gaming-phone-under-8000">Under ৳8,000</a><a href="/best/gaming-phone-under-10000">Under ৳10,000</a><a href="/best/gaming-phone-under-12000">Under ৳12,000</a><a href="/best/gaming-phone-under-15000">Under ৳15,000</a><a href="/best/gaming-phone-under-20000">Under ৳20,000</a><a href="/best/gaming-phone-under-25000">Under ৳25,000</a><a href="/best/gaming-phone-under-30000">Under ৳30,000</a><a href="/best/gaming-phone-under-35000">Under ৳35,000</a><a href="/best/gaming-phone-under-40000">Under ৳40,000</a><a href="/best/gaming-phone-under-50000">Under ৳50,000</a><a href="/best/gaming-phone-under-60000">Under ৳60,000</a><a href="/best/gaming-phone-under-80000">Under ৳80,000</a><a href="/best/gaming-phone-under-100000">Under ৳1,00,000</a><a href="/best/gaming-phone-under-120000">Under ৳1,20,000</a><a href="/best/gaming-phone-under-150000">Under ৳1,50,000</a><a href="/best/gaming-phone-under-200000">Under ৳2,00,000</a></div><button class="mgo back off" aria-label="Scroll back">&lsaquo;</button><button class="mgo fwd" aria-label="Scroll for more budgets">&rsaquo;</button></div></div><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4.5" width="10.5" height="6.5" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M13.5 6.8v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3.2" y="6.1" width="4.4" height="3.3" rx=".8" fill="currentColor"/></svg></span>Best battery life<span class="mx">16 guides</span></div><div class="mlane"><div class="mchips"><a href="/best/battery-phone-under-8000">Under ৳8,000</a><a href="/best/battery-phone-under-10000">Under ৳10,000</a><a href="/best/battery-phone-under-12000">Under ৳12,000</a><a href="/best/battery-phone-under-15000">Under ৳15,000</a><a href="/best/battery-phone-under-20000">Under ৳20,000</a><a href="/best/battery-phone-under-25000">Under ৳25,000</a><a href="/best/battery-phone-under-30000">Under ৳30,000</a><a href="/best/battery-phone-under-35000">Under ৳35,000</a><a href="/best/battery-phone-under-40000">Under ৳40,000</a><a href="/best/battery-phone-under-50000">Under ৳50,000</a><a href="/best/battery-phone-under-60000">Under ৳60,000</a><a href="/best/battery-phone-under-80000">Under ৳80,000</a><a href="/best/battery-phone-under-100000">Under ৳1,00,000</a><a href="/best/battery-phone-under-120000">Under ৳1,20,000</a><a href="/best/battery-phone-under-150000">Under ৳1,50,000</a><a href="/best/battery-phone-under-200000">Under ৳2,00,000</a></div><button class="mgo back off" aria-label="Scroll back">&lsaquo;</button><button class="mgo fwd" aria-label="Scroll for more budgets">&rsaquo;</button></div></div><div class="mrow"><div class="mlab"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M2 12.5a10 10 0 0 1 11-11M4 12.5a7.5 7.5 0 0 1 8.5-8.5M6.2 12.5a5 5 0 0 1 6.3-6.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12.2" cy="12.2" r="1.3" fill="currentColor"/></svg></span>Best 5G phones<span class="mx">13 guides</span></div><div class="mlane"><div class="mchips"><a href="/best/5g-phone-under-15000">Under ৳15,000</a><a href="/best/5g-phone-under-20000">Under ৳20,000</a><a href="/best/5g-phone-under-25000">Under ৳25,000</a><a href="/best/5g-phone-under-30000">Under ৳30,000</a><a href="/best/5g-phone-under-35000">Under ৳35,000</a><a href="/best/5g-phone-under-40000">Under ৳40,000</a><a href="/best/5g-phone-under-50000">Under ৳50,000</a><a href="/best/5g-phone-under-60000">Under ৳60,000</a><a href="/best/5g-phone-under-80000">Under ৳80,000</a><a href="/best/5g-phone-under-100000">Under ৳1,00,000</a><a href="/best/5g-phone-under-120000">Under ৳1,20,000</a><a href="/best/5g-phone-under-150000">Under ৳1,50,000</a><a href="/best/5g-phone-under-200000">Under ৳2,00,000</a></div><button class="mgo back off" aria-label="Scroll back">&lsaquo;</button><button class="mgo fwd" aria-label="Scroll for more budgets">&rsaquo;</button></div></div></section>
 <a class="cta" href="/pick">Get a personal pick &rarr;</a>
-</div></body></html>
+</div><script>
+(function(){
+function upd(l){var p=l.parentNode;
+var f=p.querySelector('.mgo.fwd'),b=p.querySelector('.mgo.back');
+if(f)f.className='mgo fwd'+(l.scrollLeft+l.clientWidth>=l.scrollWidth-8?' off':'');
+if(b)b.className='mgo back'+(l.scrollLeft<=8?' off':'')}
+document.addEventListener('click',function(e){
+var t=e.target.closest?e.target.closest('.mgo'):null;if(!t)return;
+var l=t.parentNode.querySelector('.mchips');
+var d=t.className.indexOf('back')>-1?-1:1;
+l.scrollBy({left:d*l.clientWidth*.75,behavior:'smooth'})});
+document.addEventListener('scroll',function(e){
+if(e.target.classList&&e.target.classList.contains('mchips'))upd(e.target)},true);
+function all(){var ls=document.querySelectorAll('.mchips');
+for(var i=0;i<ls.length;i++)upd(ls[i])}
+window.addEventListener('resize',all);all();
+})();
+</script></body></html>
