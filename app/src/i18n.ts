@@ -50,7 +50,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   scores: { en: "Scores", bn: "স্কোর" },
   specs: { en: "Specs", bn: "স্পেক" },
   owner_voices: { en: "Owner voices", bn: "ব্যবহারকারীদের মত" },
-  where_to_buy: { en: "Prices referenced from", bn: "যেসব দোকান থেকে দাম নেওয়া" },
+  where_to_buy: { en: "Listed prices we checked", bn: "আমরা যেসব দাম যাচাই করেছি" },
   brand_ownership: { en: "Brand & ownership", bn: "ব্র্যান্ড ও মালিকানা" },
   who_its_for: { en: "Who it's for", bn: "কাদের জন্য" },
   official: { en: "Official", bn: "অফিসিয়াল" },
@@ -60,6 +60,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     bn: "কেনার আগে দোকানে দাম ও স্টক নিশ্চিত করুন।"
   },
   best_price: { en: "Best price", bn: "সেরা দাম" },
+  listed_price: { en: "Listed price", bn: "তালিকাভুক্ত দাম" },
   carried_by: { en: "Carried by", bn: "পাওয়া যায়" },
   shops: { en: "shops", bn: "দোকানে" },
 
@@ -74,12 +75,12 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   conn_no: { en: "No", bn: "নেই" },
   conn_unknown: { en: "Not verified", bn: "যাচাই হয়নি" },
 
-  // ---- official signal (GadgetGear is the one shop we trust as official) ----
+  // ---- official signal. SP1 rule: the badge follows the SHOWN price's own
+  //      channel; shops themselves stay anonymous in all ranker UI ----
   maybe_official: { en: "Maybe official", bn: "অফিসিয়াল হতে পারে" },
-  gng_note: {
-    en: "GadgetGear — the one seller we trust as official — lists it at this price.",
-    bn: "গ্যাজেটগিয়ার — আমরা যে একমাত্র অফিসিয়াল বিক্রেতা মানি — এই দামে রেখেছে।"
-  },
+  official_bd: { en: "Official (BD warranty)", bn: "অফিসিয়াল (বিডি ওয়ারেন্টি)" },
+  unofficial_import: { en: "Unofficial import", bn: "আনঅফিসিয়াল ইমপোর্ট" },
+  official_from: { en: "Official from", bn: "অফিসিয়াল দাম" },
   official_pitch: {
     en: "Want full warranty and a 100% genuine unit? Buy official from",
     bn: "ওয়ারেন্টি আর ১০০% আসল ইউনিট চাইলে অফিসিয়াল কিনুন"
@@ -101,7 +102,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   sidegrade: { en: "Sidegrade", bn: "একই মানের" },
   vs_your: { en: "Compared to your", bn: "আপনার ফোনের তুলনায়" },
   your_phone: { en: "Your phone", bn: "আপনার ফোন" },
-  live_from_gng: { en: "Live from GadgetGear — not in our database", bn: "গ্যাজেটগিয়ার থেকে লাইভ — আমাদের ডেটাবেসে নেই" },
+  live_from_gng: { en: "Found live online — not in our database", bn: "লাইভ খোঁজে পাওয়া — আমাদের ডেটাবেসে নেই" },
   pricier: { en: "pricier", bn: "বেশি দামি" },
   cheaper: { en: "cheaper", bn: "সস্তা" },
   experimental: { en: "EXPERIMENTAL", bn: "পরীক্ষামূলক" },
@@ -135,8 +136,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   price_from: { en: "Price from", bn: "দামের উৎস" },
   price_unconfirmed: { en: "Unconfirmed price", bn: "দাম অনিশ্চিত" },
   price_unconfirmed_note: {
-    en: "No shop we keep current (Rio, GadgetGear or Pickaboo) lists this in stock, so this price is from another shop and may be outdated.",
-    bn: "আমরা যেসব দোকানের দাম হালনাগাদ রাখি (Rio, GadgetGear, Pickaboo) তাদের কেউ এটি স্টকে রাখেনি, তাই দামটি অন্য দোকানের — পুরনো হতে পারে।"
+    en: "No source we keep freshly updated lists this in stock, so this price may be outdated.",
+    bn: "আমরা যেসব উৎসের দাম নিয়মিত হালনাগাদ রাখি তাদের কেউ এটি স্টকে রাখেনি, তাই দামটি পুরনো হতে পারে।"
   },
   stock_in: { en: "In stock", bn: "স্টকে আছে" },
   stock_out: { en: "Out of stock", bn: "স্টক নেই" },
@@ -463,8 +464,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   },
 
   exp_regions: {
-    en: "Strict filter: import-market labels come only from Rio International's pricelist. Most listings don't say their market, so with this on you'll see only the few phones with a matching labeled unit.",
-    bn: "কড়া ফিল্টার: ইমপোর্ট-মার্কেট তথ্য শুধু Rio International-এর প্রাইসলিস্ট থেকে আসে। বেশিরভাগ লিস্টিং-এ এই তথ্য নেই, তাই এটি চালু করলে কেবল মিল থাকা অল্প কিছু ফোনই দেখবেন।"
+    en: "Strict filter: import-market labels come from a single source's pricelist. Most listings don't say their market, so with this on you'll see only the few phones with a matching labeled unit.",
+    bn: "কড়া ফিল্টার: ইমপোর্ট-মার্কেট তথ্য মাত্র একটি উৎস থেকে আসে। বেশিরভাগ লিস্টিং-এ এই তথ্য নেই, তাই এটি চালু করলে কেবল মিল থাকা অল্প কিছু ফোনই দেখবেন।"
   },
   exp_regions_off: {
     en: "Prefer units imported from specific markets. Labeled by only one source — expect few results when on.",
@@ -472,8 +473,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   },
 
   exp_official: {
-    en: "Heads up: only two of our eight sources actually say this — Rio International's pricelist labels official units, and everything on GadgetAndGear is official. The other shops don't disclose it, so real official phones may be missing here and some labels can be wrong. Treat this as a guide and confirm warranty at the shop.",
-    bn: "সতর্কতা: আমাদের আটটি সোর্সের মাত্র দুটি এই তথ্য দেয় — Rio International-এর প্রাইসলিস্ট অফিসিয়াল ইউনিট চিহ্নিত করে, আর GadgetAndGear-এর সবকিছু অফিসিয়াল। বাকি দোকানগুলো এটা জানায় না, তাই আসল অফিসিয়াল ফোনও এখানে বাদ পড়তে পারে, কিছু লেবেল ভুলও হতে পারে। এটাকে ধারণা হিসেবে নিন, ওয়ারেন্টি দোকানে নিশ্চিত করুন।"
+    en: "Heads up: only two of our eight sources actually disclose this — the rest don't say. Real official phones may be missing here and some labels can be wrong. Treat this as a guide and confirm warranty at the shop.",
+    bn: "সতর্কতা: আমাদের আটটি উৎসের মাত্র দুটি এই তথ্য দেয়, বাকিরা জানায় না — তাই আসল অফিসিয়াল ফোনও এখানে বাদ পড়তে পারে, কিছু লেবেল ভুলও হতে পারে। এটাকে ধারণা হিসেবে নিন, ওয়ারেন্টি দোকানে নিশ্চিত করুন।"
   },
 
   // ---- Simple/Advanced mode split (feedback #2) ----

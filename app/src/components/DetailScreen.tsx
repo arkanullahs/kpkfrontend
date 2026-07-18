@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
-import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, retentionCurve, shopLabel, st, taka, verdictMeta } from "../theme";
+import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, retentionCurve, st, taka, takaRange, verdictMeta } from "../theme";
 import { t } from "../i18n";
 import type { Connectivity, Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 import { JustSoYouKnow } from "./Compare";
-import { DataCautionChip, PriceSource } from "./ResultsScreen";
+import { ChannelChips, DataCautionChip, PriceSource } from "./ResultsScreen";
 
 interface Props {
   detail: PhoneDetail | null;
@@ -109,15 +109,19 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
     || d?.scores || {};
   const dom = h?.headline_axis || domAxis(scores);
   const price = d?.best_price ?? h?.best_price ?? null;
-  const officialRef = d?.official_ref ?? h?.official_ref ?? null;
+  // SP1 price rules: a RANGE (low anchors budget fit), channel chips follow
+  // the SHOWN price's own channel — shops stay anonymous.
+  const priceLo = d?.price_low ?? h?.price_low ?? price;
+  const priceHi = d?.price_high ?? h?.price_high ?? null;
+  const isOff = d?.best_price_official ?? h?.best_price_official ?? false;
+  const offPrice = d?.best_official_price ?? h?.best_official_price ?? null;
   const rec = d?.ai_verdict?.recommendation ?? h?.verdict?.recommendation;
   const vm = verdictMeta(rec);
-  const { fit, fitColor } = fitOf(price ?? budget, budget);
+  const { fit, fitColor } = fitOf(priceLo ?? budget, budget);
   const traits = buildTraits(d?.traits);
   const ourTake = h?.smart_verdict || d?.ai_verdict?.verdict || null;
   const inStock = d?.in_stock_shops ?? h?.in_stock_shops ?? 0;
   const dataCaution = d?.data_caution ?? h?.data_caution ?? null;
-  const bestShop = d?.best_price_shop ?? h?.best_price_shop;
   const bestPrimary = d?.best_price_primary ?? h?.best_price_primary;
 
   // sections that require the full DB record
@@ -161,17 +165,15 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
         </div>
         <div style={st("display:flex; flex-direction:column; justify-content:center;")}>
           <div style={st("display:flex; align-items:flex-end; gap:11px; flex-wrap:wrap;")}>
-            <span style={st("font-size:clamp(36px,4.2vw,48px); font-weight:300; letter-spacing:-2.5px; line-height:1;")}>{taka(price)}</span>
-            {officialRef && (
-              <span style={st(`font-size:11px; font-weight:700; padding:4px 10px; border-radius:99px; margin-bottom:5px; display:inline-flex; align-items:center; gap:5px; ${MAYBE_OFFICIAL_STYLE}`)}>
-                <span style={st("width:5px; height:5px; border-radius:50%; background:currentColor;")} />{t("maybe_official")} · {taka(officialRef.price)}
-              </span>
-            )}
+            <span style={st("font-size:clamp(28px,3.4vw,38px); font-weight:300; letter-spacing:-1.4px; line-height:1;")}>{takaRange(priceLo, priceHi)}</span>
+          </div>
+          <div style={st("display:flex; align-items:center; gap:7px; margin-top:10px; flex-wrap:wrap;")}>
+            <ChannelChips p={{ best_price_official: isOff, best_official_price: offPrice }} />
           </div>
           <div style={st("margin-top:12px; font-size:14px; color:#80868f; line-height:1.7;")}>
-            Cheapest of {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
-            {price != null && bestShop && (
-              <><br /><span style={st("display:inline-block; margin-top:6px;")}><PriceSource shop={bestShop} primary={bestPrimary} /></span></>
+            At {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
+            {priceLo != null && bestPrimary === false && (
+              <><br /><span style={st("display:inline-block; margin-top:6px;")}><PriceSource primary={bestPrimary} /></span></>
             )}
             {dataCaution && dataCaution.level !== "low" && (
               <><br /><span style={st("display:inline-block; margin-top:6px;")}><DataCautionChip dc={dataCaution} /></span></>
@@ -182,12 +184,6 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               </span></>
             )}
           </div>
-          {officialRef && (
-            <div style={st("display:flex; gap:9px; margin-top:14px; padding:11px 13px; border-radius:13px; background:rgba(10,157,106,.08); border:.5px solid rgba(10,157,106,.18);")}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3zM9 12l2 2 4-4" stroke="#0a9d6a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              <span style={st("font-size:13.5px; color:#2c3036; line-height:1.55;")}>{t("official_pitch")} <b style={st("color:#0a7d57;")}>GadgetGear</b> {t("official_pitch2")} <b>{taka(officialRef.price)}</b>.</span>
-            </div>
-          )}
         </div>
       </div>
 
@@ -474,15 +470,18 @@ function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
 }
 
 function OfferRow({ o, best }: { o: Offer; best: boolean }) {
-  const maybeOfficial = o.shop === "GadgetAndGear";
-  const hasChips = maybeOfficial || !!o.region || o.in_stock != null;
-  const row = (
-    <>
+  // Shops are anonymous infrastructure (owner 2026-07-18: named shop rows read
+  // as free ads) — no names, no outbound links. Each row is price EVIDENCE for
+  // the range above: variant, channel, import market, stock.
+  const official = o.official === true;
+  const hasChips = official || !!o.region || o.in_stock != null;
+  return (
+    <div style={st(`display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:14px; background:${best ? "var(--acsoft)" : "rgba(15,25,35,.035)"};`)}>
       <div style={st("flex:1; min-width:0;")}>
-        <div style={st("font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{shopLabel(o.shop)}{o.variant ? <span style={st("font-weight:500; color:#8a8e96;")}> · {o.variant}</span> : null}</div>
+        <div style={st("font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{o.variant || t("listed_price")}</div>
         {hasChips && (
           <div style={st("display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:5px;")}>
-            {maybeOfficial && <span style={st(`font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; ${MAYBE_OFFICIAL_STYLE}`)}>{t("maybe_official")}</span>}
+            {official && <span style={st(`font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; ${MAYBE_OFFICIAL_STYLE}`)}>{t("official")}</span>}
             {o.region && <span style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; background:rgba(15,25,35,.06); color:#5c626a;")}>{o.region}</span>}
             {o.in_stock != null && (
               <span style={st(`display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; ${o.in_stock ? "color:#0a7d57; background:rgba(10,157,106,.1);" : "color:#80868f; background:rgba(15,25,35,.055);"}`)}>
@@ -495,12 +494,8 @@ function OfferRow({ o, best }: { o: Offer; best: boolean }) {
       </div>
       <span style={st("font-size:15px; font-weight:600; color:#17191d;")}>{taka(o.price)}</span>
       {best && <span style={st("font-size:10px; font-weight:700; color:var(--acd); background:rgba(255,255,255,.85); padding:3px 9px; border-radius:99px;")}>{t("best_price")}</span>}
-    </>
+    </div>
   );
-  const style = st(`display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:14px; text-decoration:none; background:${best ? "var(--acsoft)" : "rgba(15,25,35,.035)"};`);
-  return o.url
-    ? <a href={o.url} target="_blank" rel="noopener noreferrer" className="k-press" style={style}>{row}</a>
-    : <div style={style}>{row}</div>;
 }
 
 /* ---------- loading ---------- */

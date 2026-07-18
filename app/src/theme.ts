@@ -65,6 +65,11 @@ export function taka(n: number | null | undefined): string {
   if (n == null) return "—";
   return "৳" + bnNum(fmt(n));
 }
+/** SP1 price rule: show the in-stock range, never a lone lowest number. */
+export function takaRange(lo: number | null | undefined, hi?: number | null): string {
+  if (lo == null) return taka(lo);
+  return hi != null && hi > lo ? `${taka(lo)} – ${taka(hi)}` : taka(lo);
+}
 
 /* ---------- domain label / style maps (from the DC logic) ---------- */
 

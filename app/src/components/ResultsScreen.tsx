@@ -1,5 +1,5 @@
 import { type ReactNode, useState } from "react";
-import { axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, shopLabel, st, taka, topPickBadge } from "../theme";
+import { axisLabel, classifyCaveats, fitOf, headlinePhrase, st, taka, takaRange, topPickBadge } from "../theme";
 import { t } from "../i18n";
 import { api } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
@@ -48,45 +48,41 @@ export function DataCautionChip({ dc, small }: { dc?: DataCaution | null; small?
   );
 }
 
-/** Price provenance + A3 authority. Primary shops (Rio/GadgetGear/Pickaboo) are
-    kept reasonably current, so their price is shown as plain provenance; a best
-    price from any other shop is flagged "unconfirmed" because it may be stale.
-    `compact` (used on the list cards) renders the amber flag only when
-    unconfirmed, and nothing when the price is confirmed. */
-export function PriceSource({ shop, primary, compact }: { shop?: string; primary?: boolean; compact?: boolean }) {
-  if (!shop) return null;
-  const label = shopLabel(shop);
-  const unconfirmed = primary === false;
-  const warn = (
-    <svg width={compact ? 11 : 12} height={compact ? 11 : 12} viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}>
-      <path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-  if (compact) {
-    if (!unconfirmed) return null;
-    return (
-      <span title={t("price_unconfirmed_note")} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#a8761a; background:rgba(192,137,42,.12); padding:3px 9px; border-radius:99px;")}>
-        {warn}{t("price_unconfirmed")}
-      </span>
-    );
-  }
-  const color = unconfirmed ? "#a8761a" : "#80868f";
+/** A3 price authority, SP1 style: shops are anonymous infrastructure, so the
+    only provenance ever shown is the amber "unconfirmed" flag when no
+    kept-current source lists the phone in stock. Confirmed prices render
+    nothing — the range speaks for itself. */
+export function PriceSource({ primary, compact }: { primary?: boolean; compact?: boolean }) {
+  if (primary !== false) return null;
+  const s = compact ? 11 : 12;
   return (
-    <span title={unconfirmed ? t("price_unconfirmed_note") : undefined}
-      style={st(`display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:${color}; line-height:1.4;`)}>
-      {unconfirmed && warn}
-      {t("price_from")} <span style={st("font-weight:700;")}>{label}</span>{unconfirmed ? <> · {t("price_unconfirmed")}</> : null}
+    <span title={t("price_unconfirmed_note")} style={st(`display:inline-flex; align-items:center; gap:5px; font-size:${s}px; font-weight:700; color:#a8761a; background:rgba(192,137,42,.12); padding:3px 9px; border-radius:99px;`)}>
+      <svg width={s} height={s} viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}>
+        <path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      {t("price_unconfirmed")}
     </span>
   );
 }
 
-/** Soft "maybe official" hint — shown only when GadgetGear lists the phone. */
-function MaybeOfficial({ price, small }: { price: number; small?: boolean }) {
+/** SP1 channel chips: the badge follows the SHOWN price's OWN channel
+    (best_price_official) — never "some shop lists it official somewhere".
+    When the shown price is a gray import but an official channel exists at a
+    different number, that gets its own honest amber chip. */
+export function ChannelChips({ p, small }: {
+  p: { best_price_official?: boolean; best_official_price: number | null };
+  small?: boolean;
+}) {
+  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:99px;`;
   return (
-    <span style={st(`display:inline-flex; align-items:center; gap:5px; font-size:${small ? 10 : 11}px; font-weight:700; padding:${small ? "2px 8px" : "4px 10px"}; border-radius:99px; ${MAYBE_OFFICIAL_STYLE}`)}>
-      <span style={st("width:5px; height:5px; border-radius:50%; background:currentColor;")} />
-      {t("maybe_official")}{small ? "" : ` · ${taka(price)}`}
-    </span>
+    <>
+      {p.best_price_official
+        ? <span style={st(`${base} color:#0a7d57; background:rgba(10,157,106,.1);`)}>{t("official_bd")}</span>
+        : <span style={st(`${base} font-weight:600; color:#565b63; background:rgba(15,25,35,.055);`)}>{t("unofficial_import")}</span>}
+      {!p.best_price_official && p.best_official_price != null && (
+        <span style={st(`${base} color:#a8761a; background:rgba(192,137,42,.12);`)}>{t("official_from")} {taka(p.best_official_price)}</span>
+      )}
+    </>
   );
 }
 
@@ -169,13 +165,14 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
       )}
 
       {/* HERO pick */}
-      <HeroPick p={first} price={first.best_price} budget={b} pct={pct} onClick={() => onPick(first.id)} />
+      <HeroPick p={first} budget={b} pct={pct} onClick={() => onPick(first.id)} />
 
       {/* rest */}
       <div className="k-stagger" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:11px; margin-top:14px;")}>
         {rest.map((r, i) => {
-          const price = r.best_price;
-          const { fit, fitColor } = fitOf(price ?? b, b);
+          // SP1: the range's low end anchors budget fit + the marker dot
+          const lo = r.price_low ?? r.best_price;
+          const { fit, fitColor } = fitOf(lo ?? b, b);
           return (
             <button key={r.id} onClick={() => onPick(r.id)} className="k-press k-lift"
               style={st("text-align:left; display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:19px; border:none; cursor:pointer; background:rgba(255,255,255,.88); box-shadow:0 1px 2px rgba(15,25,35,.05), inset 0 0 0 1px rgba(15,25,35,.05);")}>
@@ -187,16 +184,16 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                 </div>
                 <div style={st("font-size:13.5px; color:#80868f; margin-top:2px;")}>{headlinePhrase(r.headline_axis)}{r.headline_axis && r.headline_value != null ? ` · ${axisLabel(r.headline_axis)} ${r.headline_value}` : ""}</div>
                 <div style={st("display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap;")}>
-                  <span style={st("font-size:15.5px; font-weight:600; color:#17191d;")}>{taka(price)}</span>
-                  {r.official_ref && <MaybeOfficial price={r.official_ref.price} small />}
-                  {price != null && <PriceSource shop={r.best_price_shop} primary={r.best_price_primary} compact />}
+                  <span style={st("font-size:15.5px; font-weight:600; color:#17191d;")}>{takaRange(lo, r.price_high)}</span>
+                  <ChannelChips p={r} small />
+                  {lo != null && <PriceSource primary={r.best_price_primary} compact />}
                   <DataCautionChip dc={r.data_caution} small />
                 </div>
                 {/* mini budget-fit bar */}
                 <div style={st("position:relative; height:4px; margin-top:8px;")}>
                   <div style={st("position:absolute; inset:0; border-radius:99px; background:rgba(15,25,35,.07);")} />
                   <div style={st(`position:absolute; top:-2px; height:8px; width:1.5px; border-radius:99px; left:${pct(b)}%; transform:translateX(-50%); background:#c2c6cd;`)} />
-                  <div style={st(`position:absolute; top:-2.5px; width:9px; height:9px; border-radius:50%; left:${pct(price ?? b)}%; transform:translateX(-50%); background:var(--ac); box-shadow:0 0 0 2px #fff;`)} />
+                  <div style={st(`position:absolute; top:-2.5px; width:9px; height:9px; border-radius:50%; left:${pct(lo ?? b)}%; transform:translateX(-50%); background:var(--ac); box-shadow:0 0 0 2px #fff;`)} />
                 </div>
               </div>
               <span style={st("display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; max-width:96px;")}>
@@ -220,15 +217,16 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
   );
 }
 
-function HeroPick({ p, price, budget, pct, onClick }: {
-  p: Pick; price: number | null; budget: number;
+function HeroPick({ p, budget, pct, onClick }: {
+  p: Pick; budget: number;
   pct: (v: number) => number; onClick: () => void;
 }) {
   const badge = topPickBadge(p.confidence);
-  const { fit, fitColor } = fitOf(price ?? budget, budget);
+  // SP1: price is a range; its low end anchors budget fit + the marker dot
+  const lo = p.price_low ?? p.best_price;
+  const { fit, fitColor } = fitOf(lo ?? budget, budget);
   const { major, notes } = classifyCaveats(p.caveats);
   const note = notes[0];
-  const off = p.official_ref;
 
   return (
     <div style={st("position:relative; background:linear-gradient(165deg, rgba(255,255,255,.96), rgba(255,255,255,.9)); border-radius:26px; padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 18px 44px rgba(15,25,35,.1), inset 0 0 0 1px var(--acsoft2); margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(18px,3vw,30px); overflow:hidden;")}>
@@ -246,35 +244,26 @@ function HeroPick({ p, price, budget, pct, onClick }: {
               <span style={st(`font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:99px; white-space:nowrap; flex-shrink:0; color:${badge.c}; background:${badge.bg};`)}>{badge.label}</span>
             </div>
             <div style={st("margin-top:7px; font-size:14.5px; color:#5c626a;")}>{headlinePhrase(p.headline_axis)}{p.headline_axis && p.headline_value != null && <> · {axisLabel(p.headline_axis)} <span style={st("color:var(--acd); font-weight:700;")}>{p.headline_value}</span></>}</div>
+            {/* price lives beside the photo — the old full-width row left this
+                whole block empty under the name (owner: dead space) */}
+            <div style={st("display:flex; align-items:flex-end; gap:9px; margin-top:12px; flex-wrap:wrap;")}>
+              <span style={st("font-size:clamp(23px,2.6vw,30px); font-weight:400; letter-spacing:-1px; color:#17191d; line-height:1;")}>{takaRange(lo, p.price_high)}</span>
+              <span style={st("font-size:13px; color:#80868f; margin-bottom:2px;")}>at {p.in_stock_shops ?? 0} shops</span>
+            </div>
           </div>
         </div>
 
-        <div style={st("display:flex; align-items:flex-end; gap:11px; margin-top:20px; flex-wrap:wrap;")}>
-          <span style={st("font-size:clamp(32px,3.6vw,42px); font-weight:300; letter-spacing:-2px; color:#17191d; line-height:1;")}>{taka(price)}</span>
-          <span style={st("font-size:13.5px; color:#80868f; margin-bottom:5px;")}>at {p.in_stock_shops ?? 0} shops</span>
-        </div>
-        {price != null && p.best_price_shop && (
-          <div style={st("margin-top:8px;")}><PriceSource shop={p.best_price_shop} primary={p.best_price_primary} /></div>
-        )}
-        {p.data_caution && p.data_caution.level !== "low" && (
-          <div style={st("margin-top:12px;")}><DataCautionChip dc={p.data_caution} /></div>
-        )}
-
-        {off && (
-          <div style={st("display:flex; gap:10px; margin-top:14px; padding:12px 14px; border-radius:14px; background:rgba(10,157,106,.08); border:.5px solid rgba(10,157,106,.18);")}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3zM9 12l2 2 4-4" stroke="#0a9d6a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            <span style={st("font-size:13.5px; color:#2c3036; line-height:1.55;")}>{t("official_pitch")} <b style={st("color:#0a7d57;")}>GadgetGear</b> {t("official_pitch2")} <b>{taka(off.price)}</b>.</span>
-          </div>
-        )}
-
-        <div style={st("display:flex; flex-wrap:wrap; gap:7px; margin-top:16px;")}>
+        <div style={st("display:flex; align-items:center; gap:7px; margin-top:12px; flex-wrap:wrap;")}>
+          <ChannelChips p={p} />
+          <PriceSource primary={p.best_price_primary} />
+          {p.data_caution && p.data_caution.level !== "low" && <DataCautionChip dc={p.data_caution} small />}
           {(p.strengths || []).map((s, i) => (
-            <span key={i} style={st("font-size:13.5px; color:#41464d; background:rgba(15,25,35,.055); padding:7px 13px; border-radius:99px;")}>{axisLabel(s.axis)} {s.score}</span>
+            <span key={i} style={st("font-size:12.5px; color:#41464d; background:rgba(15,25,35,.055); padding:5px 11px; border-radius:99px;")}>{axisLabel(s.axis)} {s.score}</span>
           ))}
         </div>
 
         {note && (
-          <div style={st("display:flex; gap:9px; margin-top:14px; padding:11px 13px; border-radius:13px; background:rgba(192,137,42,.09);")}>
+          <div style={st("display:flex; gap:9px; margin-top:10px; padding:11px 13px; border-radius:13px; background:rgba(192,137,42,.09);")}>
             <span style={st("width:6px; height:6px; border-radius:50%; background:#a8761a; margin-top:7px; flex-shrink:0;")} />
             <span style={st("font-size:13.5px; color:#7a6a40; line-height:1.5;")}>{note.text}</span>
           </div>
@@ -291,7 +280,7 @@ function HeroPick({ p, price, budget, pct, onClick }: {
           <div style={st("position:relative; height:8px;")}>
             <div style={st("position:absolute; inset:0; border-radius:99px; background:rgba(15,25,35,.08);")} />
             <div style={st(`position:absolute; top:-3px; height:14px; width:2px; border-radius:99px; left:${pct(budget)}%; transform:translateX(-50%); background:#b6bcc4;`)} />
-            <div style={st(`position:absolute; top:-3px; width:14px; height:14px; border-radius:50%; left:${pct(price ?? budget)}%; transform:translateX(-50%); background:var(--ac); box-shadow:0 1px 4px var(--acglow), 0 0 0 2px #fff;`)} />
+            <div style={st(`position:absolute; top:-3px; width:14px; height:14px; border-radius:50%; left:${pct(lo ?? budget)}%; transform:translateX(-50%); background:var(--ac); box-shadow:0 1px 4px var(--acglow), 0 0 0 2px #fff;`)} />
           </div>
         </div>
 

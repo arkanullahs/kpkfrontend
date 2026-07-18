@@ -70,14 +70,18 @@ export interface CompareFrom {
 
 export interface Pick {
   id: string; key?: string; brand: string; model: string; image?: string | null;
-  best_price: number | null; best_price_shop?: string; best_price_url?: string;
-  /** true = shown price is from a kept-current shop (Rio/GadgetGear/Pickaboo);
-      false = from a secondary shop and may be outdated (A3 authority). */
+  best_price: number | null;
+  /** price RANGE across in-stock sources in the shown price's channel —
+      SP1 rule: never a lone lowest number. Shops stay anonymous. */
+  price_low?: number | null; price_high?: number | null;
+  /** true = shown price is from a kept-current source;
+      false = secondary source, may be outdated (A3 authority). */
   best_price_primary?: boolean;
+  /** the SHOWN price's own channel is official (BD warranty) */
+  best_price_official?: boolean;
   best_official_price: number | null; best_unofficial_price: number | null;
   best_official_variant?: string | null; best_unofficial_variant?: string | null;
   same_variant_saving?: VariantSaving | null;
-  official_ref?: OfficialRef | null;
   in_stock_shops?: number; age_years?: number;
   data_caution?: DataCaution | null;
   overall_score?: number;
@@ -153,6 +157,8 @@ export interface OpinionProfile {
 export interface PhoneDetail {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null; best_price_shop?: string;
+  price_low?: number | null; price_high?: number | null;
+  best_price_official?: boolean;
   best_price_primary?: boolean;
   best_official_price: number | null; best_unofficial_price: number | null;
   best_official_variant?: string | null; best_unofficial_variant?: string | null;
