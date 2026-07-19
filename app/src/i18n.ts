@@ -60,7 +60,13 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     bn: "কেনার আগে দোকানে দাম ও স্টক নিশ্চিত করুন।"
   },
   best_price: { en: "Best price", bn: "সেরা দাম" },
-  shop_word: { en: "Shop", bn: "দোকান" },
+  sellers: { en: "sellers", bn: "বিক্রেতা" },
+  variant_unknown: { en: "Variant not stated", bn: "ভ্যারিয়েন্ট উল্লেখ নেই" },
+  all_sellers: { en: "All sellers", bn: "সব বিক্রেতা" },
+  why_anon: {
+    en: "We check every seller but keep them unnamed — no shop pays us to send you their way, and the price that matters is the one you confirm in person. Rows below show only what changes the price.",
+    bn: "আমরা প্রতিটি বিক্রেতা যাচাই করি, তবে নাম দিই না — কোনো দোকান আমাদের টাকা দিয়ে আপনাকে পাঠায় না, আর আসল দাম সেটাই যা আপনি সরাসরি নিশ্চিত করেন। নিচের সারিতে শুধু যা দাম বদলায় তা-ই দেখানো হলো।"
+  },
   carried_by: { en: "Carried by", bn: "পাওয়া যায়" },
   shops: { en: "shops", bn: "দোকানে" },
 
