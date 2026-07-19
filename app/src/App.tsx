@@ -408,19 +408,39 @@ export default function App() {
       {showNotice && screen === "results" && <ResultsNotice onClose={dismissNotice} />}
       {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
 
-      {/* page footer */}
-      <div style={st("position:relative; z-index:1; padding:20px 24px 96px; text-align:center;")}>
-        <a href="https://arkanullah.pro.bd" target="_blank" rel="noopener noreferrer"
-          style={st("display:inline-flex; align-items:center; gap:10px; font-size:13px; font-weight:700; color:var(--acd); text-decoration:none; padding:10px 22px; border-radius:99px; background:rgba(255,255,255,.82); border:.5px solid var(--acsoft2); backdrop-filter:blur(10px); box-shadow:0 2px 12px rgba(15,25,35,.07);")}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20M12 2c-3 3.5-3 15.5 0 20M12 2c3 3.5 3 15.5 0 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
-          <span>Made by <b>Arkanullah Saad</b> · <span style={st("text-decoration:underline; text-underline-offset:3px;")}>see my portfolio ↗</span></span>
-        </a>
-        <div style={st("margin-top:14px; font-size:13px; color:#6b7280;")}>
-          <a href="/best/" style={st("color:inherit; text-decoration:underline; text-underline-offset:3px;")}>{t("footer_guides")}</a>
-          {" · "}
-          <a href="/support" style={st("color:inherit; text-decoration:underline; text-underline-offset:3px;")}>{t("footer_support")}</a>
+      {/* persistent site footer — dark, matches the static site (no picker card) */}
+      <footer style={st("position:relative; z-index:1; margin-top:36px; background:#0d0c15; border-radius:28px 28px 0 0; padding:44px clamp(20px,5vw,52px) 0; text-align:left;")}>
+        <div style={st("max-width:940px; margin:0 auto; display:flex; flex-wrap:wrap; gap:30px 40px; padding-bottom:32px;")}>
+          <div style={st("flex:2 1 260px; min-width:220px;")}>
+            <div style={st("display:flex; align-items:center; gap:11px; color:#fff; font-family:var(--f-display); font-size:22px; font-weight:800; letter-spacing:-.4px;")}>
+              <img src="/android-chrome-192x192.png" alt="" style={st("width:46px; height:46px; border-radius:11px;")} />bhalophone
+            </div>
+            <p style={st("margin:15px 0 0; font-size:13px; line-height:1.65; color:#8b8c98;")}>{t("footer_tagline")}.</p>
+          </div>
+          <div style={st("flex:1 1 130px;")}>
+            <div style={st("color:#e7e7ec; font-size:12px; font-weight:700; margin:0 0 14px;")}>Explore</div>
+            <div style={st("display:flex; flex-direction:column; gap:11px;")}>
+              <a href="/best/" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>{t("footer_guides")}</a>
+              <a href="/vs" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>{t("footer_compare")}</a>
+              <a href="/" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>{t("footer_home")}</a>
+            </div>
+          </div>
+          <div style={st("flex:1 1 130px;")}>
+            <div style={st("color:#e7e7ec; font-size:12px; font-weight:700; margin:0 0 14px;")}>Social</div>
+            <div style={st("display:flex; flex-direction:column; gap:11px;")}>
+              <a href="https://www.facebook.com/bhalophone" rel="me" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>Facebook</a>
+            </div>
+          </div>
+          <div style={st("flex:1 1 130px;")}>
+            <div style={st("color:#e7e7ec; font-size:12px; font-weight:700; margin:0 0 14px;")}>More</div>
+            <div style={st("display:flex; flex-direction:column; gap:11px;")}>
+              <a href="/support" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>{t("footer_support")}</a>
+              <a href="https://arkanullah.pro.bd" target="_blank" rel="noopener noreferrer" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>Made by Arkanullah Saad ↗</a>
+            </div>
+          </div>
         </div>
-      </div>
+        <div style={st("border-top:1px solid rgba(255,255,255,.08); max-width:940px; margin:0 auto; padding:20px 0 96px; text-align:center; font-size:12.5px; color:#6a6b78;")}>© {new Date().getFullYear()} bhalophone. All rights reserved.</div>
+      </footer>
 
       <Analytics />
       <SpeedInsights />
