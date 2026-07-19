@@ -183,6 +183,36 @@ footer.site{margin-top:28px;padding:18px 0;color:var(--mut);font-size:12.5px;lin
 border-top:1px solid rgba(15,25,35,.08)}
 footer.site a{color:var(--mut);text-decoration:underline}
 
+/* rich dark footer + floating picker card (owner 2026-07-19) */
+.footwrap{position:relative;z-index:1;margin-top:72px}
+.pickcard{position:relative;z-index:2;max-width:860px;margin:0 auto -78px;border-radius:24px;
+overflow:hidden;padding:clamp(30px,5vw,46px);color:#fff;
+background:radial-gradient(130% 150% at 82% 8%,#3b2f62 0%,#1c1930 46%,#0d0c15 100%);
+box-shadow:0 26px 64px rgba(10,8,22,.34)}
+.pickcard h2{font-family:var(--f-display);font-size:clamp(25px,4.4vw,40px);font-weight:600;
+letter-spacing:-1px;line-height:1.04;margin:0;max-width:14ch}
+.pickcard h2 em{font-family:var(--f-serif);font-style:italic;font-weight:400}
+.pickcard p{color:rgba(255,255,255,.6);font-size:15px;line-height:1.55;margin:14px 0 24px;max-width:44ch}
+.pickcard .cta{background:#fff;color:#14131c;box-shadow:none;margin:0}
+.pickcard .cta:hover{filter:brightness(.93)}
+.bigfoot{background:#0d0c15;color:#8b8c98;border-radius:28px 28px 0 0;
+padding:104px clamp(20px,5vw,56px) 0}
+.bigfoot .inner{max-width:940px;margin:0 auto;display:grid;
+grid-template-columns:1.7fr 1fr 1fr 1fr;gap:34px;padding-bottom:38px}
+.bigfoot .brand{display:flex;align-items:center;gap:9px;color:#fff;
+font-family:var(--f-display);font-size:19px;font-weight:700}
+.bigfoot .brand img{width:30px;height:30px;border-radius:8px}
+.bigfoot .desc{margin:15px 0 0;font-size:13px;line-height:1.65;max-width:34ch}
+.bigfoot .ct{margin-top:14px;font-size:13px}.bigfoot .ct .lb{color:#5f606d;font-size:11px}
+.bigfoot h4{color:#e7e7ec;font-size:12px;font-weight:600;letter-spacing:.2px;margin:0 0 15px}
+.bigfoot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.bigfoot ul a{color:#8b8c98;font-size:13.5px;text-decoration:none}
+.bigfoot ul a:hover{color:#fff;text-decoration:none}
+.bigfoot .copy{border-top:1px solid rgba(255,255,255,.08);max-width:940px;margin:0 auto;
+padding:20px 0;text-align:center;font-size:12.5px;color:#6a6b78}
+@media(max-width:640px){.bigfoot .inner{grid-template-columns:1fr 1fr;gap:26px}
+.pickcard{margin-bottom:-92px}.bigfoot{padding-top:118px}}
+
 @media(max-width:560px){
 /* owner 2026-07-14 round 2: column-stacking the hero orphaned the image in a
    corner of dead space. Keep image BESIDE the title on mobile, just smaller,
@@ -326,10 +356,24 @@ table.cmp.vs td{white-space:normal}
 <nav class="hnav"><a href="/best/phone-under-30000">Overall</a><a href="/best/camera-phone-under-30000">Camera</a><a href="/best/gaming-phone-under-30000">Gaming</a><a href="/best/battery-phone-under-30000" class="on">Battery</a><a href="/best/5g-phone-under-30000">5G</a></nav><a class="hcta" href="/pick">Get my pick &rarr;</a></header>
 <div class="wrap">
 <nav class="crumbs"><a href="/">Home</a> &rsaquo; <a href="/best">Best phones</a> &rsaquo; Under ৳30,000</nav><h1>Best battery phones <em>under ৳30,000</em> in Bangladesh</h1><p class="lead">As of July 2026, the best battery phone under ৳30,000 in Bangladesh is the <b>Redmi Note 15</b> at ৳23,990.</p><p class="sub">Ranked from live Bangladesh shop data &mdash; only phones in stock today, prices confirmed against trusted sellers. Last updated 2026-07-19.</p><div class="why"><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--ac)"/></svg><p><b>Why #1:</b> The Redmi Note 15 wins because it hits the &#x27;sweet spot&#x27; of a large 5,520mAh battery combined with a highly efficient 4nm processor, providing the best real-world endurance without compromising on performance. The Motorola G06 Power has a larger battery but is disqualified from the top spot because its entry-level processor is too weak for a 30,000 taka budget, making it a poor long-term investment.</p></div><article class="hero"><div class="pick"><img src="/img/04d576afb7d19f02.webp" alt="Redmi Note 15" width="104" height="136"><div class="top"><span class="badge">Our top pick</span><div class="brand">Redmi</div><h2>Note 15</h2><div class="price"><span class="amt">৳23,990 &ndash; ৳27,999</span><span class="at">at 5 shops</span></div><div class="chips"><span class="chip ok">In stock &middot; 5 shops</span><span class="chip">Unofficial import</span><span class="chip warn">Official from ৳26,499</span></div><div class="kf">12GB &middot; 6.77&quot; 120Hz &middot; 5520 mAh &middot; 108MP</div></div></div><div class="fit"><div class="r"><span class="lab">Budget fit</span><span style="font-weight:600;color:#80868f">৳6,010 under ৳30,000</span></div><div class="bar"><span class="tk"></span><span class="ceil" style="left:69.0%"></span><span class="dot" style="left:55.1%"></span></div></div><p class="verdict">Since you need the longest real-world battery life under 30,000 taka, this is your best choice. It pairs a large 5,520mAh battery with an efficient 4nm Snapdragon 6 Gen 3 chip, offering a superior balance of endurance and performance compared to the entry-level options.</p></article><div class="tblwrap"><table class="cmp"><thead><tr><th>#</th><th>Phone</th><th>Price</th><th>RAM</th><th>Display</th><th>Battery</th><th>Camera</th><th>Charging</th></tr></thead><tbody><tr><td>1</td><td class="ph">Redmi Note 15</td><td>৳23,990</td><td>12GB</td><td>6.77&quot; 120Hz</td><td>5520 mAh</td><td>108MP</td><td>-</td></tr><tr><td>2</td><td class="ph">Motorola Edge 60 Stylus</td><td>৳29,490</td><td>8GB</td><td>6.7&quot; 120Hz</td><td>5000 mAh</td><td>50MP</td><td>-</td></tr><tr><td>3</td><td class="ph">Motorola G06 Power</td><td>৳16,490</td><td>8GB</td><td>6.88&quot; 120Hz</td><td>7000 mAh</td><td>50MP</td><td>-</td></tr></tbody></table></div><div class="cards"><article class="card"><span class="num">2</span><div class="body"><div class="nm">Motorola Edge 60 Stylus</div><div class="hp">Battery champion &middot; Battery 8.0</div><div class="pr"><span class="amt">৳29,490 &ndash; ৳29,499</span></div><div class="chips"><span class="chip ok">In stock &middot; 2 shops</span><span class="chip">Unofficial import</span></div><div class="kf">8GB &middot; 6.7&quot; 120Hz &middot; 5000 mAh &middot; 50MP</div><p class="cvd">This is a solid alternative if you prefer a cleaner, near-stock software experience over the Redmi. It features a 5,000mAh battery and an efficient 4nm chipset, though it falls slightly short of the Redmi&#x27;s total capacity.</p></div><span class="fitlab" style="color:var(--acd)">Uses your full budget</span></article><article class="card"><span class="num">3</span><img src="/img/1b47b44ccc51499e.webp" alt="Motorola G06 Power" width="52" height="68" loading="lazy"><div class="body"><div class="nm">Motorola G06 Power</div><div class="hp">Battery champion &middot; Battery 10.0</div><div class="pr"><span class="amt">৳16,490 &ndash; ৳17,890</span></div><div class="chips"><span class="chip ok">In stock &middot; 4 shops</span><span class="chip">Unofficial import</span></div><div class="kf">8GB &middot; 6.88&quot; 120Hz &middot; 7000 mAh &middot; 50MP</div><p class="cvd">While this has the largest battery at 7,000mAh, it uses an entry-level processor that is significantly slower and less efficient than the mid-range chips in your other options. You would be sacrificing too much performance and display quality just for the extra capacity.</p></div><span class="fitlab" style="color:#80868f">৳13,510 under ৳30,000</span></article></div><div class="stretch"><img src="/img/51ed706594a65490.webp" alt="OPPO K13" width="52" height="68" loading="lazy"><div style="flex:1;min-width:0"><div class="lab">Worth stretching</div><div class="nm">OPPO K13</div><div class="rs">For just 2,500 taka over your budget, you get a massive 7,000mAh battery paired with a much faster 4nm Snapdragon 6 Gen 4 chip and 80W fast charging, which is a significant upgrade in both endurance and hardware quality.</div></div><div style="text-align:right;flex:none"><div class="nm">৳32,500</div><div style="font-size:11.5px;font-weight:700;color:var(--acd);margin-top:2px">+৳2,500</div></div></div><section class="decide"><h2>Which phone under ৳30,000 should you buy?</h2><ul><li><b>Best overall:</b> Samsung Galaxy A36 5G &mdash; <a href="/best/phone-under-30000">full list</a></li><li><b>Best for camera:</b> Samsung Galaxy M36 5G &mdash; <a href="/best/camera-phone-under-30000">full list</a></li><li><b>Best for gaming:</b> Infinix GT 30 &mdash; <a href="/best/gaming-phone-under-30000">full list</a></li><li><b>Best battery life:</b> Redmi Note 15 (this page's #1)</li><li><b>Best 5G pick:</b> Nothing Phone 3A lite &mdash; <a href="/best/5g-phone-under-30000">full list</a></li></ul></section><section class="faq"><h2>Frequently asked questions</h2><details><summary>What is the best battery phone under ৳30,000 in Bangladesh right now?</summary><p>The Redmi Note 15 at ৳23,990 is our current top pick. Since you need the longest real-world battery life under 30,000 taka, this is your best choice. It pairs a large 5,520mAh battery with an efficient 4nm Snapdragon 6 Gen 3 chip, offering a superior balance of endurance and performance compared to the entry-level options.</p></details><details><summary>Which phone under ৳30,000 has the best camera?</summary><p>For camera specifically, the Samsung Galaxy M36 5G leads our under-৳30,000 ranking. <a href="/best/camera-phone-under-30000">See the full camera list</a>.</p></details><details><summary>Are these prices official or unofficial?</summary><p>Prices are checked daily against trusted Bangladeshi sellers. Each listing shows whether the price is confirmed and whether the phone is official (BD warranty) or an unofficial import.</p></details><details><summary>How often is this list updated?</summary><p>This list is rebuilt every night from live Bangladesh shop data - stock and prices were last checked on 2026-07-19. Out-of-stock phones are removed automatically.</p></details></section><div class="ctabox"><div class="ct-h">Need a pick made just for <em>you</em>?</div><div class="ct-s">This list is the best under ৳30,000 overall. Answer a few quick questions about your budget and how you actually use your phone, and our engine finds the one that fits you best.</div><a class="cta" href="/pick">Get my personal pick &rarr;</a></div><nav class="linkrow"><a href="/best/battery-phone-under-8000">Under ৳8,000</a><a href="/best/battery-phone-under-10000">Under ৳10,000</a><a href="/best/battery-phone-under-12000">Under ৳12,000</a><a href="/best/battery-phone-under-15000">Under ৳15,000</a><a href="/best/battery-phone-under-20000">Under ৳20,000</a><a href="/best/battery-phone-under-25000">Under ৳25,000</a><a href="/best/battery-phone-under-35000">Under ৳35,000</a><a href="/best/battery-phone-under-40000">Under ৳40,000</a><a href="/best/battery-phone-under-50000">Under ৳50,000</a><a href="/best/battery-phone-under-60000">Under ৳60,000</a><a href="/best/battery-phone-under-80000">Under ৳80,000</a><a href="/best/battery-phone-under-100000">Under ৳1,00,000</a><a href="/best/battery-phone-under-120000">Under ৳1,20,000</a><a href="/best/battery-phone-under-150000">Under ৳1,50,000</a><a href="/best/battery-phone-under-200000">Under ৳2,00,000</a></nav>
-<footer class="site"><p>Prices &amp; stock checked 2026-07-19 across 8 Bangladeshi
-shops. Rankings come from an AI reading each phone's real review and spec
-evidence &mdash; never paid placements. Prices move daily in BD &mdash; always confirm
-with the seller.</p>
-<p><a href="/best">All budget guides</a> &middot; <a href="/support">Support this
-project</a></p></footer>
-</div></body></html>
+</div>
+<div class="footwrap"><div class="pickcard"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it &mdash; ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div>
+<footer class="bigfoot"><div class="inner">
+<div>
+<div class="brand"><img src="/apple-touch-icon.png" width="30" height="30" alt="">bhalophone</div>
+<p class="desc">AI-powered phone recommendations for Bangladesh. Prices &amp; stock checked 2026-07-19 across 8 Bangladeshi shops &mdash; never paid placements.</p>
+
+</div>
+<div><h4>Explore</h4><ul>
+<li><a href="/best">Best phone guides</a></li>
+<li><a href="/vs">Compare phones</a></li>
+<li><a href="/pick">Personal pick</a></li>
+</ul></div>
+<div><h4>Social</h4><ul><li><a href="https://www.facebook.com/bhalophone" rel="me">Facebook</a></li></ul></div>
+<div><h4>More</h4><ul>
+<li><a href="/support">Support us</a></li>
+</ul></div>
+</div>
+<div class="copy">&copy; 2026 bhalophone. All rights reserved.</div>
+</footer></div>
+</body></html>

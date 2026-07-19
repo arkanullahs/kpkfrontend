@@ -183,6 +183,36 @@ footer.site{margin-top:28px;padding:18px 0;color:var(--mut);font-size:12.5px;lin
 border-top:1px solid rgba(15,25,35,.08)}
 footer.site a{color:var(--mut);text-decoration:underline}
 
+/* rich dark footer + floating picker card (owner 2026-07-19) */
+.footwrap{position:relative;z-index:1;margin-top:72px}
+.pickcard{position:relative;z-index:2;max-width:860px;margin:0 auto -78px;border-radius:24px;
+overflow:hidden;padding:clamp(30px,5vw,46px);color:#fff;
+background:radial-gradient(130% 150% at 82% 8%,#3b2f62 0%,#1c1930 46%,#0d0c15 100%);
+box-shadow:0 26px 64px rgba(10,8,22,.34)}
+.pickcard h2{font-family:var(--f-display);font-size:clamp(25px,4.4vw,40px);font-weight:600;
+letter-spacing:-1px;line-height:1.04;margin:0;max-width:14ch}
+.pickcard h2 em{font-family:var(--f-serif);font-style:italic;font-weight:400}
+.pickcard p{color:rgba(255,255,255,.6);font-size:15px;line-height:1.55;margin:14px 0 24px;max-width:44ch}
+.pickcard .cta{background:#fff;color:#14131c;box-shadow:none;margin:0}
+.pickcard .cta:hover{filter:brightness(.93)}
+.bigfoot{background:#0d0c15;color:#8b8c98;border-radius:28px 28px 0 0;
+padding:104px clamp(20px,5vw,56px) 0}
+.bigfoot .inner{max-width:940px;margin:0 auto;display:grid;
+grid-template-columns:1.7fr 1fr 1fr 1fr;gap:34px;padding-bottom:38px}
+.bigfoot .brand{display:flex;align-items:center;gap:9px;color:#fff;
+font-family:var(--f-display);font-size:19px;font-weight:700}
+.bigfoot .brand img{width:30px;height:30px;border-radius:8px}
+.bigfoot .desc{margin:15px 0 0;font-size:13px;line-height:1.65;max-width:34ch}
+.bigfoot .ct{margin-top:14px;font-size:13px}.bigfoot .ct .lb{color:#5f606d;font-size:11px}
+.bigfoot h4{color:#e7e7ec;font-size:12px;font-weight:600;letter-spacing:.2px;margin:0 0 15px}
+.bigfoot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.bigfoot ul a{color:#8b8c98;font-size:13.5px;text-decoration:none}
+.bigfoot ul a:hover{color:#fff;text-decoration:none}
+.bigfoot .copy{border-top:1px solid rgba(255,255,255,.08);max-width:940px;margin:0 auto;
+padding:20px 0;text-align:center;font-size:12.5px;color:#6a6b78}
+@media(max-width:640px){.bigfoot .inner{grid-template-columns:1fr 1fr;gap:26px}
+.pickcard{margin-bottom:-92px}.bigfoot{padding-top:118px}}
+
 @media(max-width:560px){
 /* owner 2026-07-14 round 2: column-stacking the hero orphaned the image in a
    corner of dead space. Keep image BESIDE the title on mobile, just smaller,
@@ -326,10 +356,24 @@ table.cmp.vs td{white-space:normal}
 <nav class="hnav"><a href="/best/phone-under-80000">Overall</a><a href="/best/camera-phone-under-80000">Camera</a><a href="/best/gaming-phone-under-80000">Gaming</a><a href="/best/battery-phone-under-80000" class="on">Battery</a><a href="/best/5g-phone-under-80000">5G</a></nav><a class="hcta" href="/pick">Get my pick &rarr;</a></header>
 <div class="wrap">
 <nav class="crumbs"><a href="/">Home</a> &rsaquo; <a href="/best">Best phones</a> &rsaquo; Under ৳80,000</nav><h1>Best battery phones <em>under ৳80,000</em> in Bangladesh</h1><p class="lead">As of July 2026, the best battery phone under ৳80,000 in Bangladesh is the <b>OnePlus 15R</b> at ৳61,990.</p><p class="sub">Ranked from live Bangladesh shop data &mdash; only phones in stock today, prices confirmed against trusted sellers. Last updated 2026-07-19.</p><div class="why"><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--ac)"/></svg><p><b>Why #1:</b> The OnePlus 15R leads because it has the largest battery (7,400mAh) of all in-budget candidates, directly satisfying the buyer&#x27;s top priority. The main trade-off vs the Realme GT 7T is a slightly higher price and the risk of the brand&#x27;s known green-line display issues, but it wins on both battery capacity and chip performance tier.</p></div><article class="hero"><div class="pick"><img src="/img/fcaba7587d03c88e.webp" alt="OnePlus 15R" width="104" height="136"><div class="top"><span class="badge">Our top pick</span><div class="brand">OnePlus</div><h2>15R</h2><div class="price"><span class="amt">৳61,990 &ndash; ৳67,499</span><span class="at">at 3 shops</span></div><div class="chips"><span class="chip ok">In stock &middot; 3 shops</span><span class="chip">Unofficial import</span><span class="chip warn">Official from ৳66,999</span></div><div class="kf">12GB &middot; 6.83&quot; 165Hz &middot; 7400 mAh &middot; 50MP</div></div></div><div class="fit"><div class="r"><span class="lab">Budget fit</span><span style="font-weight:600;color:#80868f">৳18,010 under ৳80,000</span></div><div class="bar"><span class="tk"></span><span class="ceil" style="left:69.0%"></span><span class="dot" style="left:53.4%"></span></div></div><p class="verdict">Since you prioritized the longest real-world battery life above all else, this is the clear winner with a massive 7,400mAh cell. It pairs this endurance with a top-tier Snapdragon 8 Gen 5 chip for flagship performance.</p></article><div class="tblwrap"><table class="cmp"><thead><tr><th>#</th><th>Phone</th><th>Price</th><th>RAM</th><th>Display</th><th>Battery</th><th>Camera</th><th>Charging</th></tr></thead><tbody><tr><td>1</td><td class="ph">OnePlus 15R</td><td>৳61,990</td><td>12GB</td><td>6.83&quot; 165Hz</td><td>7400 mAh</td><td>50MP</td><td>-</td></tr><tr><td>2</td><td class="ph">Realme GT 7T</td><td>৳47,999</td><td>12GB</td><td>6.8&quot; 120Hz</td><td>7000 mAh</td><td>50MP</td><td>120W</td></tr><tr><td>3</td><td class="ph">Xiaomi 15T Pro</td><td>৳77,990</td><td>12GB</td><td>6.83&quot; 144Hz</td><td>5500 mAh</td><td>50MP</td><td>-</td></tr><tr><td>4</td><td class="ph">Motorola Signature</td><td>৳68,490</td><td>16GB</td><td>6.8&quot; 165Hz</td><td>5200 mAh</td><td>50MP</td><td>-</td></tr><tr><td>5</td><td class="ph">Apple iPhone 17e</td><td>৳77,990</td><td>8GB</td><td>6.1&quot;</td><td>4005 mAh</td><td>48MP</td><td>-</td></tr></tbody></table></div><div class="cards"><article class="card"><span class="num">2</span><div class="body"><div class="nm">Realme GT 7T</div><div class="hp">Battery champion &middot; Battery 9.0</div><div class="pr"><span class="amt">৳47,999 &ndash; ৳59,990</span></div><div class="chips"><span class="chip ok">In stock &middot; 2 shops</span><span class="chip">Unofficial import</span></div><div class="kf">12GB &middot; 6.8&quot; 120Hz &middot; 7000 mAh &middot; 50MP &middot; 120W</div><p class="cvd">Another battery powerhouse with 7,000mAh, though it falls slightly behind the OnePlus in capacity and raw performance tier. It is a strong alternative if you want extreme endurance without spending your full budget.</p></div><span class="fitlab" style="color:#80868f">৳32,001 under ৳80,000</span></article><article class="card"><span class="num">3</span><div class="body"><div class="nm">Xiaomi 15T Pro</div><div class="hp">Performance pick &middot; Performance 10.0</div><div class="pr"><span class="amt">৳77,990 &ndash; ৳77,999</span></div><div class="chips"><span class="chip ok">In stock &middot; 2 shops</span><span class="chip">Unofficial import</span></div><div class="kf">12GB &middot; 6.83&quot; 144Hz &middot; 5500 mAh &middot; 50MP</div><p class="cvd">While its 5,500mAh battery is smaller than the top two, it offers a much more balanced flagship experience with a superior camera system and a top-tier Dimensity 9400+ chip.</p></div><span class="fitlab" style="color:var(--acd)">Uses your full budget</span></article><article class="card"><span class="num">4</span><img src="/img/fd3210a79bdd98c5.webp" alt="Motorola Signature" width="52" height="68" loading="lazy"><div class="body"><div class="nm">Motorola Signature</div><div class="hp">Easy to live with &middot; Ease of use 9.0</div><div class="pr"><span class="amt">৳68,490 &ndash; ৳77,999</span></div><div class="chips"><span class="chip ok">In stock &middot; 3 shops</span><span class="chip">Unofficial import</span></div><div class="kf">16GB &middot; 6.8&quot; 165Hz &middot; 5200 mAh &middot; 50MP</div><p class="cvd">A clean, near-stock Android experience with a decent 5,200mAh battery and a very bright screen, though it lacks the extreme battery life of the Realme or OnePlus.</p></div><span class="fitlab" style="color:#80868f">৳11,510 under ৳80,000</span></article><article class="card"><span class="num">5</span><img src="/img/18ff58e20ab84676.webp" alt="Apple iPhone 17e" width="52" height="68" loading="lazy"><div class="body"><div class="nm">Apple iPhone 17e</div><div class="hp">Easy to live with &middot; Ease of use 10.0</div><div class="pr"><span class="amt">৳77,990 &ndash; ৳91,999</span></div><div class="chips"><span class="chip ok">In stock &middot; 3 shops</span><span class="chip">Unofficial import</span><span class="chip warn">Official from ৳1,14,999</span></div><div class="kf">8GB &middot; 6.1&quot; &middot; 4005 mAh &middot; 48MP</div><p class="cvd">Despite the prestige and software support, the 4,005mAh battery is far too small for a buyer whose primary requirement is the longest real-world battery life.</p></div><span class="fitlab" style="color:var(--acd)">Uses your full budget</span></article></div><section class="decide"><h2>Which phone under ৳80,000 should you buy?</h2><ul><li><b>Best overall:</b> Apple iPhone 17e &mdash; <a href="/best/phone-under-80000">full list</a></li><li><b>Best for camera:</b> Google Pixel 9 Pro XL &mdash; <a href="/best/camera-phone-under-80000">full list</a></li><li><b>Best for gaming:</b> OnePlus 15R &mdash; <a href="/best/gaming-phone-under-80000">full list</a></li><li><b>Best battery life:</b> OnePlus 15R (this page's #1)</li><li><b>Best 5G pick:</b> Samsung Galaxy S25 Edge &mdash; <a href="/best/5g-phone-under-80000">full list</a></li></ul></section><section class="faq"><h2>Frequently asked questions</h2><details><summary>What is the best battery phone under ৳80,000 in Bangladesh right now?</summary><p>The OnePlus 15R at ৳61,990 is our current top pick. Since you prioritized the longest real-world battery life above all else, this is the clear winner with a massive 7,400mAh cell. It pairs this endurance with a top-tier Snapdragon 8 Gen 5 chip for flagship performance.</p></details><details><summary>Which phone under ৳80,000 has the best camera?</summary><p>For camera specifically, the Google Pixel 9 Pro XL leads our under-৳80,000 ranking. <a href="/best/camera-phone-under-80000">See the full camera list</a>.</p></details><details><summary>Are these prices official or unofficial?</summary><p>Prices are checked daily against trusted Bangladeshi sellers. Each listing shows whether the price is confirmed and whether the phone is official (BD warranty) or an unofficial import.</p></details><details><summary>How often is this list updated?</summary><p>This list is rebuilt every night from live Bangladesh shop data - stock and prices were last checked on 2026-07-19. Out-of-stock phones are removed automatically.</p></details></section><div class="ctabox"><div class="ct-h">Need a pick made just for <em>you</em>?</div><div class="ct-s">This list is the best under ৳80,000 overall. Answer a few quick questions about your budget and how you actually use your phone, and our engine finds the one that fits you best.</div><a class="cta" href="/pick">Get my personal pick &rarr;</a></div><nav class="linkrow"><a href="/best/battery-phone-under-8000">Under ৳8,000</a><a href="/best/battery-phone-under-10000">Under ৳10,000</a><a href="/best/battery-phone-under-12000">Under ৳12,000</a><a href="/best/battery-phone-under-15000">Under ৳15,000</a><a href="/best/battery-phone-under-20000">Under ৳20,000</a><a href="/best/battery-phone-under-25000">Under ৳25,000</a><a href="/best/battery-phone-under-30000">Under ৳30,000</a><a href="/best/battery-phone-under-35000">Under ৳35,000</a><a href="/best/battery-phone-under-40000">Under ৳40,000</a><a href="/best/battery-phone-under-50000">Under ৳50,000</a><a href="/best/battery-phone-under-60000">Under ৳60,000</a><a href="/best/battery-phone-under-100000">Under ৳1,00,000</a><a href="/best/battery-phone-under-120000">Under ৳1,20,000</a><a href="/best/battery-phone-under-150000">Under ৳1,50,000</a><a href="/best/battery-phone-under-200000">Under ৳2,00,000</a></nav>
-<footer class="site"><p>Prices &amp; stock checked 2026-07-19 across 8 Bangladeshi
-shops. Rankings come from an AI reading each phone's real review and spec
-evidence &mdash; never paid placements. Prices move daily in BD &mdash; always confirm
-with the seller.</p>
-<p><a href="/best">All budget guides</a> &middot; <a href="/support">Support this
-project</a></p></footer>
-</div></body></html>
+</div>
+<div class="footwrap"><div class="pickcard"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it &mdash; ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div>
+<footer class="bigfoot"><div class="inner">
+<div>
+<div class="brand"><img src="/apple-touch-icon.png" width="30" height="30" alt="">bhalophone</div>
+<p class="desc">AI-powered phone recommendations for Bangladesh. Prices &amp; stock checked 2026-07-19 across 8 Bangladeshi shops &mdash; never paid placements.</p>
+
+</div>
+<div><h4>Explore</h4><ul>
+<li><a href="/best">Best phone guides</a></li>
+<li><a href="/vs">Compare phones</a></li>
+<li><a href="/pick">Personal pick</a></li>
+</ul></div>
+<div><h4>Social</h4><ul><li><a href="https://www.facebook.com/bhalophone" rel="me">Facebook</a></li></ul></div>
+<div><h4>More</h4><ul>
+<li><a href="/support">Support us</a></li>
+</ul></div>
+</div>
+<div class="copy">&copy; 2026 bhalophone. All rights reserved.</div>
+</footer></div>
+</body></html>

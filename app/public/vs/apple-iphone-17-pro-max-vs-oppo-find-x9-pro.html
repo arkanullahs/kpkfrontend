@@ -183,6 +183,36 @@ footer.site{margin-top:28px;padding:18px 0;color:var(--mut);font-size:12.5px;lin
 border-top:1px solid rgba(15,25,35,.08)}
 footer.site a{color:var(--mut);text-decoration:underline}
 
+/* rich dark footer + floating picker card (owner 2026-07-19) */
+.footwrap{position:relative;z-index:1;margin-top:72px}
+.pickcard{position:relative;z-index:2;max-width:860px;margin:0 auto -78px;border-radius:24px;
+overflow:hidden;padding:clamp(30px,5vw,46px);color:#fff;
+background:radial-gradient(130% 150% at 82% 8%,#3b2f62 0%,#1c1930 46%,#0d0c15 100%);
+box-shadow:0 26px 64px rgba(10,8,22,.34)}
+.pickcard h2{font-family:var(--f-display);font-size:clamp(25px,4.4vw,40px);font-weight:600;
+letter-spacing:-1px;line-height:1.04;margin:0;max-width:14ch}
+.pickcard h2 em{font-family:var(--f-serif);font-style:italic;font-weight:400}
+.pickcard p{color:rgba(255,255,255,.6);font-size:15px;line-height:1.55;margin:14px 0 24px;max-width:44ch}
+.pickcard .cta{background:#fff;color:#14131c;box-shadow:none;margin:0}
+.pickcard .cta:hover{filter:brightness(.93)}
+.bigfoot{background:#0d0c15;color:#8b8c98;border-radius:28px 28px 0 0;
+padding:104px clamp(20px,5vw,56px) 0}
+.bigfoot .inner{max-width:940px;margin:0 auto;display:grid;
+grid-template-columns:1.7fr 1fr 1fr 1fr;gap:34px;padding-bottom:38px}
+.bigfoot .brand{display:flex;align-items:center;gap:9px;color:#fff;
+font-family:var(--f-display);font-size:19px;font-weight:700}
+.bigfoot .brand img{width:30px;height:30px;border-radius:8px}
+.bigfoot .desc{margin:15px 0 0;font-size:13px;line-height:1.65;max-width:34ch}
+.bigfoot .ct{margin-top:14px;font-size:13px}.bigfoot .ct .lb{color:#5f606d;font-size:11px}
+.bigfoot h4{color:#e7e7ec;font-size:12px;font-weight:600;letter-spacing:.2px;margin:0 0 15px}
+.bigfoot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.bigfoot ul a{color:#8b8c98;font-size:13.5px;text-decoration:none}
+.bigfoot ul a:hover{color:#fff;text-decoration:none}
+.bigfoot .copy{border-top:1px solid rgba(255,255,255,.08);max-width:940px;margin:0 auto;
+padding:20px 0;text-align:center;font-size:12.5px;color:#6a6b78}
+@media(max-width:640px){.bigfoot .inner{grid-template-columns:1fr 1fr;gap:26px}
+.pickcard{margin-bottom:-92px}.bigfoot{padding-top:118px}}
+
 @media(max-width:560px){
 /* owner 2026-07-14 round 2: column-stacking the hero orphaned the image in a
    corner of dead space. Keep image BESIDE the title on mobile, just smaller,
@@ -327,10 +357,24 @@ table.cmp.vs td{white-space:normal}
 <a class="hcta" href="/pick">Get my pick &rarr;</a></header>
 <div class="wrap">
 <nav class="crumbs"><a href="/">Home</a> &rsaquo; <a href="/vs">Comparisons</a> &rsaquo; Apple iPhone 17 Pro Max vs OPPO Find X9 Pro</nav><h1>Apple iPhone 17 Pro Max <em>vs</em> OPPO Find X9 Pro</h1><p class="lead">As of July 2026, the <b>Apple iPhone 17 Pro Max</b> at ৳1,53,490 is the better buy over the OPPO Find X9 Pro (৳90,490) for most buyers in Bangladesh.</p><p class="sub">Head-to-head from live Bangladesh shop data - both phones in stock today, prices confirmed against trusted sellers. Last updated 2026-07-19.</p><div class="why"><svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--ac)"/></svg><p><b>Why the Apple iPhone 17 Pro Max:</b> The iPhone 17 Pro Max leads due to its exceptional camera tuning and longer software support, making it a better choice for a high-end phone buyer. The main trade-off vs the OPPO Find X9 Pro is the slightly higher price and stronger brand resale value of the iPhone.</p></div><div class="duel"><article class="dcard win"><span class="badge">Our pick</span><div class="dtop"><img src="/img/9dc1042e2d957071.webp" alt="Apple iPhone 17 Pro Max" width="76" height="100" loading="lazy"><div><div class="brand">Apple</div><div class="nm">iPhone 17 Pro Max</div></div></div><div class="amt">৳1,53,490 &ndash; ৳2,13,999</div><div class="chips"><span class="chip ok">In stock &middot; 6 shops</span><span class="chip">Unofficial import</span><span class="chip warn">Official from ৳2,04,999</span></div></article><article class="dcard"><span class="badge"></span><div class="dtop"><img src="/img/42927d18f1701a3d.webp" alt="OPPO Find X9 Pro" width="76" height="100" loading="lazy"><div><div class="brand">OPPO</div><div class="nm">Find X9 Pro</div></div></div><div class="amt">৳90,490 &ndash; ৳1,31,999</div><div class="chips"><span class="chip ok">In stock &middot; 5 shops</span><span class="chip">Unofficial import</span></div></article></div><div class="tblwrap"><table class="cmp vs"><thead><tr><th>Spec</th><th>Apple iPhone 17 Pro Max</th><th>OPPO Find X9 Pro</th></tr></thead><tbody><tr><td class="ph">Price</td><td>৳1,53,490 - ৳2,13,999</td><td>৳90,490 - ৳1,31,999</td></tr><tr><td class="ph">Chipset</td><td>Apple A19 Pro (3 nm)</td><td>Mediatek Dimensity 9500 (3 nm)</td></tr><tr><td class="ph">RAM</td><td>12GB</td><td>16GB</td></tr><tr><td class="ph">Display</td><td>6.9&quot; 120Hz</td><td>6.78&quot; 120Hz</td></tr><tr><td class="ph">Battery</td><td>4823 mAh</td><td>7500 mAh</td></tr><tr><td class="ph">Camera</td><td>48MP</td><td>50MP</td></tr></tbody></table></div><section class="decide"><h2>Choose the Apple iPhone 17 Pro Max if&hellip;</h2><p>Since you&#x27;re deciding between two high-end phones, the Apple iPhone 17 Pro Max is the better choice due to its exceptional camera tuning and longer software support. You asked for a top-notch camera, and this phone delivers with its 48MP main sensor and 4.0x optical tele lens. Although it&#x27;s slightly over budget, its strengths make it worth considering.</p></section><section class="decide"><h2>Choose the OPPO Find X9 Pro if&hellip;</h2><p>The OPPO Find X9 Pro is a strong alternative, offering flagship-class performance and a high-quality camera system. However, its software support and brand resale value are not as strong as the iPhone 17 Pro Max. Since you need a high-end phone, this is still a viable option, but it falls short in some areas.</p></section><section class="faq"><h2>Frequently asked questions</h2><details><summary>Which is better, Apple iPhone 17 Pro Max or OPPO Find X9 Pro?</summary><p>Our AI verdict picks the Apple iPhone 17 Pro Max at ৳1,53,490. The iPhone 17 Pro Max leads due to its exceptional camera tuning and longer software support, making it a better choice for a high-end phone buyer. The main trade-off vs the OPPO Find X9 Pro is the slightly higher price and stronger brand resale value of the iPhone.</p></details><details><summary>Which is cheaper, Apple iPhone 17 Pro Max or OPPO Find X9 Pro?</summary><p>The OPPO Find X9 Pro is ৳63,000 cheaper right now - ৳90,490 against ৳1,53,490 for the Apple iPhone 17 Pro Max, as of 2026-07-19.</p></details><details><summary>Is the Apple iPhone 17 Pro Max available officially in Bangladesh?</summary><p>The Apple iPhone 17 Pro Max&#x27;s lowest current price is an unofficial import; official-channel listings start at ৳2,04,999.</p></details><details><summary>How fresh is this comparison?</summary><p>Both phones&#x27; prices and stock are re-checked nightly against Bangladeshi sellers - last checked 2026-07-19. The verdict is re-run whenever either phone&#x27;s price moves.</p></details></section><div class="ctabox"><div class="ct-h">Torn between more than <em>two</em>?</div><div class="ct-s">Answer a few quick questions about your budget and how you actually use your phone, and our engine picks the one phone that fits you best - from everything in stock in Bangladesh.</div><a class="cta" href="/pick">Get my personal pick &rarr;</a></div><nav class="linkrow"><a href="/vs/apple-iphone-17-pro-max-vs-samsung-galaxy-s26-ultra">Apple iPhone 17 Pro Max vs Samsung Galaxy S26 Ultra</a><a href="/vs/apple-iphone-17-vs-oppo-find-x9-pro">Apple iPhone 17 vs OPPO Find X9 Pro</a><a href="/vs/oppo-find-x9-pro-vs-oppo-find-x9-ultra">OPPO Find X9 Pro vs OPPO Find X9 Ultra</a><a href="/vs/oppo-find-x9-pro-vs-samsung-galaxy-s25-ultra-5g">OPPO Find X9 Pro vs Samsung Galaxy S25 Ultra 5G</a><a href="/best/phone-under-200000">Best phones under ৳2,00,000</a></nav>
-<footer class="site"><p>Prices &amp; stock checked 2026-07-19 across 8 Bangladeshi
-shops. The verdict comes from an AI reading both phones' real review and spec
-evidence &mdash; never paid placements. Prices move daily in BD &mdash; always confirm
-with the seller.</p>
-<p><a href="/vs">All comparisons</a> &middot; <a href="/best">Budget guides</a>
-&middot; <a href="/support">Support this project</a></p></footer>
-</div></body></html>
+</div>
+<div class="footwrap"><div class="pickcard"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it &mdash; ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div>
+<footer class="bigfoot"><div class="inner">
+<div>
+<div class="brand"><img src="/apple-touch-icon.png" width="30" height="30" alt="">bhalophone</div>
+<p class="desc">AI-powered phone recommendations for Bangladesh. Prices &amp; stock checked 2026-07-19 across 8 Bangladeshi shops &mdash; never paid placements.</p>
+
+</div>
+<div><h4>Explore</h4><ul>
+<li><a href="/best">Best phone guides</a></li>
+<li><a href="/vs">Compare phones</a></li>
+<li><a href="/pick">Personal pick</a></li>
+</ul></div>
+<div><h4>Social</h4><ul><li><a href="https://www.facebook.com/bhalophone" rel="me">Facebook</a></li></ul></div>
+<div><h4>More</h4><ul>
+<li><a href="/support">Support us</a></li>
+</ul></div>
+</div>
+<div class="copy">&copy; 2026 bhalophone. All rights reserved.</div>
+</footer></div>
+</body></html>
