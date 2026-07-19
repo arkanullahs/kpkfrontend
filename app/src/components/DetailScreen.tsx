@@ -321,19 +321,31 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
                 the hero shows; variant groups break down the spread inside */}
             {(["official", "unofficial"] as const).map((ch) => {
               const chOffers = offers.filter((o) => (ch === "official") === offGrade(o));
-              if (!chOffers.length) return null;
+              const chip = ch === "official"
+                ? <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; color:#0a7d57; background:rgba(10,157,106,.1);")}>{t("official_bd")}</span>
+                : <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; color:#565b63; background:rgba(15,25,35,.055);")}>{t("unofficial_import")}</span>;
+              // both channels always show; an empty one says so (owner 2026-07-19)
+              if (!chOffers.length) {
+                return (
+                  <div key={ch} style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:16px;")}>
+                    {chip}
+                    <span style={st("font-size:12.5px; color:#9a9ea6;")}>{ch === "official" ? t("no_official_found") : t("no_unofficial_found")}</span>
+                  </div>
+                );
+              }
               const side = chans?.[ch];
+              const inStock = side?.in_stock ?? chOffers.filter((o) => o.in_stock === true).length;
               // Best-price badge only competes in the shown price's channel
               const gs = groupOffers(chOffers, (ch === "official") === isOff ? bestOfferPrice : null);
               return (
                 <div key={ch} style={st("margin-top:16px;")}>
                   <div style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap;")}>
-                    {ch === "official"
-                      ? <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; color:#0a7d57; background:rgba(10,157,106,.1);")}>{t("official_bd")}</span>
-                      : <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; color:#565b63; background:rgba(15,25,35,.055);")}>{t("unofficial_import")}</span>}
+                    {chip}
                     <span style={st("font-size:13px; color:#5c626a;")}>
-                      <b style={st("color:#2c3036;")}>{bnNum(String(side?.sellers ?? chOffers.length))} {t("sellers")}</b>
-                      {side ? <> · {takaRange(side.lo, side.hi)}{side.in_stock > 0 ? <> · {bnNum(String(side.in_stock))} {t("stock_in").toLowerCase()}</> : null}</> : null}
+                      <b style={st("color:#2c3036;")}>{inStock > 0
+                        ? <>{bnNum(String(inStock))} {t("shops_in_stock")}</>
+                        : <>{bnNum(String(side?.sellers ?? chOffers.length))} {t("sellers")}</>}</b>
+                      {side ? <> · {takaRange(side.lo, side.hi)}</> : null}
                     </span>
                   </div>
                   <div style={st("display:flex; flex-direction:column; gap:8px; margin-top:9px;")}>
@@ -342,6 +354,11 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
                 </div>
               );
             })}
+            {/* monetization invite — shops can pay to appear named (owner 2026-07-19) */}
+            <p style={st("margin:18px 0 0; padding-top:14px; border-top:1px solid rgba(15,25,35,.06); font-size:12px; color:#a4a8b0; line-height:1.55; text-wrap:pretty;")}>
+              {t("shop_own")}{" "}
+              <a href="/support" style={st("color:var(--acd); font-weight:600;")}>{t("shop_contact")}</a>
+            </p>
           </Card>
         )}
       </div>

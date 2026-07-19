@@ -63,6 +63,11 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   sellers: { en: "sellers", bn: "বিক্রেতা" },
   variant_unknown: { en: "Variant not stated", bn: "ভ্যারিয়েন্ট উল্লেখ নেই" },
   all_sellers: { en: "All sellers", bn: "সব বিক্রেতা" },
+  shops_in_stock: { en: "shops in stock", bn: "দোকানে স্টকে আছে" },
+  no_official_found: { en: "No official-channel listing found yet", bn: "এখনো কোনো অফিসিয়াল চ্যানেল লিস্টিং পাওয়া যায়নি" },
+  no_unofficial_found: { en: "No unofficial import listing found yet", bn: "এখনো কোনো আনঅফিসিয়াল ইমপোর্ট লিস্টিং পাওয়া যায়নি" },
+  shop_own: { en: "Run a shop and want your listings shown here?", bn: "দোকান চালান? আপনার লিস্টিং এখানে দেখাতে চান?" },
+  shop_contact: { en: "Get in touch", bn: "যোগাযোগ করুন" },
   why_anon: {
     en: "We check every seller but keep them unnamed — no shop pays us to send you their way, and the price that matters is the one you confirm in person. Rows below show only what changes the price.",
     bn: "আমরা প্রতিটি বিক্রেতা যাচাই করি, তবে নাম দিই না — কোনো দোকান আমাদের টাকা দিয়ে আপনাকে পাঠায় না, আর আসল দাম সেটাই যা আপনি সরাসরি নিশ্চিত করেন। নিচের সারিতে শুধু যা দাম বদলায় তা-ই দেখানো হলো।"
