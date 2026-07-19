@@ -68,9 +68,15 @@ export interface CompareFrom {
   price?: number | null; image?: string | null; url?: string | null;
 }
 
+/** Per-channel sellers + in-stock price range (backend engine.channel_summary):
+    the ONE source the card range, chips and listings sections all render from. */
+export interface ChannelSide { lo: number; hi: number; sellers: number; in_stock: number; }
+export interface Channels { official?: ChannelSide | null; unofficial?: ChannelSide | null; }
+
 export interface Pick {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null;
+  channels?: Channels | null;
   /** price RANGE across in-stock sources in the shown price's channel —
       SP1 rule: never a lone lowest number. Shops stay anonymous. */
   price_low?: number | null; price_high?: number | null;
@@ -160,6 +166,7 @@ export interface PhoneDetail {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null; best_price_shop?: string;
   price_low?: number | null; price_high?: number | null;
+  channels?: Channels | null;
   best_price_official?: boolean;
   best_price_primary?: boolean;
   best_official_price: number | null; best_unofficial_price: number | null;

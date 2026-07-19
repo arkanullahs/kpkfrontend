@@ -71,6 +71,19 @@ export function takaRange(lo: number | null | undefined, hi?: number | null): st
   return hi != null && hi > lo ? `${taka(lo)} – ${taka(hi)}` : taka(lo);
 }
 
+/** The range the buyer would actually pay in the SHOWN price's channel —
+    prefers the per-channel summary (same numbers the listings sections show,
+    so card and listings can never disagree), falls back to combine's
+    price_low/high for stale cached picks. */
+export function shownRange(p: {
+  best_price: number | null; best_price_official?: boolean;
+  channels?: { official?: { lo: number; hi: number } | null; unofficial?: { lo: number; hi: number } | null } | null;
+  price_low?: number | null; price_high?: number | null;
+}): { lo: number | null; hi: number | null } {
+  const side = p.best_price_official ? p.channels?.official : p.channels?.unofficial;
+  return { lo: side?.lo ?? p.price_low ?? p.best_price, hi: side?.hi ?? p.price_high ?? null };
+}
+
 /* ---------- domain label / style maps (from the DC logic) ---------- */
 
 export type AxisKey = "camera" | "battery" | "gaming" | "performance" | "ease_of_use";

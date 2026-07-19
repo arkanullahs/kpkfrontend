@@ -1,11 +1,11 @@
 import { type ReactNode, useState } from "react";
-import { axisLabel, classifyCaveats, fitOf, headlinePhrase, st, taka, takaRange, topPickBadge } from "../theme";
+import { axisLabel, classifyCaveats, fitOf, headlinePhrase, shownRange, st, taka, takaRange, topPickBadge } from "../theme";
 import { t } from "../i18n";
 import { api } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 import { JustSoYouKnow } from "./Compare";
 import { RagProgress } from "./RagProgress";
-import type { DataCaution, Pick, RecommendResp, Stretch } from "../api";
+import type { Channels, DataCaution, Pick, RecommendResp, Stretch } from "../api";
 import type { Form } from "../App";
 
 interface Props {
@@ -70,17 +70,24 @@ export function PriceSource({ primary, compact }: { primary?: boolean; compact?:
     When the shown price is a gray import but an official channel exists at a
     different number, that gets its own honest amber chip. */
 export function ChannelChips({ p, small }: {
-  p: { best_price_official?: boolean; best_official_price: number | null };
+  p: { best_price_official?: boolean; best_official_price: number | null;
+       channels?: Channels | null };
   small?: boolean;
 }) {
   const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:99px;`;
+  // the other channel's chip shows its RANGE from the same channel summary
+  // the listings render — one source, no contradictions (owner 2026-07-19)
+  const off = p.channels?.official;
   return (
     <>
       {p.best_price_official
         ? <span style={st(`${base} color:#0a7d57; background:rgba(10,157,106,.1);`)}>{t("official_bd")}</span>
         : <span style={st(`${base} font-weight:600; color:#565b63; background:rgba(15,25,35,.055);`)}>{t("unofficial_import")}</span>}
-      {!p.best_price_official && p.best_official_price != null && (
-        <span style={st(`${base} color:#a8761a; background:rgba(192,137,42,.12);`)}>{t("official_from")} {taka(p.best_official_price)}</span>
+      {!p.best_price_official && (off || p.best_official_price != null) && (
+        <span style={st(`${base} color:#a8761a; background:rgba(192,137,42,.12);`)}>
+          {off ? <>{t("official")} {takaRange(off.lo, off.hi)}</>
+               : <>{t("official_from")} {taka(p.best_official_price)}</>}
+        </span>
       )}
     </>
   );
@@ -170,8 +177,9 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
       {/* rest */}
       <div className="k-stagger" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:11px; margin-top:14px;")}>
         {rest.map((r, i) => {
-          // SP1: the range's low end anchors budget fit + the marker dot
-          const lo = r.price_low ?? r.best_price;
+          // SP1: the range's low end anchors budget fit + the marker dot;
+          // range = shown channel's in-stock spread (same as its listings)
+          const { lo, hi } = shownRange(r);
           const { fit, fitColor } = fitOf(lo ?? b, b);
           return (
             <button key={r.id} onClick={() => onPick(r.id)} className="k-press k-lift"
@@ -184,7 +192,7 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                 </div>
                 <div style={st("font-size:13.5px; color:#80868f; margin-top:2px;")}>{headlinePhrase(r.headline_axis)}{r.headline_axis && r.headline_value != null ? ` · ${axisLabel(r.headline_axis)} ${r.headline_value}` : ""}</div>
                 <div style={st("display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap;")}>
-                  <span style={st("font-size:15.5px; font-weight:600; color:#17191d;")}>{takaRange(lo, r.price_high)}</span>
+                  <span style={st("font-size:15.5px; font-weight:600; color:#17191d;")}>{takaRange(lo, hi)}</span>
                   <ChannelChips p={r} small />
                   {lo != null && <PriceSource primary={r.best_price_primary} compact />}
                   <DataCautionChip dc={r.data_caution} small />
@@ -222,8 +230,9 @@ function HeroPick({ p, budget, pct, onClick }: {
   pct: (v: number) => number; onClick: () => void;
 }) {
   const badge = topPickBadge(p.confidence);
-  // SP1: price is a range; its low end anchors budget fit + the marker dot
-  const lo = p.price_low ?? p.best_price;
+  // SP1: price is a range; its low end anchors budget fit + the marker dot;
+  // range = shown channel's in-stock spread (same numbers as its listings)
+  const { lo, hi } = shownRange(p);
   const { fit, fitColor } = fitOf(lo ?? budget, budget);
   const { major, notes } = classifyCaveats(p.caveats);
   const note = notes[0];
@@ -247,7 +256,7 @@ function HeroPick({ p, budget, pct, onClick }: {
             {/* price lives beside the photo — the old full-width row left this
                 whole block empty under the name (owner: dead space) */}
             <div style={st("display:flex; align-items:flex-end; gap:9px; margin-top:12px; flex-wrap:wrap;")}>
-              <span style={st("font-size:clamp(23px,2.6vw,30px); font-weight:400; letter-spacing:-1px; color:#17191d; line-height:1;")}>{takaRange(lo, p.price_high)}</span>
+              <span style={st("font-size:clamp(23px,2.6vw,30px); font-weight:400; letter-spacing:-1px; color:#17191d; line-height:1;")}>{takaRange(lo, hi)}</span>
               <span style={st("font-size:13px; color:#80868f; margin-bottom:2px;")}>at {p.in_stock_shops ?? 0} shops</span>
             </div>
           </div>

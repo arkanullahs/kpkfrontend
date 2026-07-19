@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, retentionCurve, st, taka, takaRange, verdictMeta } from "../theme";
+import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, retentionCurve, st, taka, takaRange, verdictMeta } from "../theme";
 import { bnNum, t } from "../i18n";
 import type { Connectivity, Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
@@ -110,10 +110,13 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const dom = h?.headline_axis || domAxis(scores);
   const price = d?.best_price ?? h?.best_price ?? null;
   // SP1 price rules: a RANGE (low anchors budget fit), channel chips follow
-  // the SHOWN price's own channel — shops stay anonymous.
-  const priceLo = d?.price_low ?? h?.price_low ?? price;
-  const priceHi = d?.price_high ?? h?.price_high ?? null;
+  // the SHOWN price's own channel — shops stay anonymous. Range comes from
+  // the per-channel summary so card and listings share one set of numbers.
   const isOff = d?.best_price_official ?? h?.best_price_official ?? false;
+  const chans = d?.channels ?? h?.channels ?? null;
+  const shownSide = isOff ? chans?.official : chans?.unofficial;
+  const priceLo = shownSide?.lo ?? d?.price_low ?? h?.price_low ?? price;
+  const priceHi = shownSide?.hi ?? d?.price_high ?? h?.price_high ?? null;
   const offPrice = d?.best_official_price ?? h?.best_official_price ?? null;
   const rec = d?.ai_verdict?.recommendation ?? h?.verdict?.recommendation;
   const vm = verdictMeta(rec);
@@ -168,7 +171,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             <span style={st("font-size:clamp(28px,3.4vw,38px); font-weight:300; letter-spacing:-1.4px; line-height:1;")}>{takaRange(priceLo, priceHi)}</span>
           </div>
           <div style={st("display:flex; align-items:center; gap:7px; margin-top:10px; flex-wrap:wrap;")}>
-            <ChannelChips p={{ best_price_official: isOff, best_official_price: offPrice }} />
+            <ChannelChips p={{ best_price_official: isOff, best_official_price: offPrice, channels: chans }} />
           </div>
           <div style={st("margin-top:12px; font-size:14px; color:#80868f; line-height:1.7;")}>
             At {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
@@ -313,12 +316,32 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               <span style={st("font-size:13.5px; color:#7a6a40; line-height:1.55;")}>{t("price_warning")}</span>
             </div>
-            <div style={st("display:flex; flex-direction:column; gap:8px; margin-top:12px;")}>
-              {(() => {
-                const gs = groupOffers(offers, bestOfferPrice);
-                return gs.map((g, i) => <VariantGroupRow key={i} g={g} lone={gs.length === 1} />);
-              })()}
-            </div>
+            {/* one block per CHANNEL (owner 2026-07-19): header carries the
+                channel's seller count + in-stock range from the same summary
+                the hero shows; variant groups break down the spread inside */}
+            {(["official", "unofficial"] as const).map((ch) => {
+              const chOffers = offers.filter((o) => (ch === "official") === offGrade(o));
+              if (!chOffers.length) return null;
+              const side = chans?.[ch];
+              // Best-price badge only competes in the shown price's channel
+              const gs = groupOffers(chOffers, (ch === "official") === isOff ? bestOfferPrice : null);
+              return (
+                <div key={ch} style={st("margin-top:16px;")}>
+                  <div style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap;")}>
+                    {ch === "official"
+                      ? <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; color:#0a7d57; background:rgba(10,157,106,.1);")}>{t("official_bd")}</span>
+                      : <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; color:#565b63; background:rgba(15,25,35,.055);")}>{t("unofficial_import")}</span>}
+                    <span style={st("font-size:13px; color:#5c626a;")}>
+                      <b style={st("color:#2c3036;")}>{bnNum(String(side?.sellers ?? chOffers.length))} {t("sellers")}</b>
+                      {side ? <> · {takaRange(side.lo, side.hi)}{side.in_stock > 0 ? <> · {bnNum(String(side.in_stock))} {t("stock_in").toLowerCase()}</> : null}</> : null}
+                    </span>
+                  </div>
+                  <div style={st("display:flex; flex-direction:column; gap:8px; margin-top:9px;")}>
+                    {gs.map((g, i) => <VariantGroupRow key={i} g={g} lone={gs.length === 1} />)}
+                  </div>
+                </div>
+              );
+            })}
           </Card>
         )}
       </div>
@@ -482,19 +505,23 @@ function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
   );
 }
 
-// Mirror of combine._off_grade: official-grade ONLY when an authority shop
+// Mirror of engine.off_grade: official-grade ONLY when an authority shop
 // tagged the row official — confident, never "maybe" (owner 2026-07-18: we
 // know official for sure, SP1 model). The shop key grades the row; it is
 // NEVER rendered (shops are anonymous infrastructure).
 const OFFICIAL_AUTHORITY = new Set(["GadgetAndGear", "Pickaboo", "SumashTech", "RioInternational"]);
+function offGrade(o: Offer): boolean {
+  return OFFICIAL_AUTHORITY.has(o.shop) && o.official === "official";
+}
 
 // One row per VARIANT, not per anonymous seller: with names scrubbed a
 // per-seller list is a wall of identical fillers ("Shop 1..11" / "A listing"),
 // while the variant is the thing that actually moves the price. Each group
-// carries its own price range + seller/stock/channel/market chips.
+// carries its own price range + seller/stock/market chips (channel lives on
+// the section header, callers pass one channel's offers at a time).
 interface OfferGroup {
   variant: string; lo: number; hi: number; n: number;
-  inStock: number; knownOut: boolean; official: boolean;
+  inStock: number; knownOut: boolean;
   regions: string[]; hasBest: boolean;
 }
 
@@ -505,17 +532,23 @@ function groupOffers(offers: Offer[], bestPrice: number | null): OfferGroup[] {
     const arr = m.get(k);
     if (arr) arr.push(o); else m.set(k, [o]);
   }
-  return [...m.entries()].map(([variant, os]) => ({
+  const gs = [...m.entries()].map(([variant, os]) => ({
     variant,
     lo: Math.min(...os.map((o) => o.price)),
     hi: Math.max(...os.map((o) => o.price)),
     n: os.length,
     inStock: os.filter((o) => o.in_stock === true).length,
     knownOut: os.every((o) => o.in_stock === false),
-    official: os.some((o) => OFFICIAL_AUTHORITY.has(o.shop) && o.official === "official"),
     regions: [...new Set(os.map((o) => o.region).filter((r): r is string => !!r))],
     hasBest: bestPrice != null && os.some((o) => o.price === bestPrice),
   })).sort((a, b) => a.lo - b.lo);
+  // the badge marks ONE group — the same price can appear in several variants
+  let seen = false;
+  for (const g of gs) {
+    if (g.hasBest && seen) g.hasBest = false;
+    seen = seen || g.hasBest;
+  }
+  return gs;
 }
 
 function VariantGroupRow({ g, lone }: { g: OfferGroup; lone: boolean }) {
@@ -526,7 +559,6 @@ function VariantGroupRow({ g, lone }: { g: OfferGroup; lone: boolean }) {
       <div style={st("flex:1; min-width:0;")}>
         <div style={st(`font-size:14px; font-weight:600; color:${g.variant ? "#2c3036" : "#8a8e96"}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{title}</div>
         <div style={st("display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:5px;")}>
-          {g.official && <span style={st(`font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; ${MAYBE_OFFICIAL_STYLE}`)}>{t("official")}</span>}
           {g.regions.map((r) => (
             <span key={r} style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; background:rgba(15,25,35,.06); color:#5c626a;")}>{r}</span>
           ))}
