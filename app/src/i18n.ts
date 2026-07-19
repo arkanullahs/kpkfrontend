@@ -50,7 +50,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   scores: { en: "Scores", bn: "স্কোর" },
   specs: { en: "Specs", bn: "স্পেক" },
   owner_voices: { en: "Owner voices", bn: "ব্যবহারকারীদের মত" },
-  where_to_buy: { en: "Listed prices we checked", bn: "আমরা যেসব দাম যাচাই করেছি" },
+  where_to_buy: { en: "Prices we checked", bn: "আমরা যেসব দাম যাচাই করেছি" },
   brand_ownership: { en: "Brand & ownership", bn: "ব্র্যান্ড ও মালিকানা" },
   who_its_for: { en: "Who it's for", bn: "কাদের জন্য" },
   official: { en: "Official", bn: "অফিসিয়াল" },
@@ -60,7 +60,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     bn: "কেনার আগে দোকানে দাম ও স্টক নিশ্চিত করুন।"
   },
   best_price: { en: "Best price", bn: "সেরা দাম" },
-  listed_price: { en: "Listed price", bn: "তালিকাভুক্ত দাম" },
+  shop_word: { en: "Shop", bn: "দোকান" },
   carried_by: { en: "Carried by", bn: "পাওয়া যায়" },
   shops: { en: "shops", bn: "দোকানে" },
 

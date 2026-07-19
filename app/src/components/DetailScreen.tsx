@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, MAYBE_OFFICIAL_STYLE, retentionCurve, st, taka, takaRange, verdictMeta } from "../theme";
-import { t } from "../i18n";
+import { bnNum, t } from "../i18n";
 import type { Connectivity, Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 import { JustSoYouKnow } from "./Compare";
@@ -304,7 +304,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               <span style={st("font-size:13.5px; color:#7a6a40; line-height:1.55;")}>{t("price_warning")}</span>
             </div>
             <div style={st("display:flex; flex-direction:column; gap:8px; margin-top:12px;")}>
-              {offers.map((o, i) => <OfferRow key={i} o={o} best={o.price === bestOfferPrice} />)}
+              {offers.map((o, i) => <OfferRow key={i} o={o} i={i} best={o.price === bestOfferPrice} />)}
             </div>
           </Card>
         )}
@@ -469,16 +469,22 @@ function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
   );
 }
 
-function OfferRow({ o, best }: { o: Offer; best: boolean }) {
+// Mirror of combine._off_grade: official-grade ONLY when an authority shop
+// tagged the row official — confident, never "maybe" (owner 2026-07-18: we
+// know official for sure, SP1 model). The shop key grades the row; it is
+// NEVER rendered (shops are anonymous infrastructure).
+const OFFICIAL_AUTHORITY = new Set(["GadgetAndGear", "Pickaboo", "SumashTech", "RioInternational"]);
+
+function OfferRow({ o, i, best }: { o: Offer; i: number; best: boolean }) {
   // Shops are anonymous infrastructure (owner 2026-07-18: named shop rows read
-  // as free ads) — no names, no outbound links. Each row is price EVIDENCE for
-  // the range above: variant, channel, import market, stock.
-  const official = o.official === true;
+  // as free ads) — rows are numbered price evidence for the range above:
+  // variant, channel, import market, stock. No names, no outbound links.
+  const official = OFFICIAL_AUTHORITY.has(o.shop) && o.official === "official";
   const hasChips = official || !!o.region || o.in_stock != null;
   return (
     <div style={st(`display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:14px; background:${best ? "var(--acsoft)" : "rgba(15,25,35,.035)"};`)}>
       <div style={st("flex:1; min-width:0;")}>
-        <div style={st("font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{o.variant || t("listed_price")}</div>
+        <div style={st("font-size:14px; font-weight:600; color:#2c3036; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{t("shop_word")} {bnNum(String(i + 1))}{o.variant ? <span style={st("font-weight:500; color:#8a8e96;")}> · {o.variant}</span> : null}</div>
         {hasChips && (
           <div style={st("display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:5px;")}>
             {official && <span style={st(`font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; ${MAYBE_OFFICIAL_STYLE}`)}>{t("official")}</span>}

@@ -139,7 +139,9 @@ export interface Meta {
 }
 
 export interface Offer {
-  shop: string; price: number; official?: boolean | null;
+  shop: string; price: number;
+  /** source's channel claim: "official" | "unofficial" | null (undisclosed) */
+  official?: string | null;
   official_final?: string; in_stock?: boolean | null; url?: string | null;
   /** shop's price is kept reasonably current (Rio/GadgetGear/Pickaboo) */
   price_primary?: boolean;
