@@ -80,9 +80,14 @@ box-shadow:0 4px 12px var(--acglow),inset 0 1px 0 rgba(255,255,255,.35)}
    everything shrinks together. Before this the "Compare" pill was sliced in
    half by the CTA (owner, Pixel 5). */
 @media(max-width:620px){
-.btxt{display:none}
-header.site{gap:5px;padding:7px 8px 7px 8px;margin:10px auto 4px;border-radius:17px}
-header.site .brand img{width:31px;height:31px;border-radius:9px}
+/* the wordmark stays on phones (owner 2026-07-25); the room comes from a
+   shorter CTA label and tighter pills instead, and the nav lane still scrolls
+   under its mask so nothing can ever overlap */
+.btxt{font-size:15px}
+.btxt em{display:none}
+.ctlong{display:none}
+header.site{gap:6px;padding:10px 9px;margin:10px auto 4px;border-radius:18px}
+header.site .brand img{width:34px;height:34px;border-radius:10px}
 /* center-justified flex clips BOTH edges once pills overflow -- left-align
    on mobile so the first pill is never cut; the right edge keeps the fade */
 .hnav{justify-content:flex-start;gap:4px;padding-right:10px;
@@ -93,8 +98,9 @@ mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 12px),transparent);
 }
 @media(max-width:400px){
 .hnav a{font-size:11px;padding:5px 8px}
-.hcta{font-size:11px;padding:6px 9px}
-header.site .brand img{width:28px;height:28px}
+.hcta{font-size:11px;padding:7px 9px}
+.btxt{font-size:14px}
+header.site .brand img{width:30px;height:30px}
 }
 
 h1{font-family:var(--f-display);font-size:clamp(28px,4.4vw,42px);font-weight:600;
@@ -458,8 +464,14 @@ table.cmp.vs td{white-space:normal}
 /* tables scroll on a phone; say so instead of letting the columns look cut */
 .swipe{display:none;margin:10px 0 -6px;font-size:12.5px;color:var(--mut)}
 @media(max-width:720px){.swipe{display:block}
-.ph .phstat{gap:6px}.ph .phstat span{padding:7px 11px}
-.ph .phstat b{font-size:14.5px}}
+/* all four on ONE row on a phone (owner 2026-07-25): a grid, not wrapping
+   flex, so "days tracked" can never drop to a second line */
+.ph .phstat{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.ph .phstat span{padding:7px 6px;font-size:8.5px;letter-spacing:.3px;
+  align-items:center;text-align:center}
+.ph .phstat b{font-size:12.5px;letter-spacing:-.5px}}
+@media(max-width:360px){.ph .phstat b{font-size:11.5px}
+.ph .phstat span{padding:6px 3px}}
 .ph .spark{margin:6px 0 0}
 .ph .spark svg{width:100%;height:clamp(96px,14vw,132px);display:block}
 .ph .phax{display:flex;justify-content:space-between;font-size:11.5px;
@@ -523,7 +535,7 @@ table.cmp td.ph .ic{color:var(--acd);opacity:.75}
 @media(max-width:640px){.rrow{grid-template-columns:88px 1fr 30px}}
 </style></head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
-<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick">Get my pick &rarr;</a></header>
+<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
 <div class="wrap">
 <nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Phones</span></nav>
 <h1>Phone prices in Bangladesh</h1>
