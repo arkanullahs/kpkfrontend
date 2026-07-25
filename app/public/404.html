@@ -26,13 +26,14 @@ a{color:var(--acd);text-decoration:none}a:hover{text-decoration:underline}
 .orbs .o2{top:36%;left:-240px;width:680px;height:680px;background:radial-gradient(circle,var(--orbB),transparent 68%)}
 .orbs .o3{bottom:-240px;right:6%;width:600px;height:600px;background:radial-gradient(circle,var(--orbC),transparent 68%)}
 
-/* 760, not 860: at 860 every white card ran wider than it had content for
-   (owner 2026-07-25: "all over the page all the cards are too wide"), and a
-   ~78-character measure reads better anyway. Header and CTA follow it so the
-   page keeps one edge. */
-.wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:8px clamp(16px,4vw,40px) 40px}
+/* 980 on desktop: 760 fixed the too-wide cards but made the whole site feel
+   cramped on a PC (owner 2026-07-25). The page is wide again; what is capped
+   now is the MEASURE of running text (.lead/.vd p/.faq p/.decide p), which is
+   what actually reads badly past ~75 characters. Tables and grids use the
+   full width. */
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:8px clamp(16px,4vw,40px) 40px}
 header.site{position:sticky;top:0;z-index:60;display:flex;align-items:center;
-justify-content:space-between;gap:10px;max-width:760px;margin:14px auto 4px;
+justify-content:space-between;gap:10px;max-width:980px;margin:14px auto 4px;
 padding:11px 14px 11px 12px;border-radius:20px;
 background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(250,251,253,.5));
 backdrop-filter:blur(28px) saturate(190%);-webkit-backdrop-filter:blur(28px) saturate(190%);
@@ -43,13 +44,17 @@ box-shadow:inset 0 1px 1px rgba(255,255,255,.95),0 12px 34px rgba(20,24,32,.1)}
    together once there's room) and the nav pills scroll sideways within their
    own lane instead of forcing the header to grow a second row. */
 header.site .brand{display:flex;align-items:center;gap:9px;flex:none}
-header.site .brand img{border-radius:10px;display:block;width:42px;height:42px}
+header.site{padding:8px 12px 8px 10px}
+header.site .brand img{border-radius:10px;display:block;width:36px;height:36px}
+.btxt{font-size:17.5px}
 /* the tagline lives UNDER the wordmark, one string on every page, so the
    header centre is free for real section links (owner 2026-07-25) */
+/* ONE line, never wrapped: the wrapped 3-line tagline was what made the bar
+   tall (owner 2026-07-25). Below 1080px it drops and the bar is logo-height. */
 .btxt em{display:block;font-style:normal;font-family:var(--f-sans);
 font-size:10.5px;font-weight:500;letter-spacing:.1px;color:var(--mut);
-line-height:1.25;max-width:22ch;white-space:normal;margin-top:1px}
-@media(max-width:900px){.btxt em{display:none}}
+line-height:1.2;white-space:nowrap;margin-top:1px}
+@media(max-width:1080px){.btxt em{display:none}}
 .btxt{font-family:var(--f-display);font-weight:700;font-size:20px;
 color:var(--ink);letter-spacing:-.4px;white-space:nowrap}
 header.site a:hover{text-decoration:none}
@@ -83,7 +88,7 @@ h1{font-family:var(--f-display);font-size:clamp(28px,4.4vw,42px);font-weight:600
 letter-spacing:-1.1px;line-height:1.12;margin:24px 0 8px}
 h1 em{font-family:var(--f-serif);font-style:italic;font-weight:400;color:var(--acd)}
 h2.grp{font-family:var(--f-display);font-size:19px;font-weight:600;letter-spacing:-.4px;margin:26px 0 2px}
-.sub{color:var(--mut);margin:0 0 4px;font-size:14.5px;line-height:1.5}
+.sub{color:var(--mut);margin:0 0 4px;font-size:14.5px;line-height:1.5;max-width:74ch}
 
 .why{display:flex;gap:11px;padding:15px 17px;border-radius:17px;background:var(--acsoft);margin:22px 0 0}
 .why svg{flex:none;margin-top:3px}
@@ -168,7 +173,7 @@ footer.site a{color:var(--mut);text-decoration:underline}
 
 /* rich dark footer (owner 2026-07-19); picker card inline in body (owner 2026-07-20) */
 .footwrap{position:relative;z-index:1;margin-top:20px}
-.pickcard{max-width:760px;margin:36px auto;border-radius:24px;
+.pickcard{max-width:980px;margin:36px auto;border-radius:24px;
 overflow:hidden;padding:clamp(30px,5vw,46px);color:#fff;
 background:radial-gradient(135% 155% at 80% 2%,#3b7bf0 0%,#1f4bad 42%,#12203f 78%,#0d0c15 100%);
 box-shadow:0 26px 64px rgba(10,12,26,.34)}
@@ -183,7 +188,10 @@ letter-spacing:-1.4px;line-height:1.06;margin:0;max-width:14ch}
 /* brand block filling the right of the CTA (owner 2026-07-25) */
 .pbrand{flex:none;display:flex;flex-direction:column;align-items:center;gap:9px;
 text-align:center;padding-left:26px;border-left:1px solid rgba(255,255,255,.14)}
-.pbrand img{border-radius:20px;box-shadow:0 12px 30px rgba(6,10,25,.45)}
+/* white tile behind the logo: on the deep blue card the transparent PNG's own
+   corners read as a dark smudge (owner 2026-07-25) */
+.pbrand img{border-radius:20px;background:#fff;padding:8px;
+box-shadow:0 12px 30px rgba(6,10,25,.45)}
 .pbtxt{display:flex;flex-direction:column;gap:3px;align-items:center}
 .pbn{font-family:var(--f-display);font-size:22px;font-weight:700;letter-spacing:-.5px;color:#fff}
 .pbt{font-size:12px;line-height:1.4;color:rgba(255,255,255,.55);max-width:19ch}
@@ -247,7 +255,7 @@ nav.crumbs a.home{padding:3px 5px}
 nav.crumbs svg{display:block;flex:none}
 nav.crumbs .sep{color:#c3c7cd;display:flex;align-items:center}
 nav.crumbs .here{color:var(--ink);font-weight:700;padding:2px 4px}
-.lead{font-size:16.5px;color:#363b42;line-height:1.6;margin:10px 0 2px}
+.lead{max-width:74ch;font-size:16.5px;color:#363b42;line-height:1.6;margin:10px 0 2px}
 .lead b{color:var(--acd)}
 .kf{font-size:12.5px;color:#5c626a;margin-top:8px;line-height:1.55}
 .tblwrap{overflow-x:auto;margin:22px 0 0;border-radius:17px;background:rgba(255,255,255,.88);
@@ -272,13 +280,20 @@ box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
 .fhead{text-align:center;margin-bottom:20px}
 .faq .eyebrow{display:block;font-size:12.5px;font-weight:600;color:var(--mut);
 letter-spacing:.2px;margin-bottom:10px}
-.faq h2{font-family:var(--f-display);font-size:clamp(25px,3.6vw,36px);font-weight:700;
-letter-spacing:-1.2px;line-height:1.14;margin:0 auto;max-width:18ch;color:var(--ink)}
-.fmore{display:inline-flex;align-items:center;gap:7px;margin-top:16px;
-font-size:14.5px;font-weight:600;color:var(--acd)}
-.fmore:hover{text-decoration:none;gap:10px}
+/* text-wrap:balance keeps a lone orphan word off the last line ("... ask
+   / us"), and the wider measure lets most headings sit on two full lines */
+.faq h2{font-family:var(--f-display);font-size:clamp(24px,3.2vw,33px);font-weight:700;
+letter-spacing:-1.1px;line-height:1.16;margin:0 auto;max-width:26ch;color:var(--ink);
+text-wrap:balance}
+/* a real button: the plain blue link was easy to miss (owner 2026-07-25) */
+.fmore{display:inline-flex;align-items:center;gap:8px;margin-top:18px;
+font-size:14.5px;font-weight:700;color:var(--ink);background:#fff;
+border-radius:99px;padding:11px 22px;
+box-shadow:0 2px 8px rgba(15,25,35,.07),inset 0 0 0 1px rgba(15,25,35,.12)}
+.fmore:hover{text-decoration:none;color:var(--acd);
+box-shadow:0 4px 14px rgba(15,25,35,.1),inset 0 0 0 1px var(--acsoft2)}
 .fmore span{transition:transform .18s}
-.fmore:hover span{transform:translateX(2px)}
+.fmore:hover span{transform:translateX(3px)}
 /* closed = muted and flat; open = white, lifted, full-ink */
 .faq details{background:rgba(255,255,255,.5);border-radius:18px;margin-top:10px;
 padding:0 20px;box-shadow:inset 0 0 0 1px rgba(15,25,35,.06);transition:background .16s}
@@ -294,7 +309,7 @@ position:relative;list-style:none}
 .faq summary::-webkit-details-marker{display:none}
 /* the answer needs room under it -- the card used to end on the last line */
 .faq p{margin:-4px 0 0;padding:0 30px 22px 0;font-size:15px;color:#5c626a;
-line-height:1.65;max-width:62ch}
+line-height:1.65;max-width:74ch}
 
 .statrow{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
 .statrow .chip{font-size:12.5px;padding:6px 13px}
@@ -372,7 +387,7 @@ letter-spacing:-.3px;line-height:1.15}
 table.cmp.vs{min-width:420px}
 table.cmp.vs td{white-space:normal}
 .vslink{margin:12px 0 0;font-size:14px;font-weight:600}
-.decide p{margin:8px 0 6px;font-size:14.5px;color:#363b42;line-height:1.6}
+.decide p{margin:8px 0 6px;font-size:14.5px;color:#363b42;line-height:1.6;max-width:76ch}
 @media(max-width:560px){
 .duel{grid-template-columns:1fr}
 }
