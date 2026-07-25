@@ -287,10 +287,15 @@ nav.crumbs .here{color:var(--ink);font-weight:700;padding:2px 4px}
 .kf{font-size:12.5px;color:#5c626a;margin-top:8px;line-height:1.55}
 .tblwrap{overflow-x:auto;margin:22px 0 0;border-radius:17px;background:rgba(255,255,255,.88);
 box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
-/* a fade on the right edge is the affordance that says "there is more" */
-.tblwrap{-webkit-overflow-scrolling:touch;
-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent);
--webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent)}
+/* No edge fade: CSS cannot tell whether the table actually overflows, so on a
+   desktop where it fits the fade just washed out the last column for nothing
+   (owner 2026-07-25). The "Swipe the table sideways" line carries the message
+   on phones, where it is true. */
+.tblwrap{-webkit-overflow-scrolling:touch}
+.plink{display:inline-flex;align-items:center;gap:6px;margin-top:9px;
+font-size:12.5px;font-weight:700;color:var(--acd)}
+.plink:hover{text-decoration:none;gap:9px}
+.plink span{transition:transform .18s}
 table.cmp{border-collapse:collapse;width:100%;min-width:600px;font-size:13.5px}
 table.cmp th{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);
 text-align:left;padding:12px 14px;border-bottom:1px solid rgba(15,25,35,.08)}
@@ -480,8 +485,10 @@ table.cmp.vs td{white-space:normal}
 .ph .phstat b{font-size:12.5px;letter-spacing:-.5px}}
 @media(max-width:360px){.ph .phstat b{font-size:11.5px}
 .ph .phstat span{padding:6px 3px}}
-.ph .spark{margin:6px 0 0}
-.ph .spark svg{width:100%;height:clamp(96px,14vw,132px);display:block}
+/* shorter on desktop: at 132px the line had acres of empty card around it */
+.ph{max-width:640px}
+.ph .spark{margin:4px 0 0}
+.ph .spark svg{width:100%;height:clamp(84px,9vw,96px);display:block}
 .ph .phax{display:flex;justify-content:space-between;font-size:11.5px;
   color:var(--mut);margin-top:4px;padding:0 2px}
 /* verdict, split into scannable parts */
