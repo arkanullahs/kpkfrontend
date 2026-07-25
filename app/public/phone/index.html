@@ -76,15 +76,25 @@ background:linear-gradient(180deg,var(--acg1),var(--acg2));border-radius:99px;
 padding:8px 16px;white-space:nowrap;
 box-shadow:0 4px 12px var(--acglow),inset 0 1px 0 rgba(255,255,255,.35)}
 .hcta:hover{filter:brightness(1.05)}
-@media(max-width:560px){
-/* the three section links are the navigation now, so they never drop. The
-   wordmark shrinks to the logo and the CTA to an arrow-free label instead. */
+/* Phones: the bar has to hold brand + 3 links + CTA on a 360px screen, so
+   everything shrinks together. Before this the "Compare" pill was sliced in
+   half by the CTA (owner, Pixel 5). */
+@media(max-width:620px){
 .btxt{display:none}
+header.site{gap:5px;padding:7px 8px 7px 8px;margin:10px auto 4px;border-radius:17px}
+header.site .brand img{width:31px;height:31px;border-radius:9px}
 /* center-justified flex clips BOTH edges once pills overflow -- left-align
    on mobile so the first pill is never cut; the right edge keeps the fade */
-.hnav{justify-content:flex-start;gap:5px}
-.hnav a{font-size:12px;padding:8px 13px}
-.hcta{font-size:12px;padding:8px 13px}
+.hnav{justify-content:flex-start;gap:4px;padding-right:10px;
+mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 12px),transparent);
+-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 12px),transparent)}
+.hnav a{font-size:11.5px;padding:6px 10px;font-weight:600}
+.hcta{font-size:11.5px;padding:6px 11px}
+}
+@media(max-width:400px){
+.hnav a{font-size:11px;padding:5px 8px}
+.hcta{font-size:11px;padding:6px 9px}
+header.site .brand img{width:28px;height:28px}
 }
 
 h1{font-family:var(--f-display);font-size:clamp(28px,4.4vw,42px);font-weight:600;
@@ -263,6 +273,10 @@ nav.crumbs .here{color:var(--ink);font-weight:700;padding:2px 4px}
 .kf{font-size:12.5px;color:#5c626a;margin-top:8px;line-height:1.55}
 .tblwrap{overflow-x:auto;margin:22px 0 0;border-radius:17px;background:rgba(255,255,255,.88);
 box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
+/* a fade on the right edge is the affordance that says "there is more" */
+.tblwrap{-webkit-overflow-scrolling:touch;
+mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent);
+-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent)}
 table.cmp{border-collapse:collapse;width:100%;min-width:600px;font-size:13.5px}
 table.cmp th{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);
 text-align:left;padding:12px 14px;border-bottom:1px solid rgba(15,25,35,.08)}
@@ -397,16 +411,29 @@ table.cmp.vs td{white-space:normal}
 
 .ic{flex:none;vertical-align:-3px}
 /* hero: the photo owns the whole left column, everything else stacks right */
+.dhero{position:relative}
 .dhero .dpick{display:grid;grid-template-columns:minmax(120px,168px) 1fr;
   gap:clamp(16px,2.4vw,28px);align-items:stretch}
 .dimg{display:flex;align-items:center;justify-content:center;background:#fff;
   border-radius:16px;padding:12px;box-shadow:inset 0 0 0 1px rgba(15,25,35,.06)}
 .dimg img{width:100%;height:auto;max-height:270px;object-fit:contain;display:block}
-.dhero .top{display:flex;flex-direction:column;justify-content:center}
-.hnote{margin:12px 0 0;font-size:13px;color:var(--mut)}
-.hnote b{color:#3d4350;font-weight:600}
-@media(max-width:600px){.dhero .dpick{grid-template-columns:92px 1fr;gap:14px}
-.dimg{padding:8px;border-radius:13px}.dimg img{max-height:150px}}
+.dhero .top{display:flex;flex-direction:column;justify-content:center;min-width:0}
+.dhero .brand{font-size:14px}
+.dhero .top h2{font-size:clamp(22px,3.4vw,29px);margin:2px 0 4px}
+/* the price we cannot verify sits in the corner, out of the reading flow */
+.unconf.corner{position:absolute;top:12px;right:14px;font-size:10.5px;
+  font-weight:700;letter-spacing:.3px;text-transform:uppercase;
+  background:rgba(168,118,26,.12);color:#8a6414;border-radius:99px;
+  padding:4px 10px;white-space:nowrap}
+@media(max-width:640px){
+/* the tile used to stretch to the full text height, leaving the photo floating
+   in a tall empty box on a phone (owner, Pixel 5) */
+.dhero .dpick{grid-template-columns:104px 1fr;gap:13px;align-items:start}
+.dimg{padding:7px;border-radius:13px}
+.dimg img{max-height:132px}
+.dhero .top h2{font-size:21px}
+.unconf.corner{position:static;display:inline-block;margin-bottom:8px}
+}
 /* headline specs as tiles, not a middot-run (owner 2026-07-25) */
 .kfx{display:flex;flex-wrap:wrap;gap:9px 20px;margin:16px 0 2px;padding-top:14px;
   border-top:1px solid rgba(15,25,35,.07)}
@@ -414,14 +441,29 @@ table.cmp.vs td{white-space:normal}
   color:#41464d}
 .kft .ic{color:var(--acd);opacity:.85}
 /* price history */
-.ph .phstat{display:flex;flex-wrap:wrap;gap:8px 26px;margin:12px 0 6px}
-.ph .phstat span{display:flex;flex-direction:column;font-size:11.5px;
-  text-transform:uppercase;letter-spacing:.6px;color:var(--mut);font-weight:600}
-.ph .phstat b{font-family:var(--f-display);font-size:17px;font-weight:700;
-  letter-spacing:-.4px;color:var(--ink);text-transform:none}
-.ph .spark svg{width:100%;height:120px}
+/* stat chips, colour-coded: lowest green, highest amber (owner 2026-07-25) */
+.ph .phstat{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 8px}
+.ph .phstat span{display:flex;flex-direction:column;gap:1px;font-size:10px;
+  text-transform:uppercase;letter-spacing:.6px;font-weight:700;
+  border-radius:13px;padding:8px 13px;background:rgba(15,25,35,.045);
+  color:var(--mut)}
+.ph .phstat b{font-family:var(--f-display);font-size:16px;font-weight:700;
+  letter-spacing:-.4px;color:var(--ink);text-transform:none;white-space:nowrap}
+.ph .phstat .s0{background:var(--acsoft);color:var(--acd)}
+.ph .phstat .s0 b{color:var(--acd)}
+.ph .phstat .s1{background:rgba(10,157,106,.11);color:#0a7d57}
+.ph .phstat .s1 b{color:#0a7d57}
+.ph .phstat .s2{background:rgba(168,118,26,.11);color:#8a6414}
+.ph .phstat .s2 b{color:#8a6414}
+/* tables scroll on a phone; say so instead of letting the columns look cut */
+.swipe{display:none;margin:10px 0 -6px;font-size:12.5px;color:var(--mut)}
+@media(max-width:720px){.swipe{display:block}
+.ph .phstat{gap:6px}.ph .phstat span{padding:7px 11px}
+.ph .phstat b{font-size:14.5px}}
+.ph .spark{margin:6px 0 0}
+.ph .spark svg{width:100%;height:clamp(96px,14vw,132px);display:block}
 .ph .phax{display:flex;justify-content:space-between;font-size:11.5px;
-  color:var(--mut);margin-top:2px}
+  color:var(--mut);margin-top:4px;padding:0 2px}
 /* verdict, split into scannable parts */
 .vd{margin:24px 0 0;padding:20px 22px 8px;border-radius:20px;background:#fff;
   box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.06)}
