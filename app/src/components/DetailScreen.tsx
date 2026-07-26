@@ -244,7 +244,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
       {/* align-items:start, or every card in a row stretches to the tallest
           one — the specs card grew icon rows and left a half-empty white slab
           under the resale graph beside it (owner 2026-07-26). */}
-      <div className="k-stagger" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); align-items:start; gap:14px; margin-top:14px;")}>
+      <div className="k-stagger" style={st("columns:330px 2; column-gap:14px; margin-top:14px;")}>
         {/* specs */}
         <Card>
           <SectionLabel>{t("specs")}</SectionLabel>
@@ -680,7 +680,7 @@ function Wrap({ children }: { children: ReactNode; onBack?: () => void }) {
   );
 }
 function Card({ children }: { children: ReactNode }) {
-  return <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07);")}>{children}</div>;
+  return <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); break-inside:avoid; margin-bottom:14px;")}>{children}</div>;
 }
 function SectionLabel({ children }: { children: ReactNode }) {
   return <div style={st("font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;")}>{children}</div>;
