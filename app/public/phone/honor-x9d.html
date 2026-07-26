@@ -149,6 +149,51 @@ color:var(--ink);line-height:1}
 background:rgba(15,25,35,.055);color:#41464d}
 .chip.ok{background:rgba(10,157,106,.12);color:#0a7d57}
 .chip.warn{background:rgba(192,137,42,.12);color:#a8761a}
+/* import market. Shared with device pages (they load this sheet first) so a
+   "China from X" chip looks the same on a guide, a /vs page and /phone/. */
+.chip.reg{background:rgba(38,86,214,.09);color:var(--acd)}
+
+/* tables scroll on a phone; say so instead of letting the columns look cut.
+   Shared: the guide comparison table is the full spec strings now, so it needs
+   the hint the device page's shop table already had. */
+.swipe{display:none;margin:10px 0 -6px;font-size:12.5px;color:var(--mut)}
+@media(max-width:720px){.swipe{display:block}}
+
+/* the full GSMArena sheet: device pages AND /vs pages fold it away here */
+/* the whole sheet is reference material, not reading material: folded away */
+.specdump{margin:16px 0 0}
+.specdump>summary{cursor:pointer;list-style:none;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;padding:13px 17px;border-radius:15px;
+  background:rgba(255,255,255,.88);font-size:14px;font-weight:700;
+  color:var(--acd);box-shadow:inset 0 0 0 1px rgba(15,25,35,.06)}
+.specdump>summary::-webkit-details-marker{display:none}
+.specdump>summary:hover{background:#fff}
+.specdump .chev{font-size:20px;line-height:1;transition:transform .18s}
+.specdump[open] .chev{transform:rotate(90deg)}
+.srccredit{font-size:12px;color:var(--mut);margin:14px 2px 4px;line-height:1.6}
+.srccredit a{color:var(--acd);font-weight:600}
+.specgrp{margin:18px 0 0;padding:14px 16px 4px;border-radius:17px;
+  background:rgba(255,255,255,.88);
+  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
+.specgrp h3{font-size:11px;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--mut);font-weight:700;margin:0 0 4px}
+table.rawspec{width:100%;border-collapse:collapse;font-size:13.5px;
+  table-layout:fixed}
+table.rawspec th{width:132px;text-align:left;vertical-align:top;font-weight:600;
+  color:var(--ink);padding:9px 12px 9px 0;
+  border-bottom:1px solid rgba(15,25,35,.05)}
+table.rawspec td{vertical-align:top;color:#41464d;padding:9px 0;
+  border-bottom:1px solid rgba(15,25,35,.05);
+  overflow-wrap:anywhere;word-break:break-word;line-height:1.55}
+table.rawspec tr:last-child th,table.rawspec tr:last-child td{border-bottom:none}
+@media(max-width:640px){
+.specgrp{padding:13px 14px 4px}
+table.rawspec,table.rawspec tbody,table.rawspec tr,
+table.rawspec th,table.rawspec td{display:block;width:auto}
+table.rawspec th{padding:10px 0 0;border-bottom:none;font-size:11px;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--mut)}
+table.rawspec td{padding:2px 0 10px}
+}
 
 .fit{padding:15px 16px;border-radius:15px;background:rgba(15,25,35,.035);margin-top:20px}
 .fit .r{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:11px}
@@ -464,47 +509,12 @@ table.cmp.vs td{white-space:normal}
    scroll on a phone. This is its own grid: a fixed label column that collapses
    to a stacked label-above-value on mobile, and values that break anywhere so
    nothing can push the page wider than the screen. */
-/* the whole sheet is reference material, not reading material: folded away */
-.specdump{margin:16px 0 0}
-.specdump>summary{cursor:pointer;list-style:none;display:flex;align-items:center;
-  justify-content:space-between;gap:10px;padding:13px 17px;border-radius:15px;
-  background:rgba(255,255,255,.88);font-size:14px;font-weight:700;
-  color:var(--acd);box-shadow:inset 0 0 0 1px rgba(15,25,35,.06)}
-.specdump>summary::-webkit-details-marker{display:none}
-.specdump>summary:hover{background:#fff}
-.specdump .chev{font-size:20px;line-height:1;transition:transform .18s}
-.specdump[open] .chev{transform:rotate(90deg)}
 /* the shop's import market, next to the config it applies to */
-.srccredit{font-size:12px;color:var(--mut);margin:14px 2px 4px;line-height:1.6}
-.srccredit a{color:var(--acd);font-weight:600}
 .rgtag{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:99px;
   font-size:10.5px;font-weight:700;letter-spacing:.3px;
   background:rgba(38,86,214,.1);color:var(--acd);vertical-align:1px}
-.chip.reg{background:rgba(38,86,214,.09);color:var(--acd)}
 .specsum{font-family:var(--f-display);font-size:15px;font-weight:600;
   letter-spacing:-.2px;color:var(--ink);margin:16px 0 8px}
-.specgrp{margin:18px 0 0;padding:14px 16px 4px;border-radius:17px;
-  background:rgba(255,255,255,.88);
-  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
-.specgrp h3{font-size:11px;text-transform:uppercase;letter-spacing:.8px;
-  color:var(--mut);font-weight:700;margin:0 0 4px}
-table.rawspec{width:100%;border-collapse:collapse;font-size:13.5px;
-  table-layout:fixed}
-table.rawspec th{width:132px;text-align:left;vertical-align:top;font-weight:600;
-  color:var(--ink);padding:9px 12px 9px 0;
-  border-bottom:1px solid rgba(15,25,35,.05)}
-table.rawspec td{vertical-align:top;color:#41464d;padding:9px 0;
-  border-bottom:1px solid rgba(15,25,35,.05);
-  overflow-wrap:anywhere;word-break:break-word;line-height:1.55}
-table.rawspec tr:last-child th,table.rawspec tr:last-child td{border-bottom:none}
-@media(max-width:640px){
-.specgrp{padding:13px 14px 4px}
-table.rawspec,table.rawspec tbody,table.rawspec tr,
-table.rawspec th,table.rawspec td{display:block;width:auto}
-table.rawspec th{padding:10px 0 0;border-bottom:none;font-size:11px;
-  text-transform:uppercase;letter-spacing:.6px;color:var(--mut)}
-table.rawspec td{padding:2px 0 10px}
-}
 /* headline specs as tiles, not a middot-run (owner 2026-07-25) */
 .kfx{display:flex;flex-wrap:wrap;gap:9px 20px;margin:16px 0 2px;padding-top:14px;
   border-top:1px solid rgba(15,25,35,.07)}
@@ -526,9 +536,7 @@ table.rawspec td{padding:2px 0 10px}
 .ph .phstat .s1 b{color:#0a7d57}
 .ph .phstat .s2{background:rgba(168,118,26,.11);color:#8a6414}
 .ph .phstat .s2 b{color:#8a6414}
-/* tables scroll on a phone; say so instead of letting the columns look cut */
-.swipe{display:none;margin:10px 0 -6px;font-size:12.5px;color:var(--mut)}
-@media(max-width:720px){.swipe{display:block}
+@media(max-width:720px){
 /* all four on ONE row on a phone (owner 2026-07-25): a grid, not wrapping
    flex, so "days tracked" can never drop to a second line */
 .ph .phstat{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
@@ -623,6 +631,7 @@ Drop resistant up to 2.5m</td></tr></tbody></table></section><section class="spe
 <div><h4>Social</h4><ul><li><a href="https://www.facebook.com/bhalophone" rel="me">Facebook</a></li></ul></div>
 <div><h4>More</h4><ul>
 <li><a href="/support">Support us</a></li>
+<li><a href="https://arkanullah.pro.bd" target="_blank" rel="noopener noreferrer">Made by Arkanullah Saad &#8599;</a></li>
 </ul></div>
 </div>
 <div class="copy">&copy; 2026 bhalophone. All rights reserved.</div>
