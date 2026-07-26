@@ -73,10 +73,24 @@ export interface CompareFrom {
 export interface ChannelSide { lo: number; hi: number; sellers: number; in_stock: number; }
 export interface Channels { official?: ChannelSide | null; unofficial?: ChannelSide | null; }
 
+/** ONE spec derivation for the whole product (backend core.specfmt): the same
+    strings the /best guides, the /vs tables and the /phone/ pages render. The
+    app used to label and format the raw `specs` dict itself, so the picker and
+    the pages described the same phone differently (owner 2026-07-26). */
+export interface SpecRow { label: string; value: string; icon: string; }
+/** The compact five a CARD carries, same wording as the full rows. */
+export interface SpecTile { icon: string; value: string; }
+/** Import market a shop actually names and has in stock, cheapest first. */
+export interface RegionOffer { code: string; name: string; price: number; }
+/** A RAM/storage config the shops price, cheapest first. */
+export interface VariantPrice { variant: string; price: number; }
+
 export interface Pick {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null;
   channels?: Channels | null;
+  spec_rows?: SpecRow[]; spec_strip?: SpecTile[];
+  variants?: VariantPrice[]; regions?: RegionOffer[];
   /** price RANGE across in-stock sources in the shown price's channel —
       SP1 rule: never a lone lowest number. Shops stay anonymous. */
   price_low?: number | null; price_high?: number | null;
@@ -176,6 +190,11 @@ export interface PhoneDetail {
   official_status?: string; in_stock_shops?: number; age_years?: number;
   data_caution?: DataCaution | null;
   tags?: string[];
+  /** the shared spec sheet — render these, not `specs`, which stays raw */
+  spec_rows?: SpecRow[]; spec_strip?: SpecTile[]; regions?: RegionOffer[];
+  /** the whole GSMArena table, grouped as /phone/* and /vs folds it away */
+  spec_sheet?: { title: string; rows: { label: string; value: string }[] }[];
+  spec_source?: string | null;
   specs?: Record<string, any>;
   connectivity?: Connectivity | null;
   blended_scores?: Scores; scores?: Scores;

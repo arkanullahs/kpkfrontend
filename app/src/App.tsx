@@ -11,6 +11,7 @@ import { MethodScreen } from "./components/MethodScreen";
 import { ResultsNotice } from "./components/ResultsNotice";
 import { PriceAlert } from "./components/PriceAlert";
 import { Dock } from "./components/Dock";
+import { BootNotice, Breadcrumbs } from "./components/Chrome";
 import { track } from "./track";
 
 export type Screen = "ask" | "results" | "detail" | "method";
@@ -188,11 +189,49 @@ export default function App() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState<string | null>(null);
 
-  // one-time loads
+  // one-time loads. /meta is also the wake-up probe: the API sleeps on the
+  // free tier, so a failure here means "cold", not "broken" — keep asking and
+  // tell the buyer what is happening instead of showing a dead header
+  // (owner 2026-07-26).
+  const [bootSecs, setBootSecs] = useState(0);
   useEffect(() => {
-    api.meta().then(setMeta).catch(() => { });
+    let stop = false;
+    const t0 = Date.now();
+    const tick = window.setInterval(
+      () => setBootSecs(Math.round((Date.now() - t0) / 1000)), 1000);
+    const load = () => {
+      api.meta().then((m) => { if (!stop) { setMeta(m); window.clearInterval(tick); } })
+        .catch(() => { if (!stop) window.setTimeout(load, 2500); });
+    };
+    load();
     api.archetypes().then(setArchetypes).catch(() => { });
+    return () => { stop = true; window.clearInterval(tick); };
   }, []);
+  // only after a beat: a warm server answers in ~200ms and must never flash it
+  const booting = !meta && bootSecs >= 2;
+
+  /* ---- browser back ----
+     The app is one URL with four screens, so the back button used to leave the
+     site from the results page (owner 2026-07-26). Every forward move pushes a
+     history entry; every back control calls history.back(), so the button and
+     the on-screen "Back" do the same thing. A popstate with no state of ours
+     is a real exit — we let it through. */
+  const pushNav = useCallback((s: Screen, step = 0) => {
+    window.history.pushState({ kpk: true, screen: s, askStep: step }, "");
+  }, []);
+  useEffect(() => {
+    window.history.replaceState({ kpk: true, screen: "ask", askStep: 0 }, "");
+    const onPop = (e: PopStateEvent) => {
+      const h = e.state as { kpk?: boolean; screen?: Screen; askStep?: number } | null;
+      if (!h?.kpk) return;
+      setScreen(h.screen || "ask");
+      setAskStep(h.askStep ?? 0);
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+  const goBack = useCallback(() => window.history.back(), []);
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
 
@@ -202,8 +241,12 @@ export default function App() {
   // official/unofficial step is gone — those flags proved too unreliable to ask
   // buyers to choose on.)
   const ASK_STEPS = 3;
-  const askNext = useCallback(() => setAskStep((s) => Math.min(s + 1, ASK_STEPS - 1)), []);
-  const askBack = useCallback(() => setAskStep((s) => Math.max(s - 1, 0)), []);
+  const askNext = useCallback(() => setAskStep((s) => {
+    const n = Math.min(s + 1, ASK_STEPS - 1);
+    if (n !== s) window.history.pushState({ kpk: true, screen: "ask", askStep: n }, "");
+    return n;
+  }), []);
+  const askBack = useCallback(() => window.history.back(), []);
 
   // live candidate count for the "See results" badge (debounced). Hits the
   // lightweight /count endpoint — structured pre-filter only, no embed/LLM —
@@ -241,6 +284,7 @@ export default function App() {
     const params: RecParams = { ...toParams(form, 5), request_id: requestId };
     lastRunKey.current = JSON.stringify(toParams(form, 5));
     setScreen("results");
+    pushNav("results");
     window.scrollTo({ top: 0 });
     setRecLoading(true);
     setRecReady(false);
@@ -264,6 +308,7 @@ export default function App() {
 
   const openDetail = useCallback(async (id: string) => {
     setScreen("detail");
+    pushNav("detail");
     setSelectedId(id);
     const rank = (result?.picks.findIndex((p) => p.id === id) ?? -1) + 1;
     track("result_click", { phone: id, rank: rank || null });
@@ -283,9 +328,11 @@ export default function App() {
     }
   }, [result]);
 
-  const goAsk = () => { setScreen("ask"); setAskStep(0); window.scrollTo({ top: 0 }); };
-  const goResults = () => { setScreen("results"); window.scrollTo({ top: 0 }); };
-  const goMethod = () => { setScreen("method"); window.scrollTo({ top: 0 }); };
+  const goAsk = () => { setScreen("ask"); setAskStep(0); pushNav("ask", 0); window.scrollTo({ top: 0 }); };
+  // "back to results" from a detail/method screen IS a back navigation — going
+  // through history keeps the browser button and this button in step
+  const goResults = () => goBack();
+  const goMethod = () => { setScreen("method"); pushNav("method"); window.scrollTo({ top: 0 }); };
 
   // one-time "prices are a guide" notice when results first appear this session
   const [showNotice, setShowNotice] = useState(false);
@@ -344,14 +391,18 @@ export default function App() {
               <span style={st("font-family:var(--f-display); font-size:20px; font-weight:800; letter-spacing:-.4px; color:#171d25; white-space:nowrap;")}>bhalophone</span>
             </a>
             <span style={st("display:block; width:1px; height:24px; background:rgba(15,25,35,.1); flex-shrink:0;")} className="khdiv" />
-            <div style={st("display:flex; flex-direction:column; min-width:0;")} className="khtag">
-              <span style={st("font-family:var(--f-bn); font-size:13.5px; font-weight:600; color:#3a3f46; line-height:1.15; white-space:nowrap;")}>{t("brand_tagline")}</span>
+            {/* the site slogan is a full sentence, and it ran straight under
+                the stock badge (owner 2026-07-26). It shrinks and clips now
+                instead of overflowing, and it only appears when the bar is
+                actually wide enough for it (.khtag media query). */}
+            <div style={st("display:flex; flex-direction:column; min-width:0; flex:1 1 auto; overflow:hidden;")} className="khtag">
+              <span style={st("font-family:var(--f-bn); font-size:13.5px; font-weight:600; color:#3a3f46; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{t("brand_tagline")}</span>
               {updatedLabel && <span style={st("font-size:11.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{updatedLabel}</span>}
             </div>
           </div>
 
           {/* RIGHT: live phone-count badge + language toggle */}
-          <div style={st("display:flex; align-items:center; gap:9px; flex-shrink:0;")}>
+          <div style={st("display:flex; align-items:center; gap:9px; flex-shrink:0; margin-left:auto;")}>
             {meta
               ? <span className="khstock" style={st("display:inline-flex; align-items:center; gap:8px; padding:7px 13px; border-radius:14px; background:var(--acsoft); border:.5px solid var(--acsoft2);")}>
                   <span className="k-live" style={st("width:8px; height:8px; border-radius:50%; background:var(--ac); flex-shrink:0;")} />
@@ -371,6 +422,19 @@ export default function App() {
       </div>
 
       <div style={st("position:relative; z-index:1; padding:18px clamp(16px,4vw,40px) 130px;")}>
+        {/* one breadcrumb system with the static pages: Home > Personal pick >
+            where you are (owner 2026-07-26). The ask screen is the root, so it
+            carries none — same rule /best and /phone follow. */}
+        {screen !== "ask" && (
+          <div style={st("max-width:860px; margin:0 auto;")}>
+            <Breadcrumbs trail={[
+              { label: t("nav_pick"), onClick: goAsk },
+              ...(screen === "results" ? [{ label: t("nav_results") }]
+                : [{ label: t("nav_results"), onClick: goResults },
+                   { label: screen === "detail" ? t("nav_detail") : t("results_how_t") }]),
+            ]} />
+          </div>
+        )}
         {screen === "ask" && (
           <AskScreen
             form={form} patch={patch} archetypes={archetypes} meta={meta}
@@ -407,6 +471,7 @@ export default function App() {
       />
       {showNotice && screen === "results" && <ResultsNotice onClose={dismissNotice} />}
       {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
+      {booting && <BootNotice seconds={bootSecs} />}
 
       {/* persistent site footer — dark, matches the static site (no picker card) */}
       <footer style={st("position:relative; z-index:1; margin-top:36px; background:#0d0c15; border-radius:28px 28px 0 0; padding:44px clamp(20px,5vw,52px) 0; text-align:left;")}>
@@ -439,7 +504,10 @@ export default function App() {
             </div>
           </div>
         </div>
-        <div style={st("border-top:1px solid rgba(255,255,255,.08); max-width:940px; margin:0 auto; padding:20px 0 96px; text-align:center; font-size:12.5px; color:#6a6b78;")}>© {new Date().getFullYear()} bhalophone. All rights reserved.</div>
+        {/* the 96px well under the copyright was dock clearance, and it read as
+            a dead black slab on every screen the dock is hidden on (owner
+            2026-07-26). Clearance only when the dock is actually there. */}
+        <div style={st(`border-top:1px solid rgba(255,255,255,.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "ask" && askStep === 0 ? 26 : 86}px; text-align:center; font-size:12.5px; color:#6a6b78;`)}>© {new Date().getFullYear()} bhalophone. All rights reserved.</div>
       </footer>
 
       <Analytics />

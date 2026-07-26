@@ -20,8 +20,11 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   prices_loading: { en: "live prices", bn: "লাইভ দাম" },
   refreshed_today: { en: "refreshed today", bn: "আজ আপডেট হয়েছে" },
   refreshed_yesterday: { en: "refreshed yesterday", bn: "গতকাল আপডেট হয়েছে" },
-  brand_tagline: { en: "The easy way to buy a phone", bn: "ফোন কেনার সহজ উপায়" },
+  // ONE slogan sitewide (owner 2026-07-26): this is knowledge/site_config
+  // "tagline", the same line the static pages' header and footer carry.
+  brand_tagline: { en: "AI-powered phone recommendations for Bangladesh", bn: "বাংলাদেশের জন্য এআই-চালিত ফোন সুপারিশ" },
   nav_ask: { en: "Ask", bn: "খুঁজুন" },
+  nav_pick: { en: "Personal pick", bn: "ব্যক্তিগত পছন্দ" },
   nav_results: { en: "Results", bn: "ফলাফল" },
   nav_detail: { en: "Detail", bn: "বিস্তারিত" },
   see_results: { en: "See results", bn: "ফলাফল দেখুন" },
@@ -47,6 +50,9 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   loading_detail: { en: "Loading full breakdown…", bn: "বিস্তারিত লোড হচ্ছে…" },
   uses_budget: { en: "Uses your full budget", bn: "পুরো বাজেট কাজে লাগে" },
   see_breakdown: { en: "See full breakdown", bn: "বিস্তারিত দেখুন" },
+  see_breakdown_sub: { en: "Every spec, every price, what owners say", bn: "সব স্পেক, সব দাম, ব্যবহারকারীদের কথা" },
+  full_spec_sheet: { en: "See the full spec sheet", bn: "সম্পূর্ণ স্পেক শিট দেখুন" },
+  spec_credit: { en: "Specifications from GSMArena. Prices and stock are ours, checked nightly against Bangladeshi shops.", bn: "স্পেসিফিকেশন GSMArena থেকে। দাম ও স্টক আমাদের, প্রতি রাতে বাংলাদেশি দোকানে যাচাই করা।" },
   if_stretch: { en: "If you stretch ↗", bn: "একটু বাড়ালে ↗" },
   // detail
   back_to_results: { en: "Back to results", bn: "ফলাফলে ফিরুন" },
@@ -63,9 +69,9 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     bn: "কেনার আগে দোকানে দাম ও স্টক নিশ্চিত করুন।"
   },
   best_price: { en: "Best price", bn: "সেরা দাম" },
-  sellers: { en: "sellers", bn: "বিক্রেতা" },
+  sellers: { en: "shops", bn: "দোকান" },
   variant_unknown: { en: "Variant not stated", bn: "ভ্যারিয়েন্ট উল্লেখ নেই" },
-  all_sellers: { en: "All sellers", bn: "সব বিক্রেতা" },
+  all_sellers: { en: "All shops", bn: "সব দোকান" },
   shops_in_stock: { en: "shops in stock", bn: "দোকানে স্টকে আছে" },
   no_official_found: { en: "No official-channel listing found yet", bn: "এখনো কোনো অফিসিয়াল চ্যানেল লিস্টিং পাওয়া যায়নি" },
   no_unofficial_found: { en: "No unofficial import listing found yet", bn: "এখনো কোনো আনঅফিসিয়াল ইমপোর্ট লিস্টিং পাওয়া যায়নি" },
@@ -95,6 +101,10 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   official_bd: { en: "Official (BD warranty)", bn: "অফিসিয়াল (বিডি ওয়ারেন্টি)" },
   unofficial_import: { en: "Unofficial import", bn: "আনঅফিসিয়াল ইমপোর্ট" },
   official_from: { en: "Official from", bn: "অফিসিয়াল দাম" },
+  // import market + config lines, mirroring the /best and /phone pages
+  from: { en: "from", bn: "থেকে" },
+  variants: { en: "Variants", bn: "ভ্যারিয়েন্ট" },
+  markets: { en: "Import market", bn: "ইমপোর্ট মার্কেট" },
   official_pitch: {
     en: "Want full warranty and a 100% genuine unit? Buy official from",
     bn: "ওয়ারেন্টি আর ১০০% আসল ইউনিট চাইলে অফিসিয়াল কিনুন"
@@ -154,6 +164,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     bn: "আমরা যেসব উৎসের দাম নিয়মিত হালনাগাদ রাখি তাদের কেউ এটি স্টকে রাখেনি, তাই দামটি পুরনো হতে পারে।"
   },
   stock_in: { en: "In stock", bn: "স্টকে আছে" },
+  in_stock_at: { en: "in stock at", bn: "স্টকে আছে" },
+  shop_one: { en: "shop", bn: "দোকানে" },
   stock_out: { en: "Out of stock", bn: "স্টক নেই" },
 
   // ---- ask wizard (stepped query so giving the answer feels as considered
@@ -417,7 +429,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   },
   qz_next: { en: "Next", bn: "পরের প্রশ্ন" },
   qz_back: { en: "Back", bn: "আগের প্রশ্ন" },
-  qz_skip: { en: "Skip — just show solid all-rounders", bn: "বাদ দিন — ভালো অলরাউন্ডার দেখান" },
+  qz_skip: { en: "Skip the rest", bn: "বাকিটা বাদ দিন" },
   qz_done: { en: "Looks right — continue", bn: "ঠিক আছে — এগিয়ে যান" },
   qz_sum_t: { en: "What we understood", bn: "আমরা যা বুঝলাম" },
   qz_sum_s: {

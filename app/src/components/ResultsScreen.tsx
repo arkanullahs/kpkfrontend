@@ -3,9 +3,10 @@ import { axisLabel, classifyCaveats, fitOf, headlinePhrase, shownRange, st, taka
 import { t } from "../i18n";
 import { api } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
+import { SpecIcon } from "./Chrome";
 import { JustSoYouKnow } from "./Compare";
 import { RagProgress } from "./RagProgress";
-import type { Channels, DataCaution, Pick, RecommendResp, Stretch } from "../api";
+import type { Channels, DataCaution, Pick, RecommendResp, RegionOffer, SpecTile, Stretch, VariantPrice } from "../api";
 import type { Form } from "../App";
 
 interface Props {
@@ -62,6 +63,64 @@ export function PriceSource({ primary, compact }: { primary?: boolean; compact?:
       </svg>
       {t("price_unconfirmed")}
     </span>
+  );
+}
+
+/** The compact spec strip, exactly what a /best guide pick card and a /vs duel
+    card print (backend core.specfmt.strip_tiles): RAM, display, battery,
+    camera, charging, in that order and that wording. A result card used to
+    show no specs at all, so the one surface a buyer actually configures said
+    less about the phone than the page ranking it (owner 2026-07-26). */
+export function SpecStrip({ tiles, small }: { tiles?: SpecTile[] | null; small?: boolean }) {
+  if (!tiles || !tiles.length) return null;
+  // icon tiles, not a middot run: the device page hero has read this way since
+  // 2026-07-25 and the owner could not scan the grey dotted string (2026-07-26)
+  return (
+    <div style={st(`display:flex; flex-wrap:wrap; gap:${small ? 7 : 10}px ${small ? 14 : 20}px; margin-top:${small ? 8 : 13}px; ${small ? "" : "padding-top:13px; border-top:1px solid rgba(15,25,35,.07);"}`)}>
+      {tiles.map((tl) => (
+        <span key={tl.icon} style={st(`display:inline-flex; align-items:center; gap:6px; font-size:${small ? 12.5 : 13.5}px; font-weight:600; color:#41464d;`)}>
+          <SpecIcon name={tl.icon} size={small ? 14 : 15} />{tl.value}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/** Import-market chips, the same ones the device page hero carries: shops here
+    stock the UK, India, China and Global builds of the same phone at different
+    prices, and only the SEO pages said which one the money buys. This is also
+    the disclosure that lets a phone with a China-ROM listing be ranked at all
+    (backend value_pass.caveats). */
+export function MarketChips({ regions, small }: { regions?: RegionOffer[] | null; small?: boolean }) {
+  if (!regions || !regions.length) return null;
+  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:99px; color:var(--acd); background:rgba(38,86,214,.09);`;
+  return (
+    <>
+      {regions.map((r) => (
+        <span key={r.code} style={st(base)}>{r.name} {t("from")} {taka(r.price)}</span>
+      ))}
+    </>
+  );
+}
+
+/** Every RAM/storage config the shops price, cheapest first — the guides gained
+    this line on 2026-07-26 because one price beside one RAM figure described
+    two different products. Shop-anonymous: configs and money, never sellers. */
+export function VariantLine({ variants, small }: { variants?: VariantPrice[] | null; small?: boolean }) {
+  if (!variants || variants.length < 2) return null;
+  // same icon-led rhythm as the spec strip above it, so the configs read as
+  // part of the same block instead of a stray grey sentence
+  return (
+    <div style={st(`display:flex; align-items:baseline; flex-wrap:wrap; gap:${small ? 6 : 8}px 12px; margin-top:${small ? 7 : 10}px; font-size:${small ? 12 : 12.5}px;`)}>
+      <span style={st("display:inline-flex; align-items:center; gap:6px; font-weight:700; color:#6c727a; letter-spacing:.2px;")}>
+        <SpecIcon name="memory" size={small ? 13 : 14} />{t("variants")}
+      </span>
+      {variants.map((v) => (
+        <span key={v.variant} style={st("display:inline-flex; align-items:center; gap:5px; color:#5c626a;")}>
+          {v.variant}<b style={st("color:#2c3036; font-weight:700;")}>{taka(v.price)}</b>
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -194,9 +253,11 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                 <div style={st("display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap;")}>
                   <span style={st("font-size:15.5px; font-weight:600; color:#17191d;")}>{takaRange(lo, hi)}</span>
                   <ChannelChips p={r} small />
+                  <MarketChips regions={r.regions} small />
                   {lo != null && <PriceSource primary={r.best_price_primary} compact />}
                   <DataCautionChip dc={r.data_caution} small />
                 </div>
+                <SpecStrip tiles={r.spec_strip} small />
                 {/* mini budget-fit bar */}
                 <div style={st("position:relative; height:4px; margin-top:8px;")}>
                   <div style={st("position:absolute; inset:0; border-radius:99px; background:rgba(15,25,35,.07);")} />
@@ -238,7 +299,8 @@ function HeroPick({ p, budget, pct, onClick }: {
   const note = notes[0];
 
   return (
-    <div style={st("position:relative; background:linear-gradient(165deg, rgba(255,255,255,.96), rgba(255,255,255,.9)); border-radius:26px; padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 18px 44px rgba(15,25,35,.1), inset 0 0 0 1px var(--acsoft2); margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(18px,3vw,30px); overflow:hidden;")}>
+    <div onClick={onClick} className="k-lift"
+      style={st("position:relative; cursor:pointer; background:linear-gradient(165deg, rgba(255,255,255,.96), rgba(255,255,255,.9)); border-radius:26px; padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 18px 44px rgba(15,25,35,.1), inset 0 0 0 1px var(--acsoft2); margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(18px,3vw,30px); overflow:hidden;")}>
       <div style={st("position:absolute; top:-90px; right:-70px; width:240px; height:240px; border-radius:50%; background:radial-gradient(circle, var(--acsoft), transparent 70%); pointer-events:none;")} />
       {/* LEFT: identity, price, official pitch, strengths, owner note */}
       <div style={st("min-width:0;")}>
@@ -264,12 +326,16 @@ function HeroPick({ p, budget, pct, onClick }: {
 
         <div style={st("display:flex; align-items:center; gap:7px; margin-top:12px; flex-wrap:wrap;")}>
           <ChannelChips p={p} />
+          <MarketChips regions={p.regions} />
           <PriceSource primary={p.best_price_primary} />
           {p.data_caution && p.data_caution.level !== "low" && <DataCautionChip dc={p.data_caution} small />}
           {(p.strengths || []).map((s, i) => (
             <span key={i} style={st("font-size:12.5px; color:#41464d; background:rgba(15,25,35,.055); padding:5px 11px; border-radius:99px;")}>{axisLabel(s.axis)} {s.score}</span>
           ))}
         </div>
+
+        <SpecStrip tiles={p.spec_strip} />
+        <VariantLine variants={p.variants} />
 
         {note && (
           <div style={st("display:flex; gap:9px; margin-top:10px; padding:11px 13px; border-radius:13px; background:rgba(192,137,42,.09);")}>
@@ -299,7 +365,20 @@ function HeroPick({ p, budget, pct, onClick }: {
           <p style={st("margin:2px 0 0; font-size:15px; color:#363b42; line-height:1.6; text-wrap:pretty;")}>{p.smart_verdict}</p>
         )}
 
-        <button onClick={onClick} className="k-press k-glow" style={st("width:100%; margin-top:auto; padding:16px; border-radius:15px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 14px var(--acglow), inset 0 1px 0 rgba(255,255,255,.3); font-size:15.5px; font-weight:600; color:#fff;")}>{t("see_breakdown")}</button>
+        {/* Buyers were reading past this: it sat at the bottom of a tall card,
+            after the verdict, looking like a footer (owner 2026-07-26). It is
+            bigger, it says what is behind it, it carries an arrow, and the
+            whole card is clickable too — nobody has to find the button. */}
+        <button onClick={onClick} className="k-press k-glow"
+          style={st("width:100%; margin-top:auto; padding:18px 20px; border-radius:17px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 8px 22px var(--acglow), inset 0 1px 0 rgba(255,255,255,.3);")}>
+          <span style={st("min-width:0;")}>
+            <span style={st("display:block; font-size:16.5px; font-weight:700; color:#fff; letter-spacing:-.2px;")}>{t("see_breakdown")}</span>
+            <span style={st("display:block; margin-top:2px; font-size:12.5px; font-weight:600; color:rgba(255,255,255,.78);")}>{t("see_breakdown_sub")}</span>
+          </span>
+          <span className="k-nudge" style={st("display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,.2);")}>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </span>
+        </button>
       </div>
     </div>
   );

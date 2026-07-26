@@ -102,7 +102,9 @@
     }
     .k-live { animation: kdot 1.8s ease-out infinite; }
     /* header tagline + divider collapse on narrow screens to keep the bar clean */
-    @media (max-width: 600px) { .khtag, .khdiv { display: none !important; } }
+    /* the slogan is a full sentence — it needs a wide bar or it crowds the
+       stock badge (owner 2026-07-26), so it leaves well before the phone sizes */
+    @media (max-width: 940px) { .khtag, .khdiv { display: none !important; } }
     /* stock badge overflows into the logo on very narrow phones */
     @media (max-width: 420px) { .khstock { display: none !important; } }
 
@@ -117,6 +119,12 @@
       .k-glow:hover { filter: brightness(1.05) saturate(1.03); }
     }
     .k-press:active { transform: translateY(0) scale(.99); transition-duration: .05s; }
+
+    /* the one CTA people were reading past: a slow arrow nudge so the eye
+       lands on it (owner 2026-07-26) */
+    @keyframes knudge { 0%,72%,100% { transform: none } 82% { transform: translateX(4px) } }
+    .k-nudge { animation: knudge 2.6s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) { .k-nudge { animation: none } }
 
     /* staggered entrance for a list of cards */
     .k-stagger > * { animation: krise .5s cubic-bezier(.2,.7,.2,1) both; }

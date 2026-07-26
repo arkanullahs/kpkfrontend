@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { fmt, st, taka } from "../theme";
 import { bnNum, bnToAscii, t } from "../i18n";
 import type { Archetype, Meta } from "../api";
@@ -145,6 +145,8 @@ function ModeGate({ onMode }: { onMode: (m: Mode) => void }) {
 /* ---------- step 1: budget (typed, with an inline go arrow) ---------- */
 function BudgetStep({ form, patch, metaStock, onNext }: { form: Form; patch: Props["patch"]; metaStock: string; onNext: () => void }) {
   const b = form.budget;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const focusBudget = () => { const el = inputRef.current; if (el) { el.focus(); el.select(); } };
   const setRaw = (s: string) => {
     // map Bangla digits → ASCII first (the field shows Bangla numerals in BN
     // mode, and some keyboards type them), THEN strip separators/non-digits
@@ -155,7 +157,7 @@ function BudgetStep({ form, patch, metaStock, onNext }: { form: Form; patch: Pro
     <>
       <div style={st("margin-top:34px; display:flex; align-items:center; gap:14px; padding:14px 14px 14px 26px; border-radius:26px; background:rgba(255,255,255,.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:.5px solid rgba(255,255,255,.95); box-shadow:inset 0 1px 1px rgba(255,255,255,.9), 0 10px 34px rgba(15,25,35,.08), 0 0 0 1px rgba(15,25,35,.04);")}>
         <span style={st("font-family:var(--f-display); font-size:clamp(38px,7vw,64px); font-weight:300; color:#c2c6cd; line-height:1;")}>৳</span>
-        <input className="kbudget" inputMode="numeric" autoFocus value={bnNum(fmt(b))}
+        <input ref={inputRef} className="kbudget" inputMode="numeric" autoFocus value={bnNum(fmt(b))}
           onChange={(e) => setRaw(e.target.value)}
           onFocus={(e) => e.target.select()}
           onKeyDown={(e) => { if (e.key === "Enter" && b >= BUDGET_MIN) onNext(); }}
@@ -166,13 +168,21 @@ function BudgetStep({ form, patch, metaStock, onNext }: { form: Form; patch: Pro
         </button>
       </div>
 
-      {/* quick picks fill the space and help non-typers */}
-      <div style={st("display:flex; gap:9px; flex-wrap:wrap; margin-top:18px;")}>
+      {/* Your OWN number is the whole point: buyers who tap a preset get ranked
+          against a budget that is not theirs, and they tapped anyway because
+          the chips looked like the answer (owner 2026-07-26). The chips are a
+          STARTING POINT now — secondary, labelled as such, and tapping one
+          drops the caret back in the field with the number selected so the
+          next keystroke is the buyer's real figure. */}
+      <p style={st("margin:20px 2px 9px; font-size:13px; font-weight:600; color:#8a8e96;")}>
+        Type the number you can actually spend. Not sure? Start from one of these and edit it.
+      </p>
+      <div style={st("display:flex; gap:8px; flex-wrap:wrap;")}>
         {QUICK.map((q) => {
           const sel = b === q;
           return (
-            <button key={q} onClick={() => patch({ budget: q })} className="k-press"
-              style={st(`padding:10px 17px; border-radius:99px; cursor:pointer; font-size:14px; font-weight:600; transition:all .15s ease; background:${sel ? "var(--ac)" : "rgba(255,255,255,.75)"}; color:${sel ? "#fff" : "#41464d"}; border:.5px solid ${sel ? "transparent" : "rgba(15,25,35,.1)"}; box-shadow:${sel ? "0 3px 12px var(--acglow)" : "0 1px 2px rgba(15,25,35,.04)"};`)}>
+            <button key={q} onClick={() => { patch({ budget: q }); focusBudget(); }} className="k-press"
+              style={st(`padding:8px 14px; border-radius:99px; cursor:pointer; font-size:13px; font-weight:600; transition:all .15s ease; background:${sel ? "var(--acsoft)" : "transparent"}; color:${sel ? "var(--acd)" : "#7b818a"}; border:.5px solid ${sel ? "var(--acsoft2)" : "rgba(15,25,35,.12)"};`)}>
               {taka(q)}
             </button>
           );

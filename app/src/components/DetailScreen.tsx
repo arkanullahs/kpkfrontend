@@ -4,7 +4,8 @@ import { bnNum, t } from "../i18n";
 import type { Connectivity, Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 import { JustSoYouKnow } from "./Compare";
-import { ChannelChips, DataCautionChip, PriceSource } from "./ResultsScreen";
+import { ChannelChips, DataCautionChip, MarketChips, PriceSource } from "./ResultsScreen";
+import { Fold, SpecIcon } from "./Chrome";
 
 interface Props {
   detail: PhoneDetail | null;
@@ -44,20 +45,19 @@ function domAxis(scores: Record<string, number | null | undefined>): string {
   return best;
 }
 
-function buildSpecs(s: Record<string, any> | undefined): { k: string; v: string }[] {
-  if (!s) return [];
-  const out: { k: string; v: string }[] = [];
-  const push = (k: string, v: any, suffix = "") => { if (v != null && v !== "") out.push({ k, v: String(v) + suffix }); };
-  push("Chipset", s.chipset);
-  push("Battery", s.battery_mah, " mAh");
-  push("Charging", s.charging_w, "W");
-  if (s.display_inch) out.push({ k: "Display", v: `${s.display_inch}″${s.display_type ? " " + String(s.display_type).split(",")[0] : ""}` });
-  push("Refresh rate", s.refresh_hz, "Hz");
-  if (s.main_camera_mp) out.push({ k: "Camera", v: `${s.main_camera_mp}MP${s.has_tele ? " + tele" : ""}${s.has_ultrawide ? " + ultrawide" : ""}` });
-  push("OIS", s.has_ois ? "Yes" : s.has_ois === false ? "No" : null);
-  push("Weight", s.weight_g, " g");
-  push("Software", s.os);
-  push("Network", s.net_5g ? "5G" : "4G");
+/** The spec sheet comes from the backend now (core.specfmt), the same rows the
+    /phone/ page's "At a glance" block and the /vs table render. This used to
+    build its own labels and formatting, which is how the app and the SEO page
+    for the same phone ended up with different sheets: the page named the panel,
+    the sensor size and the brightness qualifier, this screen printed a bare
+    "50MP" and a "Refresh rate" row nothing else had (owner 2026-07-26).
+    Network and weight, which only this screen showed, are appended here. */
+function buildSpecs(d: PhoneDetail | null | undefined): { k: string; v: string; icon: string }[] {
+  if (!d) return [];
+  const out = (d.spec_rows || []).map((r) => ({ k: r.label, v: r.value, icon: r.icon }));
+  const s = d.specs || {};
+  if (s.weight_g) out.push({ k: "Weight", v: `${s.weight_g} g`, icon: "weight" });
+  if (s.net_5g != null) out.push({ k: "Network", v: s.net_5g ? "5G" : "4G", icon: "network" });
   return out;
 }
 
@@ -133,7 +133,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const quotes = ownerQuotes(op, caveats.map((c) => c.text));
   const bestFor = (op.best_for?.length ? op.best_for : d?.ai_verdict?.best_for) || [];
   const avoidIf = op.avoid_if || [];
-  const specs = buildSpecs(d?.specs);
+  const specs = buildSpecs(d);
   const conn = connRows(d?.connectivity, d?.traits);
   const bs = d?.brand_summary;
   // only real, priced listings — a price-less offer must never sort to the top
@@ -172,6 +172,9 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           </div>
           <div style={st("display:flex; align-items:center; gap:7px; margin-top:10px; flex-wrap:wrap;")}>
             <ChannelChips p={{ best_price_official: isOff, best_official_price: offPrice, channels: chans }} />
+            {/* which import market the money buys — same chips as the /phone/
+                page hero and the guide cards */}
+            <MarketChips regions={d?.regions} />
           </div>
           <div style={st("margin-top:12px; font-size:14px; color:#80868f; line-height:1.7;")}>
             At {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
@@ -238,18 +241,54 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
         <WhoFor bestFor={bestFor} avoidIf={avoidIf} caveats={caveats} />
       )}
 
-      <div className="k-stagger" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px; margin-top:14px;")}>
+      {/* align-items:start, or every card in a row stretches to the tallest
+          one — the specs card grew icon rows and left a half-empty white slab
+          under the resale graph beside it (owner 2026-07-26). */}
+      <div className="k-stagger" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); align-items:start; gap:14px; margin-top:14px;")}>
         {/* specs */}
         <Card>
           <SectionLabel>{t("specs")}</SectionLabel>
-          <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(135px,1fr)); gap:15px 18px; margin-top:18px;")}>
+          {/* icon-led rows with room to breathe, the same shape the /phone/
+              page's "At a glance" table uses (owner 2026-07-26). The old
+              two-line grid at 15px gaps ran the labels into the values. */}
+          <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:4px 22px; margin-top:14px;")}>
             {specs.map((sp, i) => (
-              <div key={i}>
-                <div style={st("font-size:12.5px; color:#9a9da4;")}>{sp.k}</div>
-                <div style={st("font-size:14.5px; font-weight:600; color:#2c3036; margin-top:3px; line-height:1.35;")}>{sp.v}</div>
+              <div key={i} style={st("display:flex; align-items:flex-start; gap:11px; padding:11px 2px; border-bottom:1px solid rgba(15,25,35,.055);")}>
+                <span style={st("display:flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:9px; flex-shrink:0; background:rgba(15,25,35,.045); margin-top:1px;")}>
+                  <SpecIcon name={sp.icon} size={16} color="#6c727a" />
+                </span>
+                <div style={st("min-width:0;")}>
+                  <div style={st("font-size:12px; font-weight:600; letter-spacing:.3px; color:#9a9da4;")}>{sp.k}</div>
+                  <div style={st("font-size:14.5px; font-weight:600; color:#2c3036; margin-top:3px; line-height:1.45; overflow-wrap:anywhere;")}>{sp.v}</div>
+                </div>
               </div>
             ))}
           </div>
+
+          {/* the whole GSMArena sheet, folded exactly as /phone/* folds it —
+              the app was the only surface with no way to open it */}
+          {!!d?.spec_sheet?.length && (
+            <Fold label={t("full_spec_sheet")}>
+              <div style={st("display:flex; flex-direction:column; gap:14px;")}>
+                {d.spec_sheet.map((g) => (
+                  <section key={g.title} style={st("padding:14px 16px 4px; border-radius:17px; background:rgba(255,255,255,.9); box-shadow:0 1px 2px rgba(15,25,35,.05), inset 0 0 0 1px rgba(15,25,35,.05);")}>
+                    <h3 style={st("font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:#9a9da4; font-weight:700; margin:0 0 4px;")}>{g.title}</h3>
+                    {g.rows.map((r) => (
+                      <div key={r.label} style={st("display:flex; gap:12px; flex-wrap:wrap; padding:9px 0; border-bottom:1px solid rgba(15,25,35,.05); font-size:13.5px;")}>
+                        <span style={st("flex:0 0 128px; font-weight:600; color:#2c3036;")}>{r.label}</span>
+                        <span style={st("flex:1 1 160px; color:#41464d; line-height:1.55; overflow-wrap:anywhere;")}>{r.value}</span>
+                      </div>
+                    ))}
+                  </section>
+                ))}
+                <p style={st("font-size:12px; color:#9a9da4; line-height:1.6; margin:0 2px;")}>
+                  {d.spec_source
+                    ? <>Specifications from <a href={d.spec_source} rel="nofollow noopener" target="_blank" style={st("color:var(--acd); font-weight:600;")}>GSMArena</a>. Prices and stock are ours, checked nightly against Bangladeshi shops.</>
+                    : t("spec_credit")}
+                </p>
+              </div>
+            </Fold>
+          )}
           {conn.length > 0 && (
             <>
               <div style={st("font-size:12.5px; color:#9a9da4; margin-top:20px;")}>{t("conn_title")}</div>
@@ -582,7 +621,9 @@ function VariantGroupRow({ g, lone }: { g: OfferGroup; lone: boolean }) {
           {g.inStock > 0 ? (
             <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; color:#0a7d57; background:rgba(10,157,106,.1);")}>
               <span style={st("width:5px; height:5px; border-radius:50%; background:currentColor;")} />
-              {bnNum(String(g.inStock))} {t("stock_in").toLowerCase()}
+              {/* "4 in stock" read as four UNITS sitting in a warehouse. It is
+                  a count of SHOPS, which is what every other surface says. */}
+              {t("in_stock_at")} {bnNum(String(g.inStock))} {g.inStock === 1 ? t("shop_one") : t("sellers")}
             </span>
           ) : g.knownOut ? (
             <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; color:#80868f; background:rgba(15,25,35,.055);")}>
@@ -627,13 +668,13 @@ function LoadingDetail({ compact }: { compact?: boolean }) {
 }
 
 /* ---------- layout helpers ---------- */
-function Wrap({ children, onBack }: { children: ReactNode; onBack: () => void }) {
+function Wrap({ children }: { children: ReactNode; onBack?: () => void }) {
+  // No back button here any more. This screen was offering three of them at
+  // once — breadcrumb, this pill, and the floating dock (owner 2026-07-26).
+  // The breadcrumb is the one every other page on the site uses; the dock
+  // catches you at the bottom of a long page.
   return (
     <div style={st("max-width:880px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;")}>
-      <button onClick={onBack} className="k-press" style={st("display:flex; align-items:center; gap:9px; margin-top:clamp(10px,2.5vh,28px); padding:9px 16px 9px 12px; border-radius:99px; border:none; cursor:pointer; background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(15,25,35,.06); font-size:13px; font-weight:600; color:#41464d;")}>
-        <svg width="8" height="13" viewBox="0 0 9 15" fill="none"><path d="M7.5 1.5l-6 6 6 6" stroke="#41464d" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        {t("back_to_results")}
-      </button>
       {children}
     </div>
   );
