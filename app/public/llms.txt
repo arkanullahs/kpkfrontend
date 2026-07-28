@@ -4,7 +4,7 @@
 > guides for every budget, ranked from live Bangladesh shop data:
 > real in-stock status across 8+ BD shops, prices confirmed against
 > trusted sellers, rankings from review + spec evidence. Rebuilt
-> nightly; last data check 2026-07-27. Ranking is never for sale.
+> nightly; last data check 2026-07-28. Ranking is never for sale.
 
 ## Best-phone guides (updated July 2026)
 
@@ -123,7 +123,7 @@
 
 ## Individual phones
 
-- [All 200 phones we track](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with live BD price, which shops stock it, full specs and owner ratings.
+- [All 537 phones we track](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with live BD price, which shops stock it, full specs and owner ratings.
 
 
 ## Tools
