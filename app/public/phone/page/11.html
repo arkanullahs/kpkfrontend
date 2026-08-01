@@ -755,9 +755,12 @@ margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
    clear it, and the chips get the whole width back -- two to a row. */
 .mfeat{display:block;position:relative}
 .mfc{padding:17px}
-.mfh,.mfs{padding-right:104px}
-.mfimg{position:absolute;top:15px;right:14px;width:92px;padding:0;display:block}
-.mfimg img{max-height:104px;max-width:100%;padding:5px;border-radius:10px}
+/* the photo is out of flow, so the header reserves the band it occupies --
+   without this the first chip row ran underneath it (owner 2026-08-01) */
+.mfh{min-height:104px;padding-right:104px;align-items:center}
+.mfimg{position:absolute;top:15px;right:14px;width:90px;padding:0;display:block}
+.mfimg img{max-height:100px;max-width:100%;padding:5px;border-radius:10px}
+.mfs{margin-top:2px}
 .mfchips{margin-top:14px}
 .mfchips a{flex:1 1 44%;justify-content:center}
 .mfchips a.all{flex:1 1 100%}
@@ -780,11 +783,14 @@ margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hbtn{flex:1 1 100%;justify-content:center}
 /* side by side needs ~500px; below that the two columns stack back up */
 .hstage{grid-template-columns:1fr;gap:14px}
-.hbud{padding:10px 14px 11px;border-radius:15px;width:87%}
-.hbud:nth-child(3n+2){width:87%}
-.hbud:nth-child(3n+3){width:87%}
+/* On a phone the three budgets cascade on one spot rather than running down
+   the screen -- same treatment as the answer deck below them, and it takes a
+   third of the height (owner 2026-08-01). */
+.hgrid{position:relative;display:block;height:80px}
+.hbud,.hbud:nth-child(3n+1),.hbud:nth-child(3n+2),.hbud:nth-child(3n+3){
+position:absolute;left:0;right:0;top:0;width:auto;margin:0;
+padding:10px 15px 11px;border-radius:15px}
 .hv{font-size:19px;letter-spacing:-.7px}
-.hgrid{gap:8px}
 .hbl{font-size:8.5px;letter-spacing:.2px}
 .hfitw{margin-top:4px}
 .hansw{height:140px;margin-bottom:22px}
@@ -812,8 +818,8 @@ margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
    deck, nothing loops */
 @media(prefers-reduced-motion:reduce){
 .hbud,.hbud:before,.hbl em,.hbl u,.hv,.hbud i u,.hfit,.hans,.hdots i{animation:none}
-.hgrid .hbud{transform:rotate(var(--rot)) scale(.945)}
-.hgrid .hbud:first-child{transform:none}
+.hgrid .hbud{opacity:.34;transform:rotate(var(--rot)) scale(.93)}
+.hgrid .hbud:first-child{opacity:1;transform:none;z-index:5}
 .hgrid .hbud:first-child:before{opacity:1}
 .hfitw .hfit:first-child{opacity:1}
 .hansw .hans{opacity:.42;transform:rotate(var(--rot)) translateY(15px) scale(.9)}
