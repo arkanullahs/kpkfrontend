@@ -42,9 +42,15 @@ a{color:var(--acd);text-decoration:none}a:hover{text-decoration:underline}
    now is the MEASURE of running text (.lead/.vd p/.faq p/.decide p), which is
    what actually reads badly past ~75 characters. Tables and grids use the
    full width. */
-.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:8px clamp(16px,4vw,40px) 40px}
+.wrap{position:relative;z-index:1;margin:0 auto;padding:8px clamp(16px,4vw,40px) 40px}
+/* Owner 2026-08-01, second pass: "nothing on the site should live in a narrow
+   card". One shell width for every page, not an opt-in for the hubs -- the
+   980px column left half a desktop screen empty and made every card look
+   boxed-in. Running text stays readable because the measure caps live on the
+   text itself (.lead, .sub, .faq p, .vd p, .decide p), not on the shell. */
+.wrap,header.site,.pickcard{max-width:1180px}
 header.site{position:sticky;top:0;z-index:60;display:flex;align-items:center;
-justify-content:space-between;gap:10px;max-width:980px;margin:14px auto 4px;
+justify-content:space-between;gap:10px;margin:14px auto 4px;
 padding:11px 14px 11px 12px;border-radius:20px;
 background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(250,251,253,.5));
 backdrop-filter:blur(28px) saturate(190%);-webkit-backdrop-filter:blur(28px) saturate(190%);
@@ -114,7 +120,11 @@ header.site .brand img{width:30px;height:30px}
 h1{font-family:var(--f-display);font-size:clamp(28px,4.4vw,42px);font-weight:600;
 letter-spacing:-1.1px;line-height:1.12;margin:24px 0 8px}
 h1 em{font-family:var(--f-serif);font-style:italic;font-weight:400;color:var(--acd)}
-h2.grp{font-family:var(--f-display);font-size:19px;font-weight:600;letter-spacing:-.4px;margin:26px 0 2px}
+/* one rhythm for every section break on the page: the gaps between "Start
+   from a price", "Browse by what matters", "Phone prices" and "Top picks"
+   were all different (owner 2026-08-01) */
+h2.grp{font-family:var(--f-display);font-size:19px;font-weight:600;
+letter-spacing:-.4px;margin:54px 0 2px}
 .sub{color:var(--mut);margin:0 0 4px;font-size:14.5px;line-height:1.5;max-width:74ch}
 
 .why{display:flex;gap:11px;padding:15px 17px;border-radius:17px;background:var(--acsoft);margin:22px 0 0}
@@ -203,7 +213,10 @@ table.rawspec td{padding:2px 0 10px}
 .bar .dot{position:absolute;top:-3px;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);
 background:var(--ac);box-shadow:0 1px 4px var(--acglow),0 0 0 2px #fff}
 
-.verdict{margin:18px 0 0;font-size:15px;color:#363b42;line-height:1.6}
+/* the shell is 1180 now, so running text has to carry its own measure or the
+   guide verdict runs the full width of a desktop */
+.verdict{margin:18px 0 0;font-size:15px;color:#363b42;line-height:1.6;
+max-width:76ch}
 
 .cards{display:grid;grid-template-columns:1fr;gap:11px;margin-top:14px}
 .card{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:19px;
@@ -245,7 +258,7 @@ footer.site a{color:var(--mut);text-decoration:underline}
 
 /* rich dark footer (owner 2026-07-19); picker card inline in body (owner 2026-07-20) */
 .footwrap{position:relative;z-index:1;margin-top:20px}
-.pickcard{max-width:980px;margin:36px auto;border-radius:24px;
+.pickcard{margin:36px auto;border-radius:24px;
 overflow:hidden;padding:clamp(30px,5vw,46px);color:#fff;
 background:radial-gradient(135% 155% at 80% 2%,#3b7bf0 0%,#1f4bad 42%,#12203f 78%,#0d0c15 100%);
 box-shadow:0 26px 64px rgba(10,12,26,.34)}
@@ -334,8 +347,8 @@ nav.crumbs .here{color:var(--ink);font-weight:700;padding:2px 4px}
    described two different products before this (owner 2026-07-26). */
 .vlist{margin-top:5px}
 .vlab{display:inline-block;font-weight:700;color:#3d434b;margin-right:7px}
-.tblwrap{overflow-x:auto;margin:22px 0 0;border-radius:17px;background:rgba(255,255,255,.88);
-box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
+.tblwrap{overflow-x:auto;margin:18px 0 0;border-radius:19px;background:#fff;
+box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.06)}
 /* No edge fade: CSS cannot tell whether the table actually overflows, so on a
    desktop where it fits the fade just washed out the last column for nothing
    (owner 2026-07-25). The "Swipe the table sideways" line carries the message
@@ -345,12 +358,20 @@ box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
 font-size:12.5px;font-weight:700;color:var(--acd)}
 .plink:hover{text-decoration:none;gap:9px}
 .plink span{transition:transform .18s}
+/* the shop table is a data surface people actually read down, so it gets a
+   real header band, row hover and tabular figures rather than plain rules
+   (owner 2026-08-01) */
 table.cmp{border-collapse:collapse;width:100%;min-width:600px;font-size:13.5px}
-table.cmp th{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);
-text-align:left;padding:12px 14px;border-bottom:1px solid rgba(15,25,35,.08)}
-table.cmp td{padding:11px 14px;border-bottom:1px solid rgba(15,25,35,.05);white-space:nowrap;color:#41464d}
+table.cmp thead th{position:sticky;top:0;z-index:1;font-size:10.5px;
+text-transform:uppercase;letter-spacing:.8px;color:var(--mut);font-weight:700;
+text-align:left;padding:13px 16px;background:rgba(246,247,249,.97);
+backdrop-filter:blur(8px);border-bottom:1px solid rgba(15,25,35,.08)}
+table.cmp td{padding:12px 16px;border-bottom:1px solid rgba(15,25,35,.05);
+white-space:nowrap;color:#41464d;font-variant-numeric:tabular-nums}
+table.cmp tbody tr{transition:background .12s}
+table.cmp tbody tr:hover{background:rgba(37,99,217,.045)}
 table.cmp tr:last-child td{border-bottom:none}
-table.cmp td.ph{font-weight:600;color:var(--ink)}
+table.cmp td.ph{font-weight:600;color:var(--ink);font-variant-numeric:normal}
 .decide{margin:22px 0 0;padding:18px 20px 12px;border-radius:19px;background:rgba(255,255,255,.88);
 box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
 .decide h2{font-family:var(--f-display);font-size:17px;font-weight:600;letter-spacing:-.3px;margin:0}
@@ -396,9 +417,30 @@ position:relative;list-style:none}
 .faq p{margin:-4px 0 0;padding:0 30px 22px 0;font-size:15px;color:#5c626a;
 line-height:1.65;max-width:74ch}
 
-.statrow{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
-.statrow .chip{font-size:12.5px;padding:6px 13px}
-.matrix{margin:14px 0 0}
+/* The four facts under the hero were flat grey pills of the same weight as
+   every other chip on the site, so the one number that matters (how many
+   guides are live) read as decoration (owner 2026-08-01: "place and design
+   these chips much better"). They are cards now: a tinted icon, the figure in
+   full ink, the label under it. */
+.statrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+gap:11px;margin:40px 0 0}
+@media(max-width:840px){.statrow{grid-template-columns:1fr 1fr}}
+.st{display:flex;align-items:center;gap:12px;padding:13px 16px;
+border-radius:17px;background:rgba(255,255,255,.9);
+box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
+.st .si{display:flex;align-items:center;justify-content:center;flex:none;
+width:34px;height:34px;border-radius:11px;background:var(--acsoft);
+color:var(--acd)}
+.st.ok .si{background:rgba(10,157,106,.13);color:#0a7d57}
+.st b{display:block;font-family:var(--f-display);font-size:16.5px;
+font-weight:700;letter-spacing:-.4px;color:var(--ink);line-height:1.15}
+.st span{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+@media(max-width:560px){
+.statrow{grid-template-columns:1fr 1fr;gap:8px}
+.st{padding:11px 12px;gap:9px}
+.st .si{width:28px;height:28px;border-radius:9px}
+.st b{font-size:14.5px}.st span{font-size:11px}}
+.matrix{margin:16px 0 0}
 /* owner 2026-08-01: every category was an identical lane of grey chips, so
    the one most people want was no easier to find than the rest. "Best
    overall" is now a featured card and the others are a grid, each identified
@@ -410,7 +452,15 @@ background:linear-gradient(135deg,var(--acd),#12203f 62%,#0d1830)}
 .mfh{display:flex;align-items:center;gap:11px}
 .mfh h3{margin:0;font-family:var(--f-display);font-size:clamp(21px,2.6vw,26px);
 font-weight:700;letter-spacing:-.6px;color:#fff}
-.mfh .mi{background:rgba(255,255,255,.14);color:#fff;width:34px;height:34px}
+/* The tile carried width/height/background but no display, so it stayed an
+   inline box: the sizes did nothing and the 15px glyph sat on the text
+   baseline in the corner instead of the middle (owner 2026-08-01). */
+.mi{display:inline-flex;align-items:center;justify-content:center;flex:none;
+width:30px;height:30px;border-radius:10px;background:var(--acsoft);
+color:var(--acd)}
+.mi svg{display:block}
+.mfh .mi{background:rgba(255,255,255,.14);color:#fff;width:34px;height:34px;
+border-radius:11px}
 .mfs{margin:7px 0 0;font-size:13.5px;color:rgba(255,255,255,.66)}
 .mfchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .mfchips a{display:inline-flex;align-items:baseline;gap:5px;font-size:13.5px;
@@ -423,10 +473,14 @@ text-transform:uppercase;color:rgba(255,255,255,.6)}
 .mfchips a.all{background:#fff;color:var(--acd);
 box-shadow:0 4px 14px rgba(0,0,0,.18)}
 .mfchips a.all:hover{background:#fff;transform:translateY(-1px)}
-.mfimg{display:flex;align-items:center;justify-content:center;padding:18px;
-background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.14),transparent 70%)}
-.mfimg img{max-height:190px;width:auto;object-fit:contain;
-filter:drop-shadow(0 16px 30px rgba(0,0,0,.35))}
+/* multiply cannot help on the dark card -- it would drag the phone itself
+   down into the navy. The photo gets a light plate to sit on, which reads as
+   a deliberate frame rather than a stray white rectangle. */
+.mfimg{display:flex;align-items:center;justify-content:center;padding:20px}
+.mfimg img{max-height:200px;max-width:100%;width:auto;object-fit:contain;
+border-radius:14px;
+background:linear-gradient(165deg,#fff,#eef1f6);padding:8px;
+box-shadow:0 18px 40px rgba(0,0,0,.34)}
 
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 .mcard{display:flex;gap:14px;padding:15px 16px;border-radius:20px;
@@ -435,9 +489,15 @@ box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05);
 transition:box-shadow .18s,transform .18s cubic-bezier(.4,0,.2,1)}
 .mcard:hover{transform:translateY(-2px);
 box-shadow:0 10px 26px rgba(15,25,35,.1),inset 0 0 0 1px var(--acsoft2)}
+/* Owner 2026-08-01: "the images have a lil bit white border, breaking the
+   immersion". The pipeline normalises every photo onto a white 3:4 canvas, so
+   on a tinted tile that canvas drew a bright rectangle around the phone.
+   multiply makes white transparent against any lighter backdrop -- no
+   re-processing of 500-odd images, and it fixes every surface at once. */
 .mcimg{display:flex;align-items:center;justify-content:center;flex:none;
 width:78px;border-radius:14px;background:rgba(15,25,35,.035)}
-.mcimg img{max-height:96px;width:auto;object-fit:contain}
+.mcimg img{max-height:96px;width:auto;object-fit:contain;
+mix-blend-mode:multiply}
 .mcb{min-width:0;flex:1 1 auto}
 .mch{display:flex;align-items:center;gap:9px}
 .mch h3{margin:0;font-family:var(--f-display);font-size:16.5px;font-weight:600;
@@ -461,98 +521,215 @@ background:linear-gradient(180deg,var(--acg1),var(--acg2));border-color:transpar
 box-shadow:0 6px 16px var(--acglow)}
 .mcchips a:hover b{color:rgba(255,255,255,.78)}
 
-/* ---- hero: the promise on the left, the picker answering on the right ---- */
-.hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);
-gap:clamp(20px,4vw,46px);align-items:center;margin:2px 0 0}
+/* ---- /best directory: EVERY guide, not a five-chip sample. The hub used to
+   render the homepage matrix, so its own "View all" pointed back at itself and
+   the other 60-odd guides had no link anywhere on the site (owner 2026-08-01:
+   "view all leads to nothing"). ---- */
+.dirnav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+.dirnav a{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;
+font-weight:700;color:#41464d;background:rgba(255,255,255,.85);
+border:.5px solid rgba(15,25,35,.08);border-radius:99px;padding:8px 15px;
+transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s,color .16s}
+.dirnav a:hover{text-decoration:none;color:var(--acd);transform:translateY(-2px);
+box-shadow:0 6px 16px rgba(15,25,35,.09)}
+.dirnav a i{font-style:normal;font-size:11.5px;font-weight:700;color:var(--mut)}
+.dirsec{margin:34px 0 0;scroll-margin-top:96px}
+.dirsec .dh{display:flex;align-items:center;gap:11px}
+.dirsec .dh h2{margin:0;font-family:var(--f-display);font-size:20px;
+font-weight:700;letter-spacing:-.5px;color:var(--ink)}
+.dirsec .dh .mi{width:32px;height:32px}
+.dirsub{margin:6px 0 0;font-size:13.5px;color:var(--mut)}
+.dirgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));
+gap:11px;margin-top:14px}
+.dircard{display:flex;align-items:center;gap:13px;padding:12px 14px;
+border-radius:17px;background:rgba(255,255,255,.88);
+box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05);
+transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s}
+.dircard:hover{text-decoration:none;transform:translateY(-3px);
+box-shadow:0 10px 24px rgba(15,25,35,.11),inset 0 0 0 1px var(--acsoft2)}
+.dircard img{width:42px;height:56px;object-fit:contain;flex:none;
+mix-blend-mode:multiply}
+.dircard .db{min-width:0;flex:1}
+.dircard .dl{display:block;font-size:9.5px;font-weight:700;letter-spacing:1px;
+text-transform:uppercase;color:var(--mut)}
+.dircard .dv{display:block;font-size:17px;font-weight:700;letter-spacing:-.6px;
+color:var(--ink);line-height:1.2}
+.dircard .dn{display:block;font-size:12.5px;font-weight:600;color:#5c626a;
+margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:560px){
+.dirgrid{grid-template-columns:1fr 1fr;gap:8px}
+.dircard{gap:9px;padding:10px 11px}
+.dircard img{width:34px;height:46px}
+.dircard .dv{font-size:15px}
+.dircard .dn{display:none}
+}
+
+/* ---- home hero: the promise on the left, the picker working on the right.
+   SCOPED to .home, and it must stay that way. `.hero` is the shared card that
+   the guides, the /vs duels and every /phone device page also draw, so an
+   unscoped grid here laid ALL of them out in two columns with the right half
+   empty -- a guide's verdict ended up beside its own pick card and the device
+   hero was squeezed into 155px (owner 2026-08-01).
+   No card, either: the homepage is one continuous body, not a white box
+   floating on a background (owner 2026-08-01). ---- */
+.hero.home{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1fr);
+gap:clamp(24px,4.5vw,56px);align-items:center;margin:10px 0 0;
+background:none;box-shadow:none;border-radius:0;padding:0;overflow:visible}
+.hero.home::before{display:none}
+.hero.home h1{font-size:clamp(34px,5.1vw,58px);letter-spacing:-2.2px;
+line-height:1.02;margin:0 0 16px;text-wrap:balance}
+/* the serif phrase carries the line, so it gets an accent rule under it --
+   drawn below the descenders, so it never has to fight the glyphs for
+   stacking order */
+.hero.home h1 em{position:relative;display:inline-block}
+.hero.home h1 em:after{content:"";position:absolute;left:.06em;right:.06em;
+bottom:-.03em;height:.085em;border-radius:99px;
+background:linear-gradient(90deg,rgba(13,143,116,.5),rgba(37,99,217,.55) 45%,
+rgba(103,70,207,.5))}
+.hero.home .lead{font-size:clamp(15.5px,1.4vw,17.5px);max-width:44ch;
+color:#4c525a;line-height:1.55}
 .heroc{min-width:0}
-.herocta{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 0}
-.hbtn{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700;
-letter-spacing:-.2px;padding:13px 24px;border-radius:15px;color:#fff;
-background:linear-gradient(180deg,var(--acg1),var(--acg2));
-box-shadow:0 8px 22px var(--acglow);transition:transform .16s,box-shadow .16s}
+.herocta{display:flex;flex-wrap:wrap;gap:11px;margin:26px 0 0}
+.hbtn{display:inline-flex;align-items:center;gap:9px;font-size:15.5px;
+font-weight:700;letter-spacing:-.2px;padding:15px 27px;border-radius:16px;
+color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
+box-shadow:0 10px 26px var(--acglow);transition:transform .16s,box-shadow .16s}
+.hbtn i{font-style:normal;transition:transform .18s}
+.hbtn:hover i{transform:translateX(4px)}
 .hbtn:hover{text-decoration:none;transform:translateY(-2px);
 box-shadow:0 12px 28px var(--acglow)}
 .hbtn.ghost{color:var(--ink);background:rgba(255,255,255,.9);
 box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.08)}
 .hbtn.ghost:hover{box-shadow:0 6px 18px rgba(15,25,35,.1),inset 0 0 0 1px var(--acsoft2)}
 
-/* The scenes are all in the DOM, stacked; only the first is in flow, so it
-   sets the height and is what shows when motion is off. */
+/* Every budget card stays on screen for the whole loop and lights up on its
+   own turn. No element ever moves as part of a group: the old version
+   cross-faded one big .hscene per budget, which read as the entire block
+   swiping up rather than as cards that are alive (owner 2026-08-01, and the
+   brand-leak check in test_device_pages reads this sheet -- keep phone brand
+   names out of these comments). What animates now is a white
+   sheet fading in behind ONE card, its own label swapping, its own bar
+   filling -- and, below, the answer cards cross-fading one into the next. */
 .herodemo{position:relative;min-width:0}
-.hstage{position:relative}
-.hscene{position:absolute;inset:0;opacity:0;
-animation:hsc var(--t) cubic-bezier(.4,0,.2,1) infinite both;
-animation-delay:calc(var(--i) * var(--s))}
-.hscene:first-child{position:relative}
+/* Side by side, not stacked: budgets on the left, the answer they produce
+   right beside them (owner 2026-08-01). Vertically it was twice as tall as
+   the copy it sat next to. */
+.hstage{display:grid;grid-template-columns:minmax(0,.74fr) minmax(0,1fr);
+gap:clamp(12px,1.6vw,20px);align-items:center}
+.hbudcol,.hanscol{min-width:0}
 .hlab{display:block;font-size:10px;font-weight:700;letter-spacing:1.4px;
-text-transform:uppercase;color:var(--mut);padding-left:3px}
-/* two up, then one across: the budgets read as a loose stack rather than a
-   tidy row of three, which is what made the mockup feel like a real choice
-   being made instead of a segmented control */
-.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.hgrid .wide{grid-column:1/-1;display:block}
-.hbud{display:block;min-width:0;padding:12px 14px 13px;border-radius:16px;
-background:linear-gradient(165deg,rgba(255,255,255,.78),rgba(255,255,255,.5));
-box-shadow:inset 0 0 0 1px rgba(15,25,35,.05);transition:box-shadow .25s}
-/* nowrap: "Your budget" wrapped to two lines and made the asked card taller
-   than its neighbours, so the stack jumped on every scene change */
-.hbud b{display:block;font-size:9.5px;font-weight:700;letter-spacing:.6px;
-text-transform:uppercase;color:var(--mut);white-space:nowrap;
-overflow:hidden;text-overflow:ellipsis}
-.hbud em{display:block;font-style:normal;font-size:21px;font-weight:700;
-letter-spacing:-.9px;color:#5c626a;line-height:1.2;margin-top:1px}
-/* where this budget sits in the range, so three numbers don't have to be
-   read and compared to see that one is the middle one */
+text-transform:uppercase;color:var(--mut);padding-left:3px;margin-bottom:10px}
+/* Left, centre, right and each on its own tilt -- deliberately not a grid. A
+   tidy column of equal cards reads as a segmented control; a loose messy stack
+   reads as somebody trying real budgets one after another, which is the thing
+   being demonstrated (owner 2026-08-01). Each budget also carries its own hue,
+   so the cheap end and the top end are told apart by colour before the numbers
+   are even read. */
+.hgrid{display:flex;flex-direction:column;gap:10px}
+.hbud{position:relative;display:block;min-width:0;padding:11px 14px 12px;
+border-radius:16px;width:88%;transform-origin:50% 130%;
+background:linear-gradient(165deg,rgba(255,255,255,.82),rgba(255,255,255,.52));
+box-shadow:inset 0 0 0 1px rgba(15,25,35,.05);
+animation:hbmove var(--t) var(--ease) infinite both;
+animation-delay:calc(var(--i) * var(--s))}
+.hbud:nth-child(3n+1){align-self:flex-start}
+.hbud:nth-child(3n+2){align-self:flex-end;width:96%}
+.hbud:nth-child(3n+3){align-self:center;width:82%}
+/* the lit state is its own layer, so a card turns on by fading one sheet in
+   rather than by animating four paint properties at once */
+.hbud:before{content:"";position:absolute;inset:0;border-radius:inherit;
+opacity:0;background:#fff;
+box-shadow:0 12px 28px rgba(15,25,35,.12),inset 0 0 0 1.6px var(--bs);
+animation:hlit var(--t) var(--ease) infinite both;
+animation-delay:calc(var(--i) * var(--s))}
+.hbud>*{position:relative}
+/* both labels are always in the DOM, stacked in a fixed-height slot: swapping
+   the text would resize the card and jog the whole grid on every turn */
+.hbl{display:block;position:relative;height:13px;overflow:hidden;
+font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+.hbl em,.hbl u{position:absolute;left:0;top:0;font-style:normal;
+text-decoration:none;white-space:nowrap;
+animation-duration:var(--t);animation-timing-function:var(--ease);
+animation-iteration-count:infinite;animation-fill-mode:both;
+animation-delay:calc(var(--i) * var(--s))}
+.hbl em{color:var(--mut);animation-name:hlabo}
+.hbl u{color:var(--bc);opacity:0;animation-name:hlabi}
+.hv{display:block;font-size:21px;font-weight:700;letter-spacing:-.9px;
+color:#858b93;line-height:1.2;margin-top:2px;
+animation:hvon var(--t) var(--ease) infinite both;
+animation-delay:calc(var(--i) * var(--s))}
+/* where this budget sits in the range, so three numbers don't have to be read
+   and compared to see which is the small one */
 .hbud i{display:block;height:4px;border-radius:99px;margin-top:9px;
 background:rgba(15,25,35,.08);overflow:hidden}
 .hbud i u{display:block;height:100%;border-radius:99px;text-decoration:none;
-background:rgba(15,25,35,.22)}
-.hbud.on{background:#fff;box-shadow:0 8px 22px rgba(15,25,35,.09),
-inset 0 0 0 1.5px var(--acsoft2)}
-.hbud.on b,.hbud.on em{color:var(--acd)}
-.hbud.on i u{background:linear-gradient(90deg,var(--acg1),var(--acg2))}
-/* the connector: what the budget bought us, in one line */
-.hfit{display:flex;align-items:center;gap:8px;margin:9px 0 8px;padding-left:3px;
-font-size:12.5px;font-weight:700;color:var(--acd)}
-.hfit:before{content:"93";display:flex;align-items:center;justify-content:center;
-width:18px;height:18px;flex:none;border-radius:50%;font-size:11px;
-color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2))}
-/* the answer is the payoff, so it gets the room: photo across the top, then
-   the badge/name/price block -- not a thumbnail in a row */
-.hans{display:block;border-radius:20px;overflow:hidden;
-background:rgba(255,255,255,.96);
-box-shadow:0 12px 30px rgba(15,25,35,.1),inset 0 0 0 1px rgba(15,25,35,.05);
-transition:transform .18s cubic-bezier(.4,0,.2,1),box-shadow .18s}
-.hans:hover{text-decoration:none;transform:translateY(-2px);
-box-shadow:0 18px 38px rgba(15,25,35,.14),inset 0 0 0 1px var(--acsoft2)}
-.hshot{display:flex;align-items:center;justify-content:center;height:132px;
-background:linear-gradient(180deg,rgba(15,25,35,.035),rgba(15,25,35,.015))}
-.hshot img{max-height:118px;width:auto;object-fit:contain}
-.htx{display:block;min-width:0;padding:12px 15px 14px}
+opacity:.28;background:var(--bc);
+animation:hbaron var(--t) var(--ease) infinite both;
+animation-delay:calc(var(--i) * var(--s))}
+/* the connector: what the budget bought us, in one line. The arrow is drawn,
+   not a "93" glyph -- the display face has no down-arrow, so the font
+   stack fell through to whatever did and printed a stray symbol in the disc
+   (owner 2026-08-01). */
+.hfitw{position:relative;height:19px;margin:0 0 11px}
+.hfit{position:absolute;left:0;top:0;display:flex;align-items:center;gap:7px;
+padding-left:2px;font-size:12px;font-weight:700;color:var(--bc);opacity:0;
+white-space:nowrap;
+animation:hfade var(--t) var(--ease) infinite both;
+animation-delay:calc(var(--i) * var(--s))}
+.hfit svg{display:block;flex:none;width:18px;height:18px;padding:4px;
+border-radius:50%;color:#fff;background:var(--bc)}
+/* The answers are a deck, not a slideshow: the one being shown lies flat on
+   top and the rest fan out behind it at their own angles, each coming forward
+   in turn (owner 2026-08-01: "multiple angled result cards, carouseling on
+   top of each other auto"). Photo on the LEFT, the details beside it. */
+/* the fanned cards rotate around a pivot below themselves, so their corners
+   swing past the flat card's box -- the bottom margin is that overhang */
+.hansw{position:relative;height:150px;margin:0 0 26px}
+.hans{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;
+gap:12px;padding:11px 14px 11px 11px;border-radius:19px;
+opacity:0;pointer-events:none;background:#fff;transform-origin:50% 125%;
+box-shadow:0 14px 34px rgba(15,25,35,.13),inset 0 0 0 1px rgba(15,25,35,.06);
+animation:hcard var(--t) var(--ease) infinite both;
+animation-delay:calc(var(--i) * var(--s))}
+.hans:hover{text-decoration:none;
+box-shadow:0 20px 44px rgba(15,25,35,.18),inset 0 0 0 1px var(--acsoft2)}
+.hshot{display:flex;align-items:center;justify-content:center;flex:none;
+width:78px;height:114px;border-radius:13px;
+background:linear-gradient(165deg,rgba(15,25,35,.04),rgba(15,25,35,.01))}
+.hshot img{max-height:114px;width:auto;object-fit:contain;
+mix-blend-mode:multiply}
+.htx{display:block;min-width:0;flex:1}
 .hbadge{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.7px;
 text-transform:uppercase;color:#0a7d57;background:rgba(10,157,106,.12);
-padding:2px 8px;border-radius:99px}
-.hname{display:block;font-size:15px;font-weight:600;letter-spacing:-.2px;
-color:var(--ink);line-height:1.3;margin-top:4px}
-.hprice{display:block;font-size:17px;font-weight:700;letter-spacing:-.5px;
-color:var(--acd);margin-top:1px}
-.hstk{font-size:11.5px;font-weight:600;color:var(--mut);letter-spacing:0;
-margin-left:7px}
+padding:3px 9px;border-radius:99px}
+.hname{font-size:16px;font-weight:700;letter-spacing:-.4px;
+color:var(--ink);line-height:1.25;margin-top:7px;
+display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+overflow:hidden}
+.hprice{display:block;font-size:19px;font-weight:700;letter-spacing:-.7px;
+color:var(--bc);margin-top:5px}
+.hstk{display:block;font-size:11.5px;font-weight:600;color:var(--mut);
+letter-spacing:0;margin-top:3px}
 .hdots{display:flex;gap:5px;justify-content:center;margin-top:13px}
 .hdots i{width:5px;height:5px;border-radius:99px;background:rgba(15,25,35,.14);
 animation:hdot var(--t) linear infinite both;
 animation-delay:calc(var(--i) * var(--s))}
 
 /* ---- start from a price ---- */
-.bands{margin:26px 0 0}
+.bands{margin:0}
 /* six budgets, so three across leaves two even rows -- auto-fit put five up
    and orphaned the sixth */
 .bandgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
 gap:10px;margin-top:12px}
-.bandcard{display:flex;flex-direction:column;padding:14px 15px 12px;
+.bandcard{display:flex;align-items:center;gap:12px;padding:14px 15px 13px;
 border-radius:17px;background:rgba(255,255,255,.88);
 box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05);
 transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s}
+.bandcard .btx{display:flex;flex-direction:column;min-width:0;flex:1}
+.bandcard .bimg{display:flex;align-items:center;justify-content:center;
+flex:none;width:66px;height:88px}
+.bandcard .bimg img{max-height:88px;width:auto;object-fit:contain;
+mix-blend-mode:multiply}
 .bandcard:hover{text-decoration:none;transform:translateY(-3px);
 box-shadow:0 10px 24px rgba(15,25,35,.11),inset 0 0 0 1px var(--acsoft2)}
 .bandcard .bl{font-size:10px;font-weight:700;letter-spacing:1.2px;
@@ -565,30 +742,56 @@ margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bandcard .bn{font-size:12.5px;font-weight:700;color:var(--acd);margin-top:8px}
 .bandcard .bn i{font-style:normal;transition:transform .16s;display:inline-block}
 .bandcard:hover .bn i{transform:translateX(3px)}
-.grp.sm{font-size:clamp(19px,2.4vw,23px);margin-top:0}
+.grp.sm{font-size:clamp(20px,2.4vw,25px);margin-top:54px}
 
 @media(max-width:900px){
-.mfeat{grid-template-columns:1fr}
-.mfimg{order:-1;padding:14px;background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.15),transparent 72%)}
-.mfimg img{max-height:132px}
+/* Stacking put a full-width photo band above the title with the phone alone
+   in the middle of it -- acres of navy either side (owner 2026-08-01: "too
+   much empty space" on mobile). The photo stays BESIDE the text, just
+   narrower, all the way down. */
+.mfeat{grid-template-columns:minmax(0,1fr) 132px}
+.mfimg{padding:14px 12px}
+.mfimg img{max-height:156px}
 .mgrid{grid-template-columns:1fr}
 }
+@media(max-width:520px){
+/* centred, not pinned to the top: the photo column is as tall as the chip
+   list beside it, and a small image held at the top of that read as a
+   layout mistake rather than a composition */
+.mfeat{grid-template-columns:minmax(0,1fr) 118px}
+.mfimg{padding:14px 9px;align-items:center}
+.mfimg img{max-height:168px;padding:6px;border-radius:11px}
+}
 @media(max-width:820px){
-.hero{grid-template-columns:1fr;gap:22px}
-/* on a phone the demo is the proof, so it sits right under the buttons
-   rather than being pushed below the fold by the stat chips */
+/* On a phone the demo is the proof, so it follows the promise directly and
+   the buttons close the block -- reading promise, buttons, then proof put the
+   call to action before the thing that earns it (owner 2026-08-01). */
+.hero.home{grid-template-columns:1fr;gap:0}
+.heroc{display:contents}
+.hero.home h1{order:1}
+.hero.home .lead{order:2;margin-bottom:22px}
 .herodemo{order:3}
+.herocta{order:4;margin:26px 0 0}
+.hbtn{flex:1 1 auto;justify-content:center}
 }
 @media(max-width:560px){
 /* two ragged half-width buttons on two rows read as a mistake; full-width
    stacked reads as a choice */
 .hbtn{flex:1 1 100%;justify-content:center}
-.hans{padding:11px 12px;gap:11px}
-.hbud{padding:8px 9px;font-size:14px}
-/* the asked budget carries the longest label, so give it the extra room
-   instead of ellipsing "Your budget" down to "Your bud..." */
-.hbud.on{flex:1.3 1 0}
-.hbud b{font-size:8.5px;letter-spacing:.2px}
+/* side by side needs ~500px; below that the two columns stack back up */
+.hstage{grid-template-columns:1fr;gap:14px}
+.hbud{padding:11px 14px 12px;border-radius:15px;width:74%}
+.hbud:nth-child(3n+2){width:84%}
+.hbud:nth-child(3n+3){width:68%}
+.hv{font-size:20px;letter-spacing:-.7px}
+.hbl{font-size:8.5px;letter-spacing:.2px}
+.hfitw{margin-top:4px}
+.hansw{height:140px;margin-bottom:22px}
+.hans{gap:11px;padding:10px 13px 10px 10px}
+.hshot{width:78px;height:106px}
+.hshot img{max-height:98px}
+.hname{font-size:15px;margin-top:6px}
+.hprice{font-size:18px}
 .bandgrid{grid-template-columns:1fr 1fr;gap:8px}
 /* narrower photo + tighter chips so two budgets share a row: three stacked
    one-per-row made every category card three times taller than it needed */
@@ -598,22 +801,72 @@ margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mcchips{gap:6px}
 .mcchips a{padding:6px 9px;font-size:12.5px;gap:4px}
 .mch h3{font-size:15.5px}
-.bandcard{padding:12px 13px 11px}
-.bandcard .bv{font-size:20px}
+.bandcard{padding:11px 12px;gap:8px}
+.bandcard .bv{font-size:19px}
 .bandcard .bt{display:none}
+.bandcard .bimg{width:44px;height:60px}
+.bandcard .bimg img{max-height:60px}
 }
-/* motion off: scene one only, no loop, nothing moves */
+/* motion off: the first budget is lit, its answer lies flat on top of the
+   deck, nothing loops */
 @media(prefers-reduced-motion:reduce){
-.hscene{animation:none;opacity:0}
-.hscene:first-child{opacity:1}
+.hbud,.hbud:before,.hbl em,.hbl u,.hv,.hbud i u,.hfit,.hans,.hdots i{animation:none}
+.hgrid .hbud{transform:rotate(var(--rot)) scale(.945)}
+.hgrid .hbud:first-child{transform:none}
+.hgrid .hbud:first-child:before{opacity:1}
+.hfitw .hfit:first-child{opacity:1}
+.hansw .hans{opacity:.42;transform:rotate(var(--rot)) translateY(15px) scale(.9)}
+.hansw .hans:first-child{opacity:1;transform:none;z-index:5;pointer-events:auto}
 .hdots{display:none}
 .hbtn,.bandcard,.mcard,.mcchips a{transition:none}
 }
-.trend{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:14px}
+/* ---- the device card: one design for the homepage teaser, the /phone
+   directory and every /brand hub. It lives HERE, not in device_pages'
+   _CSS_EXTRA, because the homepage loads this sheet alone. ---- */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(166px,1fr));
+gap:12px;margin-top:18px}
+.pcard{display:flex;flex-direction:column;border-radius:19px;overflow:hidden;
+background:rgba(255,255,255,.9);
+box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05);
+transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s}
+.pcard:hover{text-decoration:none;transform:translateY(-3px);
+box-shadow:0 12px 26px rgba(15,25,35,.11),inset 0 0 0 1px var(--acsoft2)}
+.pshot{display:flex;align-items:center;justify-content:center;height:148px;
+background:linear-gradient(180deg,rgba(15,25,35,.035),rgba(15,25,35,.008))}
+.pshot img{max-height:130px;width:auto;object-fit:contain;
+mix-blend-mode:multiply}
+.pshot.noimg{color:rgba(15,25,35,.16)}
+.pbod{padding:11px 13px 13px;display:flex;flex-direction:column;flex:1}
+.pbr{font-size:9.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;
+color:var(--acd)}
+.pmd{font-size:14px;font-weight:600;letter-spacing:-.2px;color:var(--ink);
+line-height:1.32;margin-top:3px;flex:1}
+.ppr{font-size:15.5px;font-weight:700;letter-spacing:-.4px;color:var(--ink);
+margin-top:9px}
+/* a phone nobody stocks keeps its last price, but it must not read as one you
+   can pay today: the photo steps back, the number greys out, the pill says why
+   (owner 2026-08-01) */
+.pcard.out .pshot{opacity:.6}
+.pcard.out .ppr{color:var(--mut);font-weight:600}
+.pout{display:inline-block;margin-left:6px;font-size:9px;font-weight:700;
+letter-spacing:.5px;text-transform:uppercase;color:#8a6414;
+background:rgba(168,118,26,.14);border-radius:99px;padding:2px 7px;
+vertical-align:1px}
+@media(max-width:560px){
+.pgrid{grid-template-columns:1fr 1fr;gap:9px}
+.pshot{height:124px}.pshot img{max-height:108px}
+.pbod{padding:9px 10px 11px}
+.pmd{font-size:13px}.ppr{font-size:14px;margin-top:7px}}
+
+/* auto-fit, not two: on the wide shell a fixed pair of columns made each card
+   half a desktop screen across */
+.trend{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));
+gap:11px;margin-top:14px}
 .tcard{display:flex;gap:13px;align-items:center;padding:15px 16px;border-radius:17px;
 background:rgba(255,255,255,.88);box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
 .tcard:hover{text-decoration:none;box-shadow:0 4px 14px rgba(15,25,35,.1),inset 0 0 0 1px var(--acsoft2)}
-.tcard img{width:54px;height:72px;object-fit:contain;border-radius:10px;background:#fafafa;flex:none}
+.tcard img{width:54px;height:72px;object-fit:contain;flex:none;
+mix-blend-mode:multiply}
 .tcard .tb{font-size:11.5px;font-weight:700;color:var(--acd);letter-spacing:.6px;text-transform:uppercase}
 .tcard .tn{font-size:15px;font-weight:600;color:var(--ink);line-height:1.3;margin-top:2px}
 .tcard .tp{font-size:13.5px;color:#41464d;font-weight:600;margin-top:3px}
@@ -651,23 +904,20 @@ table.cmp.vs td{white-space:normal}
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
 <div class="wrap">
-<div class="hero"><div class="heroc">
+<div class="hero home"><div class="heroc">
 <h1>The best phone for <em>every budget</em> in Bangladesh</h1>
 <p class="lead">Tell us what you can spend. We answer with phones the shops
 actually have in stock tonight, at prices we checked ourselves &mdash; never a
 paid placement.</p>
-<div class="herocta"><a class="hbtn" href="/pick">Get my pick &rarr;</a>
+<div class="herocta"><a class="hbtn" href="/pick">Get my pick <i>&rarr;</i></a>
 <a class="hbtn ghost" href="/best">Browse guides</a></div>
-</div><style>@keyframes hsc{0%{opacity:0;transform:translateY(14px) scale(.985)}3.00%,21.50%{opacity:1;transform:none}25.00%,100%{opacity:0;transform:translateY(-12px) scale(.985)}}@keyframes hdot{0%{background:rgba(15,25,35,.14)}3.00%,21.50%{background:var(--ac);transform:scaleX(2.6)}25.00%,100%{background:rgba(15,25,35,.14)}}</style><div class="herodemo" style="--t:18.4s;--s:4.6s" role="img" aria-label="Example: a budget goes in, a phone that is actually in stock comes out"><div class="hstage"><div class="hscene" style="--i:0"><span class="hlab">Pick your budget</span><div class="hgrid"><span class="hbud"><b>Under</b><em>৳25,000</em><i><u style="width:31%"></u></i></span><span class="hbud on"><b>Your budget</b><em>৳15,000</em><i><u style="width:19%"></u></i></span><span class="wide"><span class="hbud"><b>Under</b><em>৳80,000</em><i><u style="width:100%"></u></i></span></span></div><div class="hfit">3 phones fit ৳15,000</div><a class="hans" href="/best/phone-under-15000"><span class="hshot"><img src="/img/aff8dde1c516215f.webp" alt="" width="120" height="160" loading="lazy" decoding="async"></span><span class="htx"><span class="hbadge">Our answer</span><span class="hname">Samsung Galaxy M06 5G</span><span class="hprice">৳15,499<span class="hstk">in stock at 4 shops</span></span></span></a></div><div class="hscene" style="--i:1"><span class="hlab">Pick your budget</span><div class="hgrid"><span class="hbud"><b>Under</b><em>৳15,000</em><i><u style="width:19%"></u></i></span><span class="hbud on"><b>Your budget</b><em>৳25,000</em><i><u style="width:31%"></u></i></span><span class="wide"><span class="hbud"><b>Under</b><em>৳80,000</em><i><u style="width:100%"></u></i></span></span></div><div class="hfit">3 phones fit ৳25,000</div><a class="hans" href="/best/phone-under-25000"><span class="hshot"><img src="/img/378ac7bc32bf1c37.webp" alt="" width="120" height="160" loading="lazy" decoding="async"></span><span class="htx"><span class="hbadge">Our answer</span><span class="hname">Redmi Note 15 5G</span><span class="hprice">৳23,490<span class="hstk">in stock at 7 shops</span></span></span></a></div><div class="hscene" style="--i:2"><span class="hlab">Pick your budget</span><div class="hgrid"><span class="hbud"><b>Under</b><em>৳15,000</em><i><u style="width:19%"></u></i></span><span class="hbud on"><b>Your budget</b><em>৳40,000</em><i><u style="width:50%"></u></i></span><span class="wide"><span class="hbud"><b>Under</b><em>৳80,000</em><i><u style="width:100%"></u></i></span></span></div><div class="hfit">3 phones fit ৳40,000</div><a class="hans" href="/best/phone-under-40000"><span class="hshot"><img src="/img/efbd641bf9a4aef0.webp" alt="" width="120" height="160" loading="lazy" decoding="async"></span><span class="htx"><span class="hbadge">Our answer</span><span class="hname">Motorola Edge 60 Pro</span><span class="hprice">৳37,490<span class="hstk">in stock at 6 shops</span></span></span></a></div><div class="hscene" style="--i:3"><span class="hlab">Pick your budget</span><div class="hgrid"><span class="hbud"><b>Under</b><em>৳15,000</em><i><u style="width:19%"></u></i></span><span class="hbud on"><b>Your budget</b><em>৳80,000</em><i><u style="width:100%"></u></i></span><span class="wide"><span class="hbud"><b>Under</b><em>৳40,000</em><i><u style="width:50%"></u></i></span></span></div><div class="hfit">3 phones fit ৳80,000</div><a class="hans" href="/best/phone-under-80000"><span class="hshot"><img src="/img/4c51ad488d5db230.webp" alt="" width="120" height="160" loading="lazy" decoding="async"></span><span class="htx"><span class="hbadge">Our answer</span><span class="hname">Vivo X300</span><span class="hprice">৳75,990<span class="hstk">in stock at 7 shops</span></span></span></a></div></div><div class="hdots"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i></div></div></div>
-<div class="statrow"><span class="chip ok">73 live guides</span>
-<span class="chip">17 BD shops tracked</span>
-<span class="chip">Updated nightly &middot; 2026-08-01</span>
-<span class="chip">Never paid placements</span></div>
-<section class="bands" aria-labelledby="bandh"><h2 id="bandh" class="grp sm">Start from a price</h2><div class="bandgrid"><a class="bandcard" href="/best/phone-under-15000"><span class="bl">Under</span><span class="bv">৳15,000</span><span class="bt">Samsung Galaxy M06 5G</span><span class="bn">5 guides <i>&rarr;</i></span></a><a class="bandcard" href="/best/phone-under-20000"><span class="bl">Under</span><span class="bv">৳20,000</span><span class="bt">Samsung Galaxy A16 4G</span><span class="bn">5 guides <i>&rarr;</i></span></a><a class="bandcard" href="/best/phone-under-30000"><span class="bl">Under</span><span class="bv">৳30,000</span><span class="bt">Redmi Note 15 5G</span><span class="bn">5 guides <i>&rarr;</i></span></a><a class="bandcard" href="/best/phone-under-50000"><span class="bl">Under</span><span class="bv">৳50,000</span><span class="bt">Honor 400</span><span class="bn">5 guides <i>&rarr;</i></span></a><a class="bandcard" href="/best/phone-under-80000"><span class="bl">Under</span><span class="bv">৳80,000</span><span class="bt">Vivo X300</span><span class="bn">5 guides <i>&rarr;</i></span></a><a class="bandcard" href="/best/phone-under-200000"><span class="bl">Under</span><span class="bv">৳2,00,000</span><span class="bt">Apple iPhone 17 Pro Max</span><span class="bn">5 guides <i>&rarr;</i></span></a></div></section>
+</div><style>@keyframes hlit{0%{opacity:0}8.00%,30.00%{opacity:1}38.00%,100%{opacity:0}}@keyframes hbmove{0%{transform:rotate(var(--rot)) scale(.945)}8.00%,30.00%{transform:none}38.00%,100%{transform:rotate(var(--rot)) scale(.945)}}@keyframes hlabo{0%{opacity:1}8.00%,30.00%{opacity:0}38.00%,100%{opacity:1}}@keyframes hlabi{0%{opacity:0}8.00%,30.00%{opacity:1}38.00%,100%{opacity:0}}@keyframes hvon{0%{color:#5c626a}8.00%,30.00%{color:var(--acd)}38.00%,100%{color:#5c626a}}@keyframes hbaron{0%{opacity:.24}8.00%,30.00%{opacity:1}38.00%,100%{opacity:.24}}@keyframes hfade{0%{opacity:0;transform:translateY(4px)}8.00%,30.00%{opacity:1;transform:none}38.00%,100%{opacity:0;transform:translateY(4px)}}@keyframes hcard{0%{opacity:.42;z-index:1;pointer-events:none;transform:rotate(var(--rot)) translateY(15px) scale(.9)}8.00%,30.00%{opacity:1;z-index:5;pointer-events:auto;transform:none}38.00%,100%{opacity:.42;z-index:1;pointer-events:none;transform:rotate(var(--rot)) translateY(15px) scale(.9)}}@keyframes hdot{0%{background:rgba(15,25,35,.14)}8.00%,30.00%{background:var(--bc);transform:scaleX(2.6)}38.00%,100%{background:rgba(15,25,35,.14)}}</style><div class="herodemo" style="--t:13.8s;--s:4.6s;--ease:cubic-bezier(.33,.8,.28,1)"><div class="hstage"><div class="hbudcol"><span class="hlab">Pick your budget</span><div class="hgrid"><span class="hbud" style="--i:0;--bc:#0d8f74;--bs:rgba(13,143,116,.34);--rot:-2.4deg"><span class="hbl"><em>Under</em><u>Your budget</u></span><span class="hv">৳15,000</span><i><u style="width:19%"></u></i></span><span class="hbud" style="--i:1;--bc:#1c4eae;--bs:rgba(37,99,217,.34);--rot:2deg"><span class="hbl"><em>Under</em><u>Your budget</u></span><span class="hv">৳40,000</span><i><u style="width:50%"></u></i></span><span class="hbud" style="--i:2;--bc:#6746cf;--bs:rgba(103,70,207,.34);--rot:-1.4deg"><span class="hbl"><em>Under</em><u>Your budget</u></span><span class="hv">৳80,000</span><i><u style="width:100%"></u></i></span></div></div><div class="hanscol"><div class="hfitw"><span class="hfit" style="--i:0;--bc:#0d8f74;--bs:rgba(13,143,116,.34)"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.6v8.8M2.4 7 6 10.6 9.6 7"/></svg>3 phones fit ৳15,000</span><span class="hfit" style="--i:1;--bc:#1c4eae;--bs:rgba(37,99,217,.34)"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.6v8.8M2.4 7 6 10.6 9.6 7"/></svg>3 phones fit ৳40,000</span><span class="hfit" style="--i:2;--bc:#6746cf;--bs:rgba(103,70,207,.34)"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.6v8.8M2.4 7 6 10.6 9.6 7"/></svg>3 phones fit ৳80,000</span></div><div class="hansw"><a class="hans" style="--i:0;--bc:#0d8f74;--bs:rgba(13,143,116,.34);--rot:-6.5deg" href="/best/phone-under-15000"><span class="hshot"><img src="/img/aff8dde1c516215f.webp" alt="" width="120" height="160" loading="lazy" decoding="async"></span><span class="htx"><span class="hbadge">Our answer</span><span class="hname">Samsung Galaxy M06 5G</span><span class="hprice">৳15,499</span><span class="hstk">in stock at 4 shops</span></span></a><a class="hans" style="--i:1;--bc:#1c4eae;--bs:rgba(37,99,217,.34);--rot:5deg" href="/best/phone-under-40000"><span class="hshot"><img src="/img/efbd641bf9a4aef0.webp" alt="" width="120" height="160" loading="lazy" decoding="async"></span><span class="htx"><span class="hbadge">Our answer</span><span class="hname">Motorola Edge 60 Pro</span><span class="hprice">৳37,490</span><span class="hstk">in stock at 6 shops</span></span></a><a class="hans" style="--i:2;--bc:#6746cf;--bs:rgba(103,70,207,.34);--rot:-3deg" href="/best/phone-under-80000"><span class="hshot"><img src="/img/4c51ad488d5db230.webp" alt="" width="120" height="160" loading="lazy" decoding="async"></span><span class="htx"><span class="hbadge">Our answer</span><span class="hname">Vivo X300</span><span class="hprice">৳75,990</span><span class="hstk">in stock at 7 shops</span></span></a></div></div></div><div class="hdots" aria-hidden="true"><i style="--i:0;--bc:#0d8f74;--bs:rgba(13,143,116,.34)"></i><i style="--i:1;--bc:#1c4eae;--bs:rgba(37,99,217,.34)"></i><i style="--i:2;--bc:#6746cf;--bs:rgba(103,70,207,.34)"></i></div></div></div>
+<div class="statrow"><div class="st ok"><span class="si"><svg width="17" height="17" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3h7l3 3v8H4V3zm7 0v3h3M6.5 9h5M6.5 11.5h3.5"/></svg></span><span><b>73 live guides</b><span>every budget, every use</span></span></div><div class="st"><span class="si"><svg width="17" height="17" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5 4 2.5h7l1.5 4M2.5 6.5h10v6h-10v-6zM2.5 6.5a2 2 0 0 0 3.3 0 2 2 0 0 0 3.4 0 2 2 0 0 0 3.3 0"/></svg></span><span><b>17 BD shops</b><span>prices read from each one</span></span></div><div class="st"><span class="si"><svg width="17" height="17" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 2.2a5.3 5.3 0 1 1 0 10.6 5.3 5.3 0 0 1 0-10.6zM7.5 4.8v2.9l2 1.2"/></svg></span><span><b>Updated nightly</b><span>last checked 2026-08-01</span></span></div><div class="st"><span class="si"><svg width="17" height="17" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 1.9 12.6 4v3.4c0 3-2.2 4.7-5.1 5.6-2.9-.9-5.1-2.6-5.1-5.6V4zM5.4 7.4 6.9 8.9l3-3.1"/></svg></span><span><b>Never paid</b><span>no shop can buy a ranking</span></span></div></div>
+<section class="bands" aria-labelledby="bandh"><h2 id="bandh" class="grp sm">Start from a price</h2><div class="bandgrid"><a class="bandcard" href="/best/phone-under-15000"><span class="btx"><span class="bl">Under</span><span class="bv">৳15,000</span><span class="bt">Samsung Galaxy M06 5G</span><span class="bn">5 guides <i>&rarr;</i></span></span><span class="bimg"><img src="/img/aff8dde1c516215f.webp" alt="Samsung Galaxy M06 5G" width="66" height="88" loading="lazy" decoding="async"></span></a><a class="bandcard" href="/best/phone-under-20000"><span class="btx"><span class="bl">Under</span><span class="bv">৳20,000</span><span class="bt">Samsung Galaxy A16 4G</span><span class="bn">5 guides <i>&rarr;</i></span></span><span class="bimg"><img src="/img/aa655949790c6506.webp" alt="Samsung Galaxy A16 4G" width="66" height="88" loading="lazy" decoding="async"></span></a><a class="bandcard" href="/best/phone-under-30000"><span class="btx"><span class="bl">Under</span><span class="bv">৳30,000</span><span class="bt">Redmi Note 15 5G</span><span class="bn">5 guides <i>&rarr;</i></span></span><span class="bimg"><img src="/img/378ac7bc32bf1c37.webp" alt="Redmi Note 15 5G" width="66" height="88" loading="lazy" decoding="async"></span></a><a class="bandcard" href="/best/phone-under-50000"><span class="btx"><span class="bl">Under</span><span class="bv">৳50,000</span><span class="bt">Honor 400</span><span class="bn">5 guides <i>&rarr;</i></span></span><span class="bimg"><img src="/img/11cf9fc91c215652.webp" alt="Honor 400" width="66" height="88" loading="lazy" decoding="async"></span></a><a class="bandcard" href="/best/phone-under-80000"><span class="btx"><span class="bl">Under</span><span class="bv">৳80,000</span><span class="bt">Vivo X300</span><span class="bn">5 guides <i>&rarr;</i></span></span><span class="bimg"><img src="/img/4c51ad488d5db230.webp" alt="Vivo X300" width="66" height="88" loading="lazy" decoding="async"></span></a><a class="bandcard" href="/best/phone-under-200000"><span class="btx"><span class="bl">Under</span><span class="bv">৳2,00,000</span><span class="bt">Apple iPhone 17 Pro Max</span><span class="bn">5 guides <i>&rarr;</i></span></span><span class="bimg"><img src="/img/9dc1042e2d957071.webp" alt="Apple iPhone 17 Pro Max" width="66" height="88" loading="lazy" decoding="async"></span></a></div></section>
 <h2 class="grp sm">Browse by what matters to you</h2>
 <p class="sub">Every category, ranked across each budget and rebuilt nightly.</p>
-<section class="matrix"><div class="mfeat"><div class="mfc"><div class="mfh"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M7.5 1.8l1.7 3.6 4 .4-3 2.7.9 3.9-3.6-2.1-3.6 2.1.9-3.9-3-2.7 4-.4z" fill="currentColor"/></svg></span><h3>Best overall</h3></div><p class="mfs">15 guides, ৳10,000 to ৳2,00,000</p><div class="mfchips"><a href="/best/phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/phone-under-30000"><b>Under</b>৳30,000</a><a href="/best/phone-under-50000"><b>Under</b>৳50,000</a><a href="/best/phone-under-80000"><b>Under</b>৳80,000</a><a class="all" href="/best">View all &rarr;</a></div></div><div class="mfimg"><img src="/img/378ac7bc32bf1c37.webp" alt="Redmi Note 15 5G" width="150" height="200" loading="lazy" decoding="async"></div></div><div class="mgrid"><div class="mcard"><div class="mcimg"><img src="/img/0533e898c84e89e8.webp" alt="Vivo V60 Lite 4G" width="72" height="96" loading="lazy" decoding="async"></div><div class="mcb"><div class="mch"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4" width="12" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7.5" cy="8.2" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 4l1-1.7h3L10 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span><h3>Best camera phones</h3></div><div class="mcchips"><a href="/best/camera-phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/camera-phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/camera-phone-under-30000"><b>Under</b>৳30,000</a></div><a class="mcall" href="/best">All 15 guides &rarr;</a></div></div><div class="mcard"><div class="mcimg"><img src="/img/b46818eb2ff36b11.webp" alt="Infinix GT 30" width="72" height="96" loading="lazy" decoding="async"></div><div class="mcb"><div class="mch"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4.5" width="12" height="7" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 6.7v2.6M3.7 8h2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="7.2" r=".9" fill="currentColor"/><circle cx="11.7" cy="8.9" r=".9" fill="currentColor"/></svg></span><h3>Best gaming phones</h3></div><div class="mcchips"><a href="/best/gaming-phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/gaming-phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/gaming-phone-under-30000"><b>Under</b>৳30,000</a></div><a class="mcall" href="/best">All 15 guides &rarr;</a></div></div><div class="mcard"><div class="mcimg"><img src="/img/2a228ae34fc354ad.webp" alt="Infinix Note Edge" width="72" height="96" loading="lazy" decoding="async"></div><div class="mcb"><div class="mch"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4.5" width="10.5" height="6.5" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M13.5 6.8v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3.2" y="6.1" width="4.4" height="3.3" rx=".8" fill="currentColor"/></svg></span><h3>Best battery life</h3></div><div class="mcchips"><a href="/best/battery-phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/battery-phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/battery-phone-under-30000"><b>Under</b>৳30,000</a></div><a class="mcall" href="/best">All 15 guides &rarr;</a></div></div><div class="mcard"><div class="mcimg"><img src="/img/8c4111e29a72ceb4.webp" alt="Redmi Note 15 Pro 5G" width="72" height="96" loading="lazy" decoding="async"></div><div class="mcb"><div class="mch"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M2 12.5a10 10 0 0 1 11-11M4 12.5a7.5 7.5 0 0 1 8.5-8.5M6.2 12.5a5 5 0 0 1 6.3-6.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12.2" cy="12.2" r="1.3" fill="currentColor"/></svg></span><h3>Best 5G phones</h3></div><div class="mcchips"><a href="/best/5g-phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/5g-phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/5g-phone-under-30000"><b>Under</b>৳30,000</a></div><a class="mcall" href="/best">All 13 guides &rarr;</a></div></div></div></section>
-<h2 class="grp">Phone prices in Bangladesh</h2><p class="sub">Live price, every shop stocking it, full specs and what owners actually say &mdash; one page per phone.</p><div class="trend"><a class="tcard" href="/phone/apple-iphone-17-pro"><img src="/img/e5376229a71e3a0a.webp" alt="Apple iPhone 17 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Apple</div><div class="tn">iPhone 17 Pro</div><div class="tp">৳1,47,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/apple-iphone-17-pro-max"><img src="/img/9dc1042e2d957071.webp" alt="Apple iPhone 17 Pro Max" width="54" height="72" loading="lazy"><div><div class="tb">Apple</div><div class="tn">iPhone 17 Pro Max</div><div class="tp">৳1,56,499 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/vivo-v70"><img src="/img/fa4a20ab78aa557a.webp" alt="Vivo V70" width="54" height="72" loading="lazy"><div><div class="tb">Vivo</div><div class="tn">V70</div><div class="tp">৳58,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/vivo-v70-5g"><img src="/img/fa4a20ab78aa557a.webp" alt="Vivo V70" width="54" height="72" loading="lazy"><div><div class="tb">Vivo</div><div class="tn">V70</div><div class="tp">৳58,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/vivo-x300-pro"><img src="/img/b947e78b3af97799.webp" alt="Vivo X300 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Vivo</div><div class="tn">X300 Pro</div><div class="tp">৳95,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/apple-iphone-17"><img src="/img/22bf91110893775d.webp" alt="Apple iPhone 17" width="54" height="72" loading="lazy"><div><div class="tb">Apple</div><div class="tn">iPhone 17</div><div class="tp">৳1,03,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/google-pixel-7-pro"><img src="/img/a9d2a47aafad48e8.webp" alt="Google Pixel 7 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Google</div><div class="tn">Pixel 7 Pro</div><div class="tp">৳44,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/samsung-galaxy-a07-4g"><img src="/img/0411526fb336ee36.webp" alt="Samsung Galaxy A07 4G" width="54" height="72" loading="lazy"><div><div class="tb">Samsung</div><div class="tn">Galaxy A07 4G</div><div class="tp">৳15,999 <span class="go">&rarr;</span></div></div></a></div><nav class="linkrow"><a href="/phone">See all phone prices &rarr;</a></nav>
+<section class="matrix"><div class="mfeat"><div class="mfc"><div class="mfh"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M7.5 1.8l1.7 3.6 4 .4-3 2.7.9 3.9-3.6-2.1-3.6 2.1.9-3.9-3-2.7 4-.4z" fill="currentColor"/></svg></span><h3>Best overall</h3></div><p class="mfs">15 guides, ৳10,000 to ৳2,00,000</p><div class="mfchips"><a href="/best/phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/phone-under-30000"><b>Under</b>৳30,000</a><a href="/best/phone-under-50000"><b>Under</b>৳50,000</a><a href="/best/phone-under-80000"><b>Under</b>৳80,000</a><a class="all" href="/best#c-overall">View all 15 &rarr;</a></div></div><div class="mfimg"><img src="/img/378ac7bc32bf1c37.webp" alt="Redmi Note 15 5G" width="150" height="200" loading="lazy" decoding="async"></div></div><div class="mgrid"><div class="mcard"><div class="mcimg"><img src="/img/0533e898c84e89e8.webp" alt="Vivo V60 Lite 4G" width="72" height="96" loading="lazy" decoding="async"></div><div class="mcb"><div class="mch"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4" width="12" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7.5" cy="8.2" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 4l1-1.7h3L10 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span><h3>Best camera phones</h3></div><div class="mcchips"><a href="/best/camera-phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/camera-phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/camera-phone-under-30000"><b>Under</b>৳30,000</a></div><a class="mcall" href="/best#c-camera">All 15 guides &rarr;</a></div></div><div class="mcard"><div class="mcimg"><img src="/img/b46818eb2ff36b11.webp" alt="Infinix GT 30" width="72" height="96" loading="lazy" decoding="async"></div><div class="mcb"><div class="mch"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4.5" width="12" height="7" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 6.7v2.6M3.7 8h2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="7.2" r=".9" fill="currentColor"/><circle cx="11.7" cy="8.9" r=".9" fill="currentColor"/></svg></span><h3>Best gaming phones</h3></div><div class="mcchips"><a href="/best/gaming-phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/gaming-phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/gaming-phone-under-30000"><b>Under</b>৳30,000</a></div><a class="mcall" href="/best#c-gaming">All 15 guides &rarr;</a></div></div><div class="mcard"><div class="mcimg"><img src="/img/2a228ae34fc354ad.webp" alt="Infinix Note Edge" width="72" height="96" loading="lazy" decoding="async"></div><div class="mcb"><div class="mch"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><rect x="1.5" y="4.5" width="10.5" height="6.5" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M13.5 6.8v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3.2" y="6.1" width="4.4" height="3.3" rx=".8" fill="currentColor"/></svg></span><h3>Best battery life</h3></div><div class="mcchips"><a href="/best/battery-phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/battery-phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/battery-phone-under-30000"><b>Under</b>৳30,000</a></div><a class="mcall" href="/best#c-battery">All 15 guides &rarr;</a></div></div><div class="mcard"><div class="mcimg"><img src="/img/8c4111e29a72ceb4.webp" alt="Redmi Note 15 Pro 5G" width="72" height="96" loading="lazy" decoding="async"></div><div class="mcb"><div class="mch"><span class="mi"><svg width="15" height="15" viewBox="0 0 15 15"><path d="M2 12.5a10 10 0 0 1 11-11M4 12.5a7.5 7.5 0 0 1 8.5-8.5M6.2 12.5a5 5 0 0 1 6.3-6.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12.2" cy="12.2" r="1.3" fill="currentColor"/></svg></span><h3>Best 5G phones</h3></div><div class="mcchips"><a href="/best/5g-phone-under-15000"><b>Under</b>৳15,000</a><a href="/best/5g-phone-under-20000"><b>Under</b>৳20,000</a><a href="/best/5g-phone-under-30000"><b>Under</b>৳30,000</a></div><a class="mcall" href="/best#c-5g">All 13 guides &rarr;</a></div></div></div></section>
+<h2 class="grp">Phone prices in Bangladesh</h2><p class="sub">Live price, every shop stocking it, full specs and what owners actually say &mdash; one page per phone.</p><div class="pgrid"><a class="pcard" href="/phone/apple-iphone-17-pro"><span class="pshot"><img src="/img/e5376229a71e3a0a.webp" alt="Apple iPhone 17 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Apple</span><span class="pmd">iPhone 17 Pro</span><span class="ppr">৳1,47,999</span></span></a><a class="pcard" href="/phone/apple-iphone-17-pro-max"><span class="pshot"><img src="/img/9dc1042e2d957071.webp" alt="Apple iPhone 17 Pro Max" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Apple</span><span class="pmd">iPhone 17 Pro Max</span><span class="ppr">৳1,56,499</span></span></a><a class="pcard" href="/phone/vivo-v70"><span class="pshot"><img src="/img/fa4a20ab78aa557a.webp" alt="Vivo V70" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V70</span><span class="ppr">৳58,999</span></span></a><a class="pcard" href="/phone/vivo-v70-5g"><span class="pshot"><img src="/img/fa4a20ab78aa557a.webp" alt="Vivo V70" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V70</span><span class="ppr">৳58,999</span></span></a><a class="pcard" href="/phone/vivo-x300-pro"><span class="pshot"><img src="/img/b947e78b3af97799.webp" alt="Vivo X300 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X300 Pro</span><span class="ppr">৳95,999</span></span></a><a class="pcard" href="/phone/apple-iphone-17"><span class="pshot"><img src="/img/22bf91110893775d.webp" alt="Apple iPhone 17" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Apple</span><span class="pmd">iPhone 17</span><span class="ppr">৳1,03,999</span></span></a><a class="pcard" href="/phone/google-pixel-7-pro"><span class="pshot"><img src="/img/a9d2a47aafad48e8.webp" alt="Google Pixel 7 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Google</span><span class="pmd">Pixel 7 Pro</span><span class="ppr">৳44,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a07-4g"><span class="pshot"><img src="/img/0411526fb336ee36.webp" alt="Samsung Galaxy A07 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A07 4G</span><span class="ppr">৳15,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a17-5g"><span class="pshot"><img src="/img/1776fc334a01b371.webp" alt="Samsung Galaxy A17 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A17 5G</span><span class="ppr">৳27,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a37-5g"><span class="pshot"><img src="/img/9d2e1ad62a635554.webp" alt="Samsung Galaxy A37 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A37 5G</span><span class="ppr">৳34,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a56-5g"><span class="pshot"><img src="/img/b8c5662a8e624c29.webp" alt="Samsung Galaxy A56 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A56 5G</span><span class="ppr">৳41,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a57-5g"><span class="pshot"><img src="/img/140f6c6435539200.webp" alt="Samsung Galaxy A57 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A57 5G</span><span class="ppr">৳42,999</span></span></a></div><nav class="linkrow"><a href="/phone">See all phone prices &rarr;</a></nav>
 <h2 class="grp">Top picks right now</h2><div class="trend"><a class="tcard" href="/best/phone-under-20000"><img src="/img/aa655949790c6506.webp" alt="Samsung Galaxy A16 4G" width="54" height="72" loading="lazy"><div><div class="tb">Best under ৳20,000</div><div class="tn">Samsung Galaxy A16 4G</div><div class="tp">৳17,990 &middot; <span class="go">See why &rarr;</span></div></div></a><a class="tcard" href="/best/phone-under-30000"><img src="/img/378ac7bc32bf1c37.webp" alt="Redmi Note 15 5G" width="54" height="72" loading="lazy"><div><div class="tb">Best under ৳30,000</div><div class="tn">Redmi Note 15 5G</div><div class="tp">৳23,490 &middot; <span class="go">See why &rarr;</span></div></div></a><a class="tcard" href="/best/phone-under-50000"><img src="/img/11cf9fc91c215652.webp" alt="Honor 400" width="54" height="72" loading="lazy"><div><div class="tb">Best under ৳50,000</div><div class="tn">Honor 400</div><div class="tp">৳43,490 &middot; <span class="go">See why &rarr;</span></div></div></a><a class="tcard" href="/best/phone-under-100000"><img src="/img/950fb617985ea10a.webp" alt="Samsung Galaxy S25 ultra" width="54" height="72" loading="lazy"><div><div class="tb">Best under ৳1,00,000</div><div class="tn">Samsung Galaxy S25 ultra</div><div class="tp">৳95,490 &middot; <span class="go">See why &rarr;</span></div></div></a></div>
 <section class="faq"><div class="fhead"><span class="eyebrow">Frequently asked questions</span><h2>Everything else buyers ask us</h2><a class="fmore" href="/best">Browse more recommendations <span aria-hidden="true">&rarr;</span></a></div><details open><summary>What is the best phone under ৳20,000 in Bangladesh?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>As of August 2026, the Samsung Galaxy A16 4G is our top pick under <b>৳20,000</b> - see the full ranked list with prices. <a href="/best/phone-under-20000">Best under <b>৳20,000</b></a>.</p></details><details><summary>How does bhalophone rank phones?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>An AI reads each phone&#x27;s real review and spec evidence and ranks what is actually in stock in Bangladeshi shops. No shop pays us; ranking is never for sale.</p></details><details><summary>How fresh are the prices?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>Every night. Stock and prices come from live Bangladesh shop data, last checked 2026-08-01. Out-of-stock phones drop off automatically.</p></details></section>
 <div class="pickcard"><div class="pcopy"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it, ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div><div class="pbrand" aria-hidden="true"><img src="/apple-touch-icon.png" width="84" height="84" alt="bhalophone logo"><div class="pbtxt"><span class="pbn">bhalophone</span><span class="pbt">AI-powered phone recommendations for Bangladesh</span></div></div></div>
