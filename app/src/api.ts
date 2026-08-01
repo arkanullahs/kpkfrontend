@@ -82,8 +82,37 @@ export interface SpecRow { label: string; value: string; icon: string; }
 export interface SpecTile { icon: string; value: string; }
 /** Import market a shop actually names and has in stock, cheapest first. */
 export interface RegionOffer { code: string; name: string; price: number; }
-/** A RAM/storage config the shops price, cheapest first. */
-export interface VariantPrice { variant: string; price: number; }
+/** A RAM/storage config the shops price, cheapest first.
+
+    Backend `specfmt.variant_options` — the SAME derivation the static /phone/
+    pages render, so the configure screen and the page can never describe one
+    configuration differently. Everything here is what a shop published for
+    that exact SKU, never for the model as a whole. */
+export interface StockBucket {
+  price: number | null; price_high: number | null;
+  colors: string[]; regions: RegionOffer2[];
+  /** null = NOBODY reported stock, which is not the same as sold out */
+  in_stock: boolean | null;
+  /** shop COUNT, never names — this surface is shop-anonymous */
+  shops: number;
+  /** only ever a figure a shop actually published */
+  units: number | null;
+}
+/** market a shop named for this configuration (no price of its own here) */
+export interface RegionOffer2 { code: string; name: string; }
+/** One channel of one configuration. An official unit and a gray import are
+    different products — different warranty, different price, often different
+    colours in stock — so they never share a row. `sim` splits it further: an
+    eSIM unit is cheaper and, for a buyer whose operator issues none, unusable. */
+export interface VariantChannel extends StockBucket {
+  channel: "official" | "unofficial" | "unstated" | string;
+  sim: "physical" | "single" | "hybrid" | "esim" | null;
+  label: string;
+}
+export interface VariantPrice extends StockBucket {
+  variant: string;
+  channels?: VariantChannel[];
+}
 
 export interface Pick {
   id: string; key?: string; brand: string; model: string; image?: string | null;
@@ -192,6 +221,8 @@ export interface PhoneDetail {
   tags?: string[];
   /** the shared spec sheet — render these, not `specs`, which stays raw */
   spec_rows?: SpecRow[]; spec_strip?: SpecTile[]; regions?: RegionOffer[];
+  /** every configuration with its own colours, markets and stock */
+  variants?: VariantPrice[];
   /** the whole GSMArena table, grouped as /phone/* and /vs folds it away */
   spec_sheet?: { title: string; rows: { label: string; value: string }[] }[];
   spec_source?: string | null;

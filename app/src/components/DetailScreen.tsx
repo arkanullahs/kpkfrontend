@@ -5,6 +5,7 @@ import type { Connectivity, Offer, OpinionProfile, PhoneDetail, Pick } from "../
 import { PhonePhoto } from "./PhonePhoto";
 import { JustSoYouKnow } from "./Compare";
 import { ChannelChips, DataCautionChip, MarketChips, PriceSource } from "./ResultsScreen";
+import { Configure } from "./Configure";
 import { Fold, SpecIcon } from "./Chrome";
 
 interface Props {
@@ -194,6 +195,10 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
       </div>
 
       {(() => { const m = classifyCaveats(caveats).major[0]; return m ? <div style={st("margin-top:14px;")}><JustSoYouKnow text={m.text} /></div> : null; })()}
+
+      {/* which exact unit the money buys: config, channel, SIM tray, colours
+          and the stock the shops published for that SKU */}
+      <Configure variants={d?.variants} />
 
       {/* our take — the RAG verdict, grounded in real evidence */}
       {ourTake && (
