@@ -11,7 +11,7 @@
 :root{--ac:#2563d9;--acd:#1c4eae;--acg1:#3b7bf0;--acg2:#1f56c2;
 --acsoft:rgba(37,99,217,.10);--acsoft2:rgba(37,99,217,.30);--acglow:rgba(31,86,194,.34);
 --orbA:rgba(37,99,217,.16);--orbB:rgba(120,90,232,.13);--orbC:rgba(40,180,200,.11);
---bg:#f1f0ed;--ink:#17191d;--mut:#80868f;
+--bg:#f1f0ed;--ink:#17191d;--mut:#686e76;
 --f-sans:'Plus Jakarta Sans','Anek Bangla',system-ui,sans-serif;
 --f-display:'Plus Jakarta Sans','Anek Bangla',system-ui,sans-serif;
 --f-serif:'Fraunces','Plus Jakarta Sans',serif}
@@ -135,7 +135,7 @@ flex:none;border-radius:14px;background:#fafafa}
 .hero h2{font-family:var(--f-display);margin:1px 0 0;font-size:clamp(21px,2.4vw,26px);
 font-weight:700;letter-spacing:-.4px;line-height:1.12}
 .badge{float:right;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:99px;
-white-space:nowrap;color:#0a7d57;background:rgba(10,157,106,.12);margin-left:8px}
+white-space:nowrap;color:#0a7350;background:rgba(10,157,106,.12);margin-left:8px}
 
 .price{display:flex;align-items:flex-end;gap:11px;margin-top:20px;flex-wrap:wrap}
 .price .amt{font-size:clamp(30px,3.6vw,40px);font-weight:300;letter-spacing:-1.6px;
@@ -146,7 +146,7 @@ color:var(--ink);line-height:1}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
 .chip{font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:99px;
 background:rgba(15,25,35,.055);color:#41464d}
-.chip.ok{background:rgba(10,157,106,.12);color:#0a7d57}
+.chip.ok{background:rgba(10,157,106,.12);color:#0a7350}
 .chip.warn{background:rgba(192,137,42,.12);color:#a8761a}
 /* import market. Shared with device pages (they load this sheet first) so a
    "China from X" chip looks the same on a guide, a /vs page and /phone/. */
@@ -285,7 +285,7 @@ font-family:var(--f-display);font-size:22px;font-weight:700}
 .bigfoot .brand img{width:46px;height:46px;border-radius:11px}
 .bigfoot .desc{margin:15px 0 0;font-size:13px;line-height:1.65;max-width:34ch}
 .bigfoot .ct{margin-top:14px;font-size:13px}.bigfoot .ct .lb{color:#5f606d;font-size:11px}
-.bigfoot h4{color:#e7e7ec;font-size:12px;font-weight:600;letter-spacing:.2px;margin:0 0 15px}
+.bigfoot .fh{color:#e7e7ec;font-size:12px;font-weight:600;letter-spacing:.2px;margin:0 0 15px}
 .bigfoot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
 .bigfoot ul a{color:#8b8c98;font-size:13.5px;text-decoration:none}
 .bigfoot ul a:hover{color:#fff;text-decoration:none}
@@ -421,7 +421,7 @@ box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.05)}
 .st .si{display:flex;align-items:center;justify-content:center;flex:none;
 width:34px;height:34px;border-radius:11px;background:var(--acsoft);
 color:var(--acd)}
-.st.ok .si{background:rgba(10,157,106,.13);color:#0a7d57}
+.st.ok .si{background:rgba(10,157,106,.13);color:#0a7350}
 .st b{display:block;font-family:var(--f-display);font-size:16.5px;
 font-weight:700;letter-spacing:-.4px;color:var(--ink);line-height:1.15}
 .st span{display:block;font-size:12px;color:var(--mut);margin-top:2px}
@@ -689,7 +689,7 @@ width:78px;height:114px;border-radius:13px;background:#fff}
 mix-blend-mode:multiply}
 .htx{display:block;min-width:0;flex:1}
 .hbadge{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.7px;
-text-transform:uppercase;color:#0a7d57;background:rgba(10,157,106,.12);
+text-transform:uppercase;color:#0a7350;background:rgba(10,157,106,.12);
 padding:3px 9px;border-radius:99px}
 .hname{font-size:16px;font-weight:700;letter-spacing:-.4px;
 color:var(--ink);line-height:1.25;margin-top:7px;
@@ -905,7 +905,7 @@ table.cmp.vs td{white-space:normal}
 </style></head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best" class="on">Guides</a><a href="/phone">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
-<div class="wrap">
+<div class="wrap" role="main">
 <h1>That page <em>doesn't exist</em></h1>
 <p class="lead">The guide you're after may have moved or the phone dropped out
 of stock. Everything live is one click away:</p>
@@ -920,14 +920,14 @@ pick</a> &middot; <a href="/support">Support</a></p>
 <p class="desc">AI-powered phone recommendations for Bangladesh.</p>
 
 </div>
-<div><h4>Explore</h4><ul>
+<div><p class="fh">Explore</p><ul>
 <li><a href="/best">Best phone guides</a></li>
 <li><a href="/phone">Phone prices</a></li>
 <li><a href="/vs">Compare phones</a></li>
 <li><a href="/pick">Personal pick</a></li>
 </ul></div>
-<div><h4>Social</h4><ul><li><a href="https://www.facebook.com/bhalophone" rel="me">Facebook</a></li></ul></div>
-<div><h4>More</h4><ul>
+<div><p class="fh">Social</p><ul><li><a href="https://www.facebook.com/bhalophone" rel="me">Facebook</a></li></ul></div>
+<div><p class="fh">More</p><ul>
 <li><a href="/support">Support us</a></li>
 <li><a href="https://arkanullah.pro.bd" target="_blank" rel="noopener noreferrer">Made by Arkanullah Saad &#8599;</a></li>
 </ul></div>
