@@ -989,22 +989,26 @@ table.cmp.vs td{white-space:normal}
 /* an option with nothing behind it is dimmed, never removed: a button row that
    reshuffles under the cursor is impossible to aim at */
 .fb:disabled{color:#b3b8bf;cursor:default}
-.fb:disabled .dot{opacity:.35}
-/* the paint, at the size of a bullet, inside the button that filters by it.
-   --paint is set on the BUTTON so selecting a colour can paint the whole chip
-   (owner 2026-08-02: "the chips should change colors according the chosen
-   colour"); a name we could not map has no --paint and falls back to hatching. */
-.dot{width:12px;height:12px;border-radius:50%;flex:none;
-  background:var(--paint,repeating-linear-gradient(45deg,#e2e5ea 0 2px,
-    #f7f8fa 2px 4px));box-shadow:inset 0 0 0 1px rgba(15,25,35,.22)}
-/* scoped to .ofilt so the mobile block below, which restyles .fb, cannot
-   outrank it and hand a selected colour the plain grey chip back */
-.ofilt .fb[style].on{background:var(--paint);color:var(--ink);
-  box-shadow:inset 0 0 0 1px rgba(15,25,35,.16),0 3px 10px rgba(15,25,35,.2)}
-/* on a painted chip the dot would be invisible against its own colour, so it
-   becomes a ring in whichever ink stayed readable */
-.ofilt .fb[style].on .dot{background:none;
-  box-shadow:inset 0 0 0 2px var(--ink);opacity:.85}
+/* The colour axis is a swatch picker, not chips. Spelling every paint out
+   beside its own dot made the row read as a chart legend and ran three lines
+   wide (owner 2026-08-02: "the color selector look bad"). The name stays
+   inside the button for screen readers and on hover, and every listing below
+   names its colours in full. A paint we could not map hatches instead of
+   guessing. */
+.fset[data-axis="color"]{gap:6px}
+.fset[data-axis="color"] .fb:not([data-v=""]){width:28px;height:28px;padding:0;
+  border-radius:50%;font-size:0;background:var(--paint,
+    repeating-linear-gradient(45deg,#e2e5ea 0 3px,#f7f8fa 3px 6px));
+  box-shadow:inset 0 0 0 1px rgba(15,25,35,.2)}
+.fset[data-axis="color"] .fb:not([data-v=""]):hover:not(:disabled){
+  box-shadow:inset 0 0 0 1px rgba(15,25,35,.2),0 0 0 2px #fff,
+    0 0 0 3.5px var(--acsoft2)}
+/* selected: a cobalt ring around the paint, so a white swatch reads as picked
+   without repainting the thing a buyer is choosing by */
+.ofilt .fset[data-axis="color"] .fb.on{
+  box-shadow:inset 0 0 0 1px rgba(15,25,35,.2),0 0 0 2px #fff,
+    0 0 0 4px var(--ac)}
+.fset[data-axis="color"] .fb:disabled{opacity:.3}
 /* what the current selection actually costs, rewritten on every click */
 .osum{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
   margin:20px 0 10px}
