@@ -956,75 +956,122 @@ table.cmp.vs td{white-space:normal}
    scroll on a phone. This is its own grid: a fixed label column that collapses
    to a stacked label-above-value on mobile, and values that break anywhere so
    nothing can push the page wider than the screen. */
-/* RAM/storage chooser. Buttons only filter -- every block is in the DOM, so
-   with JS off the page reads as a full list instead of an empty widget. */
-/* Owner 2026-08-01: this block "still hasn't got the good ui". It was a row
-   of hairline-bordered buttons over hairline-bordered boxes -- the only part
-   of the site still drawn in 1px grey rectangles instead of cards. */
-.cfgrow{display:inline-flex;flex-wrap:wrap;gap:5px;margin:16px 0 14px;
-  padding:5px;border-radius:99px;background:rgba(15,25,35,.05)}
-.cfgb{font:inherit;font-size:13px;font-weight:700;cursor:pointer;
-  padding:8px 15px;border-radius:99px;color:#565b63;background:none;border:0;
+/* --- the chooser -----------------------------------------------------------
+   Four rows of buttons over one list of listings. It replaced a stack of cards
+   that showed every configuration, channel and shop at once and made a buyer
+   read all of it to answer one question (owner 2026-08-02). Hidden until the
+   script runs, so with JS off the page is a complete price table rather than a
+   widget that does nothing. */
+/* the axes run inline and wrap, not one per line: four stacked rows of two or
+   three chips left most of the width empty and pushed the price down for
+   nothing (owner 2026-08-02) */
+.ofilt{display:flex;flex-wrap:wrap;align-items:center;gap:9px 20px;
+  margin:18px 0 0}
+.ofilt[hidden]{display:none}
+.frow{display:flex;align-items:center;gap:9px}
+.flab{flex:none;font-size:11px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--mut)}
+.fset{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;
+  border-radius:99px;background:rgba(15,25,35,.05)}
+.fb{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:13px;
+  font-weight:600;cursor:pointer;padding:7px 14px;border-radius:99px;
+  color:#565b63;background:none;border:0;white-space:nowrap;
   transition:color .14s,background .14s,box-shadow .14s}
-.cfgb:hover{color:var(--acd);background:rgba(255,255,255,.75)}
-.cfgb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
-  box-shadow:0 4px 12px var(--acglow)}
-.cfgwrap{display:grid;gap:12px}
-.cfgd{border-radius:19px;padding:4px 18px 14px;background:#fff;
-  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.06)}
-.cfgd[hidden]{display:none}
-.cfgh{display:flex;align-items:baseline;justify-content:space-between;
-  gap:12px;flex-wrap:wrap;padding:15px 0 6px;
-  font-family:var(--f-display);font-size:15.5px;letter-spacing:-.3px}
-.cfgh b{font-weight:700;color:var(--ink)}
-/* the one-line answer for this configuration, so the card can be read without
-   going down into the shop list */
-.cfgn{font-family:var(--f-sans);font-size:12.5px;font-weight:600;
-  letter-spacing:0;color:var(--mut)}
-/* the shops holding THIS configuration, inside its own card. They used to be
-   a separate site-wide table below, which meant the same fact was told three
-   times on one page (owner 2026-08-01). */
-.shlist{margin:10px -18px -14px;border-top:1px solid rgba(15,25,35,.07)}
-.shrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) auto 104px;
-  gap:8px 16px;align-items:center;padding:11px 18px;font-size:13.5px;
-  border-top:1px solid rgba(15,25,35,.05)}
-.shrow:first-child{border-top:0}
-.shrow:hover{background:rgba(37,99,217,.04)}
-.shrow .sn{font-weight:600;color:var(--ink);min-width:0}
-.shrow .sc{color:var(--mut);font-size:12.5px}
-.shrow .sp{font-weight:700;color:var(--ink);text-align:right;
+.fb:hover:not(:disabled){color:var(--acd);background:rgba(255,255,255,.8)}
+.fb:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.fb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
+  box-shadow:0 3px 10px var(--acglow)}
+/* an option with nothing behind it is dimmed, never removed: a button row that
+   reshuffles under the cursor is impossible to aim at */
+.fb:disabled{color:#b3b8bf;cursor:default}
+.fb:disabled .dot{opacity:.35}
+/* the paint, at the size of a bullet, inside the button that filters by it.
+   --paint is set on the BUTTON so selecting a colour can paint the whole chip
+   (owner 2026-08-02: "the chips should change colors according the chosen
+   colour"); a name we could not map has no --paint and falls back to hatching. */
+.dot{width:12px;height:12px;border-radius:50%;flex:none;
+  background:var(--paint,repeating-linear-gradient(45deg,#e2e5ea 0 2px,
+    #f7f8fa 2px 4px));box-shadow:inset 0 0 0 1px rgba(15,25,35,.22)}
+/* scoped to .ofilt so the mobile block below, which restyles .fb, cannot
+   outrank it and hand a selected colour the plain grey chip back */
+.ofilt .fb[style].on{background:var(--paint);color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(15,25,35,.16),0 3px 10px rgba(15,25,35,.2)}
+/* on a painted chip the dot would be invisible against its own colour, so it
+   becomes a ring in whichever ink stayed readable */
+.ofilt .fb[style].on .dot{background:none;
+  box-shadow:inset 0 0 0 2px var(--ink);opacity:.85}
+/* what the current selection actually costs, rewritten on every click */
+.osum{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  margin:20px 0 10px}
+.osum b{font-family:var(--f-display);font-size:26px;font-weight:700;
+  letter-spacing:-.9px;color:var(--ink);font-variant-numeric:tabular-nums}
+.osum span{font-size:13px;font-weight:600;color:var(--mut)}
+/* the warranty premium, subtracted for the reader and told once */
+.owarn{margin:14px 0 0;font-size:13.5px;line-height:1.55;color:#5c626a}
+.owarn b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* --- the listings ----------------------------------------------------------
+   One row per listing, four columns, no boxes inside boxes. The cheapest row
+   a buyer can actually pay is tinted, so the answer is visible before the list
+   is read. */
+.olist{border-radius:18px;overflow:hidden;background:#fff;
+  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.07)}
+.orow{display:grid;grid-template-columns:minmax(120px,1fr) minmax(0,1.6fr) auto
+  96px;gap:3px 16px;align-items:center;padding:12px 17px;font-size:13.5px;
+  border-top:1px solid rgba(15,25,35,.055);transition:background .14s}
+.orow:first-child{border-top:0}
+.orow[hidden]{display:none}
+.orow:hover{background:rgba(37,99,217,.035)}
+.on{font-weight:700;color:var(--ink);min-width:0}
+/* what this listing IS: warranty first, then the configuration, then the
+   details only some listings carry */
+.om{font-size:12.5px;color:var(--mut);min-width:0}
+.oc{font-weight:700;color:var(--mut)}
+.oc.ok{color:#0a7350}
+.oc.warn{color:#8a6414}
+.op{font-weight:700;font-size:15px;color:var(--ink);text-align:right;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.shrow .ss{justify-self:end}
-.shrow .chip{font-size:11.5px;padding:4px 10px}
-.shrow.out .sn,.shrow.out .sp{color:var(--mut);font-weight:600}
-@media(max-width:640px){
-.cfgd{padding:4px 14px 12px}
-.shlist{margin:10px -14px -12px}
-.shrow{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:11px 14px}
-.shrow .sc{order:3;grid-column:1}
-.shrow .sp{order:2}
-.shrow .ss{order:4;justify-self:end}}
-/* official and unofficial never share a row: same config, different warranty,
-   different price, and quoting them as one range is the most misleading thing
-   this page could do (owner 2026-08-01) */
-.chrow{display:flex;flex-wrap:wrap;gap:8px 11px;align-items:center;
-  font-size:13.5px;color:var(--mut);padding:11px 0;
-  border-top:1px solid rgba(15,25,35,.06)}
-.chrow:first-of-type{border-top:0}
-.chlab{flex:none;font-size:10.5px;font-weight:700;letter-spacing:.4px;
-  text-transform:uppercase;padding:4px 10px;border-radius:99px;
-  background:rgba(15,25,35,.06);color:var(--mut)}
-.chlab.ok{background:rgba(22,132,86,.12);color:#0f6a44}
-.chlab.warn{background:rgba(168,118,26,.13);color:#8a6414}
-.chm{display:flex;flex-wrap:wrap;gap:7px 9px;align-items:center}
-/* the price is what the row is for: it carries the weight, not the label */
-.chm b{color:var(--ink);font-family:var(--f-display);font-size:16px;
-  font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
-.cws{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.cwl{font-size:12.5px;color:var(--mut);margin-right:2px}
-.cw{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;
-  background:rgba(15,25,35,.05);color:var(--ink)}
-/* the shop's import market, next to the config it applies to */
+.os{font-size:12.5px;font-weight:600;color:#0a7350;text-align:right;
+  white-space:nowrap}
+.orow.out .on,.orow.out .op{color:var(--mut);font-weight:600}
+.orow.out .os{color:#a8761a}
+.orow.best{background:var(--acsoft)}
+.orow.best:hover{background:rgba(37,99,217,.15)}
+.orow.best .op{color:var(--acd)}
+/* the cheapest row says so, once, in the gutter its price already occupies */
+.orow.best .op::after{content:"Cheapest";display:block;font-family:var(--f-sans);
+  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--acd);margin-top:1px}
+.oempty{margin:16px 2px;font-size:14px;color:var(--mut)}
+.oempty[hidden],.osum[hidden]{display:none}
+@media(max-width:720px){
+/* --- mobile ----------------------------------------------------------------
+   The grey track is what broke here. It is an inline-flex pill that will not
+   wrap, so on a 375px screen the last chip of a row was simply cut off at the
+   edge (owner 2026-08-02: "still looks bad on mobile"). Flattening the four
+   axes into one unlabelled cloud fixed the clipping and cost the grouping,
+   which was worse -- "Not stated" beside "Import" beside "In stock" says
+   nothing about which question each answers ("now on mobile it became
+   confusing").
+
+   So: the labels stay and the track goes. Chips sit directly on the page and
+   wrap like text, which is the one layout that cannot clip. */
+.ofilt{display:block;margin:15px 0 0}
+.frow{flex-wrap:wrap;gap:4px 8px;padding:5px 0;align-items:flex-start}
+.flab{width:100%;font-size:9.5px;letter-spacing:.4px;line-height:1.6}
+.fset{padding:0;background:none;flex-wrap:wrap;gap:6px}
+.fb{padding:8px 13px;font-size:12.5px;gap:7px;background:rgba(15,25,35,.055)}
+.fb:disabled{background:rgba(15,25,35,.028)}
+.osum{margin:17px 0 9px;gap:9px}
+.osum b{font-size:23px}
+.orow{grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:11px 14px}
+/* shop and price hold the first line; what the listing is, and whether they
+   have it, sit underneath so nothing truncates on a 360px screen */
+.om{grid-column:1;grid-row:2;font-size:12px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.os{grid-column:2;grid-row:2}
+.orow.best .op::after{display:inline;margin:0 0 0 7px}}
+/* the shop's import market, where a listing names one */
 .rgtag{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:99px;
   font-size:10.5px;font-weight:700;letter-spacing:.3px;
   background:rgba(38,86,214,.1);color:var(--acd);vertical-align:1px}
@@ -1196,7 +1243,7 @@ table.cmp td.ph .ic{color:var(--acd);opacity:.75}
 </style></head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
-<div class="wrap" role="main">
+<main class="wrap">
 <nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><a href="/phone">Phones</a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Page 4</span></nav>
 <h1>Phone prices in Bangladesh</h1>
 <p class="lead">Live prices for <b>640</b> phones, re-checked nightly
@@ -1217,7 +1264,7 @@ aria-live="polite">Showing 145&ndash;192 of 640 phones</p>
 <div id="pgrid"><div class="pgrid"><a class="pcard" href="/phone/motorola-signature"><span class="pshot"><img src="/img/d52973f2f3b12b56.webp" alt="Motorola Signature" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Motorola</span><span class="pmd">Signature</span><span class="ppr">৳71,999</span></span></a><a class="pcard" href="/phone/nokia-130-2023"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">130 2023</span><span class="ppr">৳4,099</span></span></a><a class="pcard" href="/phone/nokia-130-music"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">130 Music</span><span class="ppr">৳3,999</span></span></a><a class="pcard" href="/phone/nokia-130-music-2025"><span class="pshot"><img src="/img/1fa37da89fe6a41b.webp" alt="Nokia 130 Music 2025" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">130 Music 2025</span><span class="ppr">৳3,999</span></span></a><a class="pcard" href="/phone/nokia-150-2023"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">150 2023</span><span class="ppr">৳6,499</span></span></a><a class="pcard" href="/phone/nokia-150-ds-2023"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">150 DS 2023</span><span class="ppr">৳4,400</span></span></a><a class="pcard" href="/phone/nokia-220-4g-2024"><span class="pshot"><img src="/img/45b6719ea85f71d9.webp" alt="Nokia 220 4G 2024" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">220 4G 2024</span><span class="ppr">৳8,499</span></span></a><a class="pcard" href="/phone/nokia-225-4g-2024"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">225 4G 2024</span><span class="ppr">৳6,100</span></span></a><a class="pcard" href="/phone/nokia-235-4g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">235 4G</span><span class="ppr">৳6,999</span></span></a><a class="pcard" href="/phone/nokia-235-4g-2024"><span class="pshot"><img src="/img/ef2fb74e3c3a3a01.webp" alt="Nokia 235 4G 2024" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">235 4G 2024</span><span class="ppr">৳8,999</span></span></a><a class="pcard" href="/phone/nokia-2660-flip"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">2660 Flip</span><span class="ppr">৳6,999</span></span></a><a class="pcard" href="/phone/nokia-3210"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">3210</span><span class="ppr">৳6,750</span></span></a><a class="pcard" href="/phone/nokia-5310-2024"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">5310 2024</span><span class="ppr">৳6,999</span></span></a><a class="pcard" href="/phone/nokia-5310-ds"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">5310 DS</span><span class="ppr">৳6,500</span></span></a><a class="pcard" href="/phone/nokia-6310-2024"><span class="pshot"><img src="/img/a1dcce075e0126e3.webp" alt="Nokia 6310 2024" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">6310 2024</span><span class="ppr">৳8,799</span></span></a><a class="pcard" href="/phone/nokia-flip-2660"><span class="pshot"><img src="/img/7514bce09971242d.webp" alt="Nokia FLIP 2660" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nokia</span><span class="pmd">FLIP 2660</span><span class="ppr">৳6,999</span></span></a><a class="pcard" href="/phone/nothing-phone-3"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nothing</span><span class="pmd">Phone 3</span><span class="ppr">৳70,000</span></span></a><a class="pcard" href="/phone/nothing-phone-3a"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Nothing</span><span class="pmd">Phone 3a</span><span class="ppr">৳42,499</span></span></a><a class="pcard" href="/phone/nothing-phone-3a-lite"><span class="pshot"><img src="/img/93de371e3e3e02fa.webp" alt="Nothing Phone 3a Lite" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nothing</span><span class="pmd">Phone 3a Lite</span><span class="ppr">৳32,999</span></span></a><a class="pcard" href="/phone/nothing-phone-4a"><span class="pshot"><img src="/img/39a84acafd782657.webp" alt="Nothing Phone 4a" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nothing</span><span class="pmd">Phone 4a</span><span class="ppr">৳43,999</span></span></a><a class="pcard" href="/phone/nothing-phone-4a-pro"><span class="pshot"><img src="/img/7e1647665d63a395.webp" alt="Nothing Phone 4a Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nothing</span><span class="pmd">Phone 4a Pro</span><span class="ppr">৳55,499</span></span></a><a class="pcard" href="/phone/nubia-a36"><span class="pshot"><img src="/img/14813c3bdb9f52c6.webp" alt="Nubia A36" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nubia</span><span class="pmd">A36</span><span class="ppr">৳13,999</span></span></a><a class="pcard" href="/phone/nubia-v80-design"><span class="pshot"><img src="/img/6b076954423c45c6.webp" alt="Nubia V80 Design" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nubia</span><span class="pmd">V80 Design</span><span class="ppr">৳20,999</span></span></a><a class="pcard" href="/phone/nubia-v80-max"><span class="pshot"><img src="/img/453b72d561f936ed.webp" alt="Nubia V80 Max" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nubia</span><span class="pmd">V80 Max</span><span class="ppr">৳17,999</span></span></a><a class="pcard" href="/phone/nubia-v80-pro"><span class="pshot"><img src="/img/138bfa10e5d76a67.webp" alt="Nubia V80 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Nubia</span><span class="pmd">V80 Pro</span><span class="ppr">৳21,999</span></span></a><a class="pcard out" href="/phone/oppo-a17"><span class="pshot"><img src="/img/df5e5f10c5e5b206.webp" alt="OPPO A17" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A17</span><span class="ppr">৳14,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/oppo-a17k"><span class="pshot"><img src="/img/a0cc0774ceeaa8bc.webp" alt="OPPO A17k" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A17k</span><span class="ppr">৳11,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/oppo-a18"><span class="pshot"><img src="/img/b529e564b881cfac.webp" alt="OPPO A18" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A18</span><span class="ppr">৳13,490<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/oppo-a3"><span class="pshot"><img src="/img/ed8763b85c9803e1.webp" alt="OPPO A3" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A3</span><span class="ppr">৳19,499</span></span></a><a class="pcard out" href="/phone/oppo-a38"><span class="pshot"><img src="/img/85c8f02a59cb94ef.webp" alt="OPPO A38" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A38</span><span class="ppr">৳14,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/oppo-a3x"><span class="pshot"><img src="/img/d9910d488e329e50.webp" alt="OPPO A3x" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A3x</span><span class="ppr">৳12,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/oppo-a5-4g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A5 4G</span><span class="ppr">৳17,599</span></span></a><a class="pcard" href="/phone/oppo-a5-pro"><span class="pshot"><img src="/img/9b8870b608d3f3b1.webp" alt="OPPO A5 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A5 Pro</span><span class="ppr">৳22,799</span></span></a><a class="pcard out" href="/phone/oppo-a57"><span class="pshot"><img src="/img/0cc252b7b67a78ce.webp" alt="OPPO A57" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A57</span><span class="ppr">৳16,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/oppo-a5x"><span class="pshot"><img src="/img/c84cea95af9a50f5.webp" alt="OPPO A5x" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A5x</span><span class="ppr">৳12,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/oppo-a6-4g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A6 4G</span><span class="ppr">৳25,410</span></span></a><a class="pcard out" href="/phone/oppo-a6-max"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A6 Max</span><span class="ppr">৳34,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/oppo-a6-pro"><span class="pshot"><img src="/img/e764dc96c9447cfc.webp" alt="OPPO A6 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A6 Pro</span><span class="ppr">৳30,699</span></span></a><a class="pcard out" href="/phone/oppo-a60"><span class="pshot"><img src="/img/929c673ffd19a84c.webp" alt="OPPO A60" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A60</span><span class="ppr">৳19,999<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/oppo-a6c"><span class="pshot"><img src="/img/6baef17f13c44410.webp" alt="OPPO A6c" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A6c</span><span class="ppr">৳17,310</span></span></a><a class="pcard" href="/phone/oppo-a6k"><span class="pshot"><img src="/img/441eb24fa301f89b.webp" alt="OPPO A6k" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A6k</span><span class="ppr">৳20,999</span></span></a><a class="pcard" href="/phone/oppo-a6s-pro"><span class="pshot"><img src="/img/ed2d1a1bdefbd20e.webp" alt="OPPO A6s Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A6s Pro</span><span class="ppr">৳37,699</span></span></a><a class="pcard" href="/phone/oppo-a6x"><span class="pshot"><img src="/img/1330920556846072.webp" alt="OPPO A6x" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A6x</span><span class="ppr">৳17,499</span></span></a><a class="pcard out" href="/phone/oppo-a78"><span class="pshot"><img src="/img/2a8f9aa36da6a710.webp" alt="OPPO A78" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">A78</span><span class="ppr">৳27,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/oppo-f27-pro-plus"><span class="pshot"><img src="/img/516d83a3ed876587.webp" alt="OPPO F27 Pro Plus" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">F27 Pro Plus</span><span class="ppr">৳33,590<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/oppo-f29"><span class="pshot"><img src="/img/341989280b3f3aa0.webp" alt="OPPO F29" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">F29</span><span class="ppr">৳29,790<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/oppo-f31-pro"><span class="pshot"><img src="/img/79f6e4402e9a25a4.webp" alt="OPPO F31 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">F31 Pro</span><span class="ppr">৳34,990</span></span></a><a class="pcard" href="/phone/oppo-f31-pro-plus"><span class="pshot"><img src="/img/a70a4fdabe40cd3f.webp" alt="OPPO F31 Pro Plus" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">OPPO</span><span class="pmd">F31 Pro Plus</span><span class="ppr">৳37,999</span></span></a></div></div>
 <div id="ppg"><nav class="pgnav" aria-label="Phone list pages"><a href="/phone/page/3" rel="prev">&larr; Prev</a><a href="/phone">1</a><span class="gap">&hellip;</span><a href="/phone/page/3">3</a><span class="on">4</span><a href="/phone/page/5">5</a><span class="gap">&hellip;</span><a href="/phone/page/14">14</a><a href="/phone/page/5" rel="next">Next &rarr;</a></nav></div>
 <div class="pickcard"><div class="pcopy"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it, ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div><div class="pbrand" aria-hidden="true"><img src="/apple-touch-icon.png" width="84" height="84" alt="bhalophone logo"><div class="pbtxt"><span class="pbn">bhalophone</span><span class="pbt">AI-powered phone recommendations for Bangladesh</span></div></div></div>
-</div>
+</main>
 <div class="footwrap">
 <footer class="bigfoot"><div class="inner">
 <div>

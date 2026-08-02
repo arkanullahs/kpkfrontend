@@ -956,75 +956,122 @@ table.cmp.vs td{white-space:normal}
    scroll on a phone. This is its own grid: a fixed label column that collapses
    to a stacked label-above-value on mobile, and values that break anywhere so
    nothing can push the page wider than the screen. */
-/* RAM/storage chooser. Buttons only filter -- every block is in the DOM, so
-   with JS off the page reads as a full list instead of an empty widget. */
-/* Owner 2026-08-01: this block "still hasn't got the good ui". It was a row
-   of hairline-bordered buttons over hairline-bordered boxes -- the only part
-   of the site still drawn in 1px grey rectangles instead of cards. */
-.cfgrow{display:inline-flex;flex-wrap:wrap;gap:5px;margin:16px 0 14px;
-  padding:5px;border-radius:99px;background:rgba(15,25,35,.05)}
-.cfgb{font:inherit;font-size:13px;font-weight:700;cursor:pointer;
-  padding:8px 15px;border-radius:99px;color:#565b63;background:none;border:0;
+/* --- the chooser -----------------------------------------------------------
+   Four rows of buttons over one list of listings. It replaced a stack of cards
+   that showed every configuration, channel and shop at once and made a buyer
+   read all of it to answer one question (owner 2026-08-02). Hidden until the
+   script runs, so with JS off the page is a complete price table rather than a
+   widget that does nothing. */
+/* the axes run inline and wrap, not one per line: four stacked rows of two or
+   three chips left most of the width empty and pushed the price down for
+   nothing (owner 2026-08-02) */
+.ofilt{display:flex;flex-wrap:wrap;align-items:center;gap:9px 20px;
+  margin:18px 0 0}
+.ofilt[hidden]{display:none}
+.frow{display:flex;align-items:center;gap:9px}
+.flab{flex:none;font-size:11px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--mut)}
+.fset{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;
+  border-radius:99px;background:rgba(15,25,35,.05)}
+.fb{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:13px;
+  font-weight:600;cursor:pointer;padding:7px 14px;border-radius:99px;
+  color:#565b63;background:none;border:0;white-space:nowrap;
   transition:color .14s,background .14s,box-shadow .14s}
-.cfgb:hover{color:var(--acd);background:rgba(255,255,255,.75)}
-.cfgb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
-  box-shadow:0 4px 12px var(--acglow)}
-.cfgwrap{display:grid;gap:12px}
-.cfgd{border-radius:19px;padding:4px 18px 14px;background:#fff;
-  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.06)}
-.cfgd[hidden]{display:none}
-.cfgh{display:flex;align-items:baseline;justify-content:space-between;
-  gap:12px;flex-wrap:wrap;padding:15px 0 6px;
-  font-family:var(--f-display);font-size:15.5px;letter-spacing:-.3px}
-.cfgh b{font-weight:700;color:var(--ink)}
-/* the one-line answer for this configuration, so the card can be read without
-   going down into the shop list */
-.cfgn{font-family:var(--f-sans);font-size:12.5px;font-weight:600;
-  letter-spacing:0;color:var(--mut)}
-/* the shops holding THIS configuration, inside its own card. They used to be
-   a separate site-wide table below, which meant the same fact was told three
-   times on one page (owner 2026-08-01). */
-.shlist{margin:10px -18px -14px;border-top:1px solid rgba(15,25,35,.07)}
-.shrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) auto 104px;
-  gap:8px 16px;align-items:center;padding:11px 18px;font-size:13.5px;
-  border-top:1px solid rgba(15,25,35,.05)}
-.shrow:first-child{border-top:0}
-.shrow:hover{background:rgba(37,99,217,.04)}
-.shrow .sn{font-weight:600;color:var(--ink);min-width:0}
-.shrow .sc{color:var(--mut);font-size:12.5px}
-.shrow .sp{font-weight:700;color:var(--ink);text-align:right;
+.fb:hover:not(:disabled){color:var(--acd);background:rgba(255,255,255,.8)}
+.fb:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.fb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
+  box-shadow:0 3px 10px var(--acglow)}
+/* an option with nothing behind it is dimmed, never removed: a button row that
+   reshuffles under the cursor is impossible to aim at */
+.fb:disabled{color:#b3b8bf;cursor:default}
+.fb:disabled .dot{opacity:.35}
+/* the paint, at the size of a bullet, inside the button that filters by it.
+   --paint is set on the BUTTON so selecting a colour can paint the whole chip
+   (owner 2026-08-02: "the chips should change colors according the chosen
+   colour"); a name we could not map has no --paint and falls back to hatching. */
+.dot{width:12px;height:12px;border-radius:50%;flex:none;
+  background:var(--paint,repeating-linear-gradient(45deg,#e2e5ea 0 2px,
+    #f7f8fa 2px 4px));box-shadow:inset 0 0 0 1px rgba(15,25,35,.22)}
+/* scoped to .ofilt so the mobile block below, which restyles .fb, cannot
+   outrank it and hand a selected colour the plain grey chip back */
+.ofilt .fb[style].on{background:var(--paint);color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(15,25,35,.16),0 3px 10px rgba(15,25,35,.2)}
+/* on a painted chip the dot would be invisible against its own colour, so it
+   becomes a ring in whichever ink stayed readable */
+.ofilt .fb[style].on .dot{background:none;
+  box-shadow:inset 0 0 0 2px var(--ink);opacity:.85}
+/* what the current selection actually costs, rewritten on every click */
+.osum{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  margin:20px 0 10px}
+.osum b{font-family:var(--f-display);font-size:26px;font-weight:700;
+  letter-spacing:-.9px;color:var(--ink);font-variant-numeric:tabular-nums}
+.osum span{font-size:13px;font-weight:600;color:var(--mut)}
+/* the warranty premium, subtracted for the reader and told once */
+.owarn{margin:14px 0 0;font-size:13.5px;line-height:1.55;color:#5c626a}
+.owarn b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* --- the listings ----------------------------------------------------------
+   One row per listing, four columns, no boxes inside boxes. The cheapest row
+   a buyer can actually pay is tinted, so the answer is visible before the list
+   is read. */
+.olist{border-radius:18px;overflow:hidden;background:#fff;
+  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.07)}
+.orow{display:grid;grid-template-columns:minmax(120px,1fr) minmax(0,1.6fr) auto
+  96px;gap:3px 16px;align-items:center;padding:12px 17px;font-size:13.5px;
+  border-top:1px solid rgba(15,25,35,.055);transition:background .14s}
+.orow:first-child{border-top:0}
+.orow[hidden]{display:none}
+.orow:hover{background:rgba(37,99,217,.035)}
+.on{font-weight:700;color:var(--ink);min-width:0}
+/* what this listing IS: warranty first, then the configuration, then the
+   details only some listings carry */
+.om{font-size:12.5px;color:var(--mut);min-width:0}
+.oc{font-weight:700;color:var(--mut)}
+.oc.ok{color:#0a7350}
+.oc.warn{color:#8a6414}
+.op{font-weight:700;font-size:15px;color:var(--ink);text-align:right;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.shrow .ss{justify-self:end}
-.shrow .chip{font-size:11.5px;padding:4px 10px}
-.shrow.out .sn,.shrow.out .sp{color:var(--mut);font-weight:600}
-@media(max-width:640px){
-.cfgd{padding:4px 14px 12px}
-.shlist{margin:10px -14px -12px}
-.shrow{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:11px 14px}
-.shrow .sc{order:3;grid-column:1}
-.shrow .sp{order:2}
-.shrow .ss{order:4;justify-self:end}}
-/* official and unofficial never share a row: same config, different warranty,
-   different price, and quoting them as one range is the most misleading thing
-   this page could do (owner 2026-08-01) */
-.chrow{display:flex;flex-wrap:wrap;gap:8px 11px;align-items:center;
-  font-size:13.5px;color:var(--mut);padding:11px 0;
-  border-top:1px solid rgba(15,25,35,.06)}
-.chrow:first-of-type{border-top:0}
-.chlab{flex:none;font-size:10.5px;font-weight:700;letter-spacing:.4px;
-  text-transform:uppercase;padding:4px 10px;border-radius:99px;
-  background:rgba(15,25,35,.06);color:var(--mut)}
-.chlab.ok{background:rgba(22,132,86,.12);color:#0f6a44}
-.chlab.warn{background:rgba(168,118,26,.13);color:#8a6414}
-.chm{display:flex;flex-wrap:wrap;gap:7px 9px;align-items:center}
-/* the price is what the row is for: it carries the weight, not the label */
-.chm b{color:var(--ink);font-family:var(--f-display);font-size:16px;
-  font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
-.cws{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.cwl{font-size:12.5px;color:var(--mut);margin-right:2px}
-.cw{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;
-  background:rgba(15,25,35,.05);color:var(--ink)}
-/* the shop's import market, next to the config it applies to */
+.os{font-size:12.5px;font-weight:600;color:#0a7350;text-align:right;
+  white-space:nowrap}
+.orow.out .on,.orow.out .op{color:var(--mut);font-weight:600}
+.orow.out .os{color:#a8761a}
+.orow.best{background:var(--acsoft)}
+.orow.best:hover{background:rgba(37,99,217,.15)}
+.orow.best .op{color:var(--acd)}
+/* the cheapest row says so, once, in the gutter its price already occupies */
+.orow.best .op::after{content:"Cheapest";display:block;font-family:var(--f-sans);
+  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--acd);margin-top:1px}
+.oempty{margin:16px 2px;font-size:14px;color:var(--mut)}
+.oempty[hidden],.osum[hidden]{display:none}
+@media(max-width:720px){
+/* --- mobile ----------------------------------------------------------------
+   The grey track is what broke here. It is an inline-flex pill that will not
+   wrap, so on a 375px screen the last chip of a row was simply cut off at the
+   edge (owner 2026-08-02: "still looks bad on mobile"). Flattening the four
+   axes into one unlabelled cloud fixed the clipping and cost the grouping,
+   which was worse -- "Not stated" beside "Import" beside "In stock" says
+   nothing about which question each answers ("now on mobile it became
+   confusing").
+
+   So: the labels stay and the track goes. Chips sit directly on the page and
+   wrap like text, which is the one layout that cannot clip. */
+.ofilt{display:block;margin:15px 0 0}
+.frow{flex-wrap:wrap;gap:4px 8px;padding:5px 0;align-items:flex-start}
+.flab{width:100%;font-size:9.5px;letter-spacing:.4px;line-height:1.6}
+.fset{padding:0;background:none;flex-wrap:wrap;gap:6px}
+.fb{padding:8px 13px;font-size:12.5px;gap:7px;background:rgba(15,25,35,.055)}
+.fb:disabled{background:rgba(15,25,35,.028)}
+.osum{margin:17px 0 9px;gap:9px}
+.osum b{font-size:23px}
+.orow{grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:11px 14px}
+/* shop and price hold the first line; what the listing is, and whether they
+   have it, sit underneath so nothing truncates on a 360px screen */
+.om{grid-column:1;grid-row:2;font-size:12px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.os{grid-column:2;grid-row:2}
+.orow.best .op::after{display:inline;margin:0 0 0 7px}}
+/* the shop's import market, where a listing names one */
 .rgtag{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:99px;
   font-size:10.5px;font-weight:700;letter-spacing:.3px;
   background:rgba(38,86,214,.1);color:var(--acd);vertical-align:1px}
@@ -1196,7 +1243,7 @@ table.cmp td.ph .ic{color:var(--acd);opacity:.75}
 </style></head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
-<div class="wrap" role="main">
+<main class="wrap">
 <nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><a href="/phone">Phones</a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Page 2</span></nav>
 <h1>Phone prices in Bangladesh</h1>
 <p class="lead">Live prices for <b>640</b> phones, re-checked nightly
@@ -1217,7 +1264,7 @@ aria-live="polite">Showing 49&ndash;96 of 640 phones</p>
 <div id="pgrid"><div class="pgrid"><a class="pcard" href="/phone/honor-600"><span class="pshot"><img src="/img/184aee43c3b5176b.webp" alt="Honor 600" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">600</span><span class="ppr">৳52,499</span></span></a><a class="pcard" href="/phone/honor-600-lite"><span class="pshot"><img src="/img/96acc22539369bfd.webp" alt="Honor 600 Lite" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">600 Lite</span><span class="ppr">৳39,999</span></span></a><a class="pcard" href="/phone/honor-600-pro"><span class="pshot"><img src="/img/2fdc659d09ebbc04.webp" alt="Honor 600 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">600 Pro</span><span class="ppr">৳76,999</span></span></a><a class="pcard" href="/phone/honor-magic-7-pro"><span class="pshot"><img src="/img/1bb39a4d7257ae64.webp" alt="Honor Magic 7 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Magic 7 Pro</span><span class="ppr">৳94,999</span></span></a><a class="pcard" href="/phone/honor-magic-8-pro"><span class="pshot"><img src="/img/3df820d63024173c.webp" alt="Honor Magic 8 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Magic 8 Pro</span><span class="ppr">৳1,16,999</span></span></a><a class="pcard" href="/phone/honor-magic-v3"><span class="pshot"><img src="/img/ee4fbd1997c81450.webp" alt="Honor Magic V3" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Magic V3</span><span class="ppr">৳1,79,999</span></span></a><a class="pcard" href="/phone/honor-magic-v5"><span class="pshot"><img src="/img/7e8092e7d9fc55c1.webp" alt="Honor Magic V5" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Magic V5</span><span class="ppr">৳1,69,999</span></span></a><a class="pcard" href="/phone/honor-magic-v6"><span class="pshot"><img src="/img/4152307674b1598e.webp" alt="Honor Magic V6" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Magic V6</span><span class="ppr">৳1,89,999</span></span></a><a class="pcard" href="/phone/honor-magic5-pro"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Magic5 Pro</span><span class="ppr">৳89,990</span></span></a><a class="pcard" href="/phone/honor-magic6"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Magic6</span><span class="ppr">৳74,990</span></span></a><a class="pcard" href="/phone/honor-magic6-pro"><span class="pshot"><img src="/img/5f09c4b00c0a7276.webp" alt="Honor Magic6 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Magic6 Pro</span><span class="ppr">৳1,14,990</span></span></a><a class="pcard" href="/phone/honor-magic8-pro-5g"><span class="pshot"><img src="/img/12df3422fc31baf9.webp" alt="Honor Magic8 Pro 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Magic8 Pro 5G</span><span class="ppr">৳1,14,000</span></span></a><a class="pcard" href="/phone/honor-play-10"><span class="pshot"><img src="/img/9c3cd4810dcde5f6.webp" alt="Honor Play 10" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Play 10</span><span class="ppr">৳11,299</span></span></a><a class="pcard" href="/phone/honor-power2-5g"><span class="pshot"><img src="/img/fbeb2e4ba9c33056.webp" alt="Honor Power2 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Power2 5G</span><span class="ppr">৳55,000</span></span></a><a class="pcard out" href="/phone/honor-win"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">Win</span><span class="ppr">৳72,490<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/honor-x5-plus"><span class="pshot"><img src="/img/2ff27a03445931bb.webp" alt="Honor X5 Plus" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X5 Plus</span><span class="ppr">৳12,999</span></span></a><a class="pcard" href="/phone/honor-x5c"><span class="pshot"><img src="/img/b0c1e7095c66ddff.webp" alt="Honor X5c" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X5c</span><span class="ppr">৳13,990</span></span></a><a class="pcard" href="/phone/honor-x5c-plus"><span class="pshot"><img src="/img/8db32bc47cd53072.webp" alt="Honor X5c Plus" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X5c Plus</span><span class="ppr">৳15,999</span></span></a><a class="pcard" href="/phone/honor-x6a"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X6a</span><span class="ppr">৳14,799</span></span></a><a class="pcard" href="/phone/honor-x6c"><span class="pshot"><img src="/img/1cb10b8ab41d936a.webp" alt="Honor X6c" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X6c</span><span class="ppr">৳17,790</span></span></a><a class="pcard" href="/phone/honor-x6d"><span class="pshot"><img src="/img/4c693e328f178714.webp" alt="Honor X6d" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X6d</span><span class="ppr">৳19,499</span></span></a><a class="pcard" href="/phone/honor-x7a"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X7a</span><span class="ppr">৳19,499</span></span></a><a class="pcard" href="/phone/honor-x7c"><span class="pshot"><img src="/img/5ddeb75f859409a1.webp" alt="Honor X7c" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X7c</span><span class="ppr">৳22,999</span></span></a><a class="pcard" href="/phone/honor-x7d"><span class="pshot"><img src="/img/c26cc7e9f1fbc51d.webp" alt="Honor X7d" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X7d</span><span class="ppr">৳21,490</span></span></a><a class="pcard" href="/phone/honor-x8a"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X8a</span><span class="ppr">৳24,799</span></span></a><a class="pcard" href="/phone/honor-x8d"><span class="pshot"><img src="/img/c5458b52fd89de66.webp" alt="Honor X8d" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X8d</span><span class="ppr">৳30,499</span></span></a><a class="pcard" href="/phone/honor-x9c"><span class="pshot"><img src="/img/0b85998e726c5bcc.webp" alt="Honor X9c" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X9c</span><span class="ppr">৳38,499</span></span></a><a class="pcard" href="/phone/honor-x9d"><span class="pshot"><img src="/img/28a433fe4c852566.webp" alt="Honor X9d" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Honor</span><span class="pmd">X9d</span><span class="ppr">৳35,999</span></span></a><a class="pcard" href="/phone/huawei-mate-80-pro"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Huawei</span><span class="pmd">Mate 80 Pro</span><span class="ppr">৳1,09,999</span></span></a><a class="pcard" href="/phone/huawei-mate-x7"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Huawei</span><span class="pmd">Mate X7</span><span class="ppr">৳1,84,999</span></span></a><a class="pcard" href="/phone/huawei-nova-15-max"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Huawei</span><span class="pmd">Nova 15 Max</span><span class="ppr">৳49,499</span></span></a><a class="pcard" href="/phone/huawei-nova-y74"><span class="pshot"><img src="/img/b1426e329ae2c55a.webp" alt="Huawei Nova Y74" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Huawei</span><span class="pmd">Nova Y74</span><span class="ppr">৳28,499</span></span></a><a class="pcard out" href="/phone/infinix-gt-20-pro-5g"><span class="pshot"><img src="/img/7c8fb95c9611066a.webp" alt="Infinix GT 20 Pro 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">GT 20 Pro 5G</span><span class="ppr">৳32,390<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/infinix-gt-30"><span class="pshot"><img src="/img/b46818eb2ff36b11.webp" alt="Infinix GT 30" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">GT 30</span><span class="ppr">৳30,999</span></span></a><a class="pcard out" href="/phone/infinix-gt-30-pro"><span class="pshot"><img src="/img/fc2932116bb078d6.webp" alt="Infinix GT 30 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">GT 30 Pro</span><span class="ppr">৳36,399<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/infinix-hot-12"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Hot 12</span><span class="ppr">৳17,499</span></span></a><a class="pcard" href="/phone/infinix-hot-20"><span class="pshot"><img src="/img/801d005a6d215b4b.webp" alt="Infinix Hot 20" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Hot 20</span><span class="ppr">৳16,699</span></span></a><a class="pcard" href="/phone/infinix-hot-30i"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Hot 30i</span><span class="ppr">৳10,299</span></span></a><a class="pcard out" href="/phone/infinix-hot-60"><span class="pshot"><img src="/img/871f4512794dd27d.webp" alt="Infinix Hot 60" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Hot 60</span><span class="ppr">৳17,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/infinix-hot-60-pro"><span class="pshot"><img src="/img/11497bfee8001de7.webp" alt="Infinix Hot 60 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Hot 60 Pro</span><span class="ppr">৳15,000<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/infinix-hot-60i"><span class="pshot"><img src="/img/717a73e87f1c4977.webp" alt="Infinix Hot 60i" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Hot 60i</span><span class="ppr">৳16,499</span></span></a><a class="pcard" href="/phone/infinix-hot-70"><span class="pshot"><img src="/img/6cbbf5cef6e796f7.webp" alt="Infinix Hot 70" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Hot 70</span><span class="ppr">৳18,999</span></span></a><a class="pcard" href="/phone/infinix-note-12"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Note 12</span><span class="ppr">৳16,199</span></span></a><a class="pcard" href="/phone/infinix-note-12-g88"><span class="pshot"><img src="/img/84dc2545ef6e2cd8.webp" alt="Infinix Note 12 G88" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Note 12 G88</span><span class="ppr">৳18,199</span></span></a><a class="pcard" href="/phone/infinix-note-40s"><span class="pshot"><img src="/img/4d21218f39beb612.webp" alt="Infinix Note 40S" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Note 40S</span><span class="ppr">৳28,199</span></span></a><a class="pcard out" href="/phone/infinix-note-50-pro-plus"><span class="pshot"><img src="/img/a9f77a8accbd366d.webp" alt="Infinix Note 50 Pro Plus" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Note 50 Pro Plus</span><span class="ppr">৳52,499<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/infinix-note-50x"><span class="pshot"><img src="/img/f2e9545381cd4353.webp" alt="Infinix Note 50x" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Note 50x</span><span class="ppr">৳20,999<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/infinix-note-60"><span class="pshot"><img src="/img/5e6c8772ce132cfe.webp" alt="Infinix Note 60" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Infinix</span><span class="pmd">Note 60</span><span class="ppr">৳42,999</span></span></a></div></div>
 <div id="ppg"><nav class="pgnav" aria-label="Phone list pages"><a href="/phone" rel="prev">&larr; Prev</a><a href="/phone">1</a><span class="on">2</span><a href="/phone/page/3">3</a><span class="gap">&hellip;</span><a href="/phone/page/14">14</a><a href="/phone/page/3" rel="next">Next &rarr;</a></nav></div>
 <div class="pickcard"><div class="pcopy"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it, ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div><div class="pbrand" aria-hidden="true"><img src="/apple-touch-icon.png" width="84" height="84" alt="bhalophone logo"><div class="pbtxt"><span class="pbn">bhalophone</span><span class="pbt">AI-powered phone recommendations for Bangladesh</span></div></div></div>
-</div>
+</main>
 <div class="footwrap">
 <footer class="bigfoot"><div class="inner">
 <div>

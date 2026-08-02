@@ -1,9 +1,8 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Support bhalophone</title>
-<meta name="description" content="Keep Bangladesh's independent phone
-recommendation engine free and unbiased.">
+<title>Support bhalophone - keep BD phone advice free and honest</title>
+<meta name="description" content="bhalophone is free to use and never sells a ranking. If it saved you money on a phone, you can chip in over bKash.">
 <link rel="canonical" href="https://bhalophone.com/support">
 <meta name="theme-color" content="#2563d9">
 <meta name="robots" content="index,follow,max-image-preview:large">
@@ -11,7 +10,7 @@ recommendation engine free and unbiased.">
 <meta property="og:site_name" content="bhalophone">
 <meta property="og:url" content="https://bhalophone.com/support">
 <meta property="og:title" content="Support bhalophone">
-<meta property="og:description" content="Keep Bangladesh's independent phone recommendation engine free and unbiased.">
+<meta property="og:description" content="bhalophone is free to use and never sells a ranking. If it saved you money on a phone, you can chip in over bKash.">
 <meta property="og:image" content="https://bhalophone.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Fraunces:ital,opsz,wght@1,9..144,400..600&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Fraunces:ital,opsz,wght@1,9..144,400..600&display=swap"></noscript>
@@ -912,16 +911,170 @@ table.cmp.vs td{white-space:normal}
 @media(max-width:560px){
 .duel{grid-template-columns:1fr}
 }
-</style></head>
+
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+white-space:nowrap}
+/* Mobile reads copy -> donate card -> the rest, so the one action on the page
+   is not 750px down the scroll; desktop puts the card in its own column beside
+   the whole block. */
+.shero{margin:2px 0 0}
+.shero>*+*{margin-top:22px}
+@media(min-width:960px){
+.shero{display:grid;grid-template-columns:1.08fr .92fr;gap:0 40px;
+align-items:start}
+.shero>*+*{margin-top:0}
+.sh-copy{grid-column:1;grid-row:1}
+.sh-more{grid-column:1;grid-row:2}
+.bkcard{grid-column:2;grid-row:1/span 2}
+}
+.shero h1{margin:18px 0 0}
+.slead{font-size:16.5px;line-height:1.68;color:#3a3f47;max-width:60ch;margin:14px 0 0}
+.slead b{color:var(--ink);font-weight:600}
+.tchips{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+.tchip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;
+font-weight:600;color:#41464d;background:rgba(255,255,255,.75);
+border:.5px solid rgba(15,25,35,.08);border-radius:99px;padding:7px 13px}
+.tchip svg{flex:none;color:#0a7350}
+
+.bkcard{position:relative;overflow:hidden;background:#fff;border-radius:26px;
+padding:20px clamp(18px,3vw,24px) 22px;
+box-shadow:0 1px 2px rgba(15,25,35,.05),0 18px 44px rgba(15,25,35,.11),
+inset 0 0 0 1px rgba(226,19,110,.16)}
+.bkcard::before{content:"";position:absolute;top:-80px;right:-70px;width:220px;
+height:220px;border-radius:50%;pointer-events:none;
+background:radial-gradient(circle,rgba(226,19,110,.12),transparent 70%)}
+.bkhead{position:relative;display:flex;align-items:center;justify-content:space-between;
+gap:12px;flex-wrap:wrap}
+.bkhead img{display:block}
+.bktag{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+color:#98094c;background:rgba(226,19,110,.10);padding:6px 11px;border-radius:99px}
+.bkl{margin:18px 0 0;font-size:13px;font-weight:600;color:var(--mut)}
+.bknum{display:flex;align-items:center;gap:12px;margin:7px 0 0;padding:12px 12px 12px 16px;
+border-radius:18px;background:linear-gradient(180deg,#fff,#fff5f9);
+border:1.5px dashed rgba(226,19,110,.36);flex-wrap:wrap}
+.bknum b{flex:1;min-width:150px;font-size:clamp(21px,5.2vw,26px);font-weight:700;
+letter-spacing:1px;line-height:1.25;font-variant-numeric:tabular-nums;
+-webkit-user-select:all;user-select:all}
+.copyb{flex:none;display:inline-flex;align-items:center;gap:7px;min-height:44px;
+padding:0 16px;border:0;border-radius:14px;font:inherit;font-size:13.5px;
+font-weight:700;color:#fff;cursor:pointer;background:#e2136e;
+box-shadow:0 4px 12px rgba(226,19,110,.32);transition:filter .18s,background .18s}
+.copyb:hover{filter:brightness(1.07)}
+.copyb:focus-visible{outline:3px solid rgba(226,19,110,.45);outline-offset:2px}
+.copyb.done{background:#0a7350;box-shadow:0 4px 12px rgba(10,115,80,.28)}
+.amts{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.amt{font-size:13px;font-weight:700;color:#98094c;background:rgba(226,19,110,.08);
+border-radius:12px;padding:8px 13px;font-variant-numeric:tabular-nums}
+.amt.any{color:#5c626a;background:rgba(15,25,35,.05)}
+.bksteps{counter-reset:s;list-style:none;margin:18px 0 0;padding:0}
+.bksteps li{counter-increment:s;position:relative;margin:9px 0;padding-left:30px;
+font-size:14px;line-height:1.5;color:#41464d}
+.bksteps li::before{content:counter(s);position:absolute;left:0;top:1px;
+display:flex;align-items:center;justify-content:center;width:21px;height:21px;
+border-radius:50%;background:rgba(226,19,110,.1);color:#98094c;font-size:11.5px;
+font-weight:700}
+.bkfine{margin:16px 0 0;font-size:12.5px;line-height:1.55;color:var(--mut)}
+
+.cgrid{display:grid;grid-template-columns:1fr;gap:14px;margin:14px 0 0}
+@media(min-width:760px){.cgrid{grid-template-columns:repeat(3,1fr)}}
+.ccard{background:rgba(255,255,255,.72);border:.5px solid rgba(15,25,35,.07);
+border-radius:20px;padding:19px}
+.ccard .ci{display:flex;align-items:center;justify-content:center;width:38px;
+height:38px;margin:0 0 12px;border-radius:12px;background:var(--acsoft);color:var(--acd)}
+.ccard h3{margin:0;font-family:var(--f-display);font-size:16px;font-weight:700;
+letter-spacing:-.2px}
+.ccard p{margin:6px 0 0;font-size:14px;line-height:1.55;color:#5c626a}
+.ccard a{font-weight:600}
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://bhalophone.com/"}, {"@type": "ListItem", "position": 2, "name": "Support", "item": "https://bhalophone.com/support"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does donating move a phone up the list?", "acceptedAnswer": {"@type": "Answer", "text": "No. The order comes from live shop prices and review evidence, recalculated every night. Nobody can buy a spot - not a shop, not a brand, not a donor."}}, {"@type": "Question", "name": "What if I can't spare anything?", "acceptedAnswer": {"@type": "Answer", "text": "Then don't send anything. Every guide, price and the personal pick work exactly the same for you - nothing here is locked. Sharing a guide with someone about to buy helps just as much."}}, {"@type": "Question", "name": "Is this a charity?", "acceptedAnswer": {"@type": "Answer", "text": "No. bhalophone is one person's project. What you send keeps the servers and nightly data runs going. It is not tax-deductible and it does not buy you anything."}}, {"@type": "Question", "name": "I sent it by mistake. Can I get it back?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Get in touch with the transaction ID and it goes straight back to you."}}]}</script>
+</head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
-<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best" class="on">Guides</a><a href="/phone">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
-<div class="wrap" role="main">
-<h1>Support <em>this project</em></h1>
-<p class="sub">bhalophone ranks phones from live Bangladeshi shop data and
-real review evidence. No shop pays us; ranking is never for sale.</p>
-<p>Donation details are coming soon.</p>
-<p><a class="cta" href="/best">Browse the budget guides &rarr;</a></p>
+<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
+<main class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Support</span></nav>
+<section class="shero">
+<div class="sh-copy">
+<h1>Buying the wrong phone here <em>costs months</em></h1>
+<p class="slead">For most people in Bangladesh a phone is not a gadget purchase.
+It is weeks of saving, and it has to last years. Yet the advice around it comes
+from whoever earns the biggest margin on the sale.</p>
 </div>
+<div class="bkcard">
+<div class="bkhead"><img src="/bkash-logo.svg" width="107" height="47" alt="bKash" decoding="async"><span class="bktag">Send Money</span></div>
+<p class="bkl">bKash personal number</p>
+<div class="bknum"><b>01938344754</b>
+<button class="copyb" type="button" data-copy="01938344754"
+aria-label="Copy the bKash number 01938344754">
+<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor"
+stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect x="7" y="7" width="10" height="10" rx="2"/>
+<path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/></svg>
+<span class="cl">Copy</span></button></div>
+<span id="copyst" class="vh" role="status" aria-live="polite"></span>
+<div class="amts"><span class="amt">৳100</span><span class="amt">৳300</span>
+<span class="amt">৳1,000</span><span class="amt any">or whatever you can</span></div>
+<ol class="bksteps">
+<li>Open the bKash app and tap <b>Send Money</b>.</li>
+<li>Paste the number above and enter any amount.</li>
+<li>Reference is optional &mdash; put your name if you want a thank you.</li>
+<li>Confirm and send.</li>
+</ol>
+<p class="bkfine">This is a personal bKash account, not a merchant one, so use
+<b>Send Money</b> rather than Payment. Every taka goes into running the site.
+No receipt, no invoice, no follow-up messages &mdash; and no donor ever gets a
+say in how a phone is ranked.</p>
+</div>
+<div class="sh-more">
+<p class="slead">bhalophone exists to be the other thing: <b>every price pulled
+from real shop listings, every ranking recomputed nightly, nothing for
+sale.</b> No sponsored slots, no shop paying to sit at the top, no affiliate
+deal bending the order. That independence is only possible because nobody is
+buying it &mdash; which is exactly why it needs a little help to stay up.</p>
+<div class="tchips">
+<span class="tchip"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4.5 10.5 3.6 3.6 7.4-8.2"/></svg>No paid placements</span>
+<span class="tchip"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4.5 10.5 3.6 3.6 7.4-8.2"/></svg>Ranking never for sale</span>
+<span class="tchip"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4.5 10.5 3.6 3.6 7.4-8.2"/></svg>Free for everyone</span>
+</div>
+</div>
+</section>
+
+<h2 class="grp">Why it matters</h2>
+<p class="sub">Three things your support actually protects.</p>
+<div class="cgrid">
+<div class="ccard"><span class="ci" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v14M6 17h8M4.2 7.6h11.6M4.2 7.6 2 12.4a2.6 2.6 0 0 0 4.4 0L4.2 7.6Zm11.6 0-2.2 4.8a2.6 2.6 0 0 0 4.4 0l-2.2-4.8Z"/></svg></span><h3>Rankings that answer to you</h3><p>The moment a shop can pay for the top slot, the list stops being advice and starts being an ad. Donations are the only funding model that does not create that pull.</p></div>
+<div class="ccard"><span class="ci" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H15v3M3 6.5V15a2 2 0 0 0 2 2h11a1 1 0 0 0 1-1v-2M3 6.5A1.5 1.5 0 0 0 4.5 8H17v4h-3.2a2 2 0 0 1 0-4H17"/></svg></span><h3>A costly decision, done once</h3><p>A phone bought on a shopkeeper's recommendation and regretted for two years is a real loss for a household here. Getting that call right is the entire job of this site.</p></div>
+<div class="ccard"><span class="ci" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9.5h13V16a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V9.5Zm-.5-3h14v3H3v-3Zm7 0v10.5M10 6.5S9.2 3 7.2 3a1.8 1.8 0 0 0 0 3.5H10Zm0 0s.8-3.5 2.8-3.5a1.8 1.8 0 0 1 0 3.5H10Z"/></svg></span><h3>Free for the people who need it most</h3><p>The buyers who can least afford a mistake are the least likely to pay for advice. Nothing here sits behind a wall, so that stays true.</p></div>
+</div>
+
+<section class="decide">
+<h2>Where your taka actually goes</h2>
+<ul>
+<li><b>Servers and the domain</b> &mdash; the boxes that crawl shops all night
+and serve these pages all day.</li>
+<li><b>The nightly crawl</b> &mdash; every shop we track gets re-read, so the
+price you see is the price today, not last month.</li>
+<li><b>AI ranking calls</b> &mdash; reading reviews and re-ranking phones is
+metered per call, and it is the single biggest running cost.</li>
+<li><b>Phone photos and data storage</b> &mdash; every image is self-hosted so
+no page depends on a shop's server staying up.</li>
+</ul>
+<p>Nothing here pays a salary. It is one person's side project, and any surplus
+goes straight back into covering the next month.</p>
+</section>
+
+<h2 class="grp">No money? These help just as much</h2>
+<p class="sub">Genuinely &mdash; the site grows on word of mouth, not budget.</p>
+<div class="cgrid">
+<div class="ccard"><span class="ci" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6.8a2.3 2.3 0 1 0 0-4.6 2.3 2.3 0 0 0 0 4.6ZM5.5 12.3a2.3 2.3 0 1 0 0-4.6 2.3 2.3 0 0 0 0 4.6Zm9 5.5a2.3 2.3 0 1 0 0-4.6 2.3 2.3 0 0 0 0 4.6Zm-7-6.6 5 2.7m0-7.4-5 2.7"/></svg></span><h3>Share a guide</h3><p>Send someone who is phone-shopping straight to the <a href="/best">budget guide</a> for their price range. One share reaches further than one donation.</p></div>
+<div class="ccard"><span class="ci" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 17V3.5m0 0h10l-2 3.2 2 3.3h-10"/></svg></span><h3>Tell us when a price is wrong</h3><p>Shops change prices faster than any crawler. A message on <a href="https://www.facebook.com/bhalophone" rel="noopener noreferrer" target="_blank">Facebook</a> naming the phone and the shop gets it fixed on the next nightly run.</p></div>
+<div class="ccard"><span class="ci" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 10.2c0 3.4-3.1 6.2-7 6.2a8 8 0 0 1-2-.25L4 17.5l.9-2.7A5.9 5.9 0 0 1 3 10.2C3 6.8 6.1 4 10 4s7 2.8 7 6.2Z"/></svg></span><h3>Follow along</h3><p>New guides and price drops get posted on <a href="https://www.facebook.com/bhalophone" rel="noopener noreferrer" target="_blank">Facebook</a>. Following costs nothing and it is how most people find us.</p></div>
+</div>
+
+<section class="faq"><div class="fhead"><span class="eyebrow">Frequently asked questions</span><h2>Fair questions before you send anything</h2><a class="fmore" href="/best">Browse more recommendations <span aria-hidden="true">&rarr;</span></a></div><details open><summary>Does donating move a phone up the list?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>No. The order comes from live shop prices and what reviewers actually found, recalculated every night. Nobody can buy a spot &mdash; not a shop, not a brand, not you. The day that stops being true, the list is worthless to you anyway.</p></details><details><summary>What if I can't spare anything?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>Then don't send anything. Every guide, every price and the personal pick work exactly the same for you &mdash; nothing here is locked and nothing will be. Sending a guide to a friend who is about to buy helps just as much.</p></details><details><summary>Is this a charity?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>No, it is one person's project &mdash; built and paid for by <a href="https://arkanullah.pro.bd" rel="noopener noreferrer" target="_blank">Arkanullah Saad</a>. What you send keeps the servers and the nightly data runs going. It is not tax-deductible, and it does not buy you anything.</p></details><details><summary>I sent it by mistake. Can I get it back?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>Yes. Message the <a href="https://www.facebook.com/bhalophone" rel="noopener noreferrer" target="_blank">Facebook page</a> with the transaction ID and it goes straight back to you. No questions.</p></details></section>
+<p style="margin:28px 0 0"><a class="cta" href="/best">Browse the budget guides
+&rarr;</a></p>
+</main>
 <div class="footwrap">
 <footer class="bigfoot"><div class="inner">
 <div>
@@ -943,4 +1096,20 @@ real review evidence. No shop pays us; ranking is never for sale.</p>
 </div>
 <div class="copy">&copy; 2026 bhalophone. All rights reserved.</div>
 </footer></div>
+<script>
+(function(){var b=document.querySelector('.copyb');if(!b)return;
+var lb=b.querySelector('.cl'),st=document.getElementById('copyst');
+function ok(){b.classList.add('done');lb.textContent='Copied';
+st.textContent='bKash number copied';
+setTimeout(function(){b.classList.remove('done');lb.textContent='Copy';
+st.textContent=''},2400);}
+function fallback(t){var a=document.createElement('textarea');a.value=t;
+a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';
+document.body.appendChild(a);a.select();
+try{document.execCommand('copy');ok();}catch(e){}document.body.removeChild(a);}
+b.addEventListener('click',function(){var t=b.getAttribute('data-copy');
+if(navigator.clipboard&&window.isSecureContext){
+navigator.clipboard.writeText(t).then(ok,function(){fallback(t);});}
+else{fallback(t);}});})();
+</script>
 </body></html>

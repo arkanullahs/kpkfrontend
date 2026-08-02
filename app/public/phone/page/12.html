@@ -956,75 +956,122 @@ table.cmp.vs td{white-space:normal}
    scroll on a phone. This is its own grid: a fixed label column that collapses
    to a stacked label-above-value on mobile, and values that break anywhere so
    nothing can push the page wider than the screen. */
-/* RAM/storage chooser. Buttons only filter -- every block is in the DOM, so
-   with JS off the page reads as a full list instead of an empty widget. */
-/* Owner 2026-08-01: this block "still hasn't got the good ui". It was a row
-   of hairline-bordered buttons over hairline-bordered boxes -- the only part
-   of the site still drawn in 1px grey rectangles instead of cards. */
-.cfgrow{display:inline-flex;flex-wrap:wrap;gap:5px;margin:16px 0 14px;
-  padding:5px;border-radius:99px;background:rgba(15,25,35,.05)}
-.cfgb{font:inherit;font-size:13px;font-weight:700;cursor:pointer;
-  padding:8px 15px;border-radius:99px;color:#565b63;background:none;border:0;
+/* --- the chooser -----------------------------------------------------------
+   Four rows of buttons over one list of listings. It replaced a stack of cards
+   that showed every configuration, channel and shop at once and made a buyer
+   read all of it to answer one question (owner 2026-08-02). Hidden until the
+   script runs, so with JS off the page is a complete price table rather than a
+   widget that does nothing. */
+/* the axes run inline and wrap, not one per line: four stacked rows of two or
+   three chips left most of the width empty and pushed the price down for
+   nothing (owner 2026-08-02) */
+.ofilt{display:flex;flex-wrap:wrap;align-items:center;gap:9px 20px;
+  margin:18px 0 0}
+.ofilt[hidden]{display:none}
+.frow{display:flex;align-items:center;gap:9px}
+.flab{flex:none;font-size:11px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--mut)}
+.fset{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;
+  border-radius:99px;background:rgba(15,25,35,.05)}
+.fb{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:13px;
+  font-weight:600;cursor:pointer;padding:7px 14px;border-radius:99px;
+  color:#565b63;background:none;border:0;white-space:nowrap;
   transition:color .14s,background .14s,box-shadow .14s}
-.cfgb:hover{color:var(--acd);background:rgba(255,255,255,.75)}
-.cfgb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
-  box-shadow:0 4px 12px var(--acglow)}
-.cfgwrap{display:grid;gap:12px}
-.cfgd{border-radius:19px;padding:4px 18px 14px;background:#fff;
-  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.06)}
-.cfgd[hidden]{display:none}
-.cfgh{display:flex;align-items:baseline;justify-content:space-between;
-  gap:12px;flex-wrap:wrap;padding:15px 0 6px;
-  font-family:var(--f-display);font-size:15.5px;letter-spacing:-.3px}
-.cfgh b{font-weight:700;color:var(--ink)}
-/* the one-line answer for this configuration, so the card can be read without
-   going down into the shop list */
-.cfgn{font-family:var(--f-sans);font-size:12.5px;font-weight:600;
-  letter-spacing:0;color:var(--mut)}
-/* the shops holding THIS configuration, inside its own card. They used to be
-   a separate site-wide table below, which meant the same fact was told three
-   times on one page (owner 2026-08-01). */
-.shlist{margin:10px -18px -14px;border-top:1px solid rgba(15,25,35,.07)}
-.shrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) auto 104px;
-  gap:8px 16px;align-items:center;padding:11px 18px;font-size:13.5px;
-  border-top:1px solid rgba(15,25,35,.05)}
-.shrow:first-child{border-top:0}
-.shrow:hover{background:rgba(37,99,217,.04)}
-.shrow .sn{font-weight:600;color:var(--ink);min-width:0}
-.shrow .sc{color:var(--mut);font-size:12.5px}
-.shrow .sp{font-weight:700;color:var(--ink);text-align:right;
+.fb:hover:not(:disabled){color:var(--acd);background:rgba(255,255,255,.8)}
+.fb:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.fb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
+  box-shadow:0 3px 10px var(--acglow)}
+/* an option with nothing behind it is dimmed, never removed: a button row that
+   reshuffles under the cursor is impossible to aim at */
+.fb:disabled{color:#b3b8bf;cursor:default}
+.fb:disabled .dot{opacity:.35}
+/* the paint, at the size of a bullet, inside the button that filters by it.
+   --paint is set on the BUTTON so selecting a colour can paint the whole chip
+   (owner 2026-08-02: "the chips should change colors according the chosen
+   colour"); a name we could not map has no --paint and falls back to hatching. */
+.dot{width:12px;height:12px;border-radius:50%;flex:none;
+  background:var(--paint,repeating-linear-gradient(45deg,#e2e5ea 0 2px,
+    #f7f8fa 2px 4px));box-shadow:inset 0 0 0 1px rgba(15,25,35,.22)}
+/* scoped to .ofilt so the mobile block below, which restyles .fb, cannot
+   outrank it and hand a selected colour the plain grey chip back */
+.ofilt .fb[style].on{background:var(--paint);color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(15,25,35,.16),0 3px 10px rgba(15,25,35,.2)}
+/* on a painted chip the dot would be invisible against its own colour, so it
+   becomes a ring in whichever ink stayed readable */
+.ofilt .fb[style].on .dot{background:none;
+  box-shadow:inset 0 0 0 2px var(--ink);opacity:.85}
+/* what the current selection actually costs, rewritten on every click */
+.osum{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  margin:20px 0 10px}
+.osum b{font-family:var(--f-display);font-size:26px;font-weight:700;
+  letter-spacing:-.9px;color:var(--ink);font-variant-numeric:tabular-nums}
+.osum span{font-size:13px;font-weight:600;color:var(--mut)}
+/* the warranty premium, subtracted for the reader and told once */
+.owarn{margin:14px 0 0;font-size:13.5px;line-height:1.55;color:#5c626a}
+.owarn b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* --- the listings ----------------------------------------------------------
+   One row per listing, four columns, no boxes inside boxes. The cheapest row
+   a buyer can actually pay is tinted, so the answer is visible before the list
+   is read. */
+.olist{border-radius:18px;overflow:hidden;background:#fff;
+  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.07)}
+.orow{display:grid;grid-template-columns:minmax(120px,1fr) minmax(0,1.6fr) auto
+  96px;gap:3px 16px;align-items:center;padding:12px 17px;font-size:13.5px;
+  border-top:1px solid rgba(15,25,35,.055);transition:background .14s}
+.orow:first-child{border-top:0}
+.orow[hidden]{display:none}
+.orow:hover{background:rgba(37,99,217,.035)}
+.on{font-weight:700;color:var(--ink);min-width:0}
+/* what this listing IS: warranty first, then the configuration, then the
+   details only some listings carry */
+.om{font-size:12.5px;color:var(--mut);min-width:0}
+.oc{font-weight:700;color:var(--mut)}
+.oc.ok{color:#0a7350}
+.oc.warn{color:#8a6414}
+.op{font-weight:700;font-size:15px;color:var(--ink);text-align:right;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.shrow .ss{justify-self:end}
-.shrow .chip{font-size:11.5px;padding:4px 10px}
-.shrow.out .sn,.shrow.out .sp{color:var(--mut);font-weight:600}
-@media(max-width:640px){
-.cfgd{padding:4px 14px 12px}
-.shlist{margin:10px -14px -12px}
-.shrow{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:11px 14px}
-.shrow .sc{order:3;grid-column:1}
-.shrow .sp{order:2}
-.shrow .ss{order:4;justify-self:end}}
-/* official and unofficial never share a row: same config, different warranty,
-   different price, and quoting them as one range is the most misleading thing
-   this page could do (owner 2026-08-01) */
-.chrow{display:flex;flex-wrap:wrap;gap:8px 11px;align-items:center;
-  font-size:13.5px;color:var(--mut);padding:11px 0;
-  border-top:1px solid rgba(15,25,35,.06)}
-.chrow:first-of-type{border-top:0}
-.chlab{flex:none;font-size:10.5px;font-weight:700;letter-spacing:.4px;
-  text-transform:uppercase;padding:4px 10px;border-radius:99px;
-  background:rgba(15,25,35,.06);color:var(--mut)}
-.chlab.ok{background:rgba(22,132,86,.12);color:#0f6a44}
-.chlab.warn{background:rgba(168,118,26,.13);color:#8a6414}
-.chm{display:flex;flex-wrap:wrap;gap:7px 9px;align-items:center}
-/* the price is what the row is for: it carries the weight, not the label */
-.chm b{color:var(--ink);font-family:var(--f-display);font-size:16px;
-  font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
-.cws{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.cwl{font-size:12.5px;color:var(--mut);margin-right:2px}
-.cw{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;
-  background:rgba(15,25,35,.05);color:var(--ink)}
-/* the shop's import market, next to the config it applies to */
+.os{font-size:12.5px;font-weight:600;color:#0a7350;text-align:right;
+  white-space:nowrap}
+.orow.out .on,.orow.out .op{color:var(--mut);font-weight:600}
+.orow.out .os{color:#a8761a}
+.orow.best{background:var(--acsoft)}
+.orow.best:hover{background:rgba(37,99,217,.15)}
+.orow.best .op{color:var(--acd)}
+/* the cheapest row says so, once, in the gutter its price already occupies */
+.orow.best .op::after{content:"Cheapest";display:block;font-family:var(--f-sans);
+  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--acd);margin-top:1px}
+.oempty{margin:16px 2px;font-size:14px;color:var(--mut)}
+.oempty[hidden],.osum[hidden]{display:none}
+@media(max-width:720px){
+/* --- mobile ----------------------------------------------------------------
+   The grey track is what broke here. It is an inline-flex pill that will not
+   wrap, so on a 375px screen the last chip of a row was simply cut off at the
+   edge (owner 2026-08-02: "still looks bad on mobile"). Flattening the four
+   axes into one unlabelled cloud fixed the clipping and cost the grouping,
+   which was worse -- "Not stated" beside "Import" beside "In stock" says
+   nothing about which question each answers ("now on mobile it became
+   confusing").
+
+   So: the labels stay and the track goes. Chips sit directly on the page and
+   wrap like text, which is the one layout that cannot clip. */
+.ofilt{display:block;margin:15px 0 0}
+.frow{flex-wrap:wrap;gap:4px 8px;padding:5px 0;align-items:flex-start}
+.flab{width:100%;font-size:9.5px;letter-spacing:.4px;line-height:1.6}
+.fset{padding:0;background:none;flex-wrap:wrap;gap:6px}
+.fb{padding:8px 13px;font-size:12.5px;gap:7px;background:rgba(15,25,35,.055)}
+.fb:disabled{background:rgba(15,25,35,.028)}
+.osum{margin:17px 0 9px;gap:9px}
+.osum b{font-size:23px}
+.orow{grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:11px 14px}
+/* shop and price hold the first line; what the listing is, and whether they
+   have it, sit underneath so nothing truncates on a 360px screen */
+.om{grid-column:1;grid-row:2;font-size:12px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.os{grid-column:2;grid-row:2}
+.orow.best .op::after{display:inline;margin:0 0 0 7px}}
+/* the shop's import market, where a listing names one */
 .rgtag{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:99px;
   font-size:10.5px;font-weight:700;letter-spacing:.3px;
   background:rgba(38,86,214,.1);color:var(--acd);vertical-align:1px}
@@ -1196,7 +1243,7 @@ table.cmp td.ph .ic{color:var(--acd);opacity:.75}
 </style></head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
-<div class="wrap" role="main">
+<main class="wrap">
 <nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><a href="/phone">Phones</a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Page 12</span></nav>
 <h1>Phone prices in Bangladesh</h1>
 <p class="lead">Live prices for <b>640</b> phones, re-checked nightly
@@ -1217,7 +1264,7 @@ aria-live="polite">Showing 529&ndash;576 of 640 phones</p>
 <div id="pgrid"><div class="pgrid"><a class="pcard out" href="/phone/vivo-v40e-5g"><span class="pshot"><img src="/img/a66b4eabc6d9d92e.webp" alt="Vivo V40e 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V40e 5G</span><span class="ppr">৳38,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-v50"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V50</span><span class="ppr">৳47,399</span></span></a><a class="pcard" href="/phone/vivo-v50-lite"><span class="pshot"><img src="/img/1b05a971861de876.webp" alt="Vivo V50 Lite" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V50 Lite</span><span class="ppr">৳29,490</span></span></a><a class="pcard out" href="/phone/vivo-v50e"><span class="pshot"><img src="/img/af1536a7528f859e.webp" alt="Vivo V50e" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V50e</span><span class="ppr">৳36,999<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/vivo-v60"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V60</span><span class="ppr">৳42,499<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-v60-lite-4g"><span class="pshot"><img src="/img/0533e898c84e89e8.webp" alt="Vivo V60 Lite 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V60 Lite 4G</span><span class="ppr">৳32,999</span></span></a><a class="pcard" href="/phone/vivo-v60-lite-5g"><span class="pshot"><img src="/img/f24a6c0649a814e7.webp" alt="Vivo V60 Lite 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V60 Lite 5G</span><span class="ppr">৳41,499</span></span></a><a class="pcard" href="/phone/vivo-v70"><span class="pshot"><img src="/img/fa4a20ab78aa557a.webp" alt="Vivo V70" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V70</span><span class="ppr">৳58,999</span></span></a><a class="pcard" href="/phone/vivo-v70-elite"><span class="pshot"><img src="/img/37bf12a01bc05a13.webp" alt="Vivo V70 Elite" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V70 Elite</span><span class="ppr">৳63,499</span></span></a><a class="pcard" href="/phone/vivo-v70-fe-5g"><span class="pshot"><img src="/img/8d4fed44dd546379.webp" alt="Vivo V70 FE 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V70 FE 5G</span><span class="ppr">৳40,999</span></span></a><a class="pcard" href="/phone/vivo-v70fe"><span class="pshot"><img src="/img/7c02930caf2a3c20.webp" alt="Vivo V70FE" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">V70FE</span><span class="ppr">৳40,999</span></span></a><a class="pcard" href="/phone/vivo-x-fold5"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X Fold5</span><span class="ppr">৳1,24,990</span></span></a><a class="pcard out" href="/phone/vivo-x100-ultra-5g"><span class="pshot"><img src="/img/013b6849caed656b.webp" alt="Vivo X100 Ultra 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X100 Ultra 5G</span><span class="ppr">৳1,20,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/vivo-x100s-5g"><span class="pshot"><img src="/img/a8dfa111b24266af.webp" alt="Vivo X100s 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X100s 5G</span><span class="ppr">৳70,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-x200"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X200</span><span class="ppr">৳69,990</span></span></a><a class="pcard out" href="/phone/vivo-x200-fe"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X200 FE</span><span class="ppr">৳62,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-x200-pro"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X200 Pro</span><span class="ppr">৳81,490</span></span></a><a class="pcard out" href="/phone/vivo-x200-pro-mini"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X200 Pro Mini</span><span class="ppr">৳69,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-x200-ultra"><span class="pshot"><img src="/img/465bb105b516df04.webp" alt="Vivo X200 Ultra" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X200 Ultra</span><span class="ppr">৳1,13,999</span></span></a><a class="pcard out" href="/phone/vivo-x200t"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X200T</span><span class="ppr">৳72,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-x200s"><span class="pshot"><img src="/img/e8b51abee66ae0d1.webp" alt="Vivo X200s" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X200s</span><span class="ppr">৳66,999</span></span></a><a class="pcard" href="/phone/vivo-x300"><span class="pshot"><img src="/img/4c51ad488d5db230.webp" alt="Vivo X300" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X300</span><span class="ppr">৳75,999</span></span></a><a class="pcard" href="/phone/vivo-x300-fe"><span class="pshot"><img src="/img/268bb8aff95e2e70.webp" alt="Vivo X300 FE" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X300 FE</span><span class="ppr">৳82,999</span></span></a><a class="pcard" href="/phone/vivo-x300-pro"><span class="pshot"><img src="/img/b947e78b3af97799.webp" alt="Vivo X300 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X300 Pro</span><span class="ppr">৳95,999</span></span></a><a class="pcard" href="/phone/vivo-x300-ultra"><span class="pshot"><img src="/img/2a45aaa0dc2bdd38.webp" alt="Vivo X300 Ultra" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X300 Ultra</span><span class="ppr">৳1,33,999</span></span></a><a class="pcard" href="/phone/vivo-x300s"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">X300s</span><span class="ppr">৳85,999</span></span></a><a class="pcard out" href="/phone/vivo-y03t"><span class="pshot"><img src="/img/e65426c12a543234.webp" alt="Vivo Y03t" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y03t</span><span class="ppr">৳10,490<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-y04"><span class="pshot"><img src="/img/68fa959306ce07d0.webp" alt="Vivo Y04" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y04</span><span class="ppr">৳12,399</span></span></a><a class="pcard" href="/phone/vivo-y05"><span class="pshot"><img src="/img/b3e33f624768e2ea.webp" alt="Vivo Y05" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y05</span><span class="ppr">৳16,999</span></span></a><a class="pcard" href="/phone/vivo-y11d"><span class="pshot"><img src="/img/d18880a38bf69948.webp" alt="Vivo Y11d" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y11d</span><span class="ppr">৳16,499</span></span></a><a class="pcard out" href="/phone/vivo-y17s"><span class="pshot"><img src="/img/79ebdde2d66d735a.webp" alt="Vivo Y17s" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y17s</span><span class="ppr">৳13,690<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/vivo-y18e"><span class="pshot"><img src="/img/47d1e80f632041fa.webp" alt="Vivo Y18e" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y18e</span><span class="ppr">৳12,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/vivo-y19"><span class="pshot"><img src="/img/f106107bf2e02540.webp" alt="Vivo Y19" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y19</span><span class="ppr">৳14,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-y19s"><span class="pshot"><img src="/img/cac1be425b2105c6.webp" alt="Vivo Y19s" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y19s</span><span class="ppr">৳14,499</span></span></a><a class="pcard" href="/phone/vivo-y19s-pro"><span class="pshot"><img src="/img/b33fcbc2b09a130d.webp" alt="Vivo Y19s Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y19s Pro</span><span class="ppr">৳17,999</span></span></a><a class="pcard out" href="/phone/vivo-y200t-5g"><span class="pshot"><img src="/img/4e962a9bebbdd9b6.webp" alt="Vivo Y200t 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y200t 5G</span><span class="ppr">৳20,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-y21d"><span class="pshot"><img src="/img/1d71cf646fb8180c.webp" alt="Vivo Y21d" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y21d</span><span class="ppr">৳18,490</span></span></a><a class="pcard" href="/phone/vivo-y22s"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y22s</span><span class="ppr">৳21,799</span></span></a><a class="pcard" href="/phone/vivo-y27s"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y27s</span><span class="ppr">৳21,999</span></span></a><a class="pcard" href="/phone/vivo-y28"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y28</span><span class="ppr">৳15,490</span></span></a><a class="pcard" href="/phone/vivo-y29-4g"><span class="pshot"><img src="/img/78ea1e877428a871.webp" alt="Vivo Y29 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y29 4G</span><span class="ppr">৳24,799</span></span></a><a class="pcard" href="/phone/vivo-y300-gt"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y300 GT</span><span class="ppr">৳34,990</span></span></a><a class="pcard out" href="/phone/vivo-y300t"><span class="pshot"><img src="/img/9d3db04c267c8124.webp" alt="Vivo Y300t" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y300t</span><span class="ppr">৳23,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-y31d"><span class="pshot"><img src="/img/3642b8681ab62b1d.webp" alt="Vivo Y31d" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y31d</span><span class="ppr">৳23,999</span></span></a><a class="pcard out" href="/phone/vivo-y37-5g"><span class="pshot"><img src="/img/50f78cb4b6de42c6.webp" alt="Vivo Y37 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y37 5G</span><span class="ppr">৳20,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/vivo-y400"><span class="pshot"><img src="/img/add1cc64ed8f08a1.webp" alt="Vivo Y400" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y400</span><span class="ppr">৳24,499<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/vivo-y400-pro"><span class="pshot"><img src="/img/36ea6a4186541a66.webp" alt="Vivo Y400 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y400 Pro</span><span class="ppr">৳37,999</span></span></a><a class="pcard" href="/phone/vivo-y500"><span class="pshot"><img src="/img/63c837d8ed08dba2.webp" alt="Vivo Y500" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Vivo</span><span class="pmd">Y500</span><span class="ppr">৳29,990</span></span></a></div></div>
 <div id="ppg"><nav class="pgnav" aria-label="Phone list pages"><a href="/phone/page/11" rel="prev">&larr; Prev</a><a href="/phone">1</a><span class="gap">&hellip;</span><a href="/phone/page/11">11</a><span class="on">12</span><a href="/phone/page/13">13</a><a href="/phone/page/14">14</a><a href="/phone/page/13" rel="next">Next &rarr;</a></nav></div>
 <div class="pickcard"><div class="pcopy"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it, ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div><div class="pbrand" aria-hidden="true"><img src="/apple-touch-icon.png" width="84" height="84" alt="bhalophone logo"><div class="pbtxt"><span class="pbn">bhalophone</span><span class="pbt">AI-powered phone recommendations for Bangladesh</span></div></div></div>
-</div>
+</main>
 <div class="footwrap">
 <footer class="bigfoot"><div class="inner">
 <div>

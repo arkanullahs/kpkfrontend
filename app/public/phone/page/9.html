@@ -956,75 +956,122 @@ table.cmp.vs td{white-space:normal}
    scroll on a phone. This is its own grid: a fixed label column that collapses
    to a stacked label-above-value on mobile, and values that break anywhere so
    nothing can push the page wider than the screen. */
-/* RAM/storage chooser. Buttons only filter -- every block is in the DOM, so
-   with JS off the page reads as a full list instead of an empty widget. */
-/* Owner 2026-08-01: this block "still hasn't got the good ui". It was a row
-   of hairline-bordered buttons over hairline-bordered boxes -- the only part
-   of the site still drawn in 1px grey rectangles instead of cards. */
-.cfgrow{display:inline-flex;flex-wrap:wrap;gap:5px;margin:16px 0 14px;
-  padding:5px;border-radius:99px;background:rgba(15,25,35,.05)}
-.cfgb{font:inherit;font-size:13px;font-weight:700;cursor:pointer;
-  padding:8px 15px;border-radius:99px;color:#565b63;background:none;border:0;
+/* --- the chooser -----------------------------------------------------------
+   Four rows of buttons over one list of listings. It replaced a stack of cards
+   that showed every configuration, channel and shop at once and made a buyer
+   read all of it to answer one question (owner 2026-08-02). Hidden until the
+   script runs, so with JS off the page is a complete price table rather than a
+   widget that does nothing. */
+/* the axes run inline and wrap, not one per line: four stacked rows of two or
+   three chips left most of the width empty and pushed the price down for
+   nothing (owner 2026-08-02) */
+.ofilt{display:flex;flex-wrap:wrap;align-items:center;gap:9px 20px;
+  margin:18px 0 0}
+.ofilt[hidden]{display:none}
+.frow{display:flex;align-items:center;gap:9px}
+.flab{flex:none;font-size:11px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--mut)}
+.fset{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;
+  border-radius:99px;background:rgba(15,25,35,.05)}
+.fb{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:13px;
+  font-weight:600;cursor:pointer;padding:7px 14px;border-radius:99px;
+  color:#565b63;background:none;border:0;white-space:nowrap;
   transition:color .14s,background .14s,box-shadow .14s}
-.cfgb:hover{color:var(--acd);background:rgba(255,255,255,.75)}
-.cfgb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
-  box-shadow:0 4px 12px var(--acglow)}
-.cfgwrap{display:grid;gap:12px}
-.cfgd{border-radius:19px;padding:4px 18px 14px;background:#fff;
-  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.06)}
-.cfgd[hidden]{display:none}
-.cfgh{display:flex;align-items:baseline;justify-content:space-between;
-  gap:12px;flex-wrap:wrap;padding:15px 0 6px;
-  font-family:var(--f-display);font-size:15.5px;letter-spacing:-.3px}
-.cfgh b{font-weight:700;color:var(--ink)}
-/* the one-line answer for this configuration, so the card can be read without
-   going down into the shop list */
-.cfgn{font-family:var(--f-sans);font-size:12.5px;font-weight:600;
-  letter-spacing:0;color:var(--mut)}
-/* the shops holding THIS configuration, inside its own card. They used to be
-   a separate site-wide table below, which meant the same fact was told three
-   times on one page (owner 2026-08-01). */
-.shlist{margin:10px -18px -14px;border-top:1px solid rgba(15,25,35,.07)}
-.shrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) auto 104px;
-  gap:8px 16px;align-items:center;padding:11px 18px;font-size:13.5px;
-  border-top:1px solid rgba(15,25,35,.05)}
-.shrow:first-child{border-top:0}
-.shrow:hover{background:rgba(37,99,217,.04)}
-.shrow .sn{font-weight:600;color:var(--ink);min-width:0}
-.shrow .sc{color:var(--mut);font-size:12.5px}
-.shrow .sp{font-weight:700;color:var(--ink);text-align:right;
+.fb:hover:not(:disabled){color:var(--acd);background:rgba(255,255,255,.8)}
+.fb:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.fb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
+  box-shadow:0 3px 10px var(--acglow)}
+/* an option with nothing behind it is dimmed, never removed: a button row that
+   reshuffles under the cursor is impossible to aim at */
+.fb:disabled{color:#b3b8bf;cursor:default}
+.fb:disabled .dot{opacity:.35}
+/* the paint, at the size of a bullet, inside the button that filters by it.
+   --paint is set on the BUTTON so selecting a colour can paint the whole chip
+   (owner 2026-08-02: "the chips should change colors according the chosen
+   colour"); a name we could not map has no --paint and falls back to hatching. */
+.dot{width:12px;height:12px;border-radius:50%;flex:none;
+  background:var(--paint,repeating-linear-gradient(45deg,#e2e5ea 0 2px,
+    #f7f8fa 2px 4px));box-shadow:inset 0 0 0 1px rgba(15,25,35,.22)}
+/* scoped to .ofilt so the mobile block below, which restyles .fb, cannot
+   outrank it and hand a selected colour the plain grey chip back */
+.ofilt .fb[style].on{background:var(--paint);color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(15,25,35,.16),0 3px 10px rgba(15,25,35,.2)}
+/* on a painted chip the dot would be invisible against its own colour, so it
+   becomes a ring in whichever ink stayed readable */
+.ofilt .fb[style].on .dot{background:none;
+  box-shadow:inset 0 0 0 2px var(--ink);opacity:.85}
+/* what the current selection actually costs, rewritten on every click */
+.osum{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  margin:20px 0 10px}
+.osum b{font-family:var(--f-display);font-size:26px;font-weight:700;
+  letter-spacing:-.9px;color:var(--ink);font-variant-numeric:tabular-nums}
+.osum span{font-size:13px;font-weight:600;color:var(--mut)}
+/* the warranty premium, subtracted for the reader and told once */
+.owarn{margin:14px 0 0;font-size:13.5px;line-height:1.55;color:#5c626a}
+.owarn b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* --- the listings ----------------------------------------------------------
+   One row per listing, four columns, no boxes inside boxes. The cheapest row
+   a buyer can actually pay is tinted, so the answer is visible before the list
+   is read. */
+.olist{border-radius:18px;overflow:hidden;background:#fff;
+  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.07)}
+.orow{display:grid;grid-template-columns:minmax(120px,1fr) minmax(0,1.6fr) auto
+  96px;gap:3px 16px;align-items:center;padding:12px 17px;font-size:13.5px;
+  border-top:1px solid rgba(15,25,35,.055);transition:background .14s}
+.orow:first-child{border-top:0}
+.orow[hidden]{display:none}
+.orow:hover{background:rgba(37,99,217,.035)}
+.on{font-weight:700;color:var(--ink);min-width:0}
+/* what this listing IS: warranty first, then the configuration, then the
+   details only some listings carry */
+.om{font-size:12.5px;color:var(--mut);min-width:0}
+.oc{font-weight:700;color:var(--mut)}
+.oc.ok{color:#0a7350}
+.oc.warn{color:#8a6414}
+.op{font-weight:700;font-size:15px;color:var(--ink);text-align:right;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.shrow .ss{justify-self:end}
-.shrow .chip{font-size:11.5px;padding:4px 10px}
-.shrow.out .sn,.shrow.out .sp{color:var(--mut);font-weight:600}
-@media(max-width:640px){
-.cfgd{padding:4px 14px 12px}
-.shlist{margin:10px -14px -12px}
-.shrow{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:11px 14px}
-.shrow .sc{order:3;grid-column:1}
-.shrow .sp{order:2}
-.shrow .ss{order:4;justify-self:end}}
-/* official and unofficial never share a row: same config, different warranty,
-   different price, and quoting them as one range is the most misleading thing
-   this page could do (owner 2026-08-01) */
-.chrow{display:flex;flex-wrap:wrap;gap:8px 11px;align-items:center;
-  font-size:13.5px;color:var(--mut);padding:11px 0;
-  border-top:1px solid rgba(15,25,35,.06)}
-.chrow:first-of-type{border-top:0}
-.chlab{flex:none;font-size:10.5px;font-weight:700;letter-spacing:.4px;
-  text-transform:uppercase;padding:4px 10px;border-radius:99px;
-  background:rgba(15,25,35,.06);color:var(--mut)}
-.chlab.ok{background:rgba(22,132,86,.12);color:#0f6a44}
-.chlab.warn{background:rgba(168,118,26,.13);color:#8a6414}
-.chm{display:flex;flex-wrap:wrap;gap:7px 9px;align-items:center}
-/* the price is what the row is for: it carries the weight, not the label */
-.chm b{color:var(--ink);font-family:var(--f-display);font-size:16px;
-  font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
-.cws{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.cwl{font-size:12.5px;color:var(--mut);margin-right:2px}
-.cw{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;
-  background:rgba(15,25,35,.05);color:var(--ink)}
-/* the shop's import market, next to the config it applies to */
+.os{font-size:12.5px;font-weight:600;color:#0a7350;text-align:right;
+  white-space:nowrap}
+.orow.out .on,.orow.out .op{color:var(--mut);font-weight:600}
+.orow.out .os{color:#a8761a}
+.orow.best{background:var(--acsoft)}
+.orow.best:hover{background:rgba(37,99,217,.15)}
+.orow.best .op{color:var(--acd)}
+/* the cheapest row says so, once, in the gutter its price already occupies */
+.orow.best .op::after{content:"Cheapest";display:block;font-family:var(--f-sans);
+  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--acd);margin-top:1px}
+.oempty{margin:16px 2px;font-size:14px;color:var(--mut)}
+.oempty[hidden],.osum[hidden]{display:none}
+@media(max-width:720px){
+/* --- mobile ----------------------------------------------------------------
+   The grey track is what broke here. It is an inline-flex pill that will not
+   wrap, so on a 375px screen the last chip of a row was simply cut off at the
+   edge (owner 2026-08-02: "still looks bad on mobile"). Flattening the four
+   axes into one unlabelled cloud fixed the clipping and cost the grouping,
+   which was worse -- "Not stated" beside "Import" beside "In stock" says
+   nothing about which question each answers ("now on mobile it became
+   confusing").
+
+   So: the labels stay and the track goes. Chips sit directly on the page and
+   wrap like text, which is the one layout that cannot clip. */
+.ofilt{display:block;margin:15px 0 0}
+.frow{flex-wrap:wrap;gap:4px 8px;padding:5px 0;align-items:flex-start}
+.flab{width:100%;font-size:9.5px;letter-spacing:.4px;line-height:1.6}
+.fset{padding:0;background:none;flex-wrap:wrap;gap:6px}
+.fb{padding:8px 13px;font-size:12.5px;gap:7px;background:rgba(15,25,35,.055)}
+.fb:disabled{background:rgba(15,25,35,.028)}
+.osum{margin:17px 0 9px;gap:9px}
+.osum b{font-size:23px}
+.orow{grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:11px 14px}
+/* shop and price hold the first line; what the listing is, and whether they
+   have it, sit underneath so nothing truncates on a 360px screen */
+.om{grid-column:1;grid-row:2;font-size:12px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.os{grid-column:2;grid-row:2}
+.orow.best .op::after{display:inline;margin:0 0 0 7px}}
+/* the shop's import market, where a listing names one */
 .rgtag{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:99px;
   font-size:10.5px;font-weight:700;letter-spacing:.3px;
   background:rgba(38,86,214,.1);color:var(--acd);vertical-align:1px}
@@ -1196,7 +1243,7 @@ table.cmp td.ph .ic{color:var(--acd);opacity:.75}
 </style></head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
-<div class="wrap" role="main">
+<main class="wrap">
 <nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><a href="/phone">Phones</a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Page 9</span></nav>
 <h1>Phone prices in Bangladesh</h1>
 <p class="lead">Live prices for <b>640</b> phones, re-checked nightly
@@ -1217,7 +1264,7 @@ aria-live="polite">Showing 385&ndash;432 of 640 phones</p>
 <div id="pgrid"><div class="pgrid"><a class="pcard" href="/phone/samsung-galaxy-a06-5g"><span class="pshot"><img src="/img/31515559a1d3145d.webp" alt="Samsung Galaxy A06 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A06 5G</span><span class="ppr">৳15,499</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a07-4g"><span class="pshot"><img src="/img/0411526fb336ee36.webp" alt="Samsung Galaxy A07 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A07 4G</span><span class="ppr">৳15,999</span></span></a><a class="pcard out" href="/phone/samsung-galaxy-a07-5g"><span class="pshot"><img src="/img/e9aed7510b16effa.webp" alt="Samsung Galaxy A07 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A07 5G</span><span class="ppr">৳20,490<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/samsung-galaxy-a13"><span class="pshot"><img src="/img/73e8580d06effdd3.webp" alt="Samsung Galaxy A13 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A13 5G</span><span class="ppr">৳17,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-a14"><span class="pshot"><img src="/img/44879d824b9aed74.webp" alt="Samsung Galaxy A14" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A14</span><span class="ppr">৳23,499</span></span></a><a class="pcard out" href="/phone/samsung-galaxy-a15-4g"><span class="pshot"><img src="/img/c855c0157d2e2da0.webp" alt="Samsung Galaxy A15 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A15 4G</span><span class="ppr">৳14,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-a15-5g"><span class="pshot"><img src="/img/37e6d21f14deb301.webp" alt="Samsung Galaxy A15 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A15 5G</span><span class="ppr">৳27,599</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a16-4g"><span class="pshot"><img src="/img/aa655949790c6506.webp" alt="Samsung Galaxy A16 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A16 4G</span><span class="ppr">৳18,499</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a16-5g"><span class="pshot"><img src="/img/48b69d2669f975fd.webp" alt="Samsung Galaxy A16 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A16 5G</span><span class="ppr">৳30,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a17-4g"><span class="pshot"><img src="/img/63d71dbf03d3de12.webp" alt="Samsung Galaxy A17 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A17 4G</span><span class="ppr">৳24,499</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a17-5g"><span class="pshot"><img src="/img/1776fc334a01b371.webp" alt="Samsung Galaxy A17 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A17 5G</span><span class="ppr">৳27,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a23-4g"><span class="pshot"><img src="/img/e6a42b6aad0c8234.webp" alt="Samsung Galaxy A23 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A23 4G</span><span class="ppr">৳31,199</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a24"><span class="pshot"><img src="/img/a7b63f73bc1f40bb.webp" alt="Samsung Galaxy A24" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A24</span><span class="ppr">৳38,199</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a26-4g"><span class="pshot"><img src="/img/0dca4a9f4b66b9f5.webp" alt="Samsung Galaxy A26 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A26 4G</span><span class="ppr">৳37,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a26-5g"><span class="pshot"><img src="/img/2b719807de13405f.webp" alt="Samsung Galaxy A26 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A26 5G</span><span class="ppr">৳37,499</span></span></a><a class="pcard out" href="/phone/samsung-galaxy-a33-5g"><span class="pshot"><img src="/img/cc4bbf56100c0109.webp" alt="Samsung Galaxy A33 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A33 5G</span><span class="ppr">৳28,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-a34-5g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A34 5G</span><span class="ppr">৳53,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a35-5g"><span class="pshot"><img src="/img/6038ad806035f2f0.webp" alt="Samsung Galaxy A35 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A35 5G</span><span class="ppr">৳32,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a36-5g"><span class="pshot"><img src="/img/ca46106c3a07113e.webp" alt="Samsung Galaxy A36 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A36 5G</span><span class="ppr">৳35,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a37-5g"><span class="pshot"><img src="/img/9d2e1ad62a635554.webp" alt="Samsung Galaxy A37 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A37 5G</span><span class="ppr">৳34,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a53-5g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A53 5G</span><span class="ppr">৳32,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a54-5g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A54 5G</span><span class="ppr">৳63,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a55-5g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A55 5G</span><span class="ppr">৳74,810</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a56-5g"><span class="pshot"><img src="/img/b8c5662a8e624c29.webp" alt="Samsung Galaxy A56 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A56 5G</span><span class="ppr">৳41,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a57-5g"><span class="pshot"><img src="/img/140f6c6435539200.webp" alt="Samsung Galaxy A57 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A57 5G</span><span class="ppr">৳42,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a73-5g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A73 5G</span><span class="ppr">৳47,499</span></span></a><a class="pcard" href="/phone/samsung-galaxy-f05"><span class="pshot"><img src="/img/1c876ff5a9f82f4d.webp" alt="Samsung Galaxy F05" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F05</span><span class="ppr">৳11,490</span></span></a><a class="pcard" href="/phone/samsung-galaxy-f06"><span class="pshot"><img src="/img/cdb76484d45b6813.webp" alt="Samsung Galaxy F06" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F06</span><span class="ppr">৳14,990</span></span></a><a class="pcard" href="/phone/samsung-galaxy-f07"><span class="pshot"><img src="/img/e7fe3cc67d9e638e.webp" alt="Samsung Galaxy F07" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F07</span><span class="ppr">৳14,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-f13"><span class="pshot"><img src="/img/2e3f00da68381e39.webp" alt="Samsung Galaxy F13" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F13</span><span class="ppr">৳22,499</span></span></a><a class="pcard out" href="/phone/samsung-galaxy-f14-4g"><span class="pshot"><img src="/img/394c7b9866abcf13.webp" alt="Samsung Galaxy F14 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F14 4G</span><span class="ppr">৳13,499<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-f15-5g"><span class="pshot"><img src="/img/4fa8c51cf6abf4a6.webp" alt="Samsung Galaxy F15 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F15 5G</span><span class="ppr">৳18,477</span></span></a><a class="pcard" href="/phone/samsung-galaxy-f17-5g"><span class="pshot"><img src="/img/530fb29810951ffe.webp" alt="Samsung Galaxy F17 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F17 5G</span><span class="ppr">৳26,490</span></span></a><a class="pcard" href="/phone/samsung-galaxy-f23-5g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F23 5G</span><span class="ppr">৳33,499</span></span></a><a class="pcard out" href="/phone/samsung-galaxy-f34"><span class="pshot"><img src="/img/9311268e69255fea.webp" alt="Samsung Galaxy F34 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F34 5G</span><span class="ppr">৳21,399<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-f36-5g"><span class="pshot"><img src="/img/4b3054649d799b98.webp" alt="Samsung Galaxy F36 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F36 5G</span><span class="ppr">৳25,990</span></span></a><a class="pcard out" href="/phone/samsung-galaxy-f55-5g"><span class="pshot"><img src="/img/0009556893d8f125.webp" alt="Samsung Galaxy F55 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F55 5G</span><span class="ppr">৳28,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-f56"><span class="pshot"><img src="/img/c3fb2bccbd622b8f.webp" alt="Samsung Galaxy F56" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F56</span><span class="ppr">৳33,490</span></span></a><a class="pcard" href="/phone/samsung-galaxy-f70e-5g"><span class="pshot"><img src="/img/18ff6751c1b0b432.webp" alt="Samsung Galaxy F70e 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy F70e 5G</span><span class="ppr">৳19,499</span></span></a><a class="pcard" href="/phone/samsung-galaxy-fold-7"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy Fold 7</span><span class="ppr">৳1,50,999</span></span></a><a class="pcard" href="/phone/samsung-galaxy-m06-5g"><span class="pshot"><img src="/img/aff8dde1c516215f.webp" alt="Samsung Galaxy M06 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy M06 5G</span><span class="ppr">৳15,499</span></span></a><a class="pcard out" href="/phone/samsung-galaxy-m14-4g"><span class="pshot"><img src="/img/9ebc2eecfacc87fd.webp" alt="Samsung Galaxy M14 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy M14 4G</span><span class="ppr">৳12,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/samsung-galaxy-m14-5g"><span class="pshot"><img src="/img/6c049d6e0ff034b4.webp" alt="Samsung Galaxy M14 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy M14 5G</span><span class="ppr">৳16,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-m15"><span class="pshot"><img src="/img/d57efffc609a2e3d.webp" alt="Samsung Galaxy M15" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy M15</span><span class="ppr">৳18,890</span></span></a><a class="pcard" href="/phone/samsung-galaxy-m17-5g"><span class="pshot"><img src="/img/48d72b3b62b359ed.webp" alt="Samsung Galaxy M17 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy M17 5G</span><span class="ppr">৳26,099</span></span></a><a class="pcard" href="/phone/samsung-galaxy-m17e"><span class="pshot"><img src="/img/431203a9e1750bb4.webp" alt="Samsung Galaxy M17e" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy M17e</span><span class="ppr">৳23,999</span></span></a><a class="pcard out" href="/phone/samsung-galaxy-m33-5g"><span class="pshot"><img src="/img/6884588201e995ad.webp" alt="Samsung Galaxy M33 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy M33 5G</span><span class="ppr">৳21,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-m36-5g"><span class="pshot"><img src="/img/b7482823ed956973.webp" alt="Samsung Galaxy M36 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy M36 5G</span><span class="ppr">৳26,499</span></span></a></div></div>
 <div id="ppg"><nav class="pgnav" aria-label="Phone list pages"><a href="/phone/page/8" rel="prev">&larr; Prev</a><a href="/phone">1</a><span class="gap">&hellip;</span><a href="/phone/page/8">8</a><span class="on">9</span><a href="/phone/page/10">10</a><span class="gap">&hellip;</span><a href="/phone/page/14">14</a><a href="/phone/page/10" rel="next">Next &rarr;</a></nav></div>
 <div class="pickcard"><div class="pcopy"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it, ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div><div class="pbrand" aria-hidden="true"><img src="/apple-touch-icon.png" width="84" height="84" alt="bhalophone logo"><div class="pbtxt"><span class="pbn">bhalophone</span><span class="pbt">AI-powered phone recommendations for Bangladesh</span></div></div></div>
-</div>
+</main>
 <div class="footwrap">
 <footer class="bigfoot"><div class="inner">
 <div>

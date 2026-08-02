@@ -962,75 +962,122 @@ table.cmp.vs td{white-space:normal}
    scroll on a phone. This is its own grid: a fixed label column that collapses
    to a stacked label-above-value on mobile, and values that break anywhere so
    nothing can push the page wider than the screen. */
-/* RAM/storage chooser. Buttons only filter -- every block is in the DOM, so
-   with JS off the page reads as a full list instead of an empty widget. */
-/* Owner 2026-08-01: this block "still hasn't got the good ui". It was a row
-   of hairline-bordered buttons over hairline-bordered boxes -- the only part
-   of the site still drawn in 1px grey rectangles instead of cards. */
-.cfgrow{display:inline-flex;flex-wrap:wrap;gap:5px;margin:16px 0 14px;
-  padding:5px;border-radius:99px;background:rgba(15,25,35,.05)}
-.cfgb{font:inherit;font-size:13px;font-weight:700;cursor:pointer;
-  padding:8px 15px;border-radius:99px;color:#565b63;background:none;border:0;
+/* --- the chooser -----------------------------------------------------------
+   Four rows of buttons over one list of listings. It replaced a stack of cards
+   that showed every configuration, channel and shop at once and made a buyer
+   read all of it to answer one question (owner 2026-08-02). Hidden until the
+   script runs, so with JS off the page is a complete price table rather than a
+   widget that does nothing. */
+/* the axes run inline and wrap, not one per line: four stacked rows of two or
+   three chips left most of the width empty and pushed the price down for
+   nothing (owner 2026-08-02) */
+.ofilt{display:flex;flex-wrap:wrap;align-items:center;gap:9px 20px;
+  margin:18px 0 0}
+.ofilt[hidden]{display:none}
+.frow{display:flex;align-items:center;gap:9px}
+.flab{flex:none;font-size:11px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--mut)}
+.fset{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;
+  border-radius:99px;background:rgba(15,25,35,.05)}
+.fb{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:13px;
+  font-weight:600;cursor:pointer;padding:7px 14px;border-radius:99px;
+  color:#565b63;background:none;border:0;white-space:nowrap;
   transition:color .14s,background .14s,box-shadow .14s}
-.cfgb:hover{color:var(--acd);background:rgba(255,255,255,.75)}
-.cfgb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
-  box-shadow:0 4px 12px var(--acglow)}
-.cfgwrap{display:grid;gap:12px}
-.cfgd{border-radius:19px;padding:4px 18px 14px;background:#fff;
-  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.06)}
-.cfgd[hidden]{display:none}
-.cfgh{display:flex;align-items:baseline;justify-content:space-between;
-  gap:12px;flex-wrap:wrap;padding:15px 0 6px;
-  font-family:var(--f-display);font-size:15.5px;letter-spacing:-.3px}
-.cfgh b{font-weight:700;color:var(--ink)}
-/* the one-line answer for this configuration, so the card can be read without
-   going down into the shop list */
-.cfgn{font-family:var(--f-sans);font-size:12.5px;font-weight:600;
-  letter-spacing:0;color:var(--mut)}
-/* the shops holding THIS configuration, inside its own card. They used to be
-   a separate site-wide table below, which meant the same fact was told three
-   times on one page (owner 2026-08-01). */
-.shlist{margin:10px -18px -14px;border-top:1px solid rgba(15,25,35,.07)}
-.shrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) auto 104px;
-  gap:8px 16px;align-items:center;padding:11px 18px;font-size:13.5px;
-  border-top:1px solid rgba(15,25,35,.05)}
-.shrow:first-child{border-top:0}
-.shrow:hover{background:rgba(37,99,217,.04)}
-.shrow .sn{font-weight:600;color:var(--ink);min-width:0}
-.shrow .sc{color:var(--mut);font-size:12.5px}
-.shrow .sp{font-weight:700;color:var(--ink);text-align:right;
+.fb:hover:not(:disabled){color:var(--acd);background:rgba(255,255,255,.8)}
+.fb:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.fb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
+  box-shadow:0 3px 10px var(--acglow)}
+/* an option with nothing behind it is dimmed, never removed: a button row that
+   reshuffles under the cursor is impossible to aim at */
+.fb:disabled{color:#b3b8bf;cursor:default}
+.fb:disabled .dot{opacity:.35}
+/* the paint, at the size of a bullet, inside the button that filters by it.
+   --paint is set on the BUTTON so selecting a colour can paint the whole chip
+   (owner 2026-08-02: "the chips should change colors according the chosen
+   colour"); a name we could not map has no --paint and falls back to hatching. */
+.dot{width:12px;height:12px;border-radius:50%;flex:none;
+  background:var(--paint,repeating-linear-gradient(45deg,#e2e5ea 0 2px,
+    #f7f8fa 2px 4px));box-shadow:inset 0 0 0 1px rgba(15,25,35,.22)}
+/* scoped to .ofilt so the mobile block below, which restyles .fb, cannot
+   outrank it and hand a selected colour the plain grey chip back */
+.ofilt .fb[style].on{background:var(--paint);color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(15,25,35,.16),0 3px 10px rgba(15,25,35,.2)}
+/* on a painted chip the dot would be invisible against its own colour, so it
+   becomes a ring in whichever ink stayed readable */
+.ofilt .fb[style].on .dot{background:none;
+  box-shadow:inset 0 0 0 2px var(--ink);opacity:.85}
+/* what the current selection actually costs, rewritten on every click */
+.osum{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  margin:20px 0 10px}
+.osum b{font-family:var(--f-display);font-size:26px;font-weight:700;
+  letter-spacing:-.9px;color:var(--ink);font-variant-numeric:tabular-nums}
+.osum span{font-size:13px;font-weight:600;color:var(--mut)}
+/* the warranty premium, subtracted for the reader and told once */
+.owarn{margin:14px 0 0;font-size:13.5px;line-height:1.55;color:#5c626a}
+.owarn b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* --- the listings ----------------------------------------------------------
+   One row per listing, four columns, no boxes inside boxes. The cheapest row
+   a buyer can actually pay is tinted, so the answer is visible before the list
+   is read. */
+.olist{border-radius:18px;overflow:hidden;background:#fff;
+  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.07)}
+.orow{display:grid;grid-template-columns:minmax(120px,1fr) minmax(0,1.6fr) auto
+  96px;gap:3px 16px;align-items:center;padding:12px 17px;font-size:13.5px;
+  border-top:1px solid rgba(15,25,35,.055);transition:background .14s}
+.orow:first-child{border-top:0}
+.orow[hidden]{display:none}
+.orow:hover{background:rgba(37,99,217,.035)}
+.on{font-weight:700;color:var(--ink);min-width:0}
+/* what this listing IS: warranty first, then the configuration, then the
+   details only some listings carry */
+.om{font-size:12.5px;color:var(--mut);min-width:0}
+.oc{font-weight:700;color:var(--mut)}
+.oc.ok{color:#0a7350}
+.oc.warn{color:#8a6414}
+.op{font-weight:700;font-size:15px;color:var(--ink);text-align:right;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.shrow .ss{justify-self:end}
-.shrow .chip{font-size:11.5px;padding:4px 10px}
-.shrow.out .sn,.shrow.out .sp{color:var(--mut);font-weight:600}
-@media(max-width:640px){
-.cfgd{padding:4px 14px 12px}
-.shlist{margin:10px -14px -12px}
-.shrow{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:11px 14px}
-.shrow .sc{order:3;grid-column:1}
-.shrow .sp{order:2}
-.shrow .ss{order:4;justify-self:end}}
-/* official and unofficial never share a row: same config, different warranty,
-   different price, and quoting them as one range is the most misleading thing
-   this page could do (owner 2026-08-01) */
-.chrow{display:flex;flex-wrap:wrap;gap:8px 11px;align-items:center;
-  font-size:13.5px;color:var(--mut);padding:11px 0;
-  border-top:1px solid rgba(15,25,35,.06)}
-.chrow:first-of-type{border-top:0}
-.chlab{flex:none;font-size:10.5px;font-weight:700;letter-spacing:.4px;
-  text-transform:uppercase;padding:4px 10px;border-radius:99px;
-  background:rgba(15,25,35,.06);color:var(--mut)}
-.chlab.ok{background:rgba(22,132,86,.12);color:#0f6a44}
-.chlab.warn{background:rgba(168,118,26,.13);color:#8a6414}
-.chm{display:flex;flex-wrap:wrap;gap:7px 9px;align-items:center}
-/* the price is what the row is for: it carries the weight, not the label */
-.chm b{color:var(--ink);font-family:var(--f-display);font-size:16px;
-  font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
-.cws{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.cwl{font-size:12.5px;color:var(--mut);margin-right:2px}
-.cw{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;
-  background:rgba(15,25,35,.05);color:var(--ink)}
-/* the shop's import market, next to the config it applies to */
+.os{font-size:12.5px;font-weight:600;color:#0a7350;text-align:right;
+  white-space:nowrap}
+.orow.out .on,.orow.out .op{color:var(--mut);font-weight:600}
+.orow.out .os{color:#a8761a}
+.orow.best{background:var(--acsoft)}
+.orow.best:hover{background:rgba(37,99,217,.15)}
+.orow.best .op{color:var(--acd)}
+/* the cheapest row says so, once, in the gutter its price already occupies */
+.orow.best .op::after{content:"Cheapest";display:block;font-family:var(--f-sans);
+  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--acd);margin-top:1px}
+.oempty{margin:16px 2px;font-size:14px;color:var(--mut)}
+.oempty[hidden],.osum[hidden]{display:none}
+@media(max-width:720px){
+/* --- mobile ----------------------------------------------------------------
+   The grey track is what broke here. It is an inline-flex pill that will not
+   wrap, so on a 375px screen the last chip of a row was simply cut off at the
+   edge (owner 2026-08-02: "still looks bad on mobile"). Flattening the four
+   axes into one unlabelled cloud fixed the clipping and cost the grouping,
+   which was worse -- "Not stated" beside "Import" beside "In stock" says
+   nothing about which question each answers ("now on mobile it became
+   confusing").
+
+   So: the labels stay and the track goes. Chips sit directly on the page and
+   wrap like text, which is the one layout that cannot clip. */
+.ofilt{display:block;margin:15px 0 0}
+.frow{flex-wrap:wrap;gap:4px 8px;padding:5px 0;align-items:flex-start}
+.flab{width:100%;font-size:9.5px;letter-spacing:.4px;line-height:1.6}
+.fset{padding:0;background:none;flex-wrap:wrap;gap:6px}
+.fb{padding:8px 13px;font-size:12.5px;gap:7px;background:rgba(15,25,35,.055)}
+.fb:disabled{background:rgba(15,25,35,.028)}
+.osum{margin:17px 0 9px;gap:9px}
+.osum b{font-size:23px}
+.orow{grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:11px 14px}
+/* shop and price hold the first line; what the listing is, and whether they
+   have it, sit underneath so nothing truncates on a 360px screen */
+.om{grid-column:1;grid-row:2;font-size:12px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.os{grid-column:2;grid-row:2}
+.orow.best .op::after{display:inline;margin:0 0 0 7px}}
+/* the shop's import market, where a listing names one */
 .rgtag{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:99px;
   font-size:10.5px;font-weight:700;letter-spacing:.3px;
   background:rgba(38,86,214,.1);color:var(--acd);vertical-align:1px}
@@ -1202,9 +1249,9 @@ table.cmp td.ph .ic{color:var(--acd);opacity:.75}
 </style></head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
-<div class="wrap" role="main">
-<nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><a href="/phone">Phones</a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Walton ZENX 2</span></nav><h1>Walton ZENX 2 price in Bangladesh</h1><p class="lead">As of August 2026, the <b>Walton ZENX 2</b> sells in Bangladesh from ৳9,999, in stock at 1 shop we track.</p><p class="sub">Prices re-checked nightly against Bangladeshi shops. Last checked 2026-08-02.</p><article class="hero dhero"><span class="unconf corner">unconfirmed price</span><div class="dpick"><div class="top"><div class="brand">Walton</div><h2>ZENX 2</h2><div class="price"><span class="amt">৳9,999</span><span class="at">at 1 shop</span></div><div class="chips"><span class="chip ok">In stock &middot; 1 shop</span><span class="chip ok">Official (BD warranty)</span></div><div class="kfx"><span class="kft"><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12v8H4V6zm3 0v8m3-8v8m3-8v8"/></svg>4GB RAM</span><span class="kft"><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12v9H4V4zm3 12h6"/></svg>6.8&quot; 120Hz</span><span class="kft"><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h11v7H3v-7zm13 2v3"/></svg>5000 mAh</span></div></div></div></article><section class="vd"><div class="vdh"><svg class="ic" width="19" height="19" viewBox="0 0 20 20" aria-hidden="true" fill="currentColor" stroke="none"><path d="M10 2.6 12.3 7l4.9.6-3.6 3.4.9 4.8L10 13.5l-4.5 2.3.9-4.8L2.8 7.6 7.7 7 10 2.6z"/></svg><h2>Is the Walton ZENX 2 worth buying?</h2></div><p>The Walton ZENX 2 gives you a big, bright screen and a solid feel for under 10,000 taka, but expect the battery to fade fast and the software to show ads. It sports a <b>6.8 inch</b> IPS LCD panel that runs at <b>120Hz</b>, which makes everyday scrolling feel smooth. The <b>5000 mAh</b> cell can last a day with light use, yet many owners notice it draining quickly when the screen is on for long periods. The Unisoc Tiger T615 chipset with <b>4GB</b> RAM handles basic apps, but games lag and load slowly. Camera output is average, suitable for casual shots but not impressive in low light. The phone’s build feels sturdy and the Android skin is light, though medium ad presence and rare software updates can be annoying. Overall it works for simple daily tasks if you do not need heavy gaming or a pristine software experience.</p><div class="gb"><div class="gd"><h3>What is good</h3><ul><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><span>Large <b>6.8 inch</b> <b>120Hz</b> display</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><span>Durable build quality</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><span>Bright IPS LCD screen</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><span><b>5000 mAh</b> battery capacity</span></li></ul></div><div class="bd"><h3>What is not</h3><ul><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><span>Battery drains quickly despite large capacity</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><span>Medium ad load in software</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><span>Weak gaming performance</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><span>Low overall speed for apps</span></li></ul></div></div><div class="wf"><svg class="ic" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><p><b>Buy it if</b> Buy it if you want a big screen phone on a tight budget and do not need heavy gaming or frequent software updates.</p></div><div class="wf"><svg class="ic" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><p><b>Skip it if</b> Skip it if you expect smooth gaming, long battery endurance, or a clean ad‑free Android experience.</p></div></section><h2 class="grp">Prices and stock in Bangladesh</h2><p class="sub">Every configuration we found, what each shop asks for it, and whether they actually have it. Stock and colours are what the shops publish for that exact configuration &mdash; not for the model as a whole.</p><div class="cfgwrap"><div class="cfgd" data-cfg="4gb-64gb"><div class="cfgh"><b>4GB/64GB</b><span class="cfgn">৳9,999 &middot; in stock at 1 shop</span></div><div class="chrow"><span class="chlab ok">Official (BD warranty)</span><span class="chm"><b>৳9,999</b> &middot; <span class="chip ok">In stock at 1 shop</span></span><span class="cws"><span class="cw">Pearl Blue</span></span></div><div class="shlist"><div class="shrow"><span class="sn">SMSGadget</span><span class="sc">Official</span><span class="sp">৳9,999</span><span class="ss"><span class="chip ok">In stock</span></span></div></div></div></div><p class="sub" style="margin-top:16px">Shop names are listed for transparency. We take no commission and link to no seller, so no shop can buy its way up this list.</p><section class="decide"><h2>What owners and reviewers say</h2><div class="rrow l1"><span>Camera</span><span class="rbar"><i style="width:50%"></i></span><b>5.0</b></div><div class="rrow l1"><span>Video</span><span class="rbar"><i style="width:50%"></i></span><b>5.0</b></div><div class="rrow l1"><span>Build</span><span class="rbar"><i style="width:50%"></i></span><b>5.0</b></div><div class="rrow l0"><span>Ease of use</span><span class="rbar"><i style="width:45%"></i></span><b>4.5</b></div><div class="rrow l0"><span>Battery</span><span class="rbar"><i style="width:40%"></i></span><b>4.0</b></div><div class="rrow l0"><span>Display</span><span class="rbar"><i style="width:40%"></i></span><b>4.0</b></div><div class="rrow l0"><span>Performance</span><span class="rbar"><i style="width:30%"></i></span><b>3.0</b></div><div class="rrow l0"><span>Gaming</span><span class="rbar"><i style="width:20%"></i></span><b>2.0</b></div><p>Battery and build strong; camera and display average. Scores are mined from published reviews and owner reports, not from our own testing.</p></section><h2 class="grp">Specifications</h2><div class="tblwrap"><table class="cmp vs"><tbody><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h6v4h4v6h-4v4H7v-4H3V7h4V3z"/></svg>Chipset</span></td><td>Unisoc Tiger T615</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12v9H4V4zm3 12h6"/></svg>Display</span></td><td>6.8&quot;, IPS LCD, 120Hz</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12v8H4V6zm3 0v8m3-8v8m3-8v8"/></svg>Memory</span></td><td>4GB RAM</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h11v7H3v-7zm13 2v3"/></svg>Battery</span></td><td>5000 mAh</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5 17 6v5c0 4-3.2 6-7 6.5C6.2 17 3 15 3 11V6l7-3.5z"/></svg>Software</span></td><td>Android</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12v12H4V5zm0 4h12M7.5 3v3M12.5 3v3"/></svg>Released</span></td><td>2025</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15h2v-3H4v3zm4.5 0h2V9h-2v6zm4.5 0h2V4h-2v11z"/></svg>Network</span></td><td>4G</td></tr></tbody></table></div><h2 class="grp">Before you buy</h2><div class="cavs"><div class="cav"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.4 18 16.6H2L10 3.4zM10 8v3.6M10 14.3v.1"/></svg><div><span class="ct">Owners report</span><p>Battery drains quickly.</p><q>5000mAh battery, but drains quickly</q></div></div><div class="cav"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.4 18 16.6H2L10 3.4zM10 8v3.6M10 14.3v.1"/></svg><div><span class="ct">Owners report</span><p>Ad-heavy software.</p><q>Medium ad presence, not as clean as other brands</q></div></div></div><section class="faq"><div class="fhead"><span class="eyebrow">Frequently asked questions</span><h2>Walton ZENX 2: what buyers ask us</h2><a class="fmore" href="/best">Browse more recommendations <span aria-hidden="true">&rarr;</span></a></div><details open><summary>What is the Walton ZENX 2 price in Bangladesh?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>Walton ZENX 2 costs <b>৳9,999</b> in Bangladesh, in stock at <b>1 shop</b> we track as of 2026-08-02.</p></details><details><summary>How long does the battery last on the Walton ZENX 2?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>The phone has a <b>5000 mAh</b> battery that can last a full day with moderate use, but many owners report it drains quickly when the large screen is used heavily, so endurance is not exceptional.</p></details><details><summary>Can I play games smoothly on the Walton ZENX 2?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>Gaming is not a strong point for this device. The Unisoc Tiger T615 chipset and <b>4GB</b> RAM give low gaming ratings, and owners describe the experience as not suitable for demanding games.</p></details><details><summary>Is the camera good for low‑light photos?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>The camera produces average quality images and receives a modest rating. There is no specific praise for low‑light performance, so expect ordinary results rather than standout night shots.</p></details><details><summary>Will the phone receive Android updates and is the warranty official?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>The phone comes with an official warranty priced at 9,999 taka. Software updates are rare, and the light Android skin includes a medium amount of ads, so long‑term software support is limited.</p></details></section><div class="pickcard"><div class="pcopy"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it, ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div><div class="pbrand" aria-hidden="true"><img src="/apple-touch-icon.png" width="84" height="84" alt="bhalophone logo"><div class="pbtxt"><span class="pbn">bhalophone</span><span class="pbt">AI-powered phone recommendations for Bangladesh</span></div></div></div><h2 class="grp">Similar phones at this price</h2><div class="trend"><a class="tcard" href="/phone/symphony-max-30"><div><div class="tb">Similar price</div><div class="tn">Symphony Max 30</div><div class="tp">৳9,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/symphony-max-60"><div><div class="tb">Similar price</div><div class="tn">Symphony Max 60</div><div class="tp">৳9,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/zte-a36"><img src="/img/4690f23d0844f7df.webp" alt="ZTE A36" width="54" height="72" loading="lazy"><div><div class="tb">Similar price</div><div class="tn">ZTE A36</div><div class="tp">৳10,200 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/infinix-hot-30i"><div><div class="tb">Similar price</div><div class="tn">Infinix Hot 30i</div><div class="tp">৳10,299 <span class="go">&rarr;</span></div></div></a></div>
-</div>
+<main class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><a href="/phone">Phones</a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Walton ZENX 2</span></nav><h1>Walton ZENX 2 price in Bangladesh</h1><p class="lead">As of August 2026, the <b>Walton ZENX 2</b> sells in Bangladesh from ৳9,999, in stock at 1 shop we track.</p><p class="sub">Prices re-checked nightly against Bangladeshi shops. Last checked 2026-08-02.</p><article class="hero dhero"><span class="unconf corner">unconfirmed price</span><div class="dpick"><div class="top"><div class="brand">Walton</div><h2>ZENX 2</h2><div class="price"><span class="amt">৳9,999</span><span class="at">at 1 shop</span></div><div class="chips"><span class="chip ok">In stock &middot; 1 shop</span><span class="chip ok">Official (BD warranty)</span></div><div class="kfx"><span class="kft"><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12v8H4V6zm3 0v8m3-8v8m3-8v8"/></svg>4GB RAM</span><span class="kft"><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12v9H4V4zm3 12h6"/></svg>6.8&quot; 120Hz</span><span class="kft"><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h11v7H3v-7zm13 2v3"/></svg>5000 mAh</span></div></div></div></article><section class="vd"><div class="vdh"><svg class="ic" width="19" height="19" viewBox="0 0 20 20" aria-hidden="true" fill="currentColor" stroke="none"><path d="M10 2.6 12.3 7l4.9.6-3.6 3.4.9 4.8L10 13.5l-4.5 2.3.9-4.8L2.8 7.6 7.7 7 10 2.6z"/></svg><h2>Is the Walton ZENX 2 worth buying?</h2></div><p>The Walton ZENX 2 gives you a big, bright screen and a solid feel for under 10,000 taka, but expect the battery to fade fast and the software to show ads. It sports a <b>6.8 inch</b> IPS LCD panel that runs at <b>120Hz</b>, which makes everyday scrolling feel smooth. The <b>5000 mAh</b> cell can last a day with light use, yet many owners notice it draining quickly when the screen is on for long periods. The Unisoc Tiger T615 chipset with <b>4GB</b> RAM handles basic apps, but games lag and load slowly. Camera output is average, suitable for casual shots but not impressive in low light. The phone’s build feels sturdy and the Android skin is light, though medium ad presence and rare software updates can be annoying. Overall it works for simple daily tasks if you do not need heavy gaming or a pristine software experience.</p><div class="gb"><div class="gd"><h3>What is good</h3><ul><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><span>Large <b>6.8 inch</b> <b>120Hz</b> display</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><span>Durable build quality</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><span>Bright IPS LCD screen</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><span><b>5000 mAh</b> battery capacity</span></li></ul></div><div class="bd"><h3>What is not</h3><ul><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><span>Battery drains quickly despite large capacity</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><span>Medium ad load in software</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><span>Weak gaming performance</span></li><li><svg class="ic" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><span>Low overall speed for apps</span></li></ul></div></div><div class="wf"><svg class="ic" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 8 14.5l8-9"/></svg><p><b>Buy it if</b> Buy it if you want a big screen phone on a tight budget and do not need heavy gaming or frequent software updates.</p></div><div class="wf"><svg class="ic" width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 5.5l9 9m0-9-9 9"/></svg><p><b>Skip it if</b> Skip it if you expect smooth gaming, long battery endurance, or a clean ad‑free Android experience.</p></div></section><h2 class="grp">Prices and stock in Bangladesh</h2><p class="sub">Pick the phone you actually want and the list narrows to the shops selling that exact thing. Stock and colours are what each shop publishes for its own listing &mdash; not for the model as a whole.</p><div class="ofilt" hidden><div class="frow"><span class="flab">Stock</span><div class="fset" data-axis="stock"><button type="button" class="fb on" data-v="">All</button><button type="button" class="fb" data-v="1">In stock</button><button type="button" class="fb" data-v="0">Not in stock</button></div></div></div><div class="osum"><b>৳9,999</b><span>1 listing, 1 in stock at 1 shop</span></div><div class="olist"><div class="orow" data-chan="official" data-cfg="4gb-64gb" data-color="pearl-blue" data-stock="1" data-price="9999" data-shop="SMSGadget" data-taka="৳9,999"><span class="on">SMSGadget</span><span class="om"><b class="oc ok">Official</b> &middot; 4GB/64GB &middot; Pearl Blue</span><span class="op">৳9,999</span><span class="os">In stock</span></div></div><p class="oempty" hidden>No shop we track lists that combination. Clear a filter to widen the search.</p><p class="sub" style="margin-top:16px">Shop names are listed for transparency. We take no commission and link to no seller, so no shop can buy its way up this list.</p><section class="decide"><h2>What owners and reviewers say</h2><div class="rrow l1"><span>Camera</span><span class="rbar"><i style="width:50%"></i></span><b>5.0</b></div><div class="rrow l1"><span>Video</span><span class="rbar"><i style="width:50%"></i></span><b>5.0</b></div><div class="rrow l1"><span>Build</span><span class="rbar"><i style="width:50%"></i></span><b>5.0</b></div><div class="rrow l0"><span>Ease of use</span><span class="rbar"><i style="width:45%"></i></span><b>4.5</b></div><div class="rrow l0"><span>Battery</span><span class="rbar"><i style="width:40%"></i></span><b>4.0</b></div><div class="rrow l0"><span>Display</span><span class="rbar"><i style="width:40%"></i></span><b>4.0</b></div><div class="rrow l0"><span>Performance</span><span class="rbar"><i style="width:30%"></i></span><b>3.0</b></div><div class="rrow l0"><span>Gaming</span><span class="rbar"><i style="width:20%"></i></span><b>2.0</b></div><p>Battery and build strong; camera and display average. Scores are mined from published reviews and owner reports, not from our own testing.</p></section><h2 class="grp">Specifications</h2><div class="tblwrap"><table class="cmp vs"><tbody><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h6v4h4v6h-4v4H7v-4H3V7h4V3z"/></svg>Chipset</span></td><td>Unisoc Tiger T615</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12v9H4V4zm3 12h6"/></svg>Display</span></td><td>6.8&quot;, IPS LCD, 120Hz</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12v8H4V6zm3 0v8m3-8v8m3-8v8"/></svg>Memory</span></td><td>4GB RAM</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h11v7H3v-7zm13 2v3"/></svg>Battery</span></td><td>5000 mAh</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5 17 6v5c0 4-3.2 6-7 6.5C6.2 17 3 15 3 11V6l7-3.5z"/></svg>Software</span></td><td>Android</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12v12H4V5zm0 4h12M7.5 3v3M12.5 3v3"/></svg>Released</span></td><td>2025</td></tr><tr><td class="ph"><span class="sl"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15h2v-3H4v3zm4.5 0h2V9h-2v6zm4.5 0h2V4h-2v11z"/></svg>Network</span></td><td>4G</td></tr></tbody></table></div><h2 class="grp">Before you buy</h2><div class="cavs"><div class="cav"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.4 18 16.6H2L10 3.4zM10 8v3.6M10 14.3v.1"/></svg><div><span class="ct">Owners report</span><p>Battery drains quickly.</p><q>5000mAh battery, but drains quickly</q></div></div><div class="cav"><svg class="ic" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.4 18 16.6H2L10 3.4zM10 8v3.6M10 14.3v.1"/></svg><div><span class="ct">Owners report</span><p>Ad-heavy software.</p><q>Medium ad presence, not as clean as other brands</q></div></div></div><section class="faq"><div class="fhead"><span class="eyebrow">Frequently asked questions</span><h2>Walton ZENX 2: what buyers ask us</h2><a class="fmore" href="/best">Browse more recommendations <span aria-hidden="true">&rarr;</span></a></div><details open><summary>What is the Walton ZENX 2 price in Bangladesh?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>Walton ZENX 2 costs <b>৳9,999</b> in Bangladesh, in stock at <b>1 shop</b> we track as of 2026-08-02.</p></details><details><summary>How long does the battery last on the Walton ZENX 2?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>The phone has a <b>5000 mAh</b> battery that can last a full day with moderate use, but many owners report it drains quickly when the large screen is used heavily, so endurance is not exceptional.</p></details><details><summary>Can I play games smoothly on the Walton ZENX 2?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>Gaming is not a strong point for this device. The Unisoc Tiger T615 chipset and <b>4GB</b> RAM give low gaming ratings, and owners describe the experience as not suitable for demanding games.</p></details><details><summary>Is the camera good for low‑light photos?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>The camera produces average quality images and receives a modest rating. There is no specific praise for low‑light performance, so expect ordinary results rather than standout night shots.</p></details><details><summary>Will the phone receive Android updates and is the warranty official?<span class="chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="m5 7.8 5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary><p>The phone comes with an official warranty priced at 9,999 taka. Software updates are rare, and the light Android skin includes a medium amount of ads, so long‑term software support is limited.</p></details></section><div class="pickcard"><div class="pcopy"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it, ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div><div class="pbrand" aria-hidden="true"><img src="/apple-touch-icon.png" width="84" height="84" alt="bhalophone logo"><div class="pbtxt"><span class="pbn">bhalophone</span><span class="pbt">AI-powered phone recommendations for Bangladesh</span></div></div></div><h2 class="grp">Similar phones at this price</h2><div class="trend"><a class="tcard" href="/phone/symphony-max-30"><div><div class="tb">Similar price</div><div class="tn">Symphony Max 30</div><div class="tp">৳9,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/symphony-max-60"><div><div class="tb">Similar price</div><div class="tn">Symphony Max 60</div><div class="tp">৳9,999 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/zte-a36"><img src="/img/4690f23d0844f7df.webp" alt="ZTE A36" width="54" height="72" loading="lazy"><div><div class="tb">Similar price</div><div class="tn">ZTE A36</div><div class="tp">৳10,200 <span class="go">&rarr;</span></div></div></a><a class="tcard" href="/phone/infinix-hot-30i"><div><div class="tb">Similar price</div><div class="tn">Infinix Hot 30i</div><div class="tp">৳10,299 <span class="go">&rarr;</span></div></div></a></div>
+</main>
 <div class="footwrap">
 <footer class="bigfoot"><div class="inner">
 <div>
@@ -1229,17 +1276,70 @@ table.cmp td.ph .ic{color:var(--acd);opacity:.75}
 
 <script>
 (function(){
- var row=document.querySelector('.cfgrow');if(!row)return;
- var blocks=[].slice.call(document.querySelectorAll('.cfgd'));
- var rows=[].slice.call(document.querySelectorAll('tr[data-cfg]'));
- row.addEventListener('click',function(e){
-  var b=e.target.closest('.cfgb');if(!b)return;
-  var want=b.getAttribute('data-cfg');
-  [].forEach.call(row.querySelectorAll('.cfgb'),function(x){
-    x.classList.toggle('on',x===b);});
-  blocks.concat(rows).forEach(function(el){
-    el.hidden=!!want&&el.getAttribute('data-cfg')!==want;});
+ var box=document.querySelector('.ofilt');if(!box)return;
+ var rows=[].slice.call(document.querySelectorAll('.orow'));
+ var sum=document.querySelector('.osum'),empty=document.querySelector('.oempty');
+ var axes=['chan','cfg','color','stock'],sel={};
+ axes.forEach(function(k){sel[k]='';});
+ function has(r,k,v){
+  var got=r.getAttribute('data-'+k)||'';
+  return k==='color'?got.split('|').indexOf(v)>=0:got===v;
+ }
+ /* matches every axis except `skip`: used to filter the list, and to ask
+    whether an option would still return anything if it were picked */
+ function hit(r,skip){
+  for(var i=0;i<axes.length;i++){
+   var k=axes[i];
+   if(k===skip||!sel[k])continue;
+   if(!has(r,k,sel[k]))return false;
+  }
+  return true;
+ }
+ function paint(){
+  var vis=[],best=null,cheap=null,shops={},live=0;
+  rows.forEach(function(r){
+   var ok=hit(r,null);
+   r.hidden=!ok;r.classList.remove('best');
+   if(!ok)return;
+   vis.push(r);
+   var p=+r.getAttribute('data-price')||0;
+   if(p&&(!cheap||p<+cheap.getAttribute('data-price')))cheap=r;
+   if(r.getAttribute('data-stock')==='1'){
+    live++;shops[r.getAttribute('data-shop')]=1;
+    if(p&&(!best||p<+best.getAttribute('data-price')))best=r;
+   }
+  });
+  if(best)best.classList.add('best');
+  var n=0;for(var s in shops)n++;
+  sum.innerHTML='<b>'+(cheap?cheap.getAttribute('data-taka'):'No price')
+   +'</b><span>'+vis.length+' listing'+(vis.length===1?'':'s')
+   +(live?', '+live+' in stock at '+n+' shop'+(n===1?'':'s'):', none in stock')
+   +'</span>';
+  sum.hidden=!vis.length;
+  empty.hidden=!!vis.length;
+  /* an option that would return nothing is disabled, never removed: a row of
+     buttons that reshuffles on every click is impossible to aim at */
+  axes.forEach(function(k){
+   [].forEach.call(box.querySelectorAll('.fset[data-axis="'+k+'"] .fb'),
+    function(b){
+     var v=b.getAttribute('data-v');
+     if(!v){b.disabled=false;return;}
+     b.disabled=!rows.some(function(r){return hit(r,k)&&has(r,k,v);});
+    });
+  });
+ }
+ box.addEventListener('click',function(e){
+  var b=e.target.closest('.fb');if(!b||b.disabled)return;
+  var set=b.closest('.fset'),k=set.getAttribute('data-axis');
+  /* clicking the active button clears that axis, so every filter is its own
+     undo and nobody has to hunt back to All */
+  sel[k]=(sel[k]===b.getAttribute('data-v')?'':b.getAttribute('data-v'));
+  [].forEach.call(set.querySelectorAll('.fb'),function(x){
+   x.classList.toggle('on',(x.getAttribute('data-v')||'')===sel[k]);});
+  paint();
  });
+ box.hidden=false;
+ paint();
 })();
 </script>
 </body></html>

@@ -956,75 +956,122 @@ table.cmp.vs td{white-space:normal}
    scroll on a phone. This is its own grid: a fixed label column that collapses
    to a stacked label-above-value on mobile, and values that break anywhere so
    nothing can push the page wider than the screen. */
-/* RAM/storage chooser. Buttons only filter -- every block is in the DOM, so
-   with JS off the page reads as a full list instead of an empty widget. */
-/* Owner 2026-08-01: this block "still hasn't got the good ui". It was a row
-   of hairline-bordered buttons over hairline-bordered boxes -- the only part
-   of the site still drawn in 1px grey rectangles instead of cards. */
-.cfgrow{display:inline-flex;flex-wrap:wrap;gap:5px;margin:16px 0 14px;
-  padding:5px;border-radius:99px;background:rgba(15,25,35,.05)}
-.cfgb{font:inherit;font-size:13px;font-weight:700;cursor:pointer;
-  padding:8px 15px;border-radius:99px;color:#565b63;background:none;border:0;
+/* --- the chooser -----------------------------------------------------------
+   Four rows of buttons over one list of listings. It replaced a stack of cards
+   that showed every configuration, channel and shop at once and made a buyer
+   read all of it to answer one question (owner 2026-08-02). Hidden until the
+   script runs, so with JS off the page is a complete price table rather than a
+   widget that does nothing. */
+/* the axes run inline and wrap, not one per line: four stacked rows of two or
+   three chips left most of the width empty and pushed the price down for
+   nothing (owner 2026-08-02) */
+.ofilt{display:flex;flex-wrap:wrap;align-items:center;gap:9px 20px;
+  margin:18px 0 0}
+.ofilt[hidden]{display:none}
+.frow{display:flex;align-items:center;gap:9px}
+.flab{flex:none;font-size:11px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--mut)}
+.fset{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;
+  border-radius:99px;background:rgba(15,25,35,.05)}
+.fb{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:13px;
+  font-weight:600;cursor:pointer;padding:7px 14px;border-radius:99px;
+  color:#565b63;background:none;border:0;white-space:nowrap;
   transition:color .14s,background .14s,box-shadow .14s}
-.cfgb:hover{color:var(--acd);background:rgba(255,255,255,.75)}
-.cfgb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
-  box-shadow:0 4px 12px var(--acglow)}
-.cfgwrap{display:grid;gap:12px}
-.cfgd{border-radius:19px;padding:4px 18px 14px;background:#fff;
-  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.06)}
-.cfgd[hidden]{display:none}
-.cfgh{display:flex;align-items:baseline;justify-content:space-between;
-  gap:12px;flex-wrap:wrap;padding:15px 0 6px;
-  font-family:var(--f-display);font-size:15.5px;letter-spacing:-.3px}
-.cfgh b{font-weight:700;color:var(--ink)}
-/* the one-line answer for this configuration, so the card can be read without
-   going down into the shop list */
-.cfgn{font-family:var(--f-sans);font-size:12.5px;font-weight:600;
-  letter-spacing:0;color:var(--mut)}
-/* the shops holding THIS configuration, inside its own card. They used to be
-   a separate site-wide table below, which meant the same fact was told three
-   times on one page (owner 2026-08-01). */
-.shlist{margin:10px -18px -14px;border-top:1px solid rgba(15,25,35,.07)}
-.shrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) auto 104px;
-  gap:8px 16px;align-items:center;padding:11px 18px;font-size:13.5px;
-  border-top:1px solid rgba(15,25,35,.05)}
-.shrow:first-child{border-top:0}
-.shrow:hover{background:rgba(37,99,217,.04)}
-.shrow .sn{font-weight:600;color:var(--ink);min-width:0}
-.shrow .sc{color:var(--mut);font-size:12.5px}
-.shrow .sp{font-weight:700;color:var(--ink);text-align:right;
+.fb:hover:not(:disabled){color:var(--acd);background:rgba(255,255,255,.8)}
+.fb:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.fb.on{color:#fff;background:linear-gradient(180deg,var(--acg1),var(--acg2));
+  box-shadow:0 3px 10px var(--acglow)}
+/* an option with nothing behind it is dimmed, never removed: a button row that
+   reshuffles under the cursor is impossible to aim at */
+.fb:disabled{color:#b3b8bf;cursor:default}
+.fb:disabled .dot{opacity:.35}
+/* the paint, at the size of a bullet, inside the button that filters by it.
+   --paint is set on the BUTTON so selecting a colour can paint the whole chip
+   (owner 2026-08-02: "the chips should change colors according the chosen
+   colour"); a name we could not map has no --paint and falls back to hatching. */
+.dot{width:12px;height:12px;border-radius:50%;flex:none;
+  background:var(--paint,repeating-linear-gradient(45deg,#e2e5ea 0 2px,
+    #f7f8fa 2px 4px));box-shadow:inset 0 0 0 1px rgba(15,25,35,.22)}
+/* scoped to .ofilt so the mobile block below, which restyles .fb, cannot
+   outrank it and hand a selected colour the plain grey chip back */
+.ofilt .fb[style].on{background:var(--paint);color:var(--ink);
+  box-shadow:inset 0 0 0 1px rgba(15,25,35,.16),0 3px 10px rgba(15,25,35,.2)}
+/* on a painted chip the dot would be invisible against its own colour, so it
+   becomes a ring in whichever ink stayed readable */
+.ofilt .fb[style].on .dot{background:none;
+  box-shadow:inset 0 0 0 2px var(--ink);opacity:.85}
+/* what the current selection actually costs, rewritten on every click */
+.osum{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  margin:20px 0 10px}
+.osum b{font-family:var(--f-display);font-size:26px;font-weight:700;
+  letter-spacing:-.9px;color:var(--ink);font-variant-numeric:tabular-nums}
+.osum span{font-size:13px;font-weight:600;color:var(--mut)}
+/* the warranty premium, subtracted for the reader and told once */
+.owarn{margin:14px 0 0;font-size:13.5px;line-height:1.55;color:#5c626a}
+.owarn b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* --- the listings ----------------------------------------------------------
+   One row per listing, four columns, no boxes inside boxes. The cheapest row
+   a buyer can actually pay is tinted, so the answer is visible before the list
+   is read. */
+.olist{border-radius:18px;overflow:hidden;background:#fff;
+  box-shadow:0 1px 2px rgba(15,25,35,.05),inset 0 0 0 1px rgba(15,25,35,.07)}
+.orow{display:grid;grid-template-columns:minmax(120px,1fr) minmax(0,1.6fr) auto
+  96px;gap:3px 16px;align-items:center;padding:12px 17px;font-size:13.5px;
+  border-top:1px solid rgba(15,25,35,.055);transition:background .14s}
+.orow:first-child{border-top:0}
+.orow[hidden]{display:none}
+.orow:hover{background:rgba(37,99,217,.035)}
+.on{font-weight:700;color:var(--ink);min-width:0}
+/* what this listing IS: warranty first, then the configuration, then the
+   details only some listings carry */
+.om{font-size:12.5px;color:var(--mut);min-width:0}
+.oc{font-weight:700;color:var(--mut)}
+.oc.ok{color:#0a7350}
+.oc.warn{color:#8a6414}
+.op{font-weight:700;font-size:15px;color:var(--ink);text-align:right;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.shrow .ss{justify-self:end}
-.shrow .chip{font-size:11.5px;padding:4px 10px}
-.shrow.out .sn,.shrow.out .sp{color:var(--mut);font-weight:600}
-@media(max-width:640px){
-.cfgd{padding:4px 14px 12px}
-.shlist{margin:10px -14px -12px}
-.shrow{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:11px 14px}
-.shrow .sc{order:3;grid-column:1}
-.shrow .sp{order:2}
-.shrow .ss{order:4;justify-self:end}}
-/* official and unofficial never share a row: same config, different warranty,
-   different price, and quoting them as one range is the most misleading thing
-   this page could do (owner 2026-08-01) */
-.chrow{display:flex;flex-wrap:wrap;gap:8px 11px;align-items:center;
-  font-size:13.5px;color:var(--mut);padding:11px 0;
-  border-top:1px solid rgba(15,25,35,.06)}
-.chrow:first-of-type{border-top:0}
-.chlab{flex:none;font-size:10.5px;font-weight:700;letter-spacing:.4px;
-  text-transform:uppercase;padding:4px 10px;border-radius:99px;
-  background:rgba(15,25,35,.06);color:var(--mut)}
-.chlab.ok{background:rgba(22,132,86,.12);color:#0f6a44}
-.chlab.warn{background:rgba(168,118,26,.13);color:#8a6414}
-.chm{display:flex;flex-wrap:wrap;gap:7px 9px;align-items:center}
-/* the price is what the row is for: it carries the weight, not the label */
-.chm b{color:var(--ink);font-family:var(--f-display);font-size:16px;
-  font-weight:700;letter-spacing:-.4px;font-variant-numeric:tabular-nums}
-.cws{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.cwl{font-size:12.5px;color:var(--mut);margin-right:2px}
-.cw{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;
-  background:rgba(15,25,35,.05);color:var(--ink)}
-/* the shop's import market, next to the config it applies to */
+.os{font-size:12.5px;font-weight:600;color:#0a7350;text-align:right;
+  white-space:nowrap}
+.orow.out .on,.orow.out .op{color:var(--mut);font-weight:600}
+.orow.out .os{color:#a8761a}
+.orow.best{background:var(--acsoft)}
+.orow.best:hover{background:rgba(37,99,217,.15)}
+.orow.best .op{color:var(--acd)}
+/* the cheapest row says so, once, in the gutter its price already occupies */
+.orow.best .op::after{content:"Cheapest";display:block;font-family:var(--f-sans);
+  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--acd);margin-top:1px}
+.oempty{margin:16px 2px;font-size:14px;color:var(--mut)}
+.oempty[hidden],.osum[hidden]{display:none}
+@media(max-width:720px){
+/* --- mobile ----------------------------------------------------------------
+   The grey track is what broke here. It is an inline-flex pill that will not
+   wrap, so on a 375px screen the last chip of a row was simply cut off at the
+   edge (owner 2026-08-02: "still looks bad on mobile"). Flattening the four
+   axes into one unlabelled cloud fixed the clipping and cost the grouping,
+   which was worse -- "Not stated" beside "Import" beside "In stock" says
+   nothing about which question each answers ("now on mobile it became
+   confusing").
+
+   So: the labels stay and the track goes. Chips sit directly on the page and
+   wrap like text, which is the one layout that cannot clip. */
+.ofilt{display:block;margin:15px 0 0}
+.frow{flex-wrap:wrap;gap:4px 8px;padding:5px 0;align-items:flex-start}
+.flab{width:100%;font-size:9.5px;letter-spacing:.4px;line-height:1.6}
+.fset{padding:0;background:none;flex-wrap:wrap;gap:6px}
+.fb{padding:8px 13px;font-size:12.5px;gap:7px;background:rgba(15,25,35,.055)}
+.fb:disabled{background:rgba(15,25,35,.028)}
+.osum{margin:17px 0 9px;gap:9px}
+.osum b{font-size:23px}
+.orow{grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:11px 14px}
+/* shop and price hold the first line; what the listing is, and whether they
+   have it, sit underneath so nothing truncates on a 360px screen */
+.om{grid-column:1;grid-row:2;font-size:12px;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.os{grid-column:2;grid-row:2}
+.orow.best .op::after{display:inline;margin:0 0 0 7px}}
+/* the shop's import market, where a listing names one */
 .rgtag{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:99px;
   font-size:10.5px;font-weight:700;letter-spacing:.3px;
   background:rgba(38,86,214,.1);color:var(--acd);vertical-align:1px}
@@ -1196,7 +1243,7 @@ table.cmp td.ph .ic{color:var(--acd);opacity:.75}
 </style></head>
 <body><div class="orbs"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="bhalophone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
-<div class="wrap" role="main">
+<main class="wrap">
 <nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><a href="/phone">Phones</a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Page 8</span></nav>
 <h1>Phone prices in Bangladesh</h1>
 <p class="lead">Live prices for <b>640</b> phones, re-checked nightly
@@ -1217,7 +1264,7 @@ aria-live="polite">Showing 337&ndash;384 of 640 phones</p>
 <div id="pgrid"><div class="pgrid"><a class="pcard out" href="/phone/realme-note-70t"><span class="pshot"><img src="/img/4b8452d71dc49310.webp" alt="Realme Note 70T" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">Note 70T</span><span class="ppr">৳17,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/realme-p1-speed-5g"><span class="pshot"><img src="/img/99d9e2de71d9e33a.webp" alt="Realme P1 Speed 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P1 Speed 5G</span><span class="ppr">৳26,990</span></span></a><a class="pcard out" href="/phone/realme-p3"><span class="pshot"><img src="/img/d213dafd0b7fe786.webp" alt="Realme P3" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P3</span><span class="ppr">৳25,990<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/realme-p3-lite"><span class="pshot"><img src="/img/f49d2bc8f61e053e.webp" alt="Realme P3 Lite" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P3 Lite</span><span class="ppr">৳19,333</span></span></a><a class="pcard out" href="/phone/realme-p3-ultra"><span class="pshot"><img src="/img/56ffc884265555c2.webp" alt="Realme P3 Ultra" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P3 Ultra</span><span class="ppr">৳36,990<span class="pout">Sold out</span></span></span></a><a class="pcard out" href="/phone/realme-p3x-5g"><span class="pshot"><img src="/img/f4f7a95c61fa1ce0.webp" alt="Realme P3x 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P3x 5G</span><span class="ppr">৳19,999<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/realme-p4"><span class="pshot"><img src="/img/eb70addfc2b1624a.webp" alt="Realme P4" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P4</span><span class="ppr">৳33,499</span></span></a><a class="pcard" href="/phone/realme-p4-lite"><span class="pshot"><img src="/img/5fbf5d4aceb1754d.webp" alt="Realme P4 Lite" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P4 Lite</span><span class="ppr">৳16,490</span></span></a><a class="pcard" href="/phone/realme-p4-power"><span class="pshot"><img src="/img/800609b28461d588.webp" alt="Realme P4 Power" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P4 Power</span><span class="ppr">৳39,499</span></span></a><a class="pcard out" href="/phone/realme-p4-pro"><span class="pshot"><img src="/img/eacfa7a96035fc51.webp" alt="Realme P4 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P4 Pro</span><span class="ppr">৳36,999<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/realme-p4r"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P4R</span><span class="ppr">৳27,499</span></span></a><a class="pcard" href="/phone/realme-p4x"><span class="pshot"><img src="/img/b8dbdbc146bfcc84.webp" alt="Realme P4x" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Realme</span><span class="pmd">P4x</span><span class="ppr">৳25,999</span></span></a><a class="pcard" href="/phone/redmagic-10s-pro"><span class="pshot"><img src="/img/c8e0a1a88ffe5aad.webp" alt="RedMagic 10S Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">RedMagic</span><span class="pmd">10S Pro</span><span class="ppr">৳93,999</span></span></a><a class="pcard" href="/phone/redmagic-11s-pro"><span class="pshot"><img src="/img/02502fa4435fe858.webp" alt="RedMagic 11S Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">RedMagic</span><span class="pmd">11S Pro</span><span class="ppr">৳1,52,840</span></span></a><a class="pcard" href="/phone/redmi-15-4g"><span class="pshot"><img src="/img/c653560b6c76aefb.webp" alt="Redmi 15 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">15 4G</span><span class="ppr">৳20,999</span></span></a><a class="pcard" href="/phone/redmi-15c-4g"><span class="pshot"><img src="/img/d1ee4dd4f9497e22.webp" alt="Redmi 15C 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">15C 4G</span><span class="ppr">৳16,990</span></span></a><a class="pcard" href="/phone/redmi-a3"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">A3</span><span class="ppr">৳10,999</span></span></a><a class="pcard" href="/phone/redmi-a5"><span class="pshot"><img src="/img/275a68cd3553ab0a.webp" alt="Redmi A5" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">A5</span><span class="ppr">৳15,499</span></span></a><a class="pcard" href="/phone/redmi-a7"><span class="pshot"><img src="/img/8d2b4a89fc7fb445.webp" alt="Redmi A7" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">A7</span><span class="ppr">৳13,499</span></span></a><a class="pcard" href="/phone/redmi-a7-pro"><span class="pshot"><img src="/img/7ae519248b567b92.webp" alt="Redmi A7 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">A7 Pro</span><span class="ppr">৳15,290</span></span></a><a class="pcard" href="/phone/redmi-k80"><span class="pshot"><img src="/img/be831ed260ae2f4f.webp" alt="Redmi K80" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">K80</span><span class="ppr">৳43,490</span></span></a><a class="pcard" href="/phone/redmi-k80-pro"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">K80 Pro</span><span class="ppr">৳56,500</span></span></a><a class="pcard" href="/phone/redmi-k90"><span class="pshot"><img src="/img/13e672678cf0028f.webp" alt="Redmi K90" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">K90</span><span class="ppr">৳53,499</span></span></a><a class="pcard" href="/phone/redmi-k90-pro-max"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">K90 Pro Max</span><span class="ppr">৳77,490</span></span></a><a class="pcard" href="/phone/redmi-note-13-pro-4g"><span class="pshot"><img src="/img/ad73454e69706d25.webp" alt="Redmi Note 13 Pro 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 13 Pro 4G</span><span class="ppr">৳26,990</span></span></a><a class="pcard" href="/phone/redmi-note-13-pro-5g"><span class="pshot"><img src="/img/788a7317daf400f0.webp" alt="Redmi Note 13 Pro 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 13 Pro 5G</span><span class="ppr">৳27,999</span></span></a><a class="pcard" href="/phone/redmi-note-14-4g"><span class="pshot"><img src="/img/fa2b3d89decc7df6.webp" alt="Redmi Note 14 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 14 4G</span><span class="ppr">৳22,999</span></span></a><a class="pcard" href="/phone/redmi-note-14-5g"><span class="pshot"><img src="/img/c2db57d9847f3b62.webp" alt="Redmi Note 14 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 14 5G</span><span class="ppr">৳21,999</span></span></a><a class="pcard" href="/phone/redmi-note-14-pro-4g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 14 Pro 4G</span><span class="ppr">৳31,499</span></span></a><a class="pcard" href="/phone/redmi-note-14-pro-5g"><span class="pshot"><img src="/img/1ee45e4110e99533.webp" alt="Redmi Note 14 Pro 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 14 Pro 5G</span><span class="ppr">৳27,499</span></span></a><a class="pcard" href="/phone/redmi-note-14-pro-plus-5g"><span class="pshot"><img src="/img/7f975c812b9c041e.webp" alt="Redmi Note 14 Pro Plus 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 14 Pro Plus 5G</span><span class="ppr">৳33,999</span></span></a><a class="pcard" href="/phone/redmi-note-15-4g"><span class="pshot"><img src="/img/04d576afb7d19f02.webp" alt="Redmi Note 15 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 15 4G</span><span class="ppr">৳24,999</span></span></a><a class="pcard" href="/phone/redmi-note-15-5g"><span class="pshot"><img src="/img/378ac7bc32bf1c37.webp" alt="Redmi Note 15 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 15 5G</span><span class="ppr">৳24,499</span></span></a><a class="pcard" href="/phone/redmi-note-15-pro-4g"><span class="pshot"><img src="/img/78ff074bf872b72e.webp" alt="Redmi Note 15 Pro 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 15 Pro 4G</span><span class="ppr">৳36,999</span></span></a><a class="pcard" href="/phone/redmi-note-15-pro-5g"><span class="pshot"><img src="/img/8c4111e29a72ceb4.webp" alt="Redmi Note 15 Pro 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 15 Pro 5G</span><span class="ppr">৳30,999</span></span></a><a class="pcard" href="/phone/redmi-note-15-pro-plus-5g"><span class="pshot"><img src="/img/6b231308a00ef7c1.webp" alt="Redmi Note 15 Pro Plus 5G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 15 Pro Plus 5G</span><span class="ppr">৳40,499</span></span></a><a class="pcard" href="/phone/redmi-note-17-5g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 17 5G</span><span class="ppr">৳31,500</span></span></a><a class="pcard" href="/phone/redmi-note-17-pro-5g"><span class="pshot noimg"><svg width="46" height="62" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.8" y="1.6" width="18.4" height="28.8" rx="3.4"/><path d="M9.6 4.8h4.8"/></svg></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Note 17 Pro 5G</span><span class="ppr">৳39,500</span></span></a><a class="pcard" href="/phone/redmi-turbo-4"><span class="pshot"><img src="/img/8c17247a02ecbe6c.webp" alt="Redmi Turbo 4" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Turbo 4</span><span class="ppr">৳35,490</span></span></a><a class="pcard" href="/phone/redmi-turbo-4-pro"><span class="pshot"><img src="/img/c5bb32964fd70659.webp" alt="Redmi Turbo 4 Pro" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Turbo 4 Pro</span><span class="ppr">৳42,999</span></span></a><a class="pcard" href="/phone/redmi-turbo-5"><span class="pshot"><img src="/img/21f498303585392b.webp" alt="Redmi Turbo 5" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Turbo 5</span><span class="ppr">৳41,990</span></span></a><a class="pcard" href="/phone/redmi-turbo-5-max"><span class="pshot"><img src="/img/20119370e2b3fd6d.webp" alt="Redmi Turbo 5 Max" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Redmi</span><span class="pmd">Turbo 5 Max</span><span class="ppr">৳46,999</span></span></a><a class="pcard out" href="/phone/samsung-a04e"><span class="pshot"><img src="/img/eeb55b6c1b3eaccb.webp" alt="Samsung A04e" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">A04e</span><span class="ppr">৳15,690<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-a04"><span class="pshot"><img src="/img/6a167f94477d14a9.webp" alt="Samsung Galaxy A04" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A04</span><span class="ppr">৳15,699</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a04s"><span class="pshot"><img src="/img/ea159dbe558646d8.webp" alt="Samsung Galaxy A04s" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A04s</span><span class="ppr">৳19,990</span></span></a><a class="pcard" href="/phone/samsung-galaxy-a05"><span class="pshot"><img src="/img/19dad1ecf2913de8.webp" alt="Samsung Galaxy A05" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A05</span><span class="ppr">৳14,799</span></span></a><a class="pcard out" href="/phone/samsung-galaxy-a05s"><span class="pshot"><img src="/img/3d38b4d2fd2c8e72.webp" alt="Samsung Galaxy A05s" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A05s</span><span class="ppr">৳14,490<span class="pout">Sold out</span></span></span></a><a class="pcard" href="/phone/samsung-galaxy-a06-4g"><span class="pshot"><img src="/img/684fa92ec612035f.webp" alt="Samsung Galaxy A06 4G" width="150" height="200" loading="lazy" decoding="async"></span><span class="pbod"><span class="pbr">Samsung</span><span class="pmd">Galaxy A06 4G</span><span class="ppr">৳14,290</span></span></a></div></div>
 <div id="ppg"><nav class="pgnav" aria-label="Phone list pages"><a href="/phone/page/7" rel="prev">&larr; Prev</a><a href="/phone">1</a><span class="gap">&hellip;</span><a href="/phone/page/7">7</a><span class="on">8</span><a href="/phone/page/9">9</a><span class="gap">&hellip;</span><a href="/phone/page/14">14</a><a href="/phone/page/9" rel="next">Next &rarr;</a></nav></div>
 <div class="pickcard"><div class="pcopy"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it, ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div><div class="pbrand" aria-hidden="true"><img src="/apple-touch-icon.png" width="84" height="84" alt="bhalophone logo"><div class="pbtxt"><span class="pbn">bhalophone</span><span class="pbt">AI-powered phone recommendations for Bangladesh</span></div></div></div>
-</div>
+</main>
 <div class="footwrap">
 <footer class="bigfoot"><div class="inner">
 <div>
