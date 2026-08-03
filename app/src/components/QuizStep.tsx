@@ -35,7 +35,7 @@ const HW: [string, string, string][] = [
 const HW_ICON: Record<string, string> = Object.fromEntries(HW.map(([k, i]) => [k, i]));
 
 const chip = (sel: boolean, big = false) =>
-  st(`display:inline-flex; align-items:center; gap:9px; padding:${big ? "15px 20px" : "12px 17px"}; border-radius:16px; cursor:pointer; font-size:${big ? "16px" : "15px"}; font-weight:600; transition:all .15s ease; font-family:var(--f-bn); background:${sel ? "var(--ac)" : "rgba(255,255,255,.85)"}; color:${sel ? "#fff" : "#41464d"}; border:.5px solid ${sel ? "transparent" : "rgba(15,25,35,.1)"}; box-shadow:${sel ? "0 4px 14px var(--acglow)" : "0 1px 2px rgba(15,25,35,.04)"};`);
+  st(`display:inline-flex; align-items:center; gap:9px; padding:${big ? "15px 20px" : "12px 17px"}; border-radius:var(--r); cursor:pointer; font-size:${big ? "16px" : "15px"}; font-weight:600; transition:all .15s ease; font-family:var(--f-bn); background:${sel ? "var(--teal)" : "rgba(var(--rgb-white),.85)"}; color:${sel ? "var(--card)" : "var(--tx)"}; border:.5px solid ${sel ? "transparent" : "rgba(var(--rgb-ink),.1)"}; box-shadow:${sel ? "0 4px 14px rgba(var(--rgb-ink),.14)" : "0 1px 2px rgba(var(--rgb-ink),.04)"};`);
 
 /* A tick box for the PICK-ALL questions only (owner 2026-07-26): a checkbox on
    a one-answer question promises you can choose several. Single-choice chips
@@ -43,21 +43,21 @@ const chip = (sel: boolean, big = false) =>
    is the control row: nothing auto-advances, Next is always the buyer's. */
 function Tick({ on }: { on: boolean }) {
   return (
-    <span style={st(`display:inline-flex; align-items:center; justify-content:center; width:19px; height:19px; border-radius:6px; flex-shrink:0; transition:all .15s ease; background:${on ? "rgba(255,255,255,.22)" : "transparent"}; border:1.5px solid ${on ? "rgba(255,255,255,.85)" : "rgba(15,25,35,.18)"};`)}>
+    <span style={st(`display:inline-flex; align-items:center; justify-content:center; width:19px; height:19px; border-radius:var(--r); flex-shrink:0; transition:all .15s ease; background:${on ? "rgba(var(--rgb-white),.22)" : "transparent"}; border:1.5px solid ${on ? "rgba(var(--rgb-white),.85)" : "rgba(var(--rgb-ink),.18)"};`)}>
       {on && (
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-          <path d="M5 12.5l4.5 4.5L19 7" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M5 12.5l4.5 4.5L19 7" stroke="var(--card)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       )}
     </span>
   );
 }
 
-const SECONDARY = st("display:inline-flex; align-items:center; gap:7px; padding:12px 18px; border-radius:14px; border:.5px solid rgba(15,25,35,.12); cursor:pointer; background:rgba(255,255,255,.75); font-size:13.5px; font-weight:600; color:#5c626a; font-family:var(--f-bn);");
+const SECONDARY = st("display:inline-flex; align-items:center; gap:7px; padding:12px 18px; border-radius:var(--r); border:.5px solid rgba(var(--rgb-ink),.12); cursor:pointer; background:var(--card); font-size:13.5px; font-weight:600; color:var(--mut); font-family:var(--f-bn);");
 
-const PRIMARY = st("display:inline-flex; align-items:center; gap:8px; margin-top:22px; padding:14px 26px; border-radius:16px; border:none; cursor:pointer; font-size:15.5px; font-weight:700; color:#fff; font-family:var(--f-bn); background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 6px 18px var(--acglow), inset 0 1px 0 rgba(255,255,255,.35);");
-const QTITLE = st("font-size:clamp(20px,3vw,26px); font-weight:700; color:#17191d; font-family:var(--f-bn); line-height:1.25; text-wrap:balance;");
-const WHY = st("margin:10px 0 0; font-size:14px; color:#9aa0a8; line-height:1.55; max-width:480px; text-wrap:pretty;");
+const PRIMARY = st("display:inline-flex; align-items:center; gap:8px; margin-top:22px; padding:14px 26px; border-radius:var(--r); border:none; cursor:pointer; font-size:15.5px; font-weight:700; color:var(--onp); font-family:var(--f-bn); background:var(--teal); box-shadow:0 6px 18px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.35);");
+const QTITLE = st("font-size:clamp(20px,3vw,26px); font-weight:700; color:var(--ink); font-family:var(--f-bn); line-height:1.25; text-wrap:balance;");
+const WHY = st("margin:10px 0 0; font-size:14px; color:var(--mut2); line-height:1.55; max-width:480px; text-wrap:pretty;");
 
 export function QuizStep({ form, patch, onNext, onBack }: Props) {
   const q = form.q;
@@ -99,9 +99,9 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
       {cur < SUMMARY && (
         <div style={st("display:flex; align-items:center; gap:7px;")}>
           {steps.map((_, i) => (
-            <span key={i} style={st(`width:${i === cur ? 22 : 8}px; height:8px; border-radius:99px; transition:all .3s ease; background:${i < cur ? "var(--acd)" : i === cur ? "var(--ac)" : "rgba(15,25,35,.12)"};`)} />
+            <span key={i} style={st(`width:${i === cur ? 22 : 8}px; height:8px; border-radius:var(--r); transition:all .3s ease; background:${i < cur ? "var(--lnk)" : i === cur ? "var(--teal)" : "rgba(var(--rgb-ink),.12)"};`)} />
           ))}
-          <span style={st("margin-left:6px; font-size:13px; font-weight:700; color:#9aa0a8;")}>{bnNum(String(cur + 1))} / {bnNum(String(steps.length))}</span>
+          <span style={st("margin-left:6px; font-size:13px; font-weight:700; color:var(--mut2);")}>{bnNum(String(cur + 1))} / {bnNum(String(steps.length))}</span>
         </div>
       )}
 
@@ -178,36 +178,36 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
               ))}
             </div>
             {q.hw.map((k) => (
-              <p key={k} style={st("margin:12px 0 0; padding:12px 14px; border-radius:13px; background:rgba(255,255,255,.78); font-size:13.5px; color:#5c626a; line-height:1.55; max-width:520px;")}>{t("exp_" + k)}</p>
+              <p key={k} style={st("margin:12px 0 0; padding:12px 14px; border-radius:var(--r); background:var(--card); font-size:13.5px; color:var(--mut); line-height:1.55; max-width:520px;")}>{t("exp_" + k)}</p>
             ))}
           </div>
         )}
 
         {stepName === "summary" && (
-          <div style={st("padding:22px; border-radius:22px; background:var(--acsoft); border:.5px solid var(--acsoft2);")}>
+          <div style={st("padding:22px; border-radius:var(--r); background:var(--tint); border:.5px solid var(--tint2);")}>
             <div style={st("display:flex; align-items:center; gap:9px;")}>
-              <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.3" stroke="var(--ac)" strokeWidth="1.7" /><path d="M8 12.5l2.8 2.8L16.5 9" stroke="var(--ac)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              <span style={st("font-weight:700; font-size:17px; color:var(--acd); font-family:var(--f-bn);")}>{t("qz_sum_t")}</span>
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.3" stroke="var(--teal)" strokeWidth="1.7" /><path d="M8 12.5l2.8 2.8L16.5 9" stroke="var(--teal)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span style={st("font-weight:700; font-size:17px; color:var(--lnk); font-family:var(--f-bn);")}>{t("qz_sum_t")}</span>
             </div>
-            <p style={st("margin:8px 0 0; font-size:14px; color:#7b818a; line-height:1.55;")}>{t("qz_sum_s")}</p>
+            <p style={st("margin:8px 0 0; font-size:14px; color:var(--mut2); line-height:1.55;")}>{t("qz_sum_s")}</p>
 
             {form.priorities.length ? (
               <div style={st("display:flex; flex-direction:column; gap:10px; margin-top:16px;")}>
                 {form.priorities.map((ax, i) => (
-                  <div key={ax} style={st("display:flex; gap:13px; align-items:flex-start; padding:13px 15px; border-radius:14px; background:rgba(255,255,255,.78);")}>
-                    <span style={st("display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; flex-shrink:0; background:var(--ac); color:#fff; font-size:13px; font-weight:800;")}>{bnNum(String(i + 1))}</span>
+                  <div key={ax} style={st("display:flex; gap:13px; align-items:flex-start; padding:13px 15px; border-radius:var(--r); background:var(--card);")}>
+                    <span style={st("display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:var(--r); flex-shrink:0; background:var(--teal); color:var(--onp); font-size:13px; font-weight:800;")}>{bnNum(String(i + 1))}</span>
                     <div style={st("min-width:0;")}>
-                      <div style={st("font-size:11.5px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--acd);")}>{t("qz_rank_" + Math.min(i + 1, 3))}</div>
-                      <p style={st("margin:3px 0 0; font-size:15px; color:#2c3036; line-height:1.5; font-family:var(--f-bn); text-wrap:pretty;")}>{t("pw_" + ax)}</p>
+                      <div style={st("font-size:11.5px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--lnk);")}>{t("qz_rank_" + Math.min(i + 1, 3))}</div>
+                      <p style={st("margin:3px 0 0; font-size:15px; color:var(--ink2); line-height:1.5; font-family:var(--f-bn); text-wrap:pretty;")}>{t("pw_" + ax)}</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p style={st("margin:16px 0 0; padding:13px 15px; border-radius:14px; background:rgba(255,255,255,.78); font-size:15px; color:#2c3036; line-height:1.55; font-family:var(--f-bn);")}>{t("qz_sum_balanced")}</p>
+              <p style={st("margin:16px 0 0; padding:13px 15px; border-radius:var(--r); background:var(--card); font-size:15px; color:var(--ink2); line-height:1.55; font-family:var(--f-bn);")}>{t("qz_sum_balanced")}</p>
             )}
 
-            <p style={st("margin:12px 0 0; font-size:13px; color:#9aa0a8; line-height:1.55;")}>{t("qz_sum_note")}</p>
+            <p style={st("margin:12px 0 0; font-size:13px; color:var(--mut2); line-height:1.55;")}>{t("qz_sum_note")}</p>
 
             {/* every answer stays editable from here */}
             <div style={st("display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;")}>
@@ -222,7 +222,7 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
 
             <button onClick={() => { track("quiz_complete", { who: q.who, me: q.who === "me" ? (q.me || "skipped") : "na", day: q.day.length ? [...q.day].sort().join(",") : "none", out: q.out === null ? "skipped" : q.out, hw: q.hw.length ? [...q.hw].sort().join(",") : "none", priorities: form.priorities.join(",") || "balanced" }); onNext(); }} className="k-press k-glow" style={PRIMARY}>
               {t("qz_done")}
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="var(--card)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
           </div>
         )}
@@ -245,7 +245,7 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
             <button onClick={() => { track("quiz_answer", { q: steps[cur], value: "next" }); go(cur + 1); }}
               className="k-press k-glow" style={{ ...PRIMARY, marginTop: 0 }}>
               {t("qz_next")}
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="var(--card)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
           </div>
         </div>
@@ -257,10 +257,10 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
 function EditChip({ label, value, onClick }: { label: string; value: string; onClick: () => void }) {
   return (
     <button onClick={onClick} className="k-press"
-      style={st("display:inline-flex; align-items:center; gap:7px; padding:9px 14px; border-radius:99px; cursor:pointer; background:rgba(255,255,255,.85); border:.5px solid rgba(15,25,35,.1); font-size:13px; font-family:var(--f-bn);")}>
-      <span style={st("color:#9aa0a8; font-weight:600;")}>{label}</span>
-      <span style={st("color:#17191d; font-weight:700;")}>{value}</span>
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="#9aa0a8" strokeWidth="1.8" strokeLinejoin="round" /></svg>
+      style={st("display:inline-flex; align-items:center; gap:7px; padding:9px 14px; border-radius:var(--r); cursor:pointer; background:var(--card); border:.5px solid rgba(var(--rgb-ink),.1); font-size:13px; font-family:var(--f-bn);")}>
+      <span style={st("color:var(--mut2); font-weight:600;")}>{label}</span>
+      <span style={st("color:var(--ink); font-weight:700;")}>{value}</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="var(--mut2)" strokeWidth="1.8" strokeLinejoin="round" /></svg>
     </button>
   );
 }

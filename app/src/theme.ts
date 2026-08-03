@@ -1,33 +1,10 @@
 import type { CSSProperties } from "react";
 import { bnNum } from "./i18n";
 
-/* ---------- accent palette (ported verbatim from the DC mockup) ---------- */
-
-export type Accent = "cobalt" | "emerald" | "teal" | "violet" | "sunset";
-
-interface Pal {
-  name: string; main: string; dark: string; g1: string; g2: string;
-  soft: string; soft2: string; glow: string; orbA: string; orbB: string; orbC: string;
-}
-
-export const PALETTES: Record<Accent, Pal> = {
-  cobalt:  { name: "Cobalt", main: "#2563d9", dark: "#1c4eae", g1: "#3b7bf0", g2: "#1f56c2", soft: "rgba(37,99,217,.10)", soft2: "rgba(37,99,217,.30)", glow: "rgba(31,86,194,.34)", orbA: "rgba(37,99,217,.16)", orbB: "rgba(120,90,232,.13)", orbC: "rgba(40,180,200,.11)" },
-  emerald: { name: "Emerald", main: "#0b9f73", dark: "#0a6e58", g1: "#14b487", g2: "#0a8a64", soft: "rgba(11,159,115,.10)", soft2: "rgba(11,159,115,.30)", glow: "rgba(10,138,100,.34)", orbA: "rgba(11,159,115,.16)", orbB: "rgba(86,132,232,.12)", orbC: "rgba(232,178,86,.11)" },
-  teal:    { name: "Ocean Teal", main: "#0e9b97", dark: "#0a716e", g1: "#16b3ae", g2: "#0c8581", soft: "rgba(14,155,151,.10)", soft2: "rgba(14,155,151,.30)", glow: "rgba(12,133,129,.34)", orbA: "rgba(14,155,151,.16)", orbB: "rgba(60,140,230,.12)", orbC: "rgba(120,200,180,.12)" },
-  violet:  { name: "Violet", main: "#6d4bd6", dark: "#5234ab", g1: "#8160e8", g2: "#5e3fc4", soft: "rgba(109,75,214,.10)", soft2: "rgba(109,75,214,.30)", glow: "rgba(94,63,196,.34)", orbA: "rgba(109,75,214,.15)", orbB: "rgba(220,120,200,.12)", orbC: "rgba(90,140,235,.11)" },
-  sunset:  { name: "Sunset", main: "#d2643a", dark: "#a8492a", g1: "#e87b4d", g2: "#c2532e", soft: "rgba(210,100,58,.10)", soft2: "rgba(210,100,58,.30)", glow: "rgba(194,83,46,.34)", orbA: "rgba(210,100,58,.15)", orbB: "rgba(210,160,70,.13)", orbC: "rgba(120,170,140,.10)" },
-};
-
-export function accentVars(accent: Accent): CSSProperties {
-  const p = PALETTES[accent] || PALETTES.cobalt;
-  return {
-    ["--ac" as any]: p.main, ["--acd" as any]: p.dark,
-    ["--acg1" as any]: p.g1, ["--acg2" as any]: p.g2,
-    ["--acsoft" as any]: p.soft, ["--acsoft2" as any]: p.soft2,
-    ["--acglow" as any]: p.glow,
-    ["--orbA" as any]: p.orbA, ["--orbB" as any]: p.orbB, ["--orbC" as any]: p.orbC,
-  };
-}
+/* The five switchable accent palettes are gone. The accent system is
+   single-brand now and lives in one place -- the :root token block in
+   pick/index.html, which is the same vocabulary the static pages use. A
+   palette change is an edit there, not a record in here. */
 
 /* ---------- raw-CSS → React style object ----------
    Lets us paste the mockup's inline CSS strings nearly verbatim. Converts
@@ -106,9 +83,9 @@ export function headlinePhrase(axis: string | null): string {
 export interface VerdictMeta { label: string; c: string; bg: string; }
 export function verdictMeta(v: string | null | undefined): VerdictMeta {
   const M: Record<string, VerdictMeta> = {
-    buy: { label: "Top pick", c: "#0a7d57", bg: "rgba(10,157,106,.12)" },
-    consider: { label: "Worth a look", c: "#a8761a", bg: "rgba(192,137,42,.14)" },
-    avoid: { label: "Has trade-offs", c: "#c4503c", bg: "rgba(196,80,60,.12)" },
+    buy: { label: "Top pick", c: "var(--tealD)", bg: "var(--tealL)" },
+    consider: { label: "Worth a look", c: "var(--acd)", bg: "var(--amsoft)" },
+    avoid: { label: "Has trade-offs", c: "var(--danger)", bg: "var(--dangerL)" },
   };
   return M[v || ""] || M.consider;
 }
@@ -118,14 +95,14 @@ export function verdictMeta(v: string | null | undefined): VerdictMeta {
 export function topPickBadge(confidence: string | null | undefined): VerdictMeta {
   const c = (confidence || "").toLowerCase();
   if (c === "low" || c === "unranked")
-    return { label: "Closest match", c: "var(--acd)", bg: "var(--acsoft)" };
+    return { label: "Closest match", c: "var(--mut)", bg: "var(--tone)" };
   if (c === "medium")
-    return { label: "Best match", c: "#0a7d57", bg: "rgba(10,157,106,.12)" };
-  return { label: "Our top pick", c: "#0a7d57", bg: "rgba(10,157,106,.12)" };
+    return { label: "Best match", c: "var(--tealD)", bg: "var(--tealL)" };
+  return { label: "Our top pick", c: "var(--tealD)", bg: "var(--tealL)" };
 }
 
 export function sevColor(s: string | undefined): string {
-  return ({ low: "#a8761a", med: "#c47a1e", high: "#c4503c" } as Record<string, string>)[s || ""] || "#a8761a";
+  return ({ low: "var(--ac)", med: "var(--acd)", high: "var(--danger)" } as Record<string, string>)[s || ""] || "var(--ac)";
 }
 
 // Gray-market / warranty-channel noise — buyers here don't care, so drop it.
@@ -145,7 +122,7 @@ export function classifyCaveats(caveats?: Caveatish[] | null): { major: Caveatis
 
 /** Soft "maybe official" chip — used only when GadgetGear carries the phone,
     the single BD shop we trust as an official channel. */
-export const MAYBE_OFFICIAL_STYLE = "color:#0a7d57; background:rgba(10,157,106,.1);";
+export const MAYBE_OFFICIAL_STYLE = "color:var(--tealD); background:var(--tealL);";
 
 /** Shop key (as stored on offers) → human display name. Unknown keys fall back
     to the raw key. */
@@ -170,9 +147,11 @@ export interface Fit { fit: string; fitColor: string; }
     buyers toward a weaker, cheaper phone. */
 export function fitOf(price: number, budget: number): Fit {
   const ratio = price / budget;
-  if (ratio >= 0.9 && ratio <= 1.12) return { fit: "Uses your full budget", fitColor: "var(--acd)" };
-  if (ratio < 0.9) return { fit: taka(budget - price) + " under budget", fitColor: "#80868f" };
-  return { fit: taka(price - budget) + " over budget", fitColor: "#a8761a" };
+  // the budget verdict is a statement about a PRICE, which is the one thing
+  // the amber is still for (owner 2026-08-03)
+  if (ratio >= 0.9 && ratio <= 1.12) return { fit: "Uses your full budget", fitColor: "var(--ac)" };
+  if (ratio < 0.9) return { fit: taka(budget - price) + " under budget", fitColor: "var(--mut2)" };
+  return { fit: taka(price - budget) + " over budget", fitColor: "var(--acd)" };
 }
 
 /** Estimated value-retention curve from a brand's BD resale reputation (1-10).

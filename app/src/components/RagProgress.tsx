@@ -123,11 +123,11 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
       `}</style>
 
       <div style={st("margin-top:clamp(12px,4vh,42px); text-align:center;")}>
-        <div style={st("font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;")}>
+        <div style={st("font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--mut2);")}>
           {candidates != null ? `${bnNum(String(candidates))} ${t("matches")} · ${taka(budget)}` : taka(budget)}
         </div>
         <h1 style={st("font-family:var(--f-display); margin:10px 0 0; font-size:clamp(26px,4vw,38px); font-weight:600; letter-spacing:-1px; line-height:1.12;")}>
-          {t("rag_heading")} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--acd);")}> · {secs}s</span>
+          {t("rag_heading")} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--lnk);")}> · {secs}s</span>
         </h1>
       </div>
 
@@ -136,7 +136,7 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
         <div style={st("margin-top:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:center;")}>
           {/* Users in system */}
           {totalQueue > 0 && (
-            <span style={st("display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--acd); background:var(--acsoft); border:.5px solid var(--acsoft2); padding:6px 13px; border-radius:99px;")}>
+            <span style={st("display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--lnk); background:var(--tint); border:.5px solid var(--tint2); padding:6px 13px; border-radius:var(--r);")}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
               {processing > 0 && <>{bnNum(String(processing))} being served</>}
               {processing > 0 && waiting > 0 && " · "}
@@ -145,8 +145,8 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
           )}
           {/* Queue position (only when you're actually waiting) */}
           {waiting > 0 && (
-            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:800; color:#fff; background:linear-gradient(135deg,var(--acg1),var(--acg2)); padding:6px 13px; border-radius:99px; box-shadow:0 2px 8px var(--acglow);")}>
-              <span style={st("width:6px; height:6px; border-radius:50%; background:#fff; animation:kpulse 1.2s ease-in-out infinite;")} />
+            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:800; color:var(--onp); background:var(--teal); padding:6px 13px; border-radius:var(--r); box-shadow:0 2px 8px rgba(var(--rgb-ink),.14);")}>
+              <span style={st("width:6px; height:6px; border-radius:var(--r); background:var(--card); animation:kpulse 1.2s ease-in-out infinite;")} />
               #{waiting + 1} in line
             </span>
           )}
@@ -154,26 +154,26 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
               specific provider handling THIS request, not other users' requests.
               Falls back to system-wide active providers for backward compat. */}
           {currentAttempt && !rateLimited.includes(currentAttempt) ? (
-            <span key={"current-attempt"} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#0a7d57; background:rgba(10,157,106,.09); border:.5px solid rgba(10,157,106,.2); padding:5px 11px; border-radius:99px;")}>
-              <span style={st("width:7px; height:7px; border-radius:50%; background:#0a9d6a; animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
+            <span key={"current-attempt"} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:var(--tealD); background:rgba(var(--rgb-teal),.09); border:.5px solid rgba(var(--rgb-teal),.2); padding:5px 11px; border-radius:var(--r);")}>
+              <span style={st("width:7px; height:7px; border-radius:var(--r); background:var(--teal); animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
               Using {providerName(currentAttempt)}
             </span>
           ) : activeProviders.map(p => (
-            <span key={"active-" + p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#0a7d57; background:rgba(10,157,106,.09); border:.5px solid rgba(10,157,106,.2); padding:5px 11px; border-radius:99px;")}>
-              <span style={st("width:7px; height:7px; border-radius:50%; background:#0a9d6a; animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
+            <span key={"active-" + p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:var(--tealD); background:rgba(var(--rgb-teal),.09); border:.5px solid rgba(var(--rgb-teal),.2); padding:5px 11px; border-radius:var(--r);")}>
+              <span style={st("width:7px; height:7px; border-radius:var(--r); background:var(--teal); animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
               Using {providerName(p)}
             </span>
           ))}
           {/* Rate-limited providers */}
           {rateLimited.map(p => (
-            <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:#a8761a; background:rgba(192,137,42,.1); border:.5px solid rgba(192,137,42,.22); padding:5px 11px; border-radius:99px;")}>
+            <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:var(--acd); background:rgba(var(--rgb-amber),.1); border:.5px solid rgba(var(--rgb-amber),.22); padding:5px 11px; border-radius:var(--r);")}>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               {providerName(p)} busy
             </span>
           ))}
           {/* Circuit-broken providers */}
           {breakerProviders.filter(p => !rateLimited.includes(p)).map(p => (
-            <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600; color:#80868f; background:rgba(15,25,35,.06); padding:5px 10px; border-radius:99px;")}>
+            <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600; color:var(--mut2); background:rgba(var(--rgb-ink),.06); padding:5px 10px; border-radius:var(--r);")}>
               {providerName(p)} resting ({status!.breaker![p].cooldown_s}s)
             </span>
           ))}
@@ -181,9 +181,9 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
       )}
 
       {/* progress bar */}
-      <div style={st("position:relative; height:7px; margin-top:22px; border-radius:99px; background:rgba(15,25,35,.07); overflow:hidden;")}>
-        <div style={st(`position:absolute; inset:0 auto 0 0; width:${pctBar}%; border-radius:99px; background:linear-gradient(90deg,var(--acg1),var(--acg2)); transition:width .45s cubic-bezier(.3,.8,.4,1);`)} />
-        <div style={st("position:absolute; top:0; bottom:0; left:0; width:35%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent); animation:kbar 1.6s linear infinite;")} />
+      <div style={st("position:relative; height:7px; margin-top:22px; border-radius:var(--r); background:rgba(var(--rgb-ink),.07); overflow:hidden;")}>
+        <div style={st(`position:absolute; inset:0 auto 0 0; width:${pctBar}%; border-radius:var(--r); background:var(--teal); transition:width .45s cubic-bezier(.3,.8,.4,1);`)} />
+        <div style={st("position:absolute; top:0; bottom:0; left:0; width:35%; background:linear-gradient(90deg,transparent,rgba(var(--rgb-white),.55),transparent); animation:kbar 1.6s linear infinite;")} />
       </div>
 
       {/* live counters */}
@@ -199,16 +199,16 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
           const done = i < active, now = i === active, pending = i > active;
           return (
             <div key={s.tKey}
-              style={st(`display:flex; align-items:center; gap:14px; padding:15px 17px; border-radius:18px; transition:all .35s ease; border:.5px solid ${now ? "rgba(255,255,255,.9)" : "transparent"}; background:${now ? "rgba(255,255,255,.92)" : done ? "rgba(255,255,255,.5)" : "rgba(255,255,255,.32)"}; box-shadow:${now ? "0 8px 26px rgba(15,25,35,.08), inset 0 1px 1px rgba(255,255,255,.9)" : "none"}; opacity:${pending ? 0.5 : 1};`)}>
-              <span style={st(`position:relative; width:30px; height:30px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .35s ease; color:${now ? "var(--acd)" : done ? "#fff" : "#aab0b8"}; background:${done ? "var(--ac)" : now ? "var(--acsoft)" : "rgba(15,25,35,.05)"};`)}>
-                {now && <span style={st("position:absolute; inset:-3px; border-radius:50%; border:2px solid var(--acsoft2); border-top-color:var(--ac); animation:kspin .85s linear infinite;")} />}
+              style={st(`display:flex; align-items:center; gap:14px; padding:15px 17px; border-radius:var(--r); transition:all .35s ease; border:.5px solid ${now ? "rgba(var(--rgb-white),.9)" : "transparent"}; background:${now ? "rgba(var(--rgb-white),.92)" : done ? "rgba(var(--rgb-white),.5)" : "rgba(var(--rgb-white),.32)"}; box-shadow:${now ? "0 8px 26px rgba(var(--rgb-ink),.08), inset 0 1px 1px rgba(var(--rgb-white),.9)" : "none"}; opacity:${pending ? 0.5 : 1};`)}>
+              <span style={st(`position:relative; width:30px; height:30px; border-radius:var(--r); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .35s ease; color:${now ? "var(--lnk)" : done ? "var(--card)" : "var(--faint)"}; background:${done ? "var(--teal)" : now ? "var(--tint)" : "rgba(var(--rgb-ink),.05)"};`)}>
+                {now && <span style={st("position:absolute; inset:-3px; border-radius:var(--r); border:2px solid var(--tint2); border-top-color:var(--teal); animation:kspin .85s linear infinite;")} />}
                 {done
                   ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4 10-11" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   : <span style={now ? st("animation:kfloat 1.6s ease-in-out infinite;") : undefined}>{s.icon}</span>}
               </span>
               <div style={st("min-width:0; flex:1;")}>
-                <div style={st(`font-size:14.5px; font-weight:600; color:${pending ? "#9aa0a8" : "#2c3036"};`)}>{TITLE[s.tKey]}</div>
-                <div style={st("font-size:12.5px; color:#80868f; line-height:1.45; margin-top:2px; text-wrap:pretty;")}>
+                <div style={st(`font-size:14.5px; font-weight:600; color:${pending ? "var(--mut2)" : "var(--ink2)"};`)}>{TITLE[s.tKey]}</div>
+                <div style={st("font-size:12.5px; color:var(--mut2); line-height:1.45; margin-top:2px; text-wrap:pretty;")}>
                   {now && onLast ? t(reassure) : SUB[s.tKey]}
                 </div>
               </div>
@@ -218,9 +218,9 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
       </div>
 
       {/* honesty / value note */}
-      <div style={st("display:flex; gap:11px; padding:15px 17px; border-radius:17px; background:var(--acsoft); margin-top:18px;")}>
-        <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--ac)" /></svg>
-        <p style={st("margin:0; font-size:13px; color:#41464d; line-height:1.55; text-wrap:pretty;")}>{t("rag_worth")}</p>
+      <div style={st("display:flex; gap:11px; padding:15px 17px; border-radius:var(--r); background:var(--tint); margin-top:18px;")}>
+        <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--teal)" /></svg>
+        <p style={st("margin:0; font-size:13px; color:var(--tx); line-height:1.55; text-wrap:pretty;")}>{t("rag_worth")}</p>
       </div>
     </div>
   );
@@ -228,9 +228,9 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
 
 function Counter({ big, small, lit }: { big: string; small: string; lit: boolean }) {
   return (
-    <div style={st(`flex:1; padding:13px 12px; border-radius:15px; text-align:center; transition:all .35s ease; background:${lit ? "rgba(255,255,255,.8)" : "rgba(255,255,255,.4)"}; box-shadow:${lit ? "0 4px 16px rgba(15,25,35,.06)" : "none"}; opacity:${lit ? 1 : 0.55};`)}>
-      <div style={st(`font-family:var(--f-display); font-size:clamp(20px,4vw,27px); font-weight:600; line-height:1; color:${lit ? "var(--acd)" : "#aab0b8"};`)}>{big}</div>
-      <div style={st("font-size:11px; color:#80868f; margin-top:5px; line-height:1.3;")}>{small}</div>
+    <div style={st(`flex:1; padding:13px 12px; border-radius:var(--r); text-align:center; transition:all .35s ease; background:${lit ? "rgba(var(--rgb-white),.8)" : "rgba(var(--rgb-white),.4)"}; box-shadow:${lit ? "0 4px 16px rgba(var(--rgb-ink),.06)" : "none"}; opacity:${lit ? 1 : 0.55};`)}>
+      <div style={st(`font-family:var(--f-display); font-size:clamp(20px,4vw,27px); font-weight:600; line-height:1; color:${lit ? "var(--lnk)" : "var(--faint)"};`)}>{big}</div>
+      <div style={st("font-size:11px; color:var(--mut2); margin-top:5px; line-height:1.3;")}>{small}</div>
     </div>
   );
 }

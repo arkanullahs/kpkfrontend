@@ -13,7 +13,7 @@
   <meta name="keywords" content="best phone in bangladesh, phone price bd, mobile price bangladesh, কোন ফোন কিনবো, best phone under budget, smartphone recommendation bangladesh, phone buying guide, bhalophone" />
   <meta name="author" content="bhalophone" />
   <meta name="robots" content="noindex, follow" />
-  <meta name="theme-color" content="#2563d9" />
+  <meta name="theme-color" content="#2b5f5a" />
   <link rel="canonical" href="https://bhalophone.com/pick" />
 
   <!-- Open Graph (Facebook, WhatsApp, LinkedIn link previews) -->
@@ -60,16 +60,66 @@
   <script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xmh15rdz3v");</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Fraunces:ital,opsz,wght@1,9..144,400..600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&family=Libre+Franklin:wght@300..800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --f-sans: 'Plus Jakarta Sans', 'Anek Bangla', system-ui, sans-serif;
-      --f-display: 'Plus Jakarta Sans', 'Anek Bangla', system-ui, sans-serif;
-      --f-serif: 'Fraunces', 'Plus Jakarta Sans', serif;
-      --f-bn: 'Anek Bangla', 'Plus Jakarta Sans', sans-serif;
+      /* ---------------- TOKENS ----------------
+         The same three layers, and the same names, as the static pages'
+         sheet (kpk_backend/pipeline/pages.py :root): layer 1 is measured off
+         the logo and is the only place a literal appears, layer 2 gives roles,
+         layer 3 assembles composite surfaces. A component and a guide page
+         spell the same colour the same way. */
+      --c-teal-900:#12211f; --c-teal-800:#161b1b; --c-teal-700:#1d4340; --c-teal-600:#2b5f5a;
+      --c-aqua-300:#a9cfc9; --c-aqua-200:#cfe4df; --c-aqua-100:#e7efee;
+      --c-amber-600:#c25e00; --c-amber-700:#a04d00;
+      --c-n-800:#2b3a38; --c-n-700:#3d4c4a; --c-n-500:#63726f; --c-n-400:#8a9997;
+      --c-n-300:#aebcba; --c-n-200:#d2dbda; --c-n-050:#f2f5f5; --c-white:#fff;
+      /* a functional status colour, not a brand one -- it exists so a real
+         hardware defect cannot read the same as "worth a look" */
+      --c-danger:#c4503c;
+      --rgb-ink:18,33,31; --rgb-white:255,255,255; --rgb-teal:43,95,90;
+      --rgb-amber:194,94,0; --rgb-danger:196,80,60;
+
+      /* amber is the mark (prices, the accent word, chip hover); teal carries
+         links, labels, buttons and fills; on dark the accent is the aqua */
+      --ac:var(--c-amber-600); --acd:var(--c-amber-700);
+      --amsoft:rgba(var(--rgb-amber),.10); --amline:rgba(var(--rgb-amber),.28);
+      --teal:var(--c-teal-600); --tealD:var(--c-teal-700); --tealL:var(--c-aqua-100);
+      --aqua:var(--c-aqua-300); --aquaL:var(--c-aqua-200);
+      --lnk:var(--c-teal-700);
+      --tint:rgba(var(--rgb-teal),.08); --tint2:rgba(var(--rgb-teal),.24);
+      --danger:var(--c-danger); --dangerL:rgba(var(--rgb-danger),.12);
+      --bg:var(--c-n-050); --card:var(--c-white); --panel:var(--c-teal-800);
+      --ink:var(--c-teal-900); --ink2:var(--c-n-800); --tx:var(--c-n-700);
+      --mut:var(--c-n-500); --mut2:var(--c-n-400); --faint:var(--c-n-300);
+      --rule:var(--c-n-200); --tone:rgba(var(--rgb-ink),.045);
+      --onp:var(--c-white); --onp2:rgba(var(--rgb-white),.66);
+      --onp3:rgba(var(--rgb-white),.30); --onpfill:rgba(var(--rgb-white),.07);
+      --r:2px;
+
+      --sh-hair:inset 0 0 0 1px var(--rule);
+      --sh-card:inset 0 0 0 1px var(--rule),inset 0 1px 0 rgba(var(--rgb-white),.9),
+        0 1px 2px rgba(var(--rgb-ink),.05),0 10px 20px -14px rgba(var(--rgb-ink),.28);
+      --sh-hover:inset 0 0 0 1px var(--teal),0 2px 4px rgba(var(--rgb-ink),.07),
+        0 16px 30px -18px rgba(var(--rgb-ink),.34);
+      --sh-lift:inset 0 0 0 1px var(--rule),inset 0 1px 0 rgba(var(--rgb-white),.9),
+        0 2px 4px rgba(var(--rgb-ink),.06),0 22px 40px -24px rgba(var(--rgb-ink),.40);
+      --hdr-bg:linear-gradient(180deg,rgba(var(--rgb-white),.72),rgba(246,250,249,.58));
+      --hdr-sh:inset 0 1px 0 rgba(var(--rgb-white),.95),
+        inset 0 -1px 0 rgba(var(--rgb-white),.30),0 1px 12px -4px rgba(var(--rgb-ink),.14);
+      --prism:linear-gradient(90deg,rgba(143,214,255,.85),rgba(185,242,228,.75) 22%,
+        rgba(255,255,255,0) 44%,rgba(255,215,164,.75) 66%,rgba(255,159,201,.7) 84%,
+        rgba(143,214,255,.8));
+      --plate:radial-gradient(115% 95% at 32% 14%,var(--c-white),
+        rgba(240,245,244,.9) 62%,rgba(226,235,233,.75));
+
+      --f-sans: 'Libre Franklin', 'Anek Bangla', system-ui, sans-serif;
+      --f-display: 'Libre Franklin', 'Anek Bangla', system-ui, sans-serif;
+      --f-serif: 'Libre Franklin', 'Anek Bangla', system-ui, sans-serif;
+      --f-bn: 'Anek Bangla', 'Libre Franklin', sans-serif;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; background: #f1f0ed; font-family: var(--f-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    body { margin: 0; background: var(--bg); font-family: var(--f-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
     button, input { font-family: inherit; }
     /* touch devices keep the clean edge; desktop shows a slim scrollbar
        so long pages are draggable (feedback #10) */
@@ -78,27 +128,27 @@
       ::-webkit-scrollbar { width: 10px; height: 10px; }
       ::-webkit-scrollbar-track { background: transparent; }
       ::-webkit-scrollbar-thumb {
-        background: rgba(15,25,35,.22); border-radius: 99px;
-        border: 2px solid #f1f0ed; background-clip: padding-box;
+        background: var(--faint); border-radius: var(--r);
+        border: 2px solid var(--bg); background-clip: padding-box;
       }
-      ::-webkit-scrollbar-thumb:hover { background: rgba(15,25,35,.38); border: 2px solid #f1f0ed; background-clip: padding-box; }
-      html { scrollbar-width: thin; scrollbar-color: rgba(15,25,35,.3) transparent; }
+      ::-webkit-scrollbar-thumb:hover { background: var(--mut2); border: 2px solid var(--bg); background-clip: padding-box; }
+      html { scrollbar-width: thin; scrollbar-color: var(--faint) transparent; }
     }
-    ::selection { background: rgba(37,99,217,.16); }
+    ::selection { background: var(--tint2); }
     /* hide number-input spinners — the budget field is styled bespoke */
     input.kbudget::-webkit-outer-spin-button,
     input.kbudget::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     input.kbudget { -moz-appearance: textfield; }
-    .ktrait::placeholder, .kbudget::placeholder { color: #b4b8bf; }
+    .ktrait::placeholder, .kbudget::placeholder { color: var(--faint); }
     @keyframes kfade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
     @keyframes kpop { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: none; } }
     @keyframes krise { from { opacity: 0; transform: translateY(13px); } to { opacity: 1; transform: none; } }
     @keyframes kspin { to { transform: rotate(360deg); } }
     /* pulsing "live" dot for the header status badge */
     @keyframes kdot {
-      0%   { box-shadow: 0 0 0 0 rgba(37,99,217,.5); }
-      70%  { box-shadow: 0 0 0 6px rgba(37,99,217,0); }
-      100% { box-shadow: 0 0 0 0 rgba(37,99,217,0); }
+      0%   { box-shadow: 0 0 0 0 rgba(var(--rgb-teal),.5); }
+      70%  { box-shadow: 0 0 0 6px rgba(var(--rgb-teal),0); }
+      100% { box-shadow: 0 0 0 0 rgba(var(--rgb-teal),0); }
     }
     .k-live { animation: kdot 1.8s ease-out infinite; }
     /* header tagline + divider collapse on narrow screens to keep the bar clean */
@@ -115,7 +165,7 @@
     .k-press { transition: transform .16s cubic-bezier(.2,.7,.2,1), box-shadow .2s ease, filter .16s ease; will-change: transform; }
     @media (hover: hover) {
       .k-press:hover { transform: translateY(-2px); }
-      .k-lift:hover { box-shadow: 0 16px 38px rgba(15,25,35,.14) !important; }
+      .k-lift:hover { box-shadow: var(--sh-hover) !important; }
       .k-glow:hover { filter: brightness(1.05) saturate(1.03); }
     }
     .k-press:active { transform: translateY(0) scale(.99); transition-duration: .05s; }
@@ -138,14 +188,34 @@
 
     /* keyboard accessibility — visible focus ring that respects the accent */
     :focus { outline: none; }
-    :focus-visible { outline: 2.5px solid #2563d9; outline-offset: 3px; border-radius: 8px; }
+    :focus-visible { outline: 2.5px solid var(--teal); outline-offset: 3px; border-radius: var(--r); }
 
+    /* The header is the only glass in the app: real content scrolls under it.
+       Over flat paper, glass is dirty translucency rather than material. */
+    @supports (backdrop-filter: url(#lensglass)) {
+      .k-glass { backdrop-filter: blur(13px) saturate(1.8) url(#lensglass) !important;
+                 -webkit-backdrop-filter: blur(13px) saturate(1.8) url(#lensglass) !important; }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+      .k-glass { backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+                 background: var(--card) !important; }
+    }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
 </head>
 <body>
+  <!-- the refraction filter the header's backdrop-filter points at. It has to
+       live inside <body>: browsers hoist a bare <svg> out of <head> and the id
+       never resolves. -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs>
+    <filter id="lensglass" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.0055 0.011" numOctaves="2" seed="11" result="turb" />
+      <feGaussianBlur in="turb" stdDeviation="2.4" result="soft" />
+      <feDisplacementMap in="SourceGraphic" in2="soft" scale="11" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs></svg>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>

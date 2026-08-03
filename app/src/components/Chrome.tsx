@@ -26,7 +26,7 @@ const ICONS: Record<string, string> = {
   weight: "M4 7h12l1 10H3L4 7zm3 0a3 3 0 016 0",
 };
 
-export function SpecIcon({ name, size = 16, color = "#9aa0a8" }: {
+export function SpecIcon({ name, size = 16, color = "var(--mut2)" }: {
   name?: string | null; size?: number; color?: string;
 }) {
   const d = name ? ICONS[name] : null;
@@ -44,20 +44,20 @@ export function SpecIcon({ name, size = 16, color = "#9aa0a8" }: {
 const HOUSE = "M3 10.6 12 3l9 7.6M5.5 9.2V20h13V9.2";
 
 export function Breadcrumbs({ trail }: { trail: { label: string; onClick?: () => void }[] }) {
-  const sep = <span style={st("color:#c2c6cd; user-select:none;")}>/</span>;
-  const link = "background:none; border:none; padding:0; cursor:pointer; font:inherit; color:#7b818a; text-decoration:none;";
+  const sep = <span style={st("color:var(--faint); user-select:none;")}>/</span>;
+  const link = "background:none; border:none; padding:0; cursor:pointer; font:inherit; color:var(--mut2); text-decoration:none;";
   return (
     <nav aria-label="Breadcrumb"
-      style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:13px; color:#7b818a; margin:2px 2px 14px;")}>
+      style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:13px; color:var(--mut2); margin:2px 2px 14px;")}>
       <a href="/" aria-label="Home" style={st(link + " display:inline-flex;")}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7b818a"
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--mut2)"
           strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d={HOUSE} /></svg>
       </a>
       {trail.map((c, i) => (
         <span key={i} style={st("display:inline-flex; align-items:center; gap:8px;")}>
           {sep}
           {i === trail.length - 1 || !c.onClick
-            ? <b style={st("color:#2c3036; font-weight:700;")}>{c.label}</b>
+            ? <b style={st("color:var(--ink2); font-weight:700;")}>{c.label}</b>
             : <button onClick={c.onClick} style={st(link)}>{c.label}</button>}
         </span>
       ))}
@@ -74,20 +74,20 @@ export function Breadcrumbs({ trail }: { trail: { label: string; onClick?: () =>
 export function BootNotice({ seconds }: { seconds: number }) {
   return (
     <div role="status" aria-live="polite"
-      style={st("position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:80; width:min(420px, calc(100vw - 28px)); padding:15px 17px; border-radius:20px; background:rgba(255,255,255,.94); backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%); border:.5px solid rgba(255,255,255,.9); box-shadow:0 16px 44px rgba(15,25,35,.16), inset 0 1px 1px rgba(255,255,255,.9); animation:kpop .4s cubic-bezier(.2,.7,.2,1) both;")}>
+      style={st("position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%); z-index:80; width:min(420px, calc(100vw - 28px)); padding:15px 17px; border-radius:var(--r); background:rgba(var(--rgb-white),.94); backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%); border:.5px solid rgba(var(--rgb-white),.9); box-shadow:0 16px 44px rgba(var(--rgb-ink),.16), inset 0 1px 1px rgba(var(--rgb-white),.9); animation:kpop .4s cubic-bezier(.2,.7,.2,1) both;")}>
       <style>{`@keyframes kboot{0%{left:-38%}100%{left:100%}}`}</style>
       <div style={st("display:flex; align-items:center; gap:11px;")}>
-        <span style={st("width:17px; height:17px; border-radius:99px; border:2px solid rgba(15,25,35,.14); border-top-color:var(--ac); animation:kspin .7s linear infinite; flex-shrink:0;")} />
+        <span style={st("width:17px; height:17px; border-radius:var(--r); border:2px solid rgba(var(--rgb-ink),.14); border-top-color:var(--teal); animation:kspin .7s linear infinite; flex-shrink:0;")} />
         <div style={st("min-width:0; flex:1;")}>
-          <div style={st("font-size:14px; font-weight:700; color:#2c3036;")}>Waking the price server</div>
-          <div style={st("font-size:12.5px; color:#80868f; margin-top:2px;")}>
+          <div style={st("font-size:14px; font-weight:700; color:var(--ink2);")}>Waking the price server</div>
+          <div style={st("font-size:12.5px; color:var(--mut2); margin-top:2px;")}>
             It sleeps when nobody is shopping. Usually up in under a minute
             {seconds > 3 ? ` · ${seconds}s` : ""}.
           </div>
         </div>
       </div>
-      <div style={st("position:relative; height:4px; border-radius:99px; background:rgba(15,25,35,.07); margin-top:12px; overflow:hidden;")}>
-        <span style={st("position:absolute; top:0; bottom:0; width:38%; border-radius:99px; background:linear-gradient(90deg,var(--acsoft2),var(--ac)); animation:kboot 1.25s cubic-bezier(.5,0,.5,1) infinite;")} />
+      <div style={st("position:relative; height:4px; border-radius:var(--r); background:rgba(var(--rgb-ink),.07); margin-top:12px; overflow:hidden;")}>
+        <span style={st("position:absolute; top:0; bottom:0; width:38%; border-radius:var(--r); background:var(--teal); animation:kboot 1.25s cubic-bezier(.5,0,.5,1) infinite;")} />
       </div>
     </div>
   );
@@ -98,7 +98,7 @@ export function BootNotice({ seconds }: { seconds: number }) {
 export function Fold({ label, children }: { label: string; children: ReactNode }) {
   return (
     <details style={st("margin-top:16px;")}>
-      <summary style={st("cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:13px 17px; border-radius:15px; background:rgba(255,255,255,.9); font-size:14px; font-weight:700; color:var(--acd); box-shadow:inset 0 0 0 1px rgba(15,25,35,.06);")}>
+      <summary style={st("cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:13px 17px; border-radius:var(--r); background:var(--card); font-size:14px; font-weight:700; color:var(--lnk); box-shadow:inset 0 0 0 1px rgba(var(--rgb-ink),.06);")}>
         {label}<span style={st("font-size:20px; line-height:1;")}>›</span>
       </summary>
       <div style={st("margin-top:12px;")}>{children}</div>

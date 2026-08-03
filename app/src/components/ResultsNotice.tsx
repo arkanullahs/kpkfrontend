@@ -29,16 +29,16 @@ export function ResultsNotice({ onClose }: { onClose: () => void }) {
 
   return (
     <div onClick={onClose}
-      style={st("position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(15,20,28,.42); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); animation:kfade .25s ease both;")}>
+      style={st("position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(var(--rgb-ink),.42); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); animation:kfade .25s ease both;")}>
       <div onClick={(e) => e.stopPropagation()}
-        style={st("width:100%; max-width:430px; background:#fff; border-radius:24px; padding:clamp(24px,5vw,30px); box-shadow:0 24px 70px rgba(15,25,35,.3); animation:kpop .35s cubic-bezier(.2,.7,.2,1) both; text-align:center;")}>
-        <div style={st("width:62px; height:62px; margin:0 auto; border-radius:19px; display:flex; align-items:center; justify-content:center; background:var(--acsoft);")}>
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3L12 3z" stroke="var(--ac)" strokeWidth="1.9" strokeLinejoin="round" /><path d="M12 10v4M12 16.5v.5" stroke="var(--ac)" strokeWidth="2" strokeLinecap="round" /></svg>
+        style={st("width:100%; max-width:430px; background:var(--card); border-radius:var(--r); padding:clamp(24px,5vw,30px); box-shadow:0 24px 70px rgba(var(--rgb-ink),.3); animation:kpop .35s cubic-bezier(.2,.7,.2,1) both; text-align:center;")}>
+        <div style={st("width:62px; height:62px; margin:0 auto; border-radius:var(--r); display:flex; align-items:center; justify-content:center; background:var(--tint);")}>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3L12 3z" stroke="var(--teal)" strokeWidth="1.9" strokeLinejoin="round" /><path d="M12 10v4M12 16.5v.5" stroke="var(--teal)" strokeWidth="2" strokeLinecap="round" /></svg>
         </div>
-        <h2 style={st("font-family:var(--f-display); margin:18px 0 0; font-size:22px; font-weight:700; letter-spacing:-.5px; color:#17191d;")}>{t("notice_title")}</h2>
-        <p style={st("margin:12px 0 0; font-size:14.5px; color:#5c626a; line-height:1.6; text-wrap:pretty;")}>{t("notice_body")}</p>
+        <h2 style={st("font-family:var(--f-display); margin:18px 0 0; font-size:22px; font-weight:700; letter-spacing:-.5px; color:var(--ink);")}>{t("notice_title")}</h2>
+        <p style={st("margin:12px 0 0; font-size:14.5px; color:var(--mut); line-height:1.6; text-wrap:pretty;")}>{t("notice_body")}</p>
         <button onClick={onClose} className="k-press k-glow"
-          style={st("margin-top:22px; width:100%; padding:14px; border-radius:15px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 14px var(--acglow); color:#fff; font-size:15px; font-weight:700;")}>{t("notice_ok")}</button>
+          style={st("margin-top:22px; width:100%; padding:14px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); box-shadow:0 4px 14px rgba(var(--rgb-ink),.14); color:var(--onp); font-size:15px; font-weight:700;")}>{t("notice_ok")}</button>
       </div>
     </div>
   );

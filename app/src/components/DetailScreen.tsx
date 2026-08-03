@@ -90,14 +90,14 @@ function buildTraits(tr: Record<string, any> | undefined): string[] {
 }
 
 export function DetailScreen({ detail, hint, loading, error, budget, onBack, onRetry }: Props) {
-  if (error) return <Wrap onBack={onBack}><div style={st("padding:60px 0; text-align:center; color:#c4503c;")}>{error}<br /><button onClick={onRetry} style={st("margin-top:16px; padding:10px 20px; border-radius:99px; border:none; cursor:pointer; background:var(--ac); color:#fff; font-weight:600;")}>Retry</button></div></Wrap>;
+  if (error) return <Wrap onBack={onBack}><div style={st("padding:60px 0; text-align:center; color:var(--danger);")}>{error}<br /><button onClick={onRetry} style={st("margin-top:16px; padding:10px 20px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); color:var(--onp); font-weight:600;")}>Retry</button></div></Wrap>;
 
   const d = detail;
   const h = hint || null;
   const any = d || h;
   if (!any) {
     if (loading) return <Wrap onBack={onBack}><LoadingDetail /></Wrap>;
-    return <Wrap onBack={onBack}><div style={st("padding:60px 0; text-align:center; color:#80868f;")}>Pick a phone from the results to see its full breakdown.</div></Wrap>;
+    return <Wrap onBack={onBack}><div style={st("padding:60px 0; text-align:center; color:var(--mut2);")}>Pick a phone from the results to see its full breakdown.</div></Wrap>;
   }
 
   // merged hero view-model: prefer full detail, fall back to the result pick
@@ -147,21 +147,21 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   return (
     <Wrap onBack={onBack}>
       {/* hero (renders instantly from the pick hint) */}
-      <div style={st("background:rgba(255,255,255,.92); border-radius:26px; padding:clamp(20px,3vw,32px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 16px 40px rgba(15,25,35,.09); margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(20px,3vw,32px);")}>
+      <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,32px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 16px 40px rgba(var(--rgb-ink),.09); margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(20px,3vw,32px);")}>
         <div style={st("display:flex; gap:18px;")}>
           <PhonePhoto src={image} pid={pid} w="clamp(100px,11vw,124px)" h="clamp(134px,15vw,166px)" radius={18} />
           <div style={st("min-width:0;")}>
             <div style={st("display:flex; align-items:center; gap:9px; flex-wrap:wrap;")}>
-              <span style={st("font-size:13px; color:#8a8e96; font-weight:500;")}>{brand}</span>
+              <span style={st("font-size:13px; color:var(--mut2); font-weight:500;")}>{brand}</span>
               {/* only a confident "Top pick" or an honest "Has trade-offs" — never a lukewarm "Worth a look" on a phone the buyer is already looking at */}
-              {(rec === "buy" || rec === "avoid") && <span style={st(`font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:99px; color:${vm.c}; background:${vm.bg};`)}>{vm.label}</span>}
+              {(rec === "buy" || rec === "avoid") && <span style={st(`font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:var(--r); color:${vm.c}; background:${vm.bg};`)}>{vm.label}</span>}
             </div>
             <h1 style={st("margin:4px 0 0; font-size:clamp(26px,3.6vw,38px); font-weight:700; letter-spacing:-1.2px; line-height:1.1;")}>{model}</h1>
-            <div style={st("margin-top:8px; font-size:14px; color:#5c626a;")}>{headlinePhrase(dom)}{scores[dom] != null && <> · {axisLabel(dom)} <span style={st("color:var(--acd); font-weight:700;")}>{scores[dom]}</span></>}</div>
+            <div style={st("margin-top:8px; font-size:14px; color:var(--mut);")}>{headlinePhrase(dom)}{scores[dom] != null && <> · {axisLabel(dom)} <span style={st("color:var(--lnk); font-weight:700;")}>{scores[dom]}</span></>}</div>
             {traits.length > 0 && (
               <div style={st("display:flex; flex-wrap:wrap; gap:6px; margin-top:13px;")}>
                 {traits.map((tx, i) => (
-                  <span key={i} style={st("font-size:11.5px; font-weight:600; color:#565b63; background:rgba(15,25,35,.05); padding:5px 11px; border-radius:99px;")}>{tx}</span>
+                  <span key={i} style={st("font-size:11.5px; font-weight:600; color:var(--mut); background:rgba(var(--rgb-ink),.05); padding:5px 11px; border-radius:var(--r);")}>{tx}</span>
                 ))}
               </div>
             )}
@@ -177,7 +177,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
                 page hero and the guide cards */}
             <MarketChips regions={d?.regions} />
           </div>
-          <div style={st("margin-top:12px; font-size:14px; color:#80868f; line-height:1.7;")}>
+          <div style={st("margin-top:12px; font-size:14px; color:var(--mut2); line-height:1.7;")}>
             At {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
             {priceLo != null && bestPrimary === false && (
               <><br /><span style={st("display:inline-block; margin-top:6px;")}><PriceSource primary={bestPrimary} /></span></>
@@ -186,7 +186,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               <><br /><span style={st("display:inline-block; margin-top:6px;")}><DataCautionChip dc={dataCaution} /></span></>
             )}
             {d?.price_trend && (d.price_trend.trend === "down" || d.price_trend.trend === "up") && (
-              <><br /><span style={st(`font-size:12px; font-weight:600; color:${d.price_trend.trend === "down" ? "#0a7d57" : "#a8761a"};`)}>
+              <><br /><span style={st(`font-size:12px; font-weight:600; color:${d.price_trend.trend === "down" ? "var(--tealD)" : "var(--acd)"};`)}>
                 Price {d.price_trend.trend === "down" ? "dropped" : "rose"} {taka(Math.abs(d.price_trend.delta))} recently
               </span></>
             )}
@@ -202,20 +202,20 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
 
       {/* our take — the RAG verdict, grounded in real evidence */}
       {ourTake && (
-        <div style={st("background:var(--acsoft); border-radius:20px; padding:clamp(16px,2.5vw,22px); margin-top:14px; display:flex; gap:12px;")}>
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:2px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--ac)" /></svg>
+        <div style={st("background:var(--tint); border-radius:var(--r); padding:clamp(16px,2.5vw,22px); margin-top:14px; display:flex; gap:12px;")}>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:2px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--teal)" /></svg>
           <div>
-            <div style={st("font-size:11.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:var(--acd); margin-bottom:5px;")}>{t("our_take")}</div>
-            <p style={st("margin:0; font-size:14.5px; color:#2c3036; line-height:1.6; text-wrap:pretty;")}>{ourTake}</p>
+            <div style={st("font-size:11.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:var(--lnk); margin-bottom:5px;")}>{t("our_take")}</div>
+            <p style={st("margin:0; font-size:14.5px; color:var(--ink2); line-height:1.6; text-wrap:pretty;")}>{ourTake}</p>
           </div>
         </div>
       )}
 
       {/* axes */}
       {Object.values(scores).some((v) => v != null) && (
-        <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); margin-top:14px;")}>
+        <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); margin-top:14px;")}>
           <SectionLabel>{t("scores")}</SectionLabel>
-          <p style={st("margin:9px 0 0; font-size:13.5px; color:#84878f; line-height:1.5; text-wrap:pretty;")}>{t("scores_help")}</p>
+          <p style={st("margin:9px 0 0; font-size:13.5px; color:var(--mut2); line-height:1.5; text-wrap:pretty;")}>{t("scores_help")}</p>
           <div style={st("display:flex; flex-direction:column; gap:17px; margin-top:16px;")}>
             {AXES.map((k) => {
               const v = scores[k];
@@ -224,13 +224,13 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               return (
                 <div key={k}>
                   <div style={st("display:flex; justify-content:space-between; align-items:baseline; gap:12px;")}>
-                    <span style={st("font-size:15.5px; font-weight:600; color:#2c3036;")}>{axisLabel(k)}</span>
-                    <span style={st("font-size:15px; font-weight:700; color:var(--acd);")}>{v.toFixed(1)} / 10</span>
+                    <span style={st("font-size:15.5px; font-weight:600; color:var(--ink2);")}>{axisLabel(k)}</span>
+                    <span style={st("font-size:15px; font-weight:700; color:var(--lnk);")}>{v.toFixed(1)} / 10</span>
                   </div>
-                  <div style={st("position:relative; height:7px; border-radius:99px; background:rgba(15,25,35,.06); margin-top:8px; overflow:hidden;")}>
-                    <div style={st(`position:absolute; top:0; bottom:0; left:0; width:${v * 10}%; border-radius:99px; background:linear-gradient(90deg,var(--acsoft2),var(--ac));`)} />
+                  <div style={st("position:relative; height:7px; border-radius:var(--r); background:rgba(var(--rgb-ink),.06); margin-top:8px; overflow:hidden;")}>
+                    <div style={st(`position:absolute; top:0; bottom:0; left:0; width:${v * 10}%; border-radius:var(--r); background:var(--teal);`)} />
                   </div>
-                  {reason && <div style={st("font-size:13.5px; color:#84878f; margin-top:7px; line-height:1.5;")}>{reason}</div>}
+                  {reason && <div style={st("font-size:13.5px; color:var(--mut2); margin-top:7px; line-height:1.5;")}>{reason}</div>}
                 </div>
               );
             })}
@@ -258,13 +258,13 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               two-line grid at 15px gaps ran the labels into the values. */}
           <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:4px 22px; margin-top:14px;")}>
             {specs.map((sp, i) => (
-              <div key={i} style={st("display:flex; align-items:flex-start; gap:11px; padding:11px 2px; border-bottom:1px solid rgba(15,25,35,.055);")}>
-                <span style={st("display:flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:9px; flex-shrink:0; background:rgba(15,25,35,.045); margin-top:1px;")}>
-                  <SpecIcon name={sp.icon} size={16} color="#6c727a" />
+              <div key={i} style={st("display:flex; align-items:flex-start; gap:11px; padding:11px 2px; border-bottom:1px solid rgba(var(--rgb-ink),.055);")}>
+                <span style={st("display:flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:var(--r); flex-shrink:0; background:rgba(var(--rgb-ink),.045); margin-top:1px;")}>
+                  <SpecIcon name={sp.icon} size={16} color="var(--mut)" />
                 </span>
                 <div style={st("min-width:0;")}>
-                  <div style={st("font-size:12px; font-weight:600; letter-spacing:.3px; color:#9a9da4;")}>{sp.k}</div>
-                  <div style={st("font-size:14.5px; font-weight:600; color:#2c3036; margin-top:3px; line-height:1.45; overflow-wrap:anywhere;")}>{sp.v}</div>
+                  <div style={st("font-size:12px; font-weight:600; letter-spacing:.3px; color:var(--mut2);")}>{sp.k}</div>
+                  <div style={st("font-size:14.5px; font-weight:600; color:var(--ink2); margin-top:3px; line-height:1.45; overflow-wrap:anywhere;")}>{sp.v}</div>
                 </div>
               </div>
             ))}
@@ -276,19 +276,19 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             <Fold label={t("full_spec_sheet")}>
               <div style={st("display:flex; flex-direction:column; gap:14px;")}>
                 {d.spec_sheet.map((g) => (
-                  <section key={g.title} style={st("padding:14px 16px 4px; border-radius:17px; background:rgba(255,255,255,.9); box-shadow:0 1px 2px rgba(15,25,35,.05), inset 0 0 0 1px rgba(15,25,35,.05);")}>
-                    <h3 style={st("font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:#9a9da4; font-weight:700; margin:0 0 4px;")}>{g.title}</h3>
+                  <section key={g.title} style={st("padding:14px 16px 4px; border-radius:var(--r); background:var(--card); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), inset 0 0 0 1px rgba(var(--rgb-ink),.05);")}>
+                    <h3 style={st("font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:var(--mut2); font-weight:700; margin:0 0 4px;")}>{g.title}</h3>
                     {g.rows.map((r) => (
-                      <div key={r.label} style={st("display:flex; gap:12px; flex-wrap:wrap; padding:9px 0; border-bottom:1px solid rgba(15,25,35,.05); font-size:13.5px;")}>
-                        <span style={st("flex:0 0 128px; font-weight:600; color:#2c3036;")}>{r.label}</span>
-                        <span style={st("flex:1 1 160px; color:#41464d; line-height:1.55; overflow-wrap:anywhere;")}>{r.value}</span>
+                      <div key={r.label} style={st("display:flex; gap:12px; flex-wrap:wrap; padding:9px 0; border-bottom:1px solid rgba(var(--rgb-ink),.05); font-size:13.5px;")}>
+                        <span style={st("flex:0 0 128px; font-weight:600; color:var(--ink2);")}>{r.label}</span>
+                        <span style={st("flex:1 1 160px; color:var(--tx); line-height:1.55; overflow-wrap:anywhere;")}>{r.value}</span>
                       </div>
                     ))}
                   </section>
                 ))}
-                <p style={st("font-size:12px; color:#9a9da4; line-height:1.6; margin:0 2px;")}>
+                <p style={st("font-size:12px; color:var(--mut2); line-height:1.6; margin:0 2px;")}>
                   {d.spec_source
-                    ? <>Specifications from <a href={d.spec_source} rel="nofollow noopener" target="_blank" style={st("color:var(--acd); font-weight:600;")}>GSMArena</a>. Prices and stock are ours, checked nightly against Bangladeshi shops.</>
+                    ? <>Specifications from <a href={d.spec_source} rel="nofollow noopener" target="_blank" style={st("color:var(--lnk); font-weight:600;")}>GSMArena</a>. Prices and stock are ours, checked nightly against Bangladeshi shops.</>
                     : t("spec_credit")}
                 </p>
               </div>
@@ -296,10 +296,10 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           )}
           {conn.length > 0 && (
             <>
-              <div style={st("font-size:12.5px; color:#9a9da4; margin-top:20px;")}>{t("conn_title")}</div>
+              <div style={st("font-size:12.5px; color:var(--mut2); margin-top:20px;")}>{t("conn_title")}</div>
               <div style={st("display:flex; flex-wrap:wrap; gap:7px; margin-top:9px;")}>
                 {conn.map((c) => (
-                  <span key={c.k} style={st(`display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; padding:6px 12px; border-radius:99px; ${c.v == null ? "color:#9a9da4; background:rgba(15,25,35,.045);" : c.v ? "color:#0a7d57; background:rgba(10,157,106,.1);" : "color:#80868f; background:rgba(15,25,35,.055);"}`)}>
+                  <span key={c.k} style={st(`display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; padding:6px 12px; border-radius:var(--r); ${c.v == null ? "color:var(--mut2); background:rgba(var(--rgb-ink),.045);" : c.v ? "color:var(--tealD); background:rgba(var(--rgb-teal),.1);" : "color:var(--mut2); background:rgba(var(--rgb-ink),.055);"}`)}>
                     {c.v != null && (
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                         {c.v ? <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -323,20 +323,20 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
         {(op.llm_summary || quotes.length || op.praise_flags?.length || op.complaint_flags?.length) && (
           <Card>
             <SectionLabel>{t("owner_voices")}</SectionLabel>
-            {op.llm_summary && <p style={st("margin:15px 0 0; font-size:14px; color:#41464d; line-height:1.6; text-wrap:pretty;")}>{op.llm_summary}</p>}
+            {op.llm_summary && <p style={st("margin:15px 0 0; font-size:14px; color:var(--tx); line-height:1.6; text-wrap:pretty;")}>{op.llm_summary}</p>}
             {quotes.length > 0 && (
               <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:15px;")}>
                 {quotes.map((q, i) => (
-                  <div key={i} style={st("padding:13px 16px; border-radius:15px; background:var(--acsoft); font-family:var(--f-serif); font-style:italic; font-size:16px; color:#2c3036; line-height:1.5;")}>“{q}”</div>
+                  <div key={i} style={st("padding:13px 16px; border-radius:var(--r); background:var(--tint); font-family:var(--f-serif); font-style:italic; font-size:16px; color:var(--ink2); line-height:1.5;")}>“{q}”</div>
                 ))}
               </div>
             )}
             <div style={st("display:flex; flex-wrap:wrap; gap:7px; margin-top:15px;")}>
               {(op.praise_flags || []).map((tx, i) => (
-                <span key={"p" + i} style={st("font-size:13px; font-weight:600; color:#0a7d57; background:rgba(10,157,106,.1); padding:6px 12px; border-radius:99px;")}>+ {tx}</span>
+                <span key={"p" + i} style={st("font-size:13px; font-weight:600; color:var(--tealD); background:rgba(var(--rgb-teal),.1); padding:6px 12px; border-radius:var(--r);")}>+ {tx}</span>
               ))}
               {(op.complaint_flags || []).map((tx, i) => (
-                <span key={"c" + i} style={st("font-size:13px; font-weight:600; color:#a8761a; background:rgba(192,137,42,.12); padding:6px 12px; border-radius:99px;")}>− {tx}</span>
+                <span key={"c" + i} style={st("font-size:13px; font-weight:600; color:var(--acd); background:rgba(var(--rgb-amber),.12); padding:6px 12px; border-radius:var(--r);")}>− {tx}</span>
               ))}
             </div>
           </Card>
@@ -351,14 +351,14 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             {/* the SAME range the hero shows (combine.price_low/high: in-stock
                 sellers in the shown channel, variant outliers trimmed) — never
                 a second number computed differently (owner: consistency) */}
-            <div style={st("margin-top:8px; font-size:14px; color:#5c626a;")}>
-              <b style={st("color:#2c3036;")}>{bnNum(String(offers.length))} {t("sellers")}</b>
+            <div style={st("margin-top:8px; font-size:14px; color:var(--mut);")}>
+              <b style={st("color:var(--ink2);")}>{bnNum(String(offers.length))} {t("sellers")}</b>
               {" · "}{takaRange(priceLo, priceHi)}
             </div>
-            <p style={st("margin:9px 0 0; font-size:13px; color:#84878f; line-height:1.55; text-wrap:pretty;")}>{t("why_anon")}</p>
-            <div style={st("display:flex; gap:9px; margin-top:12px; padding:12px 14px; border-radius:14px; background:rgba(192,137,42,.1);")}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              <span style={st("font-size:13.5px; color:#7a6a40; line-height:1.55;")}>{t("price_warning")}</span>
+            <p style={st("margin:9px 0 0; font-size:13px; color:var(--mut2); line-height:1.55; text-wrap:pretty;")}>{t("why_anon")}</p>
+            <div style={st("display:flex; gap:9px; margin-top:12px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1);")}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span style={st("font-size:13.5px; color:var(--acd); line-height:1.55;")}>{t("price_warning")}</span>
             </div>
             {/* one block per CHANNEL (owner 2026-07-19): header carries the
                 channel's seller count + in-stock range from the same summary
@@ -366,14 +366,14 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             {(["official", "unofficial"] as const).map((ch) => {
               const chOffers = offers.filter((o) => (ch === "official") === offGrade(o));
               const chip = ch === "official"
-                ? <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; color:#0a7d57; background:rgba(10,157,106,.1);")}>{t("official_bd")}</span>
-                : <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; color:#565b63; background:rgba(15,25,35,.055);")}>{t("unofficial_import")}</span>;
+                ? <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:var(--r); color:var(--tealD); background:rgba(var(--rgb-teal),.1);")}>{t("official_bd")}</span>
+                : <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:var(--r); color:var(--mut); background:rgba(var(--rgb-ink),.055);")}>{t("unofficial_import")}</span>;
               // both channels always show; an empty one says so (owner 2026-07-19)
               if (!chOffers.length) {
                 return (
                   <div key={ch} style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:16px;")}>
                     {chip}
-                    <span style={st("font-size:12.5px; color:#9a9ea6;")}>{ch === "official" ? t("no_official_found") : t("no_unofficial_found")}</span>
+                    <span style={st("font-size:12.5px; color:var(--mut2);")}>{ch === "official" ? t("no_official_found") : t("no_unofficial_found")}</span>
                   </div>
                 );
               }
@@ -385,8 +385,8 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
                 <div key={ch} style={st("margin-top:16px;")}>
                   <div style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap;")}>
                     {chip}
-                    <span style={st("font-size:13px; color:#5c626a;")}>
-                      <b style={st("color:#2c3036;")}>{inStock > 0
+                    <span style={st("font-size:13px; color:var(--mut);")}>
+                      <b style={st("color:var(--ink2);")}>{inStock > 0
                         ? <>{bnNum(String(inStock))} {t("shops_in_stock")}</>
                         : <>{bnNum(String(side?.sellers ?? chOffers.length))} {t("sellers")}</>}</b>
                       {side ? <> · {takaRange(side.lo, side.hi)}</> : null}
@@ -399,9 +399,9 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               );
             })}
             {/* monetization invite — shops can pay to appear named (owner 2026-07-19) */}
-            <p style={st("margin:18px 0 0; padding-top:14px; border-top:1px solid rgba(15,25,35,.06); font-size:12px; color:#a4a8b0; line-height:1.55; text-wrap:pretty;")}>
+            <p style={st("margin:18px 0 0; padding-top:14px; border-top:1px solid rgba(var(--rgb-ink),.06); font-size:12px; color:var(--faint); line-height:1.55; text-wrap:pretty;")}>
               {t("shop_own")}{" "}
-              <a href="/support" style={st("color:var(--acd); font-weight:600;")}>{t("shop_contact")}</a>
+              <a href="/support" style={st("color:var(--lnk); font-weight:600;")}>{t("shop_contact")}</a>
             </p>
           </Card>
         )}
@@ -434,40 +434,40 @@ function WhoFor({ bestFor, avoidIf, caveats }: {
 }) {
   const { major, notes } = classifyCaveats(caveats);
   return (
-    <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); margin-top:14px;")}>
+    <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); margin-top:14px;")}>
       <SectionLabel>{t("who_its_for")}</SectionLabel>
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:18px;")}>
         {bestFor.length > 0 && (
-          <div style={st("border-radius:18px; padding:17px 18px; background:linear-gradient(160deg, rgba(10,157,106,.1), rgba(10,157,106,.04)); border:.5px solid rgba(10,157,106,.16);")}>
-            <div style={st("display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#0a7d57;")}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="#0a9d6a" strokeWidth="1.8" /><path d="M8 12.5l2.5 2.5L16 9" stroke="#0a9d6a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <div style={st("border-radius:var(--r); padding:17px 18px; background:linear-gradient(160deg, rgba(var(--rgb-teal),.1), rgba(var(--rgb-teal),.04)); border:.5px solid rgba(var(--rgb-teal),.16);")}>
+            <div style={st("display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--tealD);")}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="var(--teal)" strokeWidth="1.8" /><path d="M8 12.5l2.5 2.5L16 9" stroke="var(--teal)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               {t("great_for")}
             </div>
             <div style={st("display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;")}>
               {bestFor.map((tx, i) => (
-                <span key={i} style={st("display:inline-flex; align-items:center; gap:7px; padding:8px 13px 8px 10px; border-radius:99px; background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(10,157,106,.18);")}>
-                  <span style={st("display:flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:rgba(10,157,106,.14); color:#0a8a5e; flex-shrink:0;")}>
+                <span key={i} style={st("display:inline-flex; align-items:center; gap:7px; padding:8px 13px 8px 10px; border-radius:var(--r); background:var(--card); box-shadow:inset 0 0 0 1px rgba(var(--rgb-teal),.18);")}>
+                  <span style={st("display:flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:var(--r); background:rgba(var(--rgb-teal),.14); color:var(--tealD); flex-shrink:0;")}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d={personaIcon(tx)} stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </span>
-                  <span style={st("font-size:13.5px; font-weight:600; color:#1f5e48; line-height:1.2; text-transform:capitalize;")}>{tx}</span>
+                  <span style={st("font-size:13.5px; font-weight:600; color:var(--tealD); line-height:1.2; text-transform:capitalize;")}>{tx}</span>
                 </span>
               ))}
             </div>
           </div>
         )}
         {avoidIf.length > 0 && (
-          <div style={st("border-radius:18px; padding:17px 18px; background:linear-gradient(160deg, rgba(192,137,42,.1), rgba(192,137,42,.03)); border:.5px solid rgba(192,137,42,.18);")}>
-            <div style={st("display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#a8761a;")}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="#c47a1e" strokeWidth="1.8" /><path d="M12 7.5v5.5M12 16v.5" stroke="#c47a1e" strokeWidth="2" strokeLinecap="round" /></svg>
+          <div style={st("border-radius:var(--r); padding:17px 18px; background:linear-gradient(160deg, rgba(var(--rgb-amber),.1), rgba(var(--rgb-amber),.03)); border:.5px solid rgba(var(--rgb-amber),.18);")}>
+            <div style={st("display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--acd);")}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="var(--acd)" strokeWidth="1.8" /><path d="M12 7.5v5.5M12 16v.5" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" /></svg>
               {t("think_twice")}
             </div>
             <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:14px;")}>
               {avoidIf.map((tx, i) => (
                 <div key={i} style={st("display:flex; gap:9px; align-items:flex-start;")}>
-                  <span style={st("display:flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:6px; background:rgba(192,137,42,.14); color:#a8761a; flex-shrink:0; margin-top:1px;")}>
+                  <span style={st("display:flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:var(--r); background:rgba(var(--rgb-amber),.14); color:var(--acd); flex-shrink:0; margin-top:1px;")}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" /></svg>
                   </span>
-                  <span style={st("font-size:13.5px; color:#5c626a; line-height:1.45;")}>{tx}</span>
+                  <span style={st("font-size:13.5px; color:var(--mut); line-height:1.45;")}>{tx}</span>
                 </div>
               ))}
             </div>
@@ -481,12 +481,12 @@ function WhoFor({ bestFor, avoidIf, caveats }: {
       )}
       {notes.length > 0 && (
         <>
-          <div style={st("font-size:11.5px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:#a8761a; margin:20px 0 0;")}>{t("owners_flag")}</div>
+          <div style={st("font-size:11.5px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--acd); margin:20px 0 0;")}>{t("owners_flag")}</div>
           <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:9px; margin-top:11px;")}>
             {notes.map((cv, i) => (
-              <div key={i} style={st("display:flex; gap:10px; padding:12px 14px; border-radius:14px; background:rgba(192,137,42,.08);")}>
-                <span style={st("width:7px; height:7px; border-radius:50%; background:#a8761a; margin-top:6px; flex-shrink:0;")} />
-                <span style={st("font-size:13.5px; color:#6f5f38; line-height:1.5;")}>{cv.text}</span>
+              <div key={i} style={st("display:flex; gap:10px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.08);")}>
+                <span style={st("width:7px; height:7px; border-radius:var(--r); background:var(--acd); margin-top:6px; flex-shrink:0;")} />
+                <span style={st("font-size:13.5px; color:var(--acd); line-height:1.5;")}>{cv.text}</span>
               </div>
             ))}
           </div>
@@ -510,58 +510,58 @@ function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
   const area = `${path(mine)} L${x(3).toFixed(1)} ${y(0).toFixed(1)} L${x(0).toFixed(1)} ${y(0).toFixed(1)} Z`;
   const yr3 = mine[3] - market[3];
   const verdict = yr3 >= 6 ? t("holds_better") : yr3 <= -6 ? t("holds_worse") : t("holds_typical");
-  const verdictColor = yr3 >= 6 ? "#0a7d57" : yr3 <= -6 ? "#a8761a" : "#5c626a";
+  const verdictColor = yr3 >= 6 ? "var(--tealD)" : yr3 <= -6 ? "var(--acd)" : "var(--mut)";
   const ageMark = ageYears != null && ageYears > 0 && ageYears <= 3 ? ageYears : null;
 
   return (
     <>
       <SectionLabel>{t("value_retention")}</SectionLabel>
       <div style={st(`font-size:14px; font-weight:700; color:${verdictColor}; margin-top:12px;`)}>{verdict}</div>
-      <div style={st("font-size:12.5px; color:#80868f; margin-top:3px; line-height:1.5;")}>
-        {t("est_resale_left")} <span style={st("font-weight:700; color:#2c3036;")}>~{mine[3]}%</span>
-        {taTaka(mine[3]) && <> (<span style={st("font-weight:700; color:var(--acd);")}>≈ {taTaka(mine[3])}</span>)</>} {t("after_3y")}.
+      <div style={st("font-size:12.5px; color:var(--mut2); margin-top:3px; line-height:1.5;")}>
+        {t("est_resale_left")} <span style={st("font-weight:700; color:var(--ink2);")}>~{mine[3]}%</span>
+        {taTaka(mine[3]) && <> (<span style={st("font-weight:700; color:var(--lnk);")}>≈ {taTaka(mine[3])}</span>)</>} {t("after_3y")}.
       </div>
 
       <svg viewBox={`0 0 ${W} ${H}`} style={st("width:100%; margin-top:14px; overflow:visible;")}>
         <defs>
           <linearGradient id="vrfill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--ac)" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="var(--ac)" stopOpacity="0" />
+            <stop offset="0%" stopColor="var(--teal)" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="var(--teal)" stopOpacity="0" />
           </linearGradient>
         </defs>
         {[100, 75, 50, 25].map((g) => (
           <g key={g}>
-            <line x1={padL} y1={y(g)} x2={W - padR} y2={y(g)} stroke="rgba(15,25,35,.07)" strokeWidth="1" />
-            <text x={padL - 6} y={y(g) + 3} textAnchor="end" style={st("font-size:8px; fill:#b6bcc4;")}>{g}%</text>
+            <line x1={padL} y1={y(g)} x2={W - padR} y2={y(g)} stroke="rgba(var(--rgb-ink),.07)" strokeWidth="1" />
+            <text x={padL - 6} y={y(g) + 3} textAnchor="end" style={st("font-size:8px; fill:var(--faint);")}>{g}%</text>
           </g>
         ))}
         {[0, 1, 2, 3].map((yr) => (
-          <text key={yr} x={x(yr)} y={H - 6} textAnchor="middle" style={st("font-size:8px; fill:#b6bcc4;")}>{yr === 0 ? "now" : `${yr}y`}</text>
+          <text key={yr} x={x(yr)} y={H - 6} textAnchor="middle" style={st("font-size:8px; fill:var(--faint);")}>{yr === 0 ? "now" : `${yr}y`}</text>
         ))}
         <path d={area} fill="url(#vrfill)" />
-        <path d={path(market)} fill="none" stroke="#c2c6cd" strokeWidth="1.6" strokeDasharray="3 3" strokeLinecap="round" strokeLinejoin="round" />
-        <path d={path(mine)} fill="none" stroke="var(--ac)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={path(market)} fill="none" stroke="var(--faint)" strokeWidth="1.6" strokeDasharray="3 3" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={path(mine)} fill="none" stroke="var(--teal)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
         {/* ৳ value labels at year 1/2/3 */}
         {[1, 2, 3].map((yr) => (
           <g key={yr}>
-            <circle cx={x(yr)} cy={y(mine[yr])} r="2.8" fill="var(--ac)" />
-            {taTaka(mine[yr]) && <text x={x(yr)} y={y(mine[yr]) - 7} textAnchor="middle" style={st("font-size:7.5px; font-weight:700; fill:var(--acd);")}>{taTaka(mine[yr])}</text>}
+            <circle cx={x(yr)} cy={y(mine[yr])} r="2.8" fill="var(--teal)" />
+            {taTaka(mine[yr]) && <text x={x(yr)} y={y(mine[yr]) - 7} textAnchor="middle" style={st("font-size:7.5px; font-weight:700; fill:var(--lnk);")}>{taTaka(mine[yr])}</text>}
           </g>
         ))}
-        <circle cx={x(0)} cy={y(mine[0])} r="2.8" fill="var(--ac)" />
+        <circle cx={x(0)} cy={y(mine[0])} r="2.8" fill="var(--teal)" />
         {ageMark != null && (
-          <line x1={x(ageMark)} y1={padT} x2={x(ageMark)} y2={H - padB} stroke="#a8761a" strokeWidth="1.2" strokeDasharray="2 2" />
+          <line x1={x(ageMark)} y1={padT} x2={x(ageMark)} y2={H - padB} stroke="var(--acd)" strokeWidth="1.2" strokeDasharray="2 2" />
         )}
       </svg>
 
       <div style={st("display:flex; align-items:center; gap:14px; margin-top:8px; flex-wrap:wrap;")}>
-        <span style={st("display:flex; align-items:center; gap:6px; font-size:11.5px; color:#5c626a; font-weight:600;")}><span style={st("width:14px; height:2.5px; border-radius:2px; background:var(--ac);")} />{brand}</span>
-        <span style={st("display:flex; align-items:center; gap:6px; font-size:11.5px; color:#80868f;")}><span style={st("width:14px; height:0; border-top:2px dashed #c2c6cd;")} />{t("typical_phone")}</span>
+        <span style={st("display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--mut); font-weight:600;")}><span style={st("width:14px; height:2.5px; border-radius:var(--r); background:var(--teal);")} />{brand}</span>
+        <span style={st("display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--mut2);")}><span style={st("width:14px; height:0; border-top:2px dashed var(--faint);")} />{t("typical_phone")}</span>
         {updateRecord != null && (
-          <span style={st("font-size:11.5px; color:#80868f; margin-left:auto;")}>{t("updates")} <span style={st("font-weight:700; color:#2c3036;")}>{updateRecord}/10</span></span>
+          <span style={st("font-size:11.5px; color:var(--mut2); margin-left:auto;")}>{t("updates")} <span style={st("font-weight:700; color:var(--ink2);")}>{updateRecord}/10</span></span>
         )}
       </div>
-      <p style={st("margin:13px 0 0; font-size:11px; color:#9a9da4; line-height:1.5;")}>{t("retention_disclaimer")}</p>
+      <p style={st("margin:13px 0 0; font-size:11px; color:var(--mut2); line-height:1.5;")}>{t("retention_disclaimer")}</p>
     </>
   );
 }
@@ -616,33 +616,33 @@ function VariantGroupRow({ g, lone }: { g: OfferGroup; lone: boolean }) {
   // lone unnamed group = every seller, so say that instead of "not stated"
   const title = g.variant || (lone ? t("all_sellers") : t("variant_unknown"));
   return (
-    <div style={st(`display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:14px; background:${g.hasBest ? "var(--acsoft)" : "rgba(15,25,35,.035)"};`)}>
+    <div style={st(`display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:var(--r); background:${g.hasBest ? "var(--tint)" : "rgba(var(--rgb-ink),.035)"};`)}>
       <div style={st("flex:1; min-width:0;")}>
-        <div style={st(`font-size:14px; font-weight:600; color:${g.variant ? "#2c3036" : "#8a8e96"}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{title}</div>
+        <div style={st(`font-size:14px; font-weight:600; color:${g.variant ? "var(--ink2)" : "var(--mut2)"}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{title}</div>
         <div style={st("display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:5px;")}>
           {g.regions.map((r) => (
-            <span key={r} style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; background:rgba(15,25,35,.06); color:#5c626a;")}>{r}</span>
+            <span key={r} style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--r); background:rgba(var(--rgb-ink),.06); color:var(--mut);")}>{r}</span>
           ))}
           {g.inStock > 0 ? (
-            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; color:#0a7d57; background:rgba(10,157,106,.1);")}>
-              <span style={st("width:5px; height:5px; border-radius:50%; background:currentColor;")} />
+            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--r); color:var(--tealD); background:rgba(var(--rgb-teal),.1);")}>
+              <span style={st("width:5px; height:5px; border-radius:var(--r); background:currentColor;")} />
               {/* "4 in stock" read as four UNITS sitting in a warehouse. It is
                   a count of SHOPS, which is what every other surface says. */}
               {t("in_stock_at")} {bnNum(String(g.inStock))} {g.inStock === 1 ? t("shop_one") : t("sellers")}
             </span>
           ) : g.knownOut ? (
-            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; color:#80868f; background:rgba(15,25,35,.055);")}>
-              <span style={st("width:5px; height:5px; border-radius:50%; background:currentColor;")} />
+            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--r); color:var(--mut2); background:rgba(var(--rgb-ink),.055);")}>
+              <span style={st("width:5px; height:5px; border-radius:var(--r); background:currentColor;")} />
               {t("stock_out")}
             </span>
           ) : null}
           {g.n > 1 && (
-            <span style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:99px; background:rgba(15,25,35,.06); color:#5c626a;")}>{bnNum(String(g.n))} {t("sellers")}</span>
+            <span style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--r); background:rgba(var(--rgb-ink),.06); color:var(--mut);")}>{bnNum(String(g.n))} {t("sellers")}</span>
           )}
         </div>
       </div>
-      <span style={st("font-size:15px; font-weight:600; color:#17191d; text-align:right;")}>{takaRange(g.lo, g.hi)}</span>
-      {g.hasBest && <span style={st("font-size:10px; font-weight:700; color:var(--acd); background:rgba(255,255,255,.85); padding:3px 9px; border-radius:99px;")}>{t("best_price")}</span>}
+      <span style={st("font-size:15px; font-weight:600; color:var(--ink); text-align:right;")}>{takaRange(g.lo, g.hi)}</span>
+      {g.hasBest && <span style={st("font-size:10px; font-weight:700; color:var(--lnk); background:var(--card); padding:3px 9px; border-radius:var(--r);")}>{t("best_price")}</span>}
     </div>
   );
 }
@@ -650,20 +650,20 @@ function VariantGroupRow({ g, lone }: { g: OfferGroup; lone: boolean }) {
 /* ---------- loading ---------- */
 function LoadingDetail({ compact }: { compact?: boolean }) {
   const block = (w: string, h = "13px") =>
-    st(`width:${w}; height:${h}; border-radius:7px; background:rgba(15,25,35,.07); animation:kpulse 1.4s ease-in-out infinite;`);
+    st(`width:${w}; height:${h}; border-radius:var(--r); background:rgba(var(--rgb-ink),.07); animation:kpulse 1.4s ease-in-out infinite;`);
   return (
     <div style={st(`margin-top:14px;`)}>
       <style>{`@keyframes kpulse{0%,100%{opacity:.5}50%{opacity:1}}`}</style>
       {!compact && (
-        <div style={st("display:flex; align-items:center; gap:13px; padding:17px 20px; border-radius:18px; background:var(--acsoft); margin-bottom:14px;")}>
-          <span style={st("width:20px; height:20px; border-radius:50%; border:2.5px solid var(--acsoft2); border-top-color:var(--ac); animation:kspin .8s linear infinite; flex-shrink:0;")} />
-          <span style={st("font-size:14px; font-weight:600; color:#2c3036;")}>{t("loading_detail")}</span>
+        <div style={st("display:flex; align-items:center; gap:13px; padding:17px 20px; border-radius:var(--r); background:var(--tint); margin-bottom:14px;")}>
+          <span style={st("width:20px; height:20px; border-radius:var(--r); border:2.5px solid var(--tint2); border-top-color:var(--teal); animation:kspin .8s linear infinite; flex-shrink:0;")} />
+          <span style={st("font-size:14px; font-weight:600; color:var(--ink2);")}>{t("loading_detail")}</span>
           <style>{`@keyframes kspin{to{transform:rotate(360deg)}}`}</style>
         </div>
       )}
       <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px;")}>
         {[0, 1].map((c) => (
-          <div key={c} style={st("background:rgba(255,255,255,.8); border-radius:24px; padding:24px; display:flex; flex-direction:column; gap:12px;")}>
+          <div key={c} style={st("background:var(--card); border-radius:var(--r); padding:24px; display:flex; flex-direction:column; gap:12px;")}>
             <div style={block("40%")} /><div style={block("90%")} /><div style={block("80%")} /><div style={block("60%")} />
           </div>
         ))}
@@ -685,8 +685,8 @@ function Wrap({ children }: { children: ReactNode; onBack?: () => void }) {
   );
 }
 function Card({ children }: { children: ReactNode }) {
-  return <div style={st("background:rgba(255,255,255,.92); border-radius:24px; padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 10px 28px rgba(15,25,35,.07); break-inside:avoid; margin-bottom:14px;")}>{children}</div>;
+  return <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); break-inside:avoid; margin-bottom:14px;")}>{children}</div>;
 }
 function SectionLabel({ children }: { children: ReactNode }) {
-  return <div style={st("font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:#9a9da4;")}>{children}</div>;
+  return <div style={st("font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--mut2);")}>{children}</div>;
 }

@@ -28,8 +28,8 @@ interface Props {
 // RAG ranker confidence (high/medium/low); legacy strong/good/backup kept for
 // any cached older responses
 const CONF_COLOR: Record<string, string> = {
-  high: "#0a7d57", medium: "#1c4eae", low: "#a8761a",
-  strong: "#0a7d57", good: "#1c4eae", backup: "#a8761a", fallback: "#a8761a",
+  high: "var(--tealD)", medium: "var(--lnk)", low: "var(--acd)",
+  strong: "var(--tealD)", good: "var(--lnk)", backup: "var(--acd)", fallback: "var(--acd)",
 };
 const CONF_KEY: Record<string, string> = {
   high: "conf_strong", medium: "conf_good", low: "conf_backup",
@@ -42,8 +42,8 @@ export function DataCautionChip({ dc, small }: { dc?: DataCaution | null; small?
   if (!dc || dc.level === "low") return null;
   const key = dc.level === "high" ? "data_caution_stale" : "data_caution_few";
   return (
-    <span style={st(`display:inline-flex; align-items:center; gap:6px; font-size:${small ? 11 : 12.5}px; font-weight:600; color:#a8761a; background:rgba(192,137,42,.12); padding:${small ? "3px 9px" : "5px 11px"}; border-radius:99px;`)}>
-      <svg width={small ? 11 : 13} height={small ? 11 : 13} viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    <span style={st(`display:inline-flex; align-items:center; gap:6px; font-size:${small ? 11 : 12.5}px; font-weight:600; color:var(--acd); background:rgba(var(--rgb-amber),.12); padding:${small ? "3px 9px" : "5px 11px"}; border-radius:var(--r);`)}>
+      <svg width={small ? 11 : 13} height={small ? 11 : 13} viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       {t(key)}
     </span>
   );
@@ -57,9 +57,9 @@ export function PriceSource({ primary, compact }: { primary?: boolean; compact?:
   if (primary !== false) return null;
   const s = compact ? 11 : 12;
   return (
-    <span title={t("price_unconfirmed_note")} style={st(`display:inline-flex; align-items:center; gap:5px; font-size:${s}px; font-weight:700; color:#a8761a; background:rgba(192,137,42,.12); padding:3px 9px; border-radius:99px;`)}>
+    <span title={t("price_unconfirmed_note")} style={st(`display:inline-flex; align-items:center; gap:5px; font-size:${s}px; font-weight:700; color:var(--acd); background:rgba(var(--rgb-amber),.12); padding:3px 9px; border-radius:var(--r);`)}>
       <svg width={s} height={s} viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}>
-        <path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#a8761a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       {t("price_unconfirmed")}
     </span>
@@ -76,9 +76,9 @@ export function SpecStrip({ tiles, small }: { tiles?: SpecTile[] | null; small?:
   // icon tiles, not a middot run: the device page hero has read this way since
   // 2026-07-25 and the owner could not scan the grey dotted string (2026-07-26)
   return (
-    <div style={st(`display:flex; flex-wrap:wrap; gap:${small ? 7 : 10}px ${small ? 14 : 20}px; margin-top:${small ? 8 : 13}px; ${small ? "" : "padding-top:13px; border-top:1px solid rgba(15,25,35,.07);"}`)}>
+    <div style={st(`display:flex; flex-wrap:wrap; gap:${small ? 7 : 10}px ${small ? 14 : 20}px; margin-top:${small ? 8 : 13}px; ${small ? "" : "padding-top:13px; border-top:1px solid rgba(var(--rgb-ink),.07);"}`)}>
       {tiles.map((tl) => (
-        <span key={tl.icon} style={st(`display:inline-flex; align-items:center; gap:6px; font-size:${small ? 12.5 : 13.5}px; font-weight:600; color:#41464d;`)}>
+        <span key={tl.icon} style={st(`display:inline-flex; align-items:center; gap:6px; font-size:${small ? 12.5 : 13.5}px; font-weight:600; color:var(--tx);`)}>
           <SpecIcon name={tl.icon} size={small ? 14 : 15} />{tl.value}
         </span>
       ))}
@@ -93,7 +93,7 @@ export function SpecStrip({ tiles, small }: { tiles?: SpecTile[] | null; small?:
     (backend value_pass.caveats). */
 export function MarketChips({ regions, small }: { regions?: RegionOffer[] | null; small?: boolean }) {
   if (!regions || !regions.length) return null;
-  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:99px; color:var(--acd); background:rgba(38,86,214,.09);`;
+  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:var(--r); color:var(--lnk); background:var(--tealL);`;
   return (
     <>
       {regions.map((r) => (
@@ -112,12 +112,12 @@ export function VariantLine({ variants, small }: { variants?: VariantPrice[] | n
   // part of the same block instead of a stray grey sentence
   return (
     <div style={st(`display:flex; align-items:baseline; flex-wrap:wrap; gap:${small ? 6 : 8}px 12px; margin-top:${small ? 7 : 10}px; font-size:${small ? 12 : 12.5}px;`)}>
-      <span style={st("display:inline-flex; align-items:center; gap:6px; font-weight:700; color:#6c727a; letter-spacing:.2px;")}>
+      <span style={st("display:inline-flex; align-items:center; gap:6px; font-weight:700; color:var(--mut); letter-spacing:.2px;")}>
         <SpecIcon name="memory" size={small ? 13 : 14} />{t("variants")}
       </span>
       {variants.map((v) => (
-        <span key={v.variant} style={st("display:inline-flex; align-items:center; gap:5px; color:#5c626a;")}>
-          {v.variant}<b style={st("color:#2c3036; font-weight:700;")}>{taka(v.price)}</b>
+        <span key={v.variant} style={st("display:inline-flex; align-items:center; gap:5px; color:var(--mut);")}>
+          {v.variant}<b style={st("color:var(--ink2); font-weight:700;")}>{taka(v.price)}</b>
         </span>
       ))}
     </div>
@@ -133,17 +133,17 @@ export function ChannelChips({ p, small }: {
        channels?: Channels | null };
   small?: boolean;
 }) {
-  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:99px;`;
+  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:var(--r);`;
   // the other channel's chip shows its RANGE from the same channel summary
   // the listings render — one source, no contradictions (owner 2026-07-19)
   const off = p.channels?.official;
   return (
     <>
       {p.best_price_official
-        ? <span style={st(`${base} color:#0a7d57; background:rgba(10,157,106,.1);`)}>{t("official_bd")}</span>
-        : <span style={st(`${base} font-weight:600; color:#565b63; background:rgba(15,25,35,.055);`)}>{t("unofficial_import")}</span>}
+        ? <span style={st(`${base} color:var(--tealD); background:rgba(var(--rgb-teal),.1);`)}>{t("official_bd")}</span>
+        : <span style={st(`${base} font-weight:600; color:var(--mut); background:rgba(var(--rgb-ink),.055);`)}>{t("unofficial_import")}</span>}
       {!p.best_price_official && (off || p.best_official_price != null) && (
-        <span style={st(`${base} color:#a8761a; background:rgba(192,137,42,.12);`)}>
+        <span style={st(`${base} color:var(--acd); background:rgba(var(--rgb-amber),.12);`)}>
           {off ? <>{t("official")} {takaRange(off.lo, off.hi)}</>
                : <>{t("official_from")} {taka(p.best_official_price)}</>}
         </span>
@@ -180,53 +180,53 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
       <div style={st("display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:clamp(12px,3vh,34px);")}>
         <div>
           <h1 style={st("font-family:var(--f-display); margin:0; font-size:clamp(30px,4.4vw,44px); font-weight:600; letter-spacing:-1.2px; line-height:1.1;")}>
-            {picks.length} <span style={st("font-family:var(--f-serif); font-style:italic; font-weight:400; color:var(--acd);")}>{t("top_picks")}</span>
+            {picks.length} <span style={st("font-family:var(--f-serif); font-style:italic; font-weight:400; color:var(--lnk);")}>{t("top_picks")}</span>
           </h1>
           <div style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:13px;")}>
             {querySummary.map((q, i) => (
-              <span key={i} style={st("font-size:13.5px; font-weight:600; color:#565b63; background:rgba(255,255,255,.75); border:.5px solid rgba(15,25,35,.07); padding:6px 13px; border-radius:99px;")}>{q}</span>
+              <span key={i} style={st("font-size:13.5px; font-weight:600; color:var(--mut); background:var(--card); border:.5px solid rgba(var(--rgb-ink),.07); padding:6px 13px; border-radius:var(--r);")}>{q}</span>
             ))}
-            <button onClick={onEdit} className="k-press" style={st("font-size:13.5px; font-weight:700; color:var(--acd); background:var(--acsoft); border:none; padding:6px 14px; border-radius:99px; cursor:pointer;")}>{t("edit")}</button>
+            <button onClick={onEdit} className="k-press" style={st("font-size:13.5px; font-weight:700; color:var(--lnk); background:var(--tint); border:none; padding:6px 14px; border-radius:var(--r); cursor:pointer;")}>{t("edit")}</button>
           </div>
         </div>
       </div>
 
       {/* teaser linking to the full "how it works" page */}
       <button onClick={onHowItWorks} className="k-press k-lift"
-        style={st("width:100%; text-align:left; display:flex; gap:13px; align-items:center; margin-top:18px; padding:16px 18px; border-radius:18px; border:none; cursor:pointer; background:linear-gradient(110deg, var(--acsoft), rgba(255,255,255,.55)); box-shadow:inset 0 0 0 1px var(--acsoft2); animation:kpop .35s cubic-bezier(.2,.7,.2,1) both;")}>
-        <span style={st("display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:12px; background:var(--ac); flex-shrink:0; box-shadow:0 4px 12px var(--acglow);")}>
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 00-3.8 10.6c.5.5.8 1.1.8 1.8V16h6v-.6c0-.7.3-1.3.8-1.8A6 6 0 0012 3z" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        style={st("width:100%; text-align:left; display:flex; gap:13px; align-items:center; margin-top:18px; padding:16px 18px; border-radius:var(--r); border:none; cursor:pointer; background:linear-gradient(110deg, var(--tint), rgba(var(--rgb-white),.55)); box-shadow:inset 0 0 0 1px var(--tint2); animation:kpop .35s cubic-bezier(.2,.7,.2,1) both;")}>
+        <span style={st("display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:var(--r); background:var(--teal); flex-shrink:0; box-shadow:0 4px 12px rgba(var(--rgb-ink),.14);")}>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 00-3.8 10.6c.5.5.8 1.1.8 1.8V16h6v-.6c0-.7.3-1.3.8-1.8A6 6 0 0012 3z" stroke="var(--card)" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </span>
         <div style={st("flex:1; min-width:0;")}>
-          <div style={st("font-weight:700; font-size:15.5px; color:var(--acd);")}>{t("results_how_t")}</div>
-          <div style={st("margin-top:2px; font-size:13.5px; font-weight:600; color:#5c626a;")}>{t("read_how")} →</div>
+          <div style={st("font-weight:700; font-size:15.5px; color:var(--lnk);")}>{t("results_how_t")}</div>
+          <div style={st("margin-top:2px; font-size:13.5px; font-weight:600; color:var(--mut);")}>{t("read_how")} →</div>
         </div>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; color:var(--acd);")}><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; color:var(--lnk);")}><path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </button>
 
       {meta.ranking === "unavailable" && (
-        <div style={st("display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:16px; padding:13px 16px; border-radius:14px; background:rgba(192,137,42,.12);")}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="#a8761a" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          <span style={st("flex:1; min-width:180px; font-size:14px; color:#7a6a40; line-height:1.5;")}>The AI ranker was busy, so these are the closest matches by fit — <b>not fully ranked yet</b>. They may not use your full budget. Tap retry for the real ranking.</span>
-          <button onClick={onRetry} className="k-press" style={st("font-size:12.5px; font-weight:700; color:#fff; background:#a8761a; border:none; padding:7px 16px; border-radius:99px; cursor:pointer;")}>Retry ranking</button>
+        <div style={st("display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:16px; padding:13px 16px; border-radius:var(--r); background:rgba(var(--rgb-amber),.12);")}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="var(--acd)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <span style={st("flex:1; min-width:180px; font-size:14px; color:var(--acd); line-height:1.5;")}>The AI ranker was busy, so these are the closest matches by fit — <b>not fully ranked yet</b>. They may not use your full budget. Tap retry for the real ranking.</span>
+          <button onClick={onRetry} className="k-press" style={st("font-size:12.5px; font-weight:700; color:var(--onp); background:var(--acd); border:none; padding:7px 16px; border-radius:var(--r); cursor:pointer;")}>Retry ranking</button>
         </div>
       )}
       {meta.relaxed && (
-        <div style={st("margin-top:16px; padding:11px 15px; border-radius:13px; background:rgba(192,137,42,.1); font-size:14px; color:#7a6a40; line-height:1.5;")}>
+        <div style={st("margin-top:16px; padding:11px 15px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1); font-size:14px; color:var(--acd); line-height:1.5;")}>
           No exact matches in your band, so here are the closest phones around your budget.
         </div>
       )}
       {picks.length < 3 && !meta.relaxed && (
-        <div style={st("margin-top:16px; padding:11px 15px; border-radius:13px; background:rgba(192,137,42,.1); font-size:14px; color:#7a6a40; line-height:1.5;")}>
+        <div style={st("margin-top:16px; padding:11px 15px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1); font-size:14px; color:var(--acd); line-height:1.5;")}>
           Only {picks.length === 1 ? "one phone" : "two phones"} genuinely fit this search. Widening the budget or relaxing a filter would show more.
         </div>
       )}
 
       {/* reasoning */}
       {reasoning && (
-        <div style={st("display:flex; gap:11px; padding:15px 17px; border-radius:17px; background:var(--acsoft); margin-top:22px;")}>
-          <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:2px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--ac)" /></svg>
-          <p style={st("margin:0; font-size:15px; color:#363b42; line-height:1.6; text-wrap:pretty;")}>{reasoning}</p>
+        <div style={st("display:flex; gap:11px; padding:15px 17px; border-radius:var(--r); background:var(--tint); margin-top:22px;")}>
+          <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:2px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--teal)" /></svg>
+          <p style={st("margin:0; font-size:15px; color:var(--ink2); line-height:1.6; text-wrap:pretty;")}>{reasoning}</p>
         </div>
       )}
 
@@ -242,16 +242,16 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
           const { fit, fitColor } = fitOf(lo ?? b, b);
           return (
             <button key={r.id} onClick={() => onPick(r.id)} className="k-press k-lift"
-              style={st("text-align:left; display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:19px; border:none; cursor:pointer; background:rgba(255,255,255,.88); box-shadow:0 1px 2px rgba(15,25,35,.05), inset 0 0 0 1px rgba(15,25,35,.05);")}>
-              <span style={st("width:27px; height:27px; border-radius:50%; background:rgba(15,25,35,.055); color:#80868f; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;")}>{i + 2}</span>
+              style={st("text-align:left; display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:var(--r); border:none; cursor:pointer; background:var(--card); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), inset 0 0 0 1px rgba(var(--rgb-ink),.05);")}>
+              <span style={st("width:27px; height:27px; border-radius:var(--r); background:rgba(var(--rgb-ink),.055); color:var(--mut2); font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;")}>{i + 2}</span>
               <PhonePhoto src={r.image} pid={r.id} w="52px" h="68px" radius={12} />
               <div style={st("flex:1; min-width:0;")}>
                 <div style={st("display:flex; align-items:center; gap:7px;")}>
-                  <span style={st("font-size:16px; font-weight:600; color:#17191d; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{r.brand} {r.model}</span>
+                  <span style={st("font-size:16px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{r.brand} {r.model}</span>
                 </div>
-                <div style={st("font-size:13.5px; color:#80868f; margin-top:2px;")}>{headlinePhrase(r.headline_axis)}{r.headline_axis && r.headline_value != null ? ` · ${axisLabel(r.headline_axis)} ${r.headline_value}` : ""}</div>
+                <div style={st("font-size:13.5px; color:var(--mut2); margin-top:2px;")}>{headlinePhrase(r.headline_axis)}{r.headline_axis && r.headline_value != null ? ` · ${axisLabel(r.headline_axis)} ${r.headline_value}` : ""}</div>
                 <div style={st("display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap;")}>
-                  <span style={st("font-size:15.5px; font-weight:600; color:#17191d;")}>{takaRange(lo, hi)}</span>
+                  <span style={st("font-size:15.5px; font-weight:600; color:var(--ink);")}>{takaRange(lo, hi)}</span>
                   <ChannelChips p={r} small />
                   <MarketChips regions={r.regions} small />
                   {lo != null && <PriceSource primary={r.best_price_primary} compact />}
@@ -260,9 +260,9 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                 <SpecStrip tiles={r.spec_strip} small />
                 {/* mini budget-fit bar */}
                 <div style={st("position:relative; height:4px; margin-top:8px;")}>
-                  <div style={st("position:absolute; inset:0; border-radius:99px; background:rgba(15,25,35,.07);")} />
-                  <div style={st(`position:absolute; top:-2px; height:8px; width:1.5px; border-radius:99px; left:${pct(b)}%; transform:translateX(-50%); background:#c2c6cd;`)} />
-                  <div style={st(`position:absolute; top:-2.5px; width:9px; height:9px; border-radius:50%; left:${pct(lo ?? b)}%; transform:translateX(-50%); background:var(--ac); box-shadow:0 0 0 2px #fff;`)} />
+                  <div style={st("position:absolute; inset:0; border-radius:var(--r); background:rgba(var(--rgb-ink),.07);")} />
+                  <div style={st(`position:absolute; top:-2px; height:8px; width:1.5px; border-radius:var(--r); left:${pct(b)}%; transform:translateX(-50%); background:var(--faint);`)} />
+                  <div style={st(`position:absolute; top:-2.5px; width:9px; height:9px; border-radius:var(--r); left:${pct(lo ?? b)}%; transform:translateX(-50%); background:var(--teal); box-shadow:0 0 0 2px var(--card);`)} />
                 </div>
               </div>
               <span style={st("display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; max-width:96px;")}>
@@ -279,7 +279,7 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
       {/* stretch — promoted: spending a little more is often the smart move */}
       {stretch && <StretchCard s={stretch} budget={b} onClick={() => onPick(`${stretch.brand}|${stretch.key}`)} />}
 
-      <p style={st("margin:22px 2px 0; font-size:12.5px; color:#9a9da4; line-height:1.5;")}>{meta.disclaimer}</p>
+      <p style={st("margin:22px 2px 0; font-size:12.5px; color:var(--mut2); line-height:1.5;")}>{meta.disclaimer}</p>
 
       <FeedbackCard picks={picks} budget={b} archetype={meta.archetype || meta.label || ""} />
     </div>
@@ -300,8 +300,8 @@ function HeroPick({ p, budget, pct, onClick }: {
 
   return (
     <div onClick={onClick} className="k-lift"
-      style={st("position:relative; cursor:pointer; background:linear-gradient(165deg, rgba(255,255,255,.96), rgba(255,255,255,.9)); border-radius:26px; padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(15,25,35,.05), 0 18px 44px rgba(15,25,35,.1), inset 0 0 0 1px var(--acsoft2); margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(18px,3vw,30px); overflow:hidden;")}>
-      <div style={st("position:absolute; top:-90px; right:-70px; width:240px; height:240px; border-radius:50%; background:radial-gradient(circle, var(--acsoft), transparent 70%); pointer-events:none;")} />
+      style={st("position:relative; cursor:pointer; background:linear-gradient(165deg, rgba(var(--rgb-white),.96), rgba(var(--rgb-white),.9)); border-radius:var(--r); padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 18px 44px rgba(var(--rgb-ink),.1), inset 0 0 0 1px var(--tint2); margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(18px,3vw,30px); overflow:hidden;")}>
+      <div style={st("position:absolute; top:-90px; right:-70px; width:240px; height:240px; border-radius:var(--r); background:radial-gradient(circle, var(--tint), transparent 70%); pointer-events:none;")} />
       {/* LEFT: identity, price, official pitch, strengths, owner note */}
       <div style={st("min-width:0;")}>
         <div style={st("display:flex; gap:16px;")}>
@@ -309,17 +309,17 @@ function HeroPick({ p, budget, pct, onClick }: {
           <div style={st("flex:1; min-width:0;")}>
             <div style={st("display:flex; align-items:flex-start; justify-content:space-between; gap:8px;")}>
               <div style={st("min-width:0;")}>
-                <div style={st("font-size:13px; color:#8a8e96; font-weight:500;")}>{p.brand}</div>
-                <div style={st("font-size:clamp(21px,2.4vw,26px); font-weight:700; color:#17191d; line-height:1.12; letter-spacing:-.4px;")}>{p.model}</div>
+                <div style={st("font-size:13px; color:var(--mut2); font-weight:500;")}>{p.brand}</div>
+                <div style={st("font-size:clamp(21px,2.4vw,26px); font-weight:700; color:var(--ink); line-height:1.12; letter-spacing:-.4px;")}>{p.model}</div>
               </div>
-              <span style={st(`font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:99px; white-space:nowrap; flex-shrink:0; color:${badge.c}; background:${badge.bg};`)}>{badge.label}</span>
+              <span style={st(`font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:var(--r); white-space:nowrap; flex-shrink:0; color:${badge.c}; background:${badge.bg};`)}>{badge.label}</span>
             </div>
-            <div style={st("margin-top:7px; font-size:14.5px; color:#5c626a;")}>{headlinePhrase(p.headline_axis)}{p.headline_axis && p.headline_value != null && <> · {axisLabel(p.headline_axis)} <span style={st("color:var(--acd); font-weight:700;")}>{p.headline_value}</span></>}</div>
+            <div style={st("margin-top:7px; font-size:14.5px; color:var(--mut);")}>{headlinePhrase(p.headline_axis)}{p.headline_axis && p.headline_value != null && <> · {axisLabel(p.headline_axis)} <span style={st("color:var(--lnk); font-weight:700;")}>{p.headline_value}</span></>}</div>
             {/* price lives beside the photo — the old full-width row left this
                 whole block empty under the name (owner: dead space) */}
             <div style={st("display:flex; align-items:flex-end; gap:9px; margin-top:12px; flex-wrap:wrap;")}>
-              <span style={st("font-size:clamp(23px,2.6vw,30px); font-weight:400; letter-spacing:-1px; color:#17191d; line-height:1;")}>{takaRange(lo, hi)}</span>
-              <span style={st("font-size:13px; color:#80868f; margin-bottom:2px;")}>at {p.in_stock_shops ?? 0} shops</span>
+              <span style={st("font-size:clamp(23px,2.6vw,30px); font-weight:400; letter-spacing:-1px; color:var(--ink); line-height:1;")}>{takaRange(lo, hi)}</span>
+              <span style={st("font-size:13px; color:var(--mut2); margin-bottom:2px;")}>at {p.in_stock_shops ?? 0} shops</span>
             </div>
           </div>
         </div>
@@ -330,7 +330,7 @@ function HeroPick({ p, budget, pct, onClick }: {
           <PriceSource primary={p.best_price_primary} />
           {p.data_caution && p.data_caution.level !== "low" && <DataCautionChip dc={p.data_caution} small />}
           {(p.strengths || []).map((s, i) => (
-            <span key={i} style={st("font-size:12.5px; color:#41464d; background:rgba(15,25,35,.055); padding:5px 11px; border-radius:99px;")}>{axisLabel(s.axis)} {s.score}</span>
+            <span key={i} style={st("font-size:12.5px; color:var(--tx); background:rgba(var(--rgb-ink),.055); padding:5px 11px; border-radius:var(--r);")}>{axisLabel(s.axis)} {s.score}</span>
           ))}
         </div>
 
@@ -338,31 +338,31 @@ function HeroPick({ p, budget, pct, onClick }: {
         <VariantLine variants={p.variants} />
 
         {note && (
-          <div style={st("display:flex; gap:9px; margin-top:10px; padding:11px 13px; border-radius:13px; background:rgba(192,137,42,.09);")}>
-            <span style={st("width:6px; height:6px; border-radius:50%; background:#a8761a; margin-top:7px; flex-shrink:0;")} />
-            <span style={st("font-size:13.5px; color:#7a6a40; line-height:1.5;")}>{note.text}</span>
+          <div style={st("display:flex; gap:9px; margin-top:10px; padding:11px 13px; border-radius:var(--r); background:rgba(var(--rgb-amber),.09);")}>
+            <span style={st("width:6px; height:6px; border-radius:var(--r); background:var(--acd); margin-top:7px; flex-shrink:0;")} />
+            <span style={st("font-size:13.5px; color:var(--acd); line-height:1.5;")}>{note.text}</span>
           </div>
         )}
       </div>
 
       {/* RIGHT: budget fit, must-know defect, our take, CTA pinned bottom */}
       <div style={st("display:flex; flex-direction:column; gap:13px; min-width:0;")}>
-        <div style={st("padding:15px 16px; border-radius:15px; background:rgba(15,25,35,.035);")}>
+        <div style={st("padding:15px 16px; border-radius:var(--r); background:rgba(var(--rgb-ink),.035);")}>
           <div style={st("display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:10px;")}>
-            <span style={st("color:#80868f;")}>{t("budget_fit")}</span>
+            <span style={st("color:var(--mut2);")}>{t("budget_fit")}</span>
             <span style={st(`font-weight:600; color:${fitColor};`)}>{fit}</span>
           </div>
           <div style={st("position:relative; height:8px;")}>
-            <div style={st("position:absolute; inset:0; border-radius:99px; background:rgba(15,25,35,.08);")} />
-            <div style={st(`position:absolute; top:-3px; height:14px; width:2px; border-radius:99px; left:${pct(budget)}%; transform:translateX(-50%); background:#b6bcc4;`)} />
-            <div style={st(`position:absolute; top:-3px; width:14px; height:14px; border-radius:50%; left:${pct(lo ?? budget)}%; transform:translateX(-50%); background:var(--ac); box-shadow:0 1px 4px var(--acglow), 0 0 0 2px #fff;`)} />
+            <div style={st("position:absolute; inset:0; border-radius:var(--r); background:rgba(var(--rgb-ink),.08);")} />
+            <div style={st(`position:absolute; top:-3px; height:14px; width:2px; border-radius:var(--r); left:${pct(budget)}%; transform:translateX(-50%); background:var(--faint);`)} />
+            <div style={st(`position:absolute; top:-3px; width:14px; height:14px; border-radius:var(--r); left:${pct(lo ?? budget)}%; transform:translateX(-50%); background:var(--teal); box-shadow:0 1px 4px rgba(var(--rgb-ink),.14), 0 0 0 2px var(--card);`)} />
           </div>
         </div>
 
         {major[0] && <JustSoYouKnow text={major[0].text} />}
 
         {p.smart_verdict && (
-          <p style={st("margin:2px 0 0; font-size:15px; color:#363b42; line-height:1.6; text-wrap:pretty;")}>{p.smart_verdict}</p>
+          <p style={st("margin:2px 0 0; font-size:15px; color:var(--ink2); line-height:1.6; text-wrap:pretty;")}>{p.smart_verdict}</p>
         )}
 
         {/* Buyers were reading past this: it sat at the bottom of a tall card,
@@ -370,13 +370,13 @@ function HeroPick({ p, budget, pct, onClick }: {
             bigger, it says what is behind it, it carries an arrow, and the
             whole card is clickable too — nobody has to find the button. */}
         <button onClick={onClick} className="k-press k-glow"
-          style={st("width:100%; margin-top:auto; padding:18px 20px; border-radius:17px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 8px 22px var(--acglow), inset 0 1px 0 rgba(255,255,255,.3);")}>
+          style={st("width:100%; margin-top:auto; padding:18px 20px; border-radius:var(--r); border:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left; background:var(--teal); box-shadow:0 8px 22px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.3);")}>
           <span style={st("min-width:0;")}>
-            <span style={st("display:block; font-size:16.5px; font-weight:700; color:#fff; letter-spacing:-.2px;")}>{t("see_breakdown")}</span>
-            <span style={st("display:block; margin-top:2px; font-size:12.5px; font-weight:600; color:rgba(255,255,255,.78);")}>{t("see_breakdown_sub")}</span>
+            <span style={st("display:block; font-size:16.5px; font-weight:700; color:var(--onp); letter-spacing:-.2px;")}>{t("see_breakdown")}</span>
+            <span style={st("display:block; margin-top:2px; font-size:12.5px; font-weight:600; color:rgba(var(--rgb-white),.78);")}>{t("see_breakdown_sub")}</span>
           </span>
-          <span className="k-nudge" style={st("display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,.2);")}>
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <span className="k-nudge" style={st("display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:var(--r); flex-shrink:0; background:rgba(var(--rgb-white),.2);")}>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="var(--card)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </span>
         </button>
       </div>
@@ -388,18 +388,18 @@ function HeroPick({ p, budget, pct, onClick }: {
 function StretchCard({ s, budget, onClick }: { s: Stretch; budget: number; onClick: () => void }) {
   const over = Math.max(0, s.best_price - budget);
   return (
-    <button onClick={onClick} className="k-press k-lift" style={st("width:100%; text-align:left; display:flex; align-items:center; gap:15px; padding:18px 20px; margin-top:14px; border-radius:20px; border:none; cursor:pointer; background:linear-gradient(110deg, var(--acsoft), rgba(255,255,255,.7)); box-shadow:inset 0 0 0 1px var(--acsoft2), 0 6px 20px rgba(15,25,35,.06);")}>
-      <span style={st("display:flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:13px; background:var(--ac); flex-shrink:0; box-shadow:0 4px 12px var(--acglow);")}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5M9 5h10v10" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+    <button onClick={onClick} className="k-press k-lift" style={st("width:100%; text-align:left; display:flex; align-items:center; gap:15px; padding:18px 20px; margin-top:14px; border-radius:var(--r); border:none; cursor:pointer; background:linear-gradient(110deg, var(--tint), rgba(var(--rgb-white),.7)); box-shadow:inset 0 0 0 1px var(--tint2), 0 6px 20px rgba(var(--rgb-ink),.06);")}>
+      <span style={st("display:flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:var(--r); background:var(--teal); flex-shrink:0; box-shadow:0 4px 12px rgba(var(--rgb-ink),.14);")}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5M9 5h10v10" stroke="var(--card)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </span>
       <div style={st("flex:1; min-width:0;")}>
-        <div style={st("font-size:11px; font-weight:700; color:var(--acd); letter-spacing:1.2px; text-transform:uppercase;")}>{t("worth_stretch")}</div>
-        <div style={st("font-size:17px; font-weight:700; color:#17191d; margin-top:3px;")}>{s.brand} {s.model}</div>
-        <div style={st("font-size:14px; color:#5c626a; margin-top:3px; line-height:1.5;")}>{s.reason || `A clear step up for ${taka(over)} more.`}</div>
+        <div style={st("font-size:11px; font-weight:700; color:var(--lnk); letter-spacing:1.2px; text-transform:uppercase;")}>{t("worth_stretch")}</div>
+        <div style={st("font-size:17px; font-weight:700; color:var(--ink); margin-top:3px;")}>{s.brand} {s.model}</div>
+        <div style={st("font-size:14px; color:var(--mut); margin-top:3px; line-height:1.5;")}>{s.reason || `A clear step up for ${taka(over)} more.`}</div>
       </div>
       <div style={st("text-align:right; flex-shrink:0;")}>
-        <div style={st("font-size:17px; font-weight:700; color:#17191d;")}>{taka(s.best_price)}</div>
-        <div style={st("font-size:11.5px; font-weight:700; color:var(--acd); margin-top:2px;")}>+{taka(over)}</div>
+        <div style={st("font-size:17px; font-weight:700; color:var(--ink);")}>{taka(s.best_price)}</div>
+        <div style={st("font-size:11.5px; font-weight:700; color:var(--lnk); margin-top:2px;")}>+{taka(over)}</div>
       </div>
     </button>
   );
@@ -430,29 +430,29 @@ function FeedbackCard({ picks, budget, archetype }: { picks: Pick[]; budget: num
   };
 
   if (phase === "done") return (
-    <div style={st("margin-top:28px; padding:18px 20px; border-radius:18px; background:rgba(10,157,106,.08); border:.5px solid rgba(10,157,106,.18); display:flex; align-items:center; gap:12px;")}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a9d6a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      <span style={st("font-size:14.5px; font-weight:600; color:#2c3036;")}>{t("feedback_thanks")}</span>
+    <div style={st("margin-top:28px; padding:18px 20px; border-radius:var(--r); background:rgba(var(--rgb-teal),.08); border:.5px solid rgba(var(--rgb-teal),.18); display:flex; align-items:center; gap:12px;")}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="var(--teal)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <span style={st("font-size:14.5px; font-weight:600; color:var(--ink2);")}>{t("feedback_thanks")}</span>
     </div>
   );
 
   if (phase === "comment") return (
-    <div style={st("margin-top:28px; padding:20px 22px; border-radius:20px; background:rgba(255,255,255,.88); box-shadow:0 1px 2px rgba(15,25,35,.05), inset 0 0 0 1px rgba(15,25,35,.06);")}>
+    <div style={st("margin-top:28px; padding:20px 22px; border-radius:var(--r); background:var(--card); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), inset 0 0 0 1px rgba(var(--rgb-ink),.06);")}>
       <div style={st("display:flex; align-items:center; gap:10px; margin-bottom:14px;")}>
         <button onClick={() => rate("up")} className="k-press"
-          style={st(`font-size:20px; padding:6px 12px; border-radius:12px; border:none; cursor:pointer; background:${rating === "up" ? "rgba(10,157,106,.15)" : "rgba(15,25,35,.05)"}; transition:background .15s;`)}>👍</button>
+          style={st(`font-size:20px; padding:6px 12px; border-radius:var(--r); border:none; cursor:pointer; background:${rating === "up" ? "rgba(var(--rgb-teal),.15)" : "rgba(var(--rgb-ink),.05)"}; transition:background .15s;`)}>👍</button>
         <button onClick={() => rate("down")} className="k-press"
-          style={st(`font-size:20px; padding:6px 12px; border-radius:12px; border:none; cursor:pointer; background:${rating === "down" ? "rgba(220,60,60,.12)" : "rgba(15,25,35,.05)"}; transition:background .15s;`)}>👎</button>
-        <span style={st("font-size:13.5px; font-weight:600; color:#5c626a;")}>{rating === "up" ? t("feedback_comment_up") : t("feedback_comment_down")}</span>
+          style={st(`font-size:20px; padding:6px 12px; border-radius:var(--r); border:none; cursor:pointer; background:${rating === "down" ? "var(--dangerL)" : "rgba(var(--rgb-ink),.05)"}; transition:background .15s;`)}>👎</button>
+        <span style={st("font-size:13.5px; font-weight:600; color:var(--mut);")}>{rating === "up" ? t("feedback_comment_up") : t("feedback_comment_down")}</span>
       </div>
       <textarea value={comment} onChange={e => setComment(e.target.value)} rows={3}
         placeholder={t("feedback_placeholder")}
-        style={st("width:100%; box-sizing:border-box; padding:11px 13px; border-radius:12px; border:.5px solid rgba(15,25,35,.12); background:rgba(15,25,35,.03); font-size:14px; color:#17191d; font-family:inherit; resize:vertical; outline:none;")} />
+        style={st("width:100%; box-sizing:border-box; padding:11px 13px; border-radius:var(--r); border:.5px solid rgba(var(--rgb-ink),.12); background:rgba(var(--rgb-ink),.03); font-size:14px; color:var(--ink); font-family:inherit; resize:vertical; outline:none;")} />
       <div style={st("display:flex; gap:9px; margin-top:12px; justify-content:flex-end;")}>
         <button onClick={() => setPhase("idle")} className="k-press"
-          style={st("font-size:13px; font-weight:600; color:#80868f; background:transparent; border:none; cursor:pointer; padding:9px 14px; border-radius:12px;")}>{t("feedback_skip")}</button>
+          style={st("font-size:13px; font-weight:600; color:var(--mut2); background:transparent; border:none; cursor:pointer; padding:9px 14px; border-radius:var(--r);")}>{t("feedback_skip")}</button>
         <button onClick={submit} disabled={busy} className="k-press k-glow"
-          style={st("font-size:13.5px; font-weight:700; color:#fff; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 12px var(--acglow); border:none; cursor:pointer; padding:9px 20px; border-radius:12px; opacity:" + (busy ? ".6" : "1") + ";")}>
+          style={st("font-size:13.5px; font-weight:700; color:var(--onp); background:var(--teal); box-shadow:0 4px 12px rgba(var(--rgb-ink),.14); border:none; cursor:pointer; padding:9px 20px; border-radius:var(--r); opacity:" + (busy ? ".6" : "1") + ";")}>
           {t("feedback_submit")}
         </button>
       </div>
@@ -460,13 +460,13 @@ function FeedbackCard({ picks, budget, archetype }: { picks: Pick[]; budget: num
   );
 
   return (
-    <div style={st("margin-top:28px; padding:18px 20px; border-radius:20px; background:rgba(255,255,255,.75); box-shadow:inset 0 0 0 1px rgba(15,25,35,.06); display:flex; align-items:center; gap:14px; flex-wrap:wrap;")}>
-      <span style={st("flex:1; min-width:180px; font-size:14.5px; font-weight:600; color:#363b42;")}>{t("feedback_q")}</span>
+    <div style={st("margin-top:28px; padding:18px 20px; border-radius:var(--r); background:var(--card); box-shadow:inset 0 0 0 1px rgba(var(--rgb-ink),.06); display:flex; align-items:center; gap:14px; flex-wrap:wrap;")}>
+      <span style={st("flex:1; min-width:180px; font-size:14.5px; font-weight:600; color:var(--ink2);")}>{t("feedback_q")}</span>
       <div style={st("display:flex; gap:8px;")}>
         <button onClick={() => rate("up")} className="k-press"
-          style={st("font-size:20px; padding:8px 16px; border-radius:13px; border:none; cursor:pointer; background:rgba(15,25,35,.06); transition:background .15s;")}>👍</button>
+          style={st("font-size:20px; padding:8px 16px; border-radius:var(--r); border:none; cursor:pointer; background:rgba(var(--rgb-ink),.06); transition:background .15s;")}>👍</button>
         <button onClick={() => rate("down")} className="k-press"
-          style={st("font-size:20px; padding:8px 16px; border-radius:13px; border:none; cursor:pointer; background:rgba(15,25,35,.06); transition:background .15s;")}>👎</button>
+          style={st("font-size:20px; padding:8px 16px; border-radius:var(--r); border:none; cursor:pointer; background:rgba(var(--rgb-ink),.06); transition:background .15s;")}>👎</button>
       </div>
     </div>
   );
@@ -474,16 +474,16 @@ function FeedbackCard({ picks, budget, archetype }: { picks: Pick[]; budget: num
 
 /* ---------- small shared bits ---------- */
 function Centered({ children }: { children: ReactNode }) {
-  return <div style={st("max-width:680px; margin:0 auto; padding:80px 0; text-align:center; color:#80868f; font-size:15px;")}>{children}</div>;
+  return <div style={st("max-width:680px; margin:0 auto; padding:80px 0; text-align:center; color:var(--mut2); font-size:15px;")}>{children}</div>;
 }
 function ErrorBox({ msg, onRetry, retryLabel }: { msg: string; onRetry: () => void; retryLabel?: string }) {
   return (
     <div style={st("max-width:460px; margin:0 auto; padding:60px 0; text-align:center; animation:kpop .45s cubic-bezier(.2,.7,.2,1) both;")}>
-      <div style={st("width:64px; height:64px; margin:0 auto; border-radius:20px; display:flex; align-items:center; justify-content:center; background:rgba(192,137,42,.12);")}>
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zM16 16l4.5 4.5" stroke="#a8761a" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <div style={st("width:64px; height:64px; margin:0 auto; border-radius:var(--r); display:flex; align-items:center; justify-content:center; background:rgba(var(--rgb-amber),.12);")}>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M11 4a7 7 0 100 14 7 7 0 000-14zM16 16l4.5 4.5" stroke="var(--acd)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </div>
-      <div style={st("margin-top:18px; font-size:16px; font-weight:600; color:#2c3036; line-height:1.45;")}>{msg}</div>
-      <button onClick={onRetry} className="k-press k-glow" style={st("margin-top:20px; padding:12px 24px; border-radius:99px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 14px var(--acglow); color:#fff; font-size:14px; font-weight:600;")}>{retryLabel || "Try again"}</button>
+      <div style={st("margin-top:18px; font-size:16px; font-weight:600; color:var(--ink2); line-height:1.45;")}>{msg}</div>
+      <button onClick={onRetry} className="k-press k-glow" style={st("margin-top:20px; padding:12px 24px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); box-shadow:0 4px 14px rgba(var(--rgb-ink),.14); color:var(--onp); font-size:14px; font-weight:600;")}>{retryLabel || "Try again"}</button>
     </div>
   );
 }

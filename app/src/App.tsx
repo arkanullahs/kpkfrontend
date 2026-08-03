@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { api, type Archetype, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
-import { accentVars, st, type Accent } from "./theme";
+import { st } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
 import { AskScreen } from "./components/AskScreen";
 import { ResultsScreen } from "./components/ResultsScreen";
@@ -146,7 +146,6 @@ export function toParams(f: Form, top = 5): RecParams {
 }
 
 export default function App() {
-  const accent: Accent = "cobalt";
   const [lang, setLangState] = useState<Lang>(getLang());
   const toggleLang = () => { const n = lang === "en" ? "bn" : "en"; setLang(n); setLangState(n); };
   const [screen, setScreen] = useState<Screen>("ask");
@@ -369,52 +368,46 @@ export default function App() {
   })();
 
   return (
-    <div key={lang} style={{ ...st("min-height:100vh; background:#f1f0ed; color:#17191d; font-family:var(--f-sans);"), ...accentVars(accent) }}>
-      {/* ambient orbs */}
-      <div style={st("position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;")}>
-        <div style={st("position:absolute; top:-180px; right:-140px; width:560px; height:560px; border-radius:50%; background:radial-gradient(circle, var(--orbA), transparent 68%);")} />
-        <div style={st("position:absolute; top:36%; left:-240px; width:680px; height:680px; border-radius:50%; background:radial-gradient(circle, var(--orbB), transparent 68%);")} />
-        <div style={st("position:absolute; bottom:-240px; right:6%; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, var(--orbC), transparent 68%);")} />
-      </div>
+    <div key={lang} style={st("min-height:100vh; background:var(--bg); color:var(--ink); font-family:var(--f-sans);")}>
 
       {/* glass header */}
       <div style={st("position:sticky; top:0; z-index:60; display:flex; justify-content:center; padding:14px clamp(16px,4vw,40px) 6px;")}>
-        <div style={st("position:relative; width:100%; max-width:1080px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:9px 11px 9px 18px; border-radius:21px; background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(250,251,253,.5)); backdrop-filter:blur(28px) saturate(190%); -webkit-backdrop-filter:blur(28px) saturate(190%); border:.5px solid rgba(255,255,255,.85); box-shadow:inset 0 1px 1px rgba(255,255,255,.95), inset 0 -1px 1px rgba(255,255,255,.3), 0 12px 34px rgba(20,24,32,.1);")}>
-          {/* thin accent sheen along the top edge */}
-          <span style={st("position:absolute; left:18px; right:18px; top:0; height:1px; border-radius:99px; background:linear-gradient(90deg, transparent, var(--acsoft2), transparent); pointer-events:none;")} />
+        <div className="k-glass" style={st("position:relative; width:100%; max-width:1080px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:9px 11px 9px 18px; border-radius:var(--r); background:var(--hdr-bg); backdrop-filter:blur(18px) saturate(1.8); -webkit-backdrop-filter:blur(18px) saturate(1.8); border:0; border-bottom:1px solid rgba(var(--rgb-teal),.22); box-shadow:var(--hdr-sh);")}>
+          {/* chromatic dispersion along the edge -- the logo's own material */}
+          <span style={st("position:absolute; left:0; right:0; bottom:-1px; height:1px; background:var(--prism); opacity:.55; pointer-events:none;")} />
 
           {/* LEFT: logo + tagline */}
           <div style={st("display:flex; align-items:center; gap:13px; min-width:0;")}>
             {/* brand links to the static SEO homepage; the app itself lives at /pick */}
             <a href="/" style={st("display:flex; align-items:center; gap:13px; text-decoration:none; flex-shrink:0;")}>
-              <img src="/android-chrome-192x192.png" alt="bhalophone" style={st("height:34px; width:34px; display:block; flex-shrink:0; border-radius:9px;")} />
-              <span style={st("font-family:var(--f-display); font-size:20px; font-weight:800; letter-spacing:-.4px; color:#171d25; white-space:nowrap;")}>bhalophone</span>
+              <img src="/android-chrome-192x192.png" alt="bhalophone" style={st("height:34px; width:34px; display:block; flex-shrink:0; border-radius:var(--r);")} />
+              <span style={st("font-family:var(--f-display); font-size:20px; font-weight:800; letter-spacing:-.4px; color:var(--ink); white-space:nowrap;")}>bhalophone</span>
             </a>
-            <span style={st("display:block; width:1px; height:24px; background:rgba(15,25,35,.1); flex-shrink:0;")} className="khdiv" />
+            <span style={st("display:block; width:1px; height:24px; background:rgba(var(--rgb-ink),.1); flex-shrink:0;")} className="khdiv" />
             {/* the site slogan is a full sentence, and it ran straight under
                 the stock badge (owner 2026-07-26). It shrinks and clips now
                 instead of overflowing, and it only appears when the bar is
                 actually wide enough for it (.khtag media query). */}
             <div style={st("display:flex; flex-direction:column; min-width:0; flex:1 1 auto; overflow:hidden;")} className="khtag">
-              <span style={st("font-family:var(--f-bn); font-size:13.5px; font-weight:600; color:#3a3f46; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{t("brand_tagline")}</span>
-              {updatedLabel && <span style={st("font-size:11.5px; color:#9a9da4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{updatedLabel}</span>}
+              <span style={st("font-family:var(--f-bn); font-size:13.5px; font-weight:600; color:var(--ink2); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{t("brand_tagline")}</span>
+              {updatedLabel && <span style={st("font-size:11.5px; color:var(--mut2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{updatedLabel}</span>}
             </div>
           </div>
 
           {/* RIGHT: live phone-count badge + language toggle */}
           <div style={st("display:flex; align-items:center; gap:9px; flex-shrink:0; margin-left:auto;")}>
             {meta
-              ? <span className="khstock" style={st("display:inline-flex; align-items:center; gap:8px; padding:7px 13px; border-radius:14px; background:var(--acsoft); border:.5px solid var(--acsoft2);")}>
-                  <span className="k-live" style={st("width:8px; height:8px; border-radius:50%; background:var(--ac); flex-shrink:0;")} />
-                  <span style={st("font-size:13px; font-weight:700; color:var(--acd); white-space:nowrap;")}>{metaStock} <span style={st("font-weight:600; color:#6b7280;")}>{t("in_stock")}</span></span>
+              ? <span className="khstock" style={st("display:inline-flex; align-items:center; gap:8px; padding:7px 13px; border-radius:var(--r); background:var(--tint); border:.5px solid var(--tint2);")}>
+                  <span className="k-live" style={st("width:8px; height:8px; border-radius:var(--r); background:var(--teal); flex-shrink:0;")} />
+                  <span style={st("font-size:13px; font-weight:700; color:var(--lnk); white-space:nowrap;")}>{metaStock} <span style={st("font-weight:600; color:var(--mut);")}>{t("in_stock")}</span></span>
                 </span>
-              : <span className="khstock" style={st("display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:14px; background:rgba(15,25,35,.04); color:#84878f;")}>
-                  <span style={st("width:12px; height:12px; border-radius:99px; border:2px solid rgba(15,25,35,.16); border-top-color:var(--ac); animation:kspin .7s linear infinite;")} />
+              : <span className="khstock" style={st("display:inline-flex; align-items:center; gap:7px; padding:7px 13px; border-radius:var(--r); background:rgba(var(--rgb-ink),.04); color:var(--mut2);")}>
+                  <span style={st("width:12px; height:12px; border-radius:var(--r); border:2px solid rgba(var(--rgb-ink),.16); border-top-color:var(--teal); animation:kspin .7s linear infinite;")} />
                   <span style={st("font-size:12.5px; font-weight:600; white-space:nowrap;")}>{t("prices_loading")}</span>
                 </span>}
             <button onClick={toggleLang} title="Language / ভাষা" aria-label="Toggle language" className="k-press k-glow"
-              style={st("display:inline-flex; align-items:center; gap:6px; flex-shrink:0; padding:8px 14px; border-radius:14px; border:none; cursor:pointer; background:linear-gradient(180deg,var(--acg1),var(--acg2)); box-shadow:0 4px 12px var(--acglow), inset 0 1px 0 rgba(255,255,255,.35); font-size:13px; font-weight:700; color:#fff; font-family:'Anek Bangla',sans-serif;")}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" strokeWidth="1.7" /><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" stroke="#fff" strokeWidth="1.5" /></svg>
+              style={st("display:inline-flex; align-items:center; gap:6px; flex-shrink:0; padding:8px 14px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); box-shadow:0 4px 12px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.35); font-size:13px; font-weight:700; color:var(--onp); font-family:'Anek Bangla',sans-serif;")}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--card)" strokeWidth="1.7" /><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" stroke="var(--card)" strokeWidth="1.5" /></svg>
               {lang === "en" ? "বাংলা" : "EN"}
             </button>
           </div>
@@ -474,40 +467,40 @@ export default function App() {
       {booting && <BootNotice seconds={bootSecs} />}
 
       {/* persistent site footer — dark, matches the static site (no picker card) */}
-      <footer style={st("position:relative; z-index:1; margin-top:36px; background:#0d0c15; border-radius:28px 28px 0 0; padding:44px clamp(20px,5vw,52px) 0; text-align:left;")}>
+      <footer style={st("position:relative; z-index:1; margin-top:36px; background:var(--panel); border-radius:var(--r); padding:44px clamp(20px,5vw,52px) 0; text-align:left;")}>
         <div style={st("max-width:940px; margin:0 auto; display:flex; flex-wrap:wrap; gap:30px 40px; padding-bottom:32px;")}>
           <div style={st("flex:2 1 260px; min-width:220px;")}>
-            <div style={st("display:flex; align-items:center; gap:11px; color:#fff; font-family:var(--f-display); font-size:22px; font-weight:800; letter-spacing:-.4px;")}>
-              <img src="/android-chrome-192x192.png" alt="" style={st("width:46px; height:46px; border-radius:11px;")} />bhalophone
+            <div style={st("display:flex; align-items:center; gap:11px; color:var(--onp); font-family:var(--f-display); font-size:22px; font-weight:800; letter-spacing:-.4px;")}>
+              <img src="/android-chrome-192x192.png" alt="" style={st("width:46px; height:46px; border-radius:var(--r);")} />bhalophone
             </div>
-            <p style={st("margin:15px 0 0; font-size:13px; line-height:1.65; color:#8b8c98;")}>{t("footer_tagline")}.</p>
+            <p style={st("margin:15px 0 0; font-size:13px; line-height:1.65; color:var(--mut2);")}>{t("footer_tagline")}.</p>
           </div>
           <div style={st("flex:1 1 130px;")}>
-            <div style={st("color:#e7e7ec; font-size:12px; font-weight:700; margin:0 0 14px;")}>Explore</div>
+            <div style={st("color:var(--rule); font-size:12px; font-weight:700; margin:0 0 14px;")}>Explore</div>
             <div style={st("display:flex; flex-direction:column; gap:11px;")}>
-              <a href="/best/" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>{t("footer_guides")}</a>
-              <a href="/vs" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>{t("footer_compare")}</a>
-              <a href="/" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>{t("footer_home")}</a>
-            </div>
-          </div>
-          <div style={st("flex:1 1 130px;")}>
-            <div style={st("color:#e7e7ec; font-size:12px; font-weight:700; margin:0 0 14px;")}>Social</div>
-            <div style={st("display:flex; flex-direction:column; gap:11px;")}>
-              <a href="https://www.facebook.com/bhalophone" rel="me" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>Facebook</a>
+              <a href="/best/" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>{t("footer_guides")}</a>
+              <a href="/vs" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>{t("footer_compare")}</a>
+              <a href="/" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>{t("footer_home")}</a>
             </div>
           </div>
           <div style={st("flex:1 1 130px;")}>
-            <div style={st("color:#e7e7ec; font-size:12px; font-weight:700; margin:0 0 14px;")}>More</div>
+            <div style={st("color:var(--rule); font-size:12px; font-weight:700; margin:0 0 14px;")}>Social</div>
             <div style={st("display:flex; flex-direction:column; gap:11px;")}>
-              <a href="/support" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>{t("footer_support")}</a>
-              <a href="https://arkanullah.pro.bd" target="_blank" rel="noopener noreferrer" style={st("color:#8b8c98; font-size:13.5px; text-decoration:none;")}>Made by Arkanullah Saad ↗</a>
+              <a href="https://www.facebook.com/bhalophone" rel="me" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>Facebook</a>
+            </div>
+          </div>
+          <div style={st("flex:1 1 130px;")}>
+            <div style={st("color:var(--rule); font-size:12px; font-weight:700; margin:0 0 14px;")}>More</div>
+            <div style={st("display:flex; flex-direction:column; gap:11px;")}>
+              <a href="/support" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>{t("footer_support")}</a>
+              <a href="https://arkanullah.pro.bd" target="_blank" rel="noopener noreferrer" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>Made by Arkanullah Saad ↗</a>
             </div>
           </div>
         </div>
         {/* the 96px well under the copyright was dock clearance, and it read as
             a dead black slab on every screen the dock is hidden on (owner
             2026-07-26). Clearance only when the dock is actually there. */}
-        <div style={st(`border-top:1px solid rgba(255,255,255,.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "ask" && askStep === 0 ? 26 : 86}px; text-align:center; font-size:12.5px; color:#6a6b78;`)}>© {new Date().getFullYear()} bhalophone. All rights reserved.</div>
+        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "ask" && askStep === 0 ? 26 : 86}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>© {new Date().getFullYear()} bhalophone. All rights reserved.</div>
       </footer>
 
       <Analytics />
