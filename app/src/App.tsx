@@ -372,7 +372,7 @@ export default function App() {
 
       {/* glass header */}
       <div style={st("position:sticky; top:0; z-index:60; display:flex; justify-content:center; padding:14px clamp(16px,4vw,40px) 6px;")}>
-        <div className="k-glass" style={st("position:relative; width:100%; max-width:1080px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:9px 11px 9px 18px; border-radius:var(--r); background:var(--hdr-bg); backdrop-filter:blur(18px) saturate(1.8); -webkit-backdrop-filter:blur(18px) saturate(1.8); border:0; border-bottom:1px solid rgba(var(--rgb-teal),.22); box-shadow:var(--hdr-sh);")}>
+        <div className="k-glass" style={st("position:relative; width:100%; max-width:940px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:9px 11px 9px 18px; border-radius:var(--r); background:var(--hdr-bg); backdrop-filter:blur(18px) saturate(1.8); -webkit-backdrop-filter:blur(18px) saturate(1.8); border:0; border-bottom:1px solid rgba(var(--rgb-teal),.22); box-shadow:var(--hdr-sh);")}>
           {/* chromatic dispersion along the edge -- the logo's own material */}
           <span style={st("position:absolute; left:0; right:0; bottom:-1px; height:1px; background:var(--prism); opacity:.55; pointer-events:none;")} />
 
@@ -419,7 +419,7 @@ export default function App() {
             where you are (owner 2026-07-26). The ask screen is the root, so it
             carries none — same rule /best and /phone follow. */}
         {screen !== "ask" && (
-          <div style={st("max-width:860px; margin:0 auto;")}>
+          <div style={st("max-width:940px; margin:0 auto;")}>
             <Breadcrumbs trail={[
               { label: t("nav_pick"), onClick: goAsk },
               ...(screen === "results" ? [{ label: t("nav_results") }]

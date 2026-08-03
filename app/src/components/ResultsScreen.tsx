@@ -176,7 +176,7 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
   const rest = picks.slice(1);
 
   return (
-    <div style={st("max-width:860px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;")}>
+    <div style={st("max-width:940px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;")}>
       <div style={st("display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:clamp(12px,3vh,34px);")}>
         <div>
           <h1 style={st("font-family:var(--f-display); margin:0; font-size:clamp(30px,4.4vw,44px); font-weight:600; letter-spacing:-1.2px; line-height:1.1;")}>
@@ -205,26 +205,26 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
       </button>
 
       {meta.ranking === "unavailable" && (
-        <div style={st("display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:16px; padding:13px 16px; border-radius:var(--r); background:rgba(var(--rgb-amber),.12);")}>
+        <div style={st("display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px; padding:13px 16px; border-radius:var(--r); background:rgba(var(--rgb-amber),.12);")}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0;")}><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="var(--acd)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
           <span style={st("flex:1; min-width:180px; font-size:14px; color:var(--acd); line-height:1.5;")}>The AI ranker was busy, so these are the closest matches by fit — <b>not fully ranked yet</b>. They may not use your full budget. Tap retry for the real ranking.</span>
           <button onClick={onRetry} className="k-press" style={st("font-size:12.5px; font-weight:700; color:var(--onp); background:var(--acd); border:none; padding:7px 16px; border-radius:var(--r); cursor:pointer;")}>Retry ranking</button>
         </div>
       )}
       {meta.relaxed && (
-        <div style={st("margin-top:16px; padding:11px 15px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1); font-size:14px; color:var(--acd); line-height:1.5;")}>
+        <div style={st("margin-top:14px; padding:11px 15px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1); font-size:14px; color:var(--acd); line-height:1.5;")}>
           No exact matches in your band, so here are the closest phones around your budget.
         </div>
       )}
       {picks.length < 3 && !meta.relaxed && (
-        <div style={st("margin-top:16px; padding:11px 15px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1); font-size:14px; color:var(--acd); line-height:1.5;")}>
+        <div style={st("margin-top:14px; padding:11px 15px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1); font-size:14px; color:var(--acd); line-height:1.5;")}>
           Only {picks.length === 1 ? "one phone" : "two phones"} genuinely fit this search. Widening the budget or relaxing a filter would show more.
         </div>
       )}
 
       {/* reasoning */}
       {reasoning && (
-        <div style={st("display:flex; gap:11px; padding:15px 17px; border-radius:var(--r); background:var(--tint); margin-top:22px;")}>
+        <div style={st("display:flex; gap:11px; padding:15px 17px; border-radius:var(--r); background:var(--tint); margin-top:14px;")}>
           <svg width="17" height="17" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:2px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--teal)" /></svg>
           <p style={st("margin:0; font-size:15px; color:var(--ink2); line-height:1.6; text-wrap:pretty;")}>{reasoning}</p>
         </div>
@@ -234,7 +234,11 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
       <HeroPick p={first} budget={b} pct={pct} onClick={() => onPick(first.id)} />
 
       {/* rest */}
-      <div className="k-stagger" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:11px; margin-top:14px;")}>
+      {/* minmax(min(...)) — a bare minmax(340px,1fr) track is wider than the
+          viewport under ~370px and pushed the whole page sideways.
+          align-items:start — grid rows stretch every card to the tallest one in
+          the row, so the pick with fewer chips carried a band of empty card */}
+      <div className="k-stagger" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr)); align-items:start; gap:14px; margin-top:14px;")}>
         {rest.map((r, i) => {
           // SP1: the range's low end anchors budget fit + the marker dot;
           // range = shown channel's in-stock spread (same as its listings)
@@ -242,16 +246,29 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
           const { fit, fitColor } = fitOf(lo ?? b, b);
           return (
             <button key={r.id} onClick={() => onPick(r.id)} className="k-press k-lift"
-              style={st("text-align:left; display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:var(--r); border:none; cursor:pointer; background:var(--card); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), inset 0 0 0 1px rgba(var(--rgb-ink),.05);")}>
-              <span style={st("width:27px; height:27px; border-radius:var(--r); background:rgba(var(--rgb-ink),.055); color:var(--mut2); font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;")}>{i + 2}</span>
-              <PhonePhoto src={r.image} pid={r.id} w="52px" h="68px" radius={12} />
-              <div style={st("flex:1; min-width:0;")}>
-                <div style={st("display:flex; align-items:center; gap:7px;")}>
-                  <span style={st("font-size:16px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{r.brand} {r.model}</span>
-                </div>
+              style={st("text-align:left; display:flex; align-items:flex-start; gap:14px; padding:16px; border-radius:var(--r); border:none; cursor:pointer; background:var(--card); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), inset 0 0 0 1px rgba(var(--rgb-ink),.05);")}>
+              {/* rank rides the photo corner. As its own flex column it cost the
+                  card ~40px of width, and the text beside it had so little room
+                  that every chip wrapped onto a line of its own. */}
+              <span style={st("position:relative; flex-shrink:0;")}>
+                <PhonePhoto src={r.image} pid={r.id} w="58px" h="76px" radius={12} />
+                <span style={st("position:absolute; top:-7px; left:-7px; width:22px; height:22px; border-radius:var(--r); background:var(--card); color:var(--mut2); font-size:11.5px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(var(--rgb-ink),.12), inset 0 0 0 1px rgba(var(--rgb-ink),.07);")}>{i + 2}</span>
+              </span>
+              <div style={st("flex:1; min-width:0; display:flex; flex-direction:column;")}>
+                <span style={st("font-size:16px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{r.brand} {r.model}</span>
                 <div style={st("font-size:13.5px; color:var(--mut2); margin-top:2px;")}>{headlinePhrase(r.headline_axis)}{r.headline_axis && r.headline_value != null ? ` · ${axisLabel(r.headline_axis)} ${r.headline_value}` : ""}</div>
-                <div style={st("display:flex; align-items:center; gap:8px; margin-top:5px; flex-wrap:wrap;")}>
+                {/* price left, verdict right — the verdict used to be a third
+                    fixed column and wrapped "৳13,510 under budget" over 3 lines */}
+                <div style={st("display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; margin-top:6px;")}>
                   <span style={st("font-size:15.5px; font-weight:600; color:var(--ink);")}>{takaRange(lo, hi)}</span>
+                  <span style={st("margin-left:auto; display:flex; align-items:baseline; gap:8px; flex-shrink:0;")}>
+                    <span style={st(`font-size:12.5px; font-weight:700; color:${fitColor}; white-space:nowrap;`)}>{fit}</span>
+                    {r.confidence && CONF_KEY[r.confidence] && (
+                      <span style={st(`font-size:11px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; white-space:nowrap; color:${CONF_COLOR[r.confidence]}; opacity:.85;`)}>{t(CONF_KEY[r.confidence])}</span>
+                    )}
+                  </span>
+                </div>
+                <div style={st("display:flex; align-items:center; gap:6px; margin-top:8px; flex-wrap:wrap;")}>
                   <ChannelChips p={r} small />
                   <MarketChips regions={r.regions} small />
                   {lo != null && <PriceSource primary={r.best_price_primary} compact />}
@@ -259,18 +276,12 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                 </div>
                 <SpecStrip tiles={r.spec_strip} small />
                 {/* mini budget-fit bar */}
-                <div style={st("position:relative; height:4px; margin-top:8px;")}>
-                  <div style={st("position:absolute; inset:0; border-radius:var(--r); background:rgba(var(--rgb-ink),.07);")} />
-                  <div style={st(`position:absolute; top:-2px; height:8px; width:1.5px; border-radius:var(--r); left:${pct(b)}%; transform:translateX(-50%); background:var(--faint);`)} />
-                  <div style={st(`position:absolute; top:-2.5px; width:9px; height:9px; border-radius:var(--r); left:${pct(lo ?? b)}%; transform:translateX(-50%); background:var(--teal); box-shadow:0 0 0 2px var(--card);`)} />
+                <div style={st("position:relative; height:4px; margin-top:14px;")}>
+                  <div style={st("position:absolute; left:0; right:0; bottom:0; height:4px; border-radius:var(--r); background:rgba(var(--rgb-ink),.07);")} />
+                  <div style={st(`position:absolute; bottom:-2px; height:8px; width:1.5px; border-radius:var(--r); left:${pct(b)}%; transform:translateX(-50%); background:var(--faint);`)} />
+                  <div style={st(`position:absolute; bottom:-2.5px; width:9px; height:9px; border-radius:var(--r); left:${pct(lo ?? b)}%; transform:translateX(-50%); background:var(--teal); box-shadow:0 0 0 2px var(--card);`)} />
                 </div>
               </div>
-              <span style={st("display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; max-width:96px;")}>
-                <span style={st(`font-size:13px; font-weight:700; color:${fitColor}; text-align:right; line-height:1.35;`)}>{fit}</span>
-                {r.confidence && CONF_KEY[r.confidence] && (
-                  <span style={st(`font-size:11px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:${CONF_COLOR[r.confidence]}; opacity:.85;`)}>{t(CONF_KEY[r.confidence])}</span>
-                )}
-              </span>
             </button>
           );
         })}
@@ -279,7 +290,7 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
       {/* stretch — promoted: spending a little more is often the smart move */}
       {stretch && <StretchCard s={stretch} budget={b} onClick={() => onPick(`${stretch.brand}|${stretch.key}`)} />}
 
-      <p style={st("margin:22px 2px 0; font-size:12.5px; color:var(--mut2); line-height:1.5;")}>{meta.disclaimer}</p>
+      <p style={st("margin:20px 2px 0; font-size:12.5px; color:var(--mut2); line-height:1.5;")}>{meta.disclaimer}</p>
 
       <FeedbackCard picks={picks} budget={b} archetype={meta.archetype || meta.label || ""} />
     </div>
@@ -300,8 +311,11 @@ function HeroPick({ p, budget, pct, onClick }: {
 
   return (
     <div onClick={onClick} className="k-lift"
-      style={st("position:relative; cursor:pointer; background:linear-gradient(165deg, rgba(var(--rgb-white),.96), rgba(var(--rgb-white),.9)); border-radius:var(--r); padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 18px 44px rgba(var(--rgb-ink),.1), inset 0 0 0 1px var(--tint2); margin-top:18px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(18px,3vw,30px); overflow:hidden;")}>
+      style={st("position:relative; cursor:pointer; background:linear-gradient(165deg, rgba(var(--rgb-white),.96), rgba(var(--rgb-white),.9)); border-radius:var(--r); padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 18px 44px rgba(var(--rgb-ink),.1), inset 0 0 0 1px var(--tint2); margin-top:14px; display:flex; flex-direction:column; gap:clamp(16px,2.4vw,24px); overflow:hidden;")}>
       <div style={st("position:absolute; top:-90px; right:-70px; width:240px; height:240px; border-radius:var(--r); background:radial-gradient(circle, var(--tint), transparent 70%); pointer-events:none;")} />
+      {/* two columns of unequal length, so align-items:start — stretching them
+          left a block of dead card under whichever column ran out first */}
+      <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr)); gap:clamp(18px,3vw,30px); align-items:start;")}>
       {/* LEFT: identity, price, official pitch, strengths, owner note */}
       <div style={st("min-width:0;")}>
         <div style={st("display:flex; gap:16px;")}>
@@ -345,7 +359,7 @@ function HeroPick({ p, budget, pct, onClick }: {
         )}
       </div>
 
-      {/* RIGHT: budget fit, must-know defect, our take, CTA pinned bottom */}
+      {/* RIGHT: budget fit, must-know defect, our take */}
       <div style={st("display:flex; flex-direction:column; gap:13px; min-width:0;")}>
         <div style={st("padding:15px 16px; border-radius:var(--r); background:rgba(var(--rgb-ink),.035);")}>
           <div style={st("display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:10px;")}>
@@ -364,22 +378,25 @@ function HeroPick({ p, budget, pct, onClick }: {
         {p.smart_verdict && (
           <p style={st("margin:2px 0 0; font-size:15px; color:var(--ink2); line-height:1.6; text-wrap:pretty;")}>{p.smart_verdict}</p>
         )}
-
-        {/* Buyers were reading past this: it sat at the bottom of a tall card,
-            after the verdict, looking like a footer (owner 2026-07-26). It is
-            bigger, it says what is behind it, it carries an arrow, and the
-            whole card is clickable too — nobody has to find the button. */}
-        <button onClick={onClick} className="k-press k-glow"
-          style={st("width:100%; margin-top:auto; padding:18px 20px; border-radius:var(--r); border:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left; background:var(--teal); box-shadow:0 8px 22px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.3);")}>
-          <span style={st("min-width:0;")}>
-            <span style={st("display:block; font-size:16.5px; font-weight:700; color:var(--onp); letter-spacing:-.2px;")}>{t("see_breakdown")}</span>
-            <span style={st("display:block; margin-top:2px; font-size:12.5px; font-weight:600; color:rgba(var(--rgb-white),.78);")}>{t("see_breakdown_sub")}</span>
-          </span>
-          <span className="k-nudge" style={st("display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:var(--r); flex-shrink:0; background:rgba(var(--rgb-white),.2);")}>
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="var(--card)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </span>
-        </button>
+        </div>
       </div>
+
+      {/* Buyers were reading past this: it sat at the bottom of a tall card,
+          after the verdict, looking like a footer (owner 2026-07-26). It is
+          bigger, it says what is behind it, it carries an arrow, and the
+          whole card is clickable too — nobody has to find the button. Full
+          card width now: pinned inside the short right column it floated,
+          leaving a gap above it and dead space beside it. */}
+      <button onClick={onClick} className="k-press k-glow"
+        style={st("width:100%; padding:18px 20px; border-radius:var(--r); border:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; text-align:left; background:var(--teal); box-shadow:0 8px 22px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.3);")}>
+        <span style={st("min-width:0;")}>
+          <span style={st("display:block; font-size:16.5px; font-weight:700; color:var(--onp); letter-spacing:-.2px;")}>{t("see_breakdown")}</span>
+          <span style={st("display:block; margin-top:2px; font-size:12.5px; font-weight:600; color:rgba(var(--rgb-white),.78);")}>{t("see_breakdown_sub")}</span>
+        </span>
+        <span className="k-nudge" style={st("display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:var(--r); flex-shrink:0; background:rgba(var(--rgb-white),.2);")}>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="var(--card)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </span>
+      </button>
     </div>
   );
 }
@@ -388,16 +405,16 @@ function HeroPick({ p, budget, pct, onClick }: {
 function StretchCard({ s, budget, onClick }: { s: Stretch; budget: number; onClick: () => void }) {
   const over = Math.max(0, s.best_price - budget);
   return (
-    <button onClick={onClick} className="k-press k-lift" style={st("width:100%; text-align:left; display:flex; align-items:center; gap:15px; padding:18px 20px; margin-top:14px; border-radius:var(--r); border:none; cursor:pointer; background:linear-gradient(110deg, var(--tint), rgba(var(--rgb-white),.7)); box-shadow:inset 0 0 0 1px var(--tint2), 0 6px 20px rgba(var(--rgb-ink),.06);")}>
+    <button onClick={onClick} className="k-press k-lift" style={st("width:100%; text-align:left; display:flex; align-items:center; flex-wrap:wrap; gap:12px 15px; padding:18px 20px; margin-top:14px; border-radius:var(--r); border:none; cursor:pointer; background:linear-gradient(110deg, var(--tint), rgba(var(--rgb-white),.7)); box-shadow:inset 0 0 0 1px var(--tint2), 0 6px 20px rgba(var(--rgb-ink),.06);")}>
       <span style={st("display:flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:var(--r); background:var(--teal); flex-shrink:0; box-shadow:0 4px 12px rgba(var(--rgb-ink),.14);")}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 19L19 5M9 5h10v10" stroke="var(--card)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </span>
-      <div style={st("flex:1; min-width:0;")}>
+      <div style={st("flex:1; min-width:200px;")}>
         <div style={st("font-size:11px; font-weight:700; color:var(--lnk); letter-spacing:1.2px; text-transform:uppercase;")}>{t("worth_stretch")}</div>
         <div style={st("font-size:17px; font-weight:700; color:var(--ink); margin-top:3px;")}>{s.brand} {s.model}</div>
         <div style={st("font-size:14px; color:var(--mut); margin-top:3px; line-height:1.5;")}>{s.reason || `A clear step up for ${taka(over)} more.`}</div>
       </div>
-      <div style={st("text-align:right; flex-shrink:0;")}>
+      <div style={st("text-align:right; flex-shrink:0; margin-left:auto;")}>
         <div style={st("font-size:17px; font-weight:700; color:var(--ink);")}>{taka(s.best_price)}</div>
         <div style={st("font-size:11.5px; font-weight:700; color:var(--lnk); margin-top:2px;")}>+{taka(over)}</div>
       </div>
@@ -430,7 +447,7 @@ function FeedbackCard({ picks, budget, archetype }: { picks: Pick[]; budget: num
   };
 
   if (phase === "done") return (
-    <div style={st("margin-top:28px; padding:18px 20px; border-radius:var(--r); background:rgba(var(--rgb-teal),.08); border:.5px solid rgba(var(--rgb-teal),.18); display:flex; align-items:center; gap:12px;")}>
+    <div style={st("margin-top:24px; padding:18px 20px; border-radius:var(--r); background:rgba(var(--rgb-teal),.08); border:.5px solid rgba(var(--rgb-teal),.18); display:flex; align-items:center; gap:12px;")}>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="var(--teal)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
       <span style={st("font-size:14.5px; font-weight:600; color:var(--ink2);")}>{t("feedback_thanks")}</span>
     </div>
@@ -460,7 +477,7 @@ function FeedbackCard({ picks, budget, archetype }: { picks: Pick[]; budget: num
   );
 
   return (
-    <div style={st("margin-top:28px; padding:18px 20px; border-radius:var(--r); background:var(--card); box-shadow:inset 0 0 0 1px rgba(var(--rgb-ink),.06); display:flex; align-items:center; gap:14px; flex-wrap:wrap;")}>
+    <div style={st("margin-top:24px; padding:18px 20px; border-radius:var(--r); background:var(--card); box-shadow:inset 0 0 0 1px rgba(var(--rgb-ink),.06); display:flex; align-items:center; gap:14px; flex-wrap:wrap;")}>
       <span style={st("flex:1; min-width:180px; font-size:14.5px; font-weight:600; color:var(--ink2);")}>{t("feedback_q")}</span>
       <div style={st("display:flex; gap:8px;")}>
         <button onClick={() => rate("up")} className="k-press"

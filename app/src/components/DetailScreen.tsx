@@ -679,7 +679,7 @@ function Wrap({ children }: { children: ReactNode; onBack?: () => void }) {
   // The breadcrumb is the one every other page on the site uses; the dock
   // catches you at the bottom of a long page.
   return (
-    <div style={st("max-width:880px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;")}>
+    <div style={st("max-width:940px; margin:0 auto; animation:kfade .45s cubic-bezier(.2,.7,.2,1) both;")}>
       {children}
     </div>
   );
