@@ -246,13 +246,15 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
           const { fit, fitColor } = fitOf(lo ?? b, b);
           return (
             <button key={r.id} onClick={() => onPick(r.id)} className="k-press k-lift"
-              style={st("text-align:left; display:flex; align-items:flex-start; gap:14px; padding:16px; border-radius:var(--r); border:none; cursor:pointer; background:var(--card); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), inset 0 0 0 1px rgba(var(--rgb-ink),.05);")}>
+              style={st("text-align:left; display:flex; align-items:flex-start; gap:16px; padding:18px; border-radius:var(--r); border:none; cursor:pointer; background:var(--card); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), inset 0 0 0 1px rgba(var(--rgb-ink),.05);")}>
               {/* rank rides the photo corner. As its own flex column it cost the
                   card ~40px of width, and the text beside it had so little room
-                  that every chip wrapped onto a line of its own. */}
+                  that every chip wrapped onto a line of its own. The photo is
+                  sized off the viewport so it stays 3:4 and does not eat the
+                  text column on a phone. */}
               <span style={st("position:relative; flex-shrink:0;")}>
-                <PhonePhoto src={r.image} pid={r.id} w="58px" h="76px" radius={12} />
-                <span style={st("position:absolute; top:-7px; left:-7px; width:22px; height:22px; border-radius:var(--r); background:var(--card); color:var(--mut2); font-size:11.5px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(var(--rgb-ink),.12), inset 0 0 0 1px rgba(var(--rgb-ink),.07);")}>{i + 2}</span>
+                <PhonePhoto src={r.image} pid={r.id} w="clamp(68px,18vw,84px)" h="clamp(90px,24vw,112px)" radius={14} />
+                <span style={st("position:absolute; top:-8px; left:-8px; width:24px; height:24px; border-radius:var(--r); background:var(--card); color:var(--mut2); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(var(--rgb-ink),.12), inset 0 0 0 1px rgba(var(--rgb-ink),.07);")}>{i + 2}</span>
               </span>
               <div style={st("flex:1; min-width:0; display:flex; flex-direction:column;")}>
                 <span style={st("font-size:16px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{r.brand} {r.model}</span>
@@ -268,7 +270,7 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                     )}
                   </span>
                 </div>
-                <div style={st("display:flex; align-items:center; gap:6px; margin-top:8px; flex-wrap:wrap;")}>
+                <div style={st("display:flex; align-items:center; gap:6px; margin-top:10px; flex-wrap:wrap;")}>
                   <ChannelChips p={r} small />
                   <MarketChips regions={r.regions} small />
                   {lo != null && <PriceSource primary={r.best_price_primary} compact />}
@@ -319,7 +321,7 @@ function HeroPick({ p, budget, pct, onClick }: {
       {/* LEFT: identity, price, official pitch, strengths, owner note */}
       <div style={st("min-width:0;")}>
         <div style={st("display:flex; gap:16px;")}>
-          <PhonePhoto src={p.image} pid={p.id} w="clamp(88px,11vw,104px)" h="clamp(116px,14vw,136px)" />
+          <PhonePhoto src={p.image} pid={p.id} w="clamp(92px,24vw,132px)" h="clamp(122px,32vw,176px)" />
           <div style={st("flex:1; min-width:0;")}>
             <div style={st("display:flex; align-items:flex-start; justify-content:space-between; gap:8px;")}>
               <div style={st("min-width:0;")}>
