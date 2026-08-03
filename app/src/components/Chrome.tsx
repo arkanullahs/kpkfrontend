@@ -72,9 +72,12 @@ export function Breadcrumbs({ trail }: { trail: { label: string; onClick?: () =>
    a non-blocking card with an honest indeterminate bar: it says what is
    happening, and it disappears the moment /meta lands.
 
-   It sits a fifth of the viewport up rather than on the floor, so it lands
-   nearer eye level and clear of the footer, while still leaving the choice
-   cards -- the thing a buyer is actually here to click -- uncovered.
+   STICKY, not fixed. It renders as the last thing before the footer, so a
+   fixed card at any bottom offset eventually sat ON the footer -- there is no
+   offset that clears a footer whose height is not knowable from CSS. Sticky
+   rides the bottom of the viewport while there is content to scroll and then
+   releases into flow just above the footer, which is the one placement that
+   cannot overlap it.
 
    Centred by auto margins, NOT by left:50% + translateX(-50%): the kpop
    entrance ends on transform:none and runs with fill-mode both, so the final
@@ -83,7 +86,7 @@ export function Breadcrumbs({ trail }: { trail: { label: string; onClick?: () =>
 export function BootNotice({ seconds }: { seconds: number }) {
   return (
     <div role="status" aria-live="polite"
-      style={st("position:fixed; left:0; right:0; margin:0 auto; bottom:calc(20vh + env(safe-area-inset-bottom,0px)); z-index:80; width:min(420px, calc(100vw - 28px)); padding:15px 17px; border-radius:var(--r); background:rgba(var(--rgb-white),.94); backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%); border:.5px solid rgba(var(--rgb-white),.9); box-shadow:0 16px 44px rgba(var(--rgb-ink),.16), inset 0 1px 1px rgba(var(--rgb-white),.9); animation:kpop .4s cubic-bezier(.2,.7,.2,1) both;")}>
+      style={st("position:sticky; margin:0 auto 20px; bottom:calc(20px + env(safe-area-inset-bottom,0px)); z-index:80; width:min(420px, calc(100vw - 28px)); padding:15px 17px; border-radius:var(--r); background:rgba(var(--rgb-white),.94); backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%); border:.5px solid rgba(var(--rgb-white),.9); box-shadow:0 16px 44px rgba(var(--rgb-ink),.16), inset 0 1px 1px rgba(var(--rgb-white),.9); animation:kpop .4s cubic-bezier(.2,.7,.2,1) both;")}>
       <style>{`@keyframes kboot{0%{left:-38%}100%{left:100%}}`}</style>
       <div style={st("display:flex; align-items:center; gap:11px;")}>
         <span style={st("width:17px; height:17px; border-radius:var(--r); border:2px solid rgba(var(--rgb-ink),.14); border-top-color:var(--teal); animation:kspin .7s linear infinite; flex-shrink:0;")} />
