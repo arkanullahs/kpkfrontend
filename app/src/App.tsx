@@ -500,7 +500,13 @@ export default function App() {
         {/* the 96px well under the copyright was dock clearance, and it read as
             a dead black slab on every screen the dock is hidden on (owner
             2026-07-26). Clearance only when the dock is actually there. */}
-        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "ask" && askStep === 0 ? 26 : 86}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>© {new Date().getFullYear()} bhalophone. All rights reserved.</div>
+        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "ask" && askStep === 0 ? 26 : 86}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>
+          © {new Date().getFullYear()} bhalophone. All rights reserved.
+          {/* the trademark notice, quieter than the copyright above it and on
+              its own line so it reads as a disclaimer rather than a byline.
+              Same wording as pages.py TRADEMARK_NOTE — keep the two in step. */}
+          <span style={st("display:block; max-width:660px; margin:7px auto 0; font-size:11.5px; line-height:1.55; color:var(--mut2); text-wrap:pretty;")}>{t("trademark_note")}</span>
+        </div>
       </footer>
 
       <Analytics />

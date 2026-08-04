@@ -84,6 +84,49 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   carried_by: { en: "Carried by", bn: "পাওয়া যায়" },
   shops: { en: "shops", bn: "দোকানে" },
 
+  // ---- the shop board. Shops are NAMED here now (owner 2026-08-04); the
+  //      static /phone/ page and this screen render one derivation, so they
+  //      can no longer disagree about who is cheapest. Still no links: naming
+  //      a shop is disclosure, sending it traffic is a business we do not run.
+  filter_all: { en: "All", bn: "সব" },
+  filter_more: { en: "more", bn: "আরও" },
+  clear_filters: { en: "Clear all filters", bn: "সব ফিল্টার মুছুন" },
+  listings_word: { en: "listings", bn: "লিস্টিং" },
+  from_word: { en: "from", bn: "থেকে" },
+  cheapest_first: { en: "Cheapest first", bn: "সস্তা আগে" },
+  cheapest_in_stock: { en: "Cheapest in stock", bn: "স্টকে সবচেয়ে সস্তা" },
+  vs_cheapest: { en: "vs cheapest in stock", bn: "স্টকে সবচেয়ে সস্তার তুলনায়" },
+  stock_unreported: { en: "Not reported", bn: "জানানো হয়নি" },
+  show_all: { en: "Show all", bn: "সব দেখুন" },
+  show_fewer: { en: "Show fewer listings", bn: "কম লিস্টিং দেখুন" },
+  empty_combo: { en: "Nothing matches this combination", bn: "এই সমন্বয়ে কিছু মেলেনি" },
+  empty_combo_help: {
+    en: "Try clearing the colour or variant filter — most shops publish only one of them.",
+    bn: "রঙ বা ভ্যারিয়েন্ট ফিল্টার সরিয়ে দেখুন — বেশিরভাগ দোকান দুটির একটিই জানায়।"
+  },
+  note_cheaper_out: {
+    en: "{p} at {s} is lower, but that listing is out of stock.",
+    bn: "{s}-এ {p} কম, কিন্তু ওই লিস্টিং স্টকে নেই।"
+  },
+  note_tied_one: { en: "1 other shop matches this price.", bn: "আরও ১টি দোকানে একই দাম।" },
+  note_tied: { en: "{n} other shops match this price.", bn: "আরও {n}টি দোকানে একই দাম।" },
+  note_below_next: { en: "{p} below the next shop with stock.", bn: "স্টক আছে এমন পরের দোকানের চেয়ে {p} কম।" },
+  note_only_shop: { en: "The only shop reporting stock right now.", bn: "এই মুহূর্তে কেবল এই দোকানেই স্টক আছে।" },
+  warranty_premium: {
+    en: "On {v} the official BD warranty costs {p} more than the same configuration imported.",
+    bn: "{v}-এ অফিসিয়াল বিডি ওয়ারেন্টির দাম একই কনফিগারেশনের ইমপোর্টের চেয়ে {p} বেশি।"
+  },
+  shop_names_note: {
+    en: "Shop names and logos are listed for transparency, and belong to the shops themselves. We take no commission and link to no seller, so no shop can buy its way up this list.",
+    bn: "স্বচ্ছতার জন্য দোকানের নাম ও লোগো দেওয়া হলো — সেগুলো দোকানের নিজস্ব সম্পত্তি। আমরা কোনো কমিশন নিই না, কোনো বিক্রেতার লিঙ্ক দিই না — তাই কেউ টাকা দিয়ে উপরে উঠতে পারে না।"
+  },
+  // kept verbatim in step with pages.py TRADEMARK_NOTE — one notice, two
+  // codebases, and a reader who sees both should not see two wordings
+  trademark_note: {
+    en: "Shop logos, brand names and product names are the trademarks of their respective owners, shown only to identify who sells what. We are not affiliated with, endorsed by, or paid by any of them.",
+    bn: "দোকানের লোগো, ব্র্যান্ড ও পণ্যের নাম তাদের নিজ নিজ মালিকের ট্রেডমার্ক — কে কী বিক্রি করছে তা বোঝাতেই কেবল দেখানো হয়েছে। তাদের কারও সঙ্গে আমাদের কোনো সম্পর্ক, অনুমোদন বা আর্থিক লেনদেন নেই।"
+  },
+
   // ---- listing-data caution (feedback #5) + connectivity (P2 remainder) ----
   data_caution_few: { en: "Few/old listings — verify at shop", bn: "লিস্টিং কম বা পুরনো — দোকানে যাচাই করুন" },
   data_caution_stale: { en: "Listings look outdated — confirm price at shop", bn: "লিস্টিং পুরনো হতে পারে — দোকানে দাম নিশ্চিত করুন" },

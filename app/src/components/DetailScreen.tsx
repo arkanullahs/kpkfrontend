@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, retentionCurve, st, taka, takaRange, verdictMeta } from "../theme";
-import { bnNum, t } from "../i18n";
-import type { Connectivity, Offer, OpinionProfile, PhoneDetail, Pick } from "../api";
+import { t } from "../i18n";
+import type { Connectivity, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { PhonePhoto } from "./PhonePhoto";
 import { JustSoYouKnow } from "./Compare";
 import { ChannelChips, DataCautionChip, MarketChips, PriceSource } from "./ResultsScreen";
-import { Configure } from "./Configure";
+import { ShopPrices } from "./ShopPrices";
 import { Fold, SpecIcon } from "./Chrome";
 
 interface Props {
@@ -137,12 +137,10 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const specs = buildSpecs(d);
   const conn = connRows(d?.connectivity, d?.traits);
   const bs = d?.brand_summary;
-  // only real, priced listings — a price-less offer must never sort to the top
-  const offers = (d?.offers || []).filter((o) => o.price && o.price > 0).sort((a, b) => a.price - b.price);
-  // badge the RECOMMENDED price (A3: cheapest kept-current in-stock offer), not
-  // the raw cheapest — else "Best price" lands on an out-of-stock/stale row and
-  // contradicts the hero. Fall back to raw cheapest when no authority price.
-  const bestOfferPrice = price ?? (offers.length ? offers[0].price : null);
+  // every shop listing, named, cheapest first, with the axes to narrow them by
+  // — derived by the backend so this screen and the /phone/ page cannot
+  // disagree about who is cheapest (core.specfmt.listing_view)
+  const listings = d?.listings || null;
 
   return (
     <Wrap onBack={onBack}>
@@ -196,9 +194,13 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
 
       {(() => { const m = classifyCaveats(caveats).major[0]; return m ? <div style={st("margin-top:14px;")}><JustSoYouKnow text={m.text} /></div> : null; })()}
 
-      {/* which exact unit the money buys: config, channel, SIM tray, colours
-          and the stock the shops published for that SKU */}
-      <Configure variants={d?.variants} />
+      {/* The "Choose RAM & storage" card used to sit here. It was the
+          shop-ANONYMOUS summary of exactly what the shop board below now
+          shows per named shop -- variant, channel, stock count, market,
+          colours, price range -- so the screen asked the buyer to pick a
+          configuration twice, once from a bucket and once from real listings
+          (owner 2026-08-04). The board's Memory axis is the config chooser
+          now, and the price it lands on belongs to a listing that exists. */}
 
       {/* our take — the RAG verdict, grounded in real evidence */}
       {ourTake && (
@@ -342,66 +344,35 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           </Card>
         )}
 
-        {/* where to buy — last, and clearly flagged as unconfirmed prices */}
-        {offers.length > 0 && (
+        {/* Who sells it, at what price — last, and clearly flagged as prices
+            we read off shop websites rather than confirmed at a counter.
+
+            Shops are NAMED here now (owner 2026-08-04). This screen used to
+            scrub them and group by channel-then-variant while the static
+            /phone/ page named every one, so the same phone had two answers to
+            "who is cheapest". Both render core.specfmt.listing_view now.
+            Still no outbound links: naming a shop is disclosure, sending it
+            traffic is a business model we do not have. */}
+        {listings && listings.listings.length > 0 && (
           <Card>
             <SectionLabel>{t("where_to_buy")}</SectionLabel>
-            {/* trust signal: we checked N sellers, and this is the spread.
-                Shops stay anonymous — the note says why. */}
-            {/* the SAME range the hero shows (combine.price_low/high: in-stock
-                sellers in the shown channel, variant outliers trimmed) — never
-                a second number computed differently (owner: consistency) */}
-            <div style={st("margin-top:8px; font-size:14px; color:var(--mut);")}>
-              <b style={st("color:var(--ink2);")}>{bnNum(String(offers.length))} {t("sellers")}</b>
-              {" · "}{takaRange(priceLo, priceHi)}
-            </div>
-            <p style={st("margin:9px 0 0; font-size:13px; color:var(--mut2); line-height:1.55; text-wrap:pretty;")}>{t("why_anon")}</p>
             <div style={st("display:flex; gap:9px; margin-top:12px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1);")}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               <span style={st("font-size:13.5px; color:var(--acd); line-height:1.55;")}>{t("price_warning")}</span>
             </div>
-            {/* one block per CHANNEL (owner 2026-07-19): header carries the
-                channel's seller count + in-stock range from the same summary
-                the hero shows; variant groups break down the spread inside */}
-            {(["official", "unofficial"] as const).map((ch) => {
-              const chOffers = offers.filter((o) => (ch === "official") === offGrade(o));
-              const chip = ch === "official"
-                ? <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:var(--r); color:var(--tealD); background:rgba(var(--rgb-teal),.1);")}>{t("official_bd")}</span>
-                : <span style={st("display:inline-flex; font-size:11px; font-weight:700; padding:3px 10px; border-radius:var(--r); color:var(--mut); background:rgba(var(--rgb-ink),.055);")}>{t("unofficial_import")}</span>;
-              // both channels always show; an empty one says so (owner 2026-07-19)
-              if (!chOffers.length) {
-                return (
-                  <div key={ch} style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:16px;")}>
-                    {chip}
-                    <span style={st("font-size:12.5px; color:var(--mut2);")}>{ch === "official" ? t("no_official_found") : t("no_unofficial_found")}</span>
-                  </div>
-                );
-              }
-              const side = chans?.[ch];
-              const inStock = side?.in_stock ?? chOffers.filter((o) => o.in_stock === true).length;
-              // Best-price badge only competes in the shown price's channel
-              const gs = groupOffers(chOffers, (ch === "official") === isOff ? bestOfferPrice : null);
-              return (
-                <div key={ch} style={st("margin-top:16px;")}>
-                  <div style={st("display:flex; align-items:center; gap:8px; flex-wrap:wrap;")}>
-                    {chip}
-                    <span style={st("font-size:13px; color:var(--mut);")}>
-                      <b style={st("color:var(--ink2);")}>{inStock > 0
-                        ? <>{bnNum(String(inStock))} {t("shops_in_stock")}</>
-                        : <>{bnNum(String(side?.sellers ?? chOffers.length))} {t("sellers")}</>}</b>
-                      {side ? <> · {takaRange(side.lo, side.hi)}</> : null}
-                    </span>
-                  </div>
-                  <div style={st("display:flex; flex-direction:column; gap:8px; margin-top:9px;")}>
-                    {gs.map((g, i) => <VariantGroupRow key={i} g={g} lone={gs.length === 1} />)}
-                  </div>
-                </div>
-              );
-            })}
-            {/* monetization invite — shops can pay to appear named (owner 2026-07-19) */}
+            {/* the warranty premium, subtracted for the reader and told once —
+                only on a configuration where BOTH channels are really on sale,
+                or it is two different phones being subtracted */}
+            {listings.premium && (
+              <p style={st("margin:14px 0 0; font-size:13.5px; line-height:1.55; color:var(--mut);")}>
+                {t("warranty_premium")
+                  .replace("{v}", listings.premium.variant)
+                  .replace("{p}", taka(listings.premium.diff))}
+              </p>
+            )}
+            <ShopPrices view={listings} />
             <p style={st("margin:18px 0 0; padding-top:14px; border-top:1px solid rgba(var(--rgb-ink),.06); font-size:12px; color:var(--faint); line-height:1.55; text-wrap:pretty;")}>
-              {t("shop_own")}{" "}
-              <a href="/support" style={st("color:var(--lnk); font-weight:600;")}>{t("shop_contact")}</a>
+              {t("shop_names_note")}
             </p>
           </Card>
         )}
@@ -563,87 +534,6 @@ function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
       </div>
       <p style={st("margin:13px 0 0; font-size:11px; color:var(--mut2); line-height:1.5;")}>{t("retention_disclaimer")}</p>
     </>
-  );
-}
-
-// Mirror of engine.off_grade: official-grade ONLY when an authority shop
-// tagged the row official — confident, never "maybe" (owner 2026-07-18: we
-// know official for sure, SP1 model). The shop key grades the row; it is
-// NEVER rendered (shops are anonymous infrastructure).
-const OFFICIAL_AUTHORITY = new Set(["GadgetAndGear", "Pickaboo", "SumashTech", "RioInternational"]);
-function offGrade(o: Offer): boolean {
-  return OFFICIAL_AUTHORITY.has(o.shop) && o.official === "official";
-}
-
-// One row per VARIANT, not per anonymous seller: with names scrubbed a
-// per-seller list is a wall of identical fillers ("Shop 1..11" / "A listing"),
-// while the variant is the thing that actually moves the price. Each group
-// carries its own price range + seller/stock/market chips (channel lives on
-// the section header, callers pass one channel's offers at a time).
-interface OfferGroup {
-  variant: string; lo: number; hi: number; n: number;
-  inStock: number; knownOut: boolean;
-  regions: string[]; hasBest: boolean;
-}
-
-function groupOffers(offers: Offer[], bestPrice: number | null): OfferGroup[] {
-  const m = new Map<string, Offer[]>();
-  for (const o of offers) {
-    const k = o.variant || "";
-    const arr = m.get(k);
-    if (arr) arr.push(o); else m.set(k, [o]);
-  }
-  const gs = [...m.entries()].map(([variant, os]) => ({
-    variant,
-    lo: Math.min(...os.map((o) => o.price)),
-    hi: Math.max(...os.map((o) => o.price)),
-    n: os.length,
-    inStock: os.filter((o) => o.in_stock === true).length,
-    knownOut: os.every((o) => o.in_stock === false),
-    regions: [...new Set(os.map((o) => o.region).filter((r): r is string => !!r))],
-    hasBest: bestPrice != null && os.some((o) => o.price === bestPrice),
-  })).sort((a, b) => a.lo - b.lo);
-  // the badge marks ONE group — the same price can appear in several variants
-  let seen = false;
-  for (const g of gs) {
-    if (g.hasBest && seen) g.hasBest = false;
-    seen = seen || g.hasBest;
-  }
-  return gs;
-}
-
-function VariantGroupRow({ g, lone }: { g: OfferGroup; lone: boolean }) {
-  // lone unnamed group = every seller, so say that instead of "not stated"
-  const title = g.variant || (lone ? t("all_sellers") : t("variant_unknown"));
-  return (
-    <div style={st(`display:flex; align-items:center; gap:11px; padding:12px 14px; border-radius:var(--r); background:${g.hasBest ? "var(--tint)" : "rgba(var(--rgb-ink),.035)"};`)}>
-      <div style={st("flex:1; min-width:0;")}>
-        <div style={st(`font-size:14px; font-weight:600; color:${g.variant ? "var(--ink2)" : "var(--mut2)"}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;`)}>{title}</div>
-        <div style={st("display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:5px;")}>
-          {g.regions.map((r) => (
-            <span key={r} style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--r); background:rgba(var(--rgb-ink),.06); color:var(--mut);")}>{r}</span>
-          ))}
-          {g.inStock > 0 ? (
-            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--r); color:var(--tealD); background:rgba(var(--rgb-teal),.1);")}>
-              <span style={st("width:5px; height:5px; border-radius:var(--r); background:currentColor;")} />
-              {/* "4 in stock" read as four UNITS sitting in a warehouse. It is
-                  a count of SHOPS, which is what every other surface says. */}
-              {t("in_stock_at")} {bnNum(String(g.inStock))} {g.inStock === 1 ? t("shop_one") : t("sellers")}
-            </span>
-          ) : g.knownOut ? (
-            <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--r); color:var(--mut2); background:rgba(var(--rgb-ink),.055);")}>
-              <span style={st("width:5px; height:5px; border-radius:var(--r); background:currentColor;")} />
-              {t("stock_out")}
-            </span>
-          ) : null}
-          {g.n > 1 && (
-            <span style={st("font-size:10px; font-weight:700; padding:2px 8px; border-radius:var(--r); background:rgba(var(--rgb-ink),.06); color:var(--mut);")}>{bnNum(String(g.n))} {t("sellers")}</span>
-          )}
-        </div>
-      </div>
-      <span style={st("font-size:15px; font-weight:600; color:var(--ink); text-align:right;")}>{takaRange(g.lo, g.hi)}</span>
-      {g.hasBest && <span style={st("font-size:10px; font-weight:700; color:var(--lnk); background:var(--card); padding:3px 9px; border-radius:var(--r);")}>{t("best_price")}</span>}
-    </div>
   );
 }
 

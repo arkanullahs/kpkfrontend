@@ -205,6 +205,44 @@ export interface OpinionProfile {
   aspects?: Record<string, { quotes?: string[]; summary?: string }>;
 }
 
+/** One shop's listing, as `core.specfmt.listing_view` derives it. The static
+    /phone/ page renders the same records, so the app and the SEO page can no
+    longer disagree about who is cheapest or what a listing is. */
+export interface Listing {
+  shop: string; name: string; initials: string;
+  /** absolute URL of the shop's self-hosted brand mark; null = use initials */
+  logo: string | null;
+  /** that mark's own colour as "R,G,B", which accents the hero band */
+  accent: string | null;
+  /** whether the mark survives on the near-black band; if not, use `initials` */
+  logo_dark: boolean;
+  /** null when we will not do maths on it (missing, or flagged implausible) */
+  price: number | null;
+  /** what the shop actually publishes, shown even where `price` is null */
+  shown_price: number | null;
+  suspect: boolean;
+  stock: "in" | "out" | "unknown";
+  channel: "official" | "unofficial" | "unstated" | string;
+  channel_word: string;
+  variant: string | null; sim: string | null;
+  region: string | null; region_name: string | null;
+  colors: { name: string; hex: string[] }[];
+  /** filter keys, shared with the static page's data-attributes */
+  cfg: string; color_ids: string[]; region_id: string;
+}
+export interface ListingAxis {
+  key: "stock" | "chan" | "region" | "cfg" | "color" | string;
+  title: string; hint: string; primary: boolean;
+  options: { value: string; label: string; hex?: string[] }[];
+}
+export interface ListingView {
+  listings: Listing[];
+  axes: ListingAxis[];
+  /** what the BD warranty costs where both channels sell the same config */
+  premium: { variant: string; diff: number } | null;
+  shops: number;
+}
+
 export interface PhoneDetail {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null; best_price_shop?: string;
@@ -238,6 +276,8 @@ export interface PhoneDetail {
   os_summary?: { os_name?: string; update_years?: string; bloat_ads?: string } | null;
   brand_summary?: { bd_service?: number; update_record?: number; resale?: number } | null;
   offers?: Offer[];
+  /** every shop listing, named, plus the axes to narrow them by */
+  listings?: ListingView | null;
   flags?: string[];
   price_history?: { date: string; best_price: number; official: number | null; unofficial: number | null; in_stock_shops: number }[];
   price_trend?: { trend: "up" | "down" | "flat" | "new"; delta: number } | null;
