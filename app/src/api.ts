@@ -214,8 +214,9 @@ export interface Listing {
   logo: string | null;
   /** that mark's own colour as "R,G,B", which accents the hero band */
   accent: string | null;
-  /** whether the mark survives on the near-black band; if not, use `initials` */
-  logo_dark: boolean;
+  /** the mark to use on the near-black hero band — often a knocked-out or
+      inverted variant of `logo`. null = nothing readable there, use `initials` */
+  logo_dark: string | null;
   /** null when we will not do maths on it (missing, or flagged implausible) */
   price: number | null;
   /** what the shop actually publishes, shown even where `price` is null */

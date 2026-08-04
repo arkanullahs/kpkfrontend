@@ -62,7 +62,8 @@ function Mark({ l, px, onDark }: { l: Listing; px: number; onDark?: boolean }) {
   // icons, and a square slot squeezed the wordmarks into an unreadable strip
   const box = `flex:none; display:flex; align-items:center; justify-content:center;`
     + ` overflow:hidden; width:${Math.round(px * 1.35)}px; height:${px}px; border-radius:var(--r);`;
-  if (!l.logo || (onDark && !l.logo_dark)) {
+  const src = onDark ? l.logo_dark : l.logo;
+  if (!src) {
     return (
       <span style={st(box + `font-size:${px > 40 ? 14 : 12.5}px; font-weight:700; letter-spacing:.3px;`
         + (onDark ? " color:var(--aqua); background:var(--onpfill); box-shadow:inset 0 0 0 1px var(--onp3);"
@@ -73,7 +74,7 @@ function Mark({ l, px, onDark }: { l: Listing; px: number; onDark?: boolean }) {
   }
   return (
     <span style={st(box)}>
-      <img src={l.logo} alt={`${l.name} logo`} width={px} height={px}
+      <img src={src} alt={`${l.name} logo`} width={px} height={px}
         loading="lazy" decoding="async"
         style={st("width:100%; height:100%; object-fit:contain; border-radius:0;")} />
     </span>
