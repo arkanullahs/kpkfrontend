@@ -13,6 +13,7 @@ import { PriceAlert } from "./components/PriceAlert";
 import { Dock } from "./components/Dock";
 import { BootNotice, Breadcrumbs } from "./components/Chrome";
 import { track } from "./track";
+import { DEFAULT_FORM, deriveIntent, toParams, type Form } from "./need";
 
 export type Screen = "ask" | "results" | "detail" | "method";
 
@@ -22,128 +23,9 @@ export type Screen = "ask" | "results" | "detail" | "method";
    never appear (no pressure to "upgrade"); reloading re-offers the gate. */
 export type Mode = "simple" | "advanced";
 
-export interface Form {
-  budget: number;
-  archetypes: string[];          // multi-select: the buyer can pick several needs
-  platform: "any" | "android" | "ios";
-  osStyle: "any" | "clean" | "feature";
-  avoidChinese: boolean;         // hide China-HQ brands entirely (Xiaomi, Oppo…)
-  officialOnly: boolean;         // only phones with an official-warranty listing
-  excludeBrands: string[];
-  traitText: string;
-  // advanced mode (feedback #2/#7) — hardware dealbreakers + brand whitelist
-  requireJack: boolean;
-  requireIr: boolean;
-  requireFm: boolean;
-  socVendor: "any" | "snapdragon" | "mediatek";
-  includeBrands: string[];       // only these brands (engine `brand` whitelist)
-  hwStrict: boolean;             // unverified hardware also fails must-have filters
-  regions: string[];             // accepted import markets (Rio-labeled offers only)
-  requireRom: boolean;           // only phones with an official LineageOS build
-  // Simple-mode quiz answers (feedback #4) — dynamically weighted, no buckets.
-  // `me` is the branch question asked only when the buyer answers "for myself".
-  q: { who: string; me: string; day: string[]; out: boolean | null; hw: string[] };
-  useCase: string;               // EN sentence sent as use_case (embedded intent)
-  priorities: string[];          // ordered axes derived from the quiz answers
-}
+export type { Form, QuizIntent } from "./need";
+export { DEFAULT_FORM, CHOICE_LADDER, CHOICES, deriveIntent, toParams } from "./need";
 
-const DEFAULT_FORM: Form = {
-  budget: 95000, archetypes: [], platform: "any",
-  osStyle: "any", avoidChinese: false, officialOnly: false,
-  excludeBrands: [], traitText: "",
-  requireJack: false, requireIr: false, requireFm: false,
-  socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
-  q: { who: "me", me: "", day: [], out: null, hw: [] },
-  useCase: "", priorities: [],
-};
-
-/** Simple-mode quiz → dynamic intent (feedback #4 redesign). No archetype
-    buckets: every answer adds weighted votes to the priority axes AND a plain
-    sentence fragment. The sentence goes to the server as `use_case` (embedded
-    verbatim and shown to the ranking LLM); the strongest axes ride along as
-    `priorities`. Always English — the evidence cards it is matched against
-    are English. Nothing answered = balanced (empty intent, server default). */
-export interface QuizIntent { useCase: string; priorities: string[] }
-
-const QUIZ_DAY_VOTES: Record<string, [string, number][]> = {
-  photos: [["camera", 2]],
-  games: [["gaming", 2], ["performance", 0.8]],
-  reels: [["video", 2], ["camera", 0.8]],
-  work: [["performance", 1.2], ["battery", 0.8]],
-  chat: [["ease_of_use", 0.5], ["battery", 0.5]],
-  watch: [["battery", 1], ["performance", 0.4]],
-};
-const QUIZ_DAY_TEXT: Record<string, string> = {
-  photos: "takes lots of photos",
-  games: "plays games seriously",
-  reels: "shoots videos and reels for social media",
-  work: "runs office and business apps all day",
-  chat: "mostly calls, WhatsApp and Facebook",
-  watch: "watches shows and videos for hours",
-};
-
-export function deriveIntent(q: Form["q"]): QuizIntent {
-  const w: Record<string, number> = {};
-  const add = (ax: string, v: number) => { w[ax] = (w[ax] || 0) + v; };
-  const bits: string[] = [];
-  if (q.who === "elder") {
-    add("ease_of_use", 2.2); add("battery", 0.8);
-    bits.push("for an older parent - must be simple and forgiving, loud clear sound, no ad spam");
-  }
-  if (q.who === "other") {
-    add("ease_of_use", 0.6);
-    bits.push("a gift for someone else - safe well-rounded choice that is easy to like");
-  }
-  if (q.who === "me" && q.me === "student") {
-    add("performance", 0.8); add("battery", 0.8);
-    bits.push("for a student - best value that stays good for years");
-  }
-  for (const d of q.day) for (const [ax, v] of QUIZ_DAY_VOTES[d] || []) add(ax, v);
-  const dayBits = q.day.filter((d) => QUIZ_DAY_TEXT[d]).map((d) => QUIZ_DAY_TEXT[d]);
-  if (dayBits.length) bits.push("day on the phone: " + dayBits.join(", "));
-  if (q.out) {
-    add("battery", 1.4);
-    bits.push("outdoors most of the day - screen must stay readable in sunlight, battery must last");
-  }
-  const hwText: Record<string, string> = {
-    jack: "wants a headphone jack for wired earphones",
-    ir: "wants an IR blaster to control the TV or AC",
-    fm: "wants FM radio that works without internet",
-  };
-  for (const h of q.hw) if (hwText[h]) bits.push(hwText[h]);
-  const priorities = Object.keys(w).sort((a, b) => w[b] - w[a]).slice(0, 3);
-  return { useCase: bits.join("; "), priorities };
-}
-
-/** form → /recommend query params */
-export function toParams(f: Form, top = 5): RecParams {
-  const p: RecParams = { budget: f.budget, top };
-  // NL trait text takes over (server maps it to archetype/priorities/filters)
-  if (f.traitText.trim()) {
-    p.traits = f.traitText.trim();
-  } else if (f.useCase || f.priorities.length) {
-    // Simple quiz: dynamic intent — no archetype buckets (feedback #4)
-    if (f.useCase) p.use_case = f.useCase;
-    if (f.priorities.length) p.priorities = f.priorities.join(",");
-  } else if (f.archetypes.length) {
-    // multiple selected needs merge server-side (engine.resolve_intent)
-    p.archetype = f.archetypes.join(",");
-  }
-  if (f.platform !== "any") p.platform = f.platform;
-  if (f.osStyle !== "any") p.os_style = f.osStyle;
-  if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
-  if (f.officialOnly) p.official_only = true;
-  if (f.excludeBrands.length) p.exclude_brand = f.excludeBrands.join(",");
-  if (f.requireJack) p.require_jack = true;
-  if (f.requireIr) p.require_ir = true;
-  if (f.requireFm) p.require_fm = true;
-  if (f.socVendor !== "any") p.soc_vendor = f.socVendor;
-  if (f.includeBrands.length) p.brand = f.includeBrands.join(",");
-  if (f.hwStrict) p.hw_strict = true;
-  if (f.regions.length) p.regions = f.regions.join(",");
-  if (f.requireRom) p.require_custom_rom = true;
-  return p;
-}
 
 export default function App() {
   const [lang, setLangState] = useState<Lang>(getLang());
@@ -171,7 +53,7 @@ export default function App() {
       }
       // Advanced ranks by the purpose cards — drop the quiz intent so a stale
       // use_case cannot silently override the picked archetypes
-      : { ...f, useCase: "", priorities: [] });
+      : { ...f, useCase: "", priorities: [], weights: {} });
   }, []);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [archetypes, setArchetypes] = useState<Archetype[]>([]);

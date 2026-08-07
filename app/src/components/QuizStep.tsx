@@ -1,34 +1,42 @@
 import { useState } from "react";
 import { st } from "../theme";
-import { bnNum, t } from "../i18n";
-import { deriveIntent, type Form } from "../App";
+import { t } from "../i18n";
+import { deriveIntent, CHOICES, type Form } from "../App";
 import { track } from "../track";
 
-/* One-question-at-a-time quiz (feedback #4 redesign). Each answer re-derives
-   the dynamic intent (use_case sentence + weighted priorities) — no archetype
-   buckets. Single-choice questions auto-advance after a beat; the summary
-   spells out what we understood in plain words and keeps every answer one tap
-   from editable. Returning visitors with answers land on the summary. */
+/* THE FORCED-CHOICE QUIZ (spec section 7).
+
+   What this replaced: five branching questions, two of them additive
+   multi-selects over activities ("what fills the day on the phone? pick all
+   that fit"). Additive multi-select provably self-cancels — only 44 of its 672
+   reachable combinations produced a dominant axis. A buyer who ticks photos AND
+   games AND watching has said they want everything, which is identical to
+   saying nothing, and the ranker got a flat vector it could not act on.
+
+   Two changes make it work. The questions ask what the buyer would GIVE UP
+   rather than what they do, because a recommendation is a choice under a budget
+   and "what do you do" is near-identical across buyers. And the two answers are
+   WEIGHTED UNEQUALLY (3.0 then 1.0, see deriveIntent) so two different answers
+   still leave a clear leader — an evenly-weighted pair is flat 70% of the time.
+
+   Question 3 stays a multi-select on purpose: hardware is a set of dealbreakers
+   that produce no weights, so it cannot self-cancel, and a buyer really can
+   need both a jack and FM radio. */
 
 interface Props {
   form: Form;
   patch: (d: Partial<Form>) => void;
-  onNext: () => void; // leave the quiz for the fine-tune step
-  onBack: () => void; // leave the quiz backwards to the budget step
+  onNext: () => void;
+  onBack: () => void;
 }
 
-const WHO: [string, string, string][] = [
-  ["me", "🙋", "qq_who_me"], ["elder", "🧓", "qq_who_elder"], ["other", "🎁", "qq_who_other"],
-];
-const ME: [string, string, string][] = [
-  ["student", "🎓", "qq_me_student"], ["other", "💼", "qq_me_other"],
-];
-const DAY: [string, string, string][] = [
-  ["photos", "📷", "qq_day_photos"], ["games", "🎮", "qq_day_games"],
-  ["reels", "🎬", "qq_day_reels"], ["work", "💼", "qq_day_work"],
-  ["chat", "💬", "qq_day_chat"], ["watch", "📺", "qq_day_watch"],
-];
-const DAY_ICON: Record<string, string> = Object.fromEntries(DAY.map(([k, i]) => [k, i]));
+// Q1 offers the four big trade-offs; gaming and video are narrower, so they
+// appear as second-answer options rather than crowding the main decision.
+const Q1_KEYS = ["camera", "battery", "speed", "simple"];
+const Q2_KEYS = ["camera", "battery", "speed", "simple", "gaming", "video"];
+const ICON: Record<string, string> = {
+  camera: "📷", battery: "🔋", speed: "⚡", simple: "🧓", gaming: "🎮", video: "🎬",
+};
 const HW: [string, string, string][] = [
   ["jack", "🎧", "qq_hw_jack"], ["ir", "📺", "qq_hw_ir"], ["fm", "📻", "qq_hw_fm"],
 ];
@@ -37,10 +45,9 @@ const HW_ICON: Record<string, string> = Object.fromEntries(HW.map(([k, i]) => [k
 const chip = (sel: boolean, big = false) =>
   st(`display:inline-flex; align-items:center; gap:9px; padding:${big ? "15px 20px" : "12px 17px"}; border-radius:var(--r); cursor:pointer; font-size:${big ? "16px" : "15px"}; font-weight:600; transition:all .15s ease; font-family:var(--f-bn); background:${sel ? "var(--teal)" : "rgba(var(--rgb-white),.85)"}; color:${sel ? "var(--card)" : "var(--tx)"}; border:.5px solid ${sel ? "transparent" : "rgba(var(--rgb-ink),.1)"}; box-shadow:${sel ? "0 4px 14px rgba(var(--rgb-ink),.14)" : "0 1px 2px rgba(var(--rgb-ink),.04)"};`);
 
-/* A tick box for the PICK-ALL questions only (owner 2026-07-26): a checkbox on
-   a one-answer question promises you can choose several. Single-choice chips
-   stay plain — selected is the filled chip. What every question DOES share now
-   is the control row: nothing auto-advances, Next is always the buyer's. */
+/* A tick box for the dealbreakers question ONLY (owner 2026-07-26): a checkbox
+   on a one-answer question promises you can choose several. The two choice
+   questions are single-answer, so their selected state is the filled chip. */
 function Tick({ on }: { on: boolean }) {
   return (
     <span style={st(`display:inline-flex; align-items:center; justify-content:center; width:19px; height:19px; border-radius:var(--r); flex-shrink:0; transition:all .15s ease; background:${on ? "rgba(var(--rgb-white),.22)" : "transparent"}; border:1.5px solid ${on ? "rgba(var(--rgb-white),.85)" : "rgba(var(--rgb-ink),.18)"};`)}>
@@ -54,24 +61,21 @@ function Tick({ on }: { on: boolean }) {
 }
 
 const SECONDARY = st("display:inline-flex; align-items:center; gap:7px; padding:12px 18px; border-radius:var(--r); border:.5px solid rgba(var(--rgb-ink),.12); cursor:pointer; background:var(--card); font-size:13.5px; font-weight:600; color:var(--mut); font-family:var(--f-bn);");
-
 const PRIMARY = st("display:inline-flex; align-items:center; gap:8px; margin-top:22px; padding:14px 26px; border-radius:var(--r); border:none; cursor:pointer; font-size:15.5px; font-weight:700; color:var(--onp); font-family:var(--f-bn); background:var(--teal); box-shadow:0 6px 18px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.35);");
 const QTITLE = st("font-size:clamp(20px,3vw,26px); font-weight:700; color:var(--ink); font-family:var(--f-bn); line-height:1.25; text-wrap:balance;");
 const WHY = st("margin:10px 0 0; font-size:14px; color:var(--mut2); line-height:1.55; max-width:480px; text-wrap:pretty;");
 
+const STEPS = ["q1", "q2", "hw"] as const;
+const SUMMARY = STEPS.length;
+
 export function QuizStep({ form, patch, onNext, onBack }: Props) {
   const q = form.q;
-  // the step list branches: "for myself" inserts the who-are-you question
-  const steps: string[] = ["who", ...(q.who === "me" ? ["me"] : []), "day", "out", "hw"];
-  const SUMMARY = steps.length; // summary sits one past the last question
-  // any real answer means a returning visitor — open on the summary, not Q1
-  const answered = q.out !== null || q.day.length > 0 || q.who !== "me" || q.me !== "" || q.hw.length > 0;
+  const answered = q.picks.length > 0 || q.hw.length > 0;
   const [sub, setSub] = useState(answered ? SUMMARY : 0);
   const [dir, setDir] = useState<1 | -1>(1);
 
-  // clamp against the CURRENT list — changing "who" can shrink/grow the branch
   const cur = Math.min(sub, SUMMARY);
-  const stepName = cur < SUMMARY ? steps[cur] : "summary";
+  const stepName = cur < SUMMARY ? STEPS[cur] : "summary";
 
   const go = (s: number) => {
     setDir(s >= cur ? 1 : -1);
@@ -80,6 +84,15 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
   const setQ = (d: Partial<Form["q"]>) => {
     const next = { ...q, ...d };
     patch({ q: next, ...deriveIntent(next) });
+  };
+  /* Answering slot i REPLACES it — the whole point is that this is a choice,
+     not an accumulation. Re-answering Q1 also drops Q2 when they collide, so
+     the buyer can never end up with the same axis in both slots by accident. */
+  const pick = (slot: number, key: string) => {
+    const picks = [...q.picks];
+    picks[slot] = key;
+    setQ({ picks: picks.filter(Boolean).filter((k, i, a) => a.indexOf(k) === i) });
+    track("quiz_answer", { q: "choice" + (slot + 1), value: key });
   };
   const toggleHw = (k: string) => {
     const hw = q.hw.includes(k) ? q.hw.filter((x) => x !== k) : [...q.hw, k];
@@ -90,76 +103,46 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
     });
   };
 
+  // Q2 never re-offers what Q1 already won: "camera matters most" followed by
+  // "camera" again is not a second piece of information.
+  const q2Keys = Q2_KEYS.filter((k) => k !== q.picks[0]);
+
   return (
     <div style={st("margin-top:26px;")}>
       <style>{`@keyframes kqf{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
 @keyframes kqb{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}`}</style>
 
-      {/* quiz progress: growing dots + counter, hidden on the summary */}
       {cur < SUMMARY && (
         <div style={st("display:flex; align-items:center; gap:7px;")}>
-          {steps.map((_, i) => (
+          {STEPS.map((_, i) => (
             <span key={i} style={st(`width:${i === cur ? 22 : 8}px; height:8px; border-radius:var(--r); transition:all .3s ease; background:${i < cur ? "var(--lnk)" : i === cur ? "var(--teal)" : "rgba(var(--rgb-ink),.12)"};`)} />
           ))}
-          <span style={st("margin-left:6px; font-size:13px; font-weight:700; color:var(--mut2);")}>{bnNum(String(cur + 1))} / {bnNum(String(steps.length))}</span>
         </div>
       )}
 
-      {/* the active question — re-mounts per sub-step for the slide entrance */}
       <div key={cur} style={{ ...st("margin-top:18px;"), animation: `${dir === 1 ? "kqf" : "kqb"} .38s cubic-bezier(.2,.7,.2,1) both` }}>
-        {stepName === "who" && (
+        {stepName === "q1" && (
           <div>
-            <div style={QTITLE}>{t("qq_who")}</div>
-            <p style={WHY}>{t("qz_why_who")}</p>
+            <div style={QTITLE}>{t("qc_q1")}</div>
+            <p style={WHY}>{t("qc_q1_why")}</p>
             <div style={st("display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;")}>
-              {WHO.map(([k, icon, lk]) => (
-                <button key={k} onClick={() => { track("quiz_answer", { q: "who", value: k }); setQ({ who: k }); }} className="k-press" style={chip(q.who === k, true)}>
-                  <span>{icon}</span>{t(lk)}
+              {Q1_KEYS.map((k) => (
+                <button key={k} onClick={() => pick(0, k)} className="k-press" style={chip(q.picks[0] === k, true)}>
+                  <span>{ICON[k]}</span>{t("qc_" + k)}
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {stepName === "me" && (
+        {stepName === "q2" && (
           <div>
-            <div style={QTITLE}>{t("qq_me")}</div>
-            <p style={WHY}>{t("qz_why_me")}</p>
+            <div style={QTITLE}>{t("qc_q2")}</div>
+            <p style={WHY}>{t("qc_q2_why")}</p>
             <div style={st("display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;")}>
-              {ME.map(([k, icon, lk]) => (
-                <button key={k} onClick={() => { track("quiz_answer", { q: "me", value: k }); setQ({ me: k }); }} className="k-press" style={chip(q.me === k, true)}>
-                  <span>{icon}</span>{t(lk)}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {stepName === "day" && (
-          <div>
-            <div style={QTITLE}>{t("qq_day")}</div>
-            <p style={WHY}>{t("qz_why_day")}</p>
-            <div style={st("display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;")}>
-              {DAY.map(([k, icon, lk]) => {
-                const sel = q.day.includes(k);
-                return (
-                  <button key={k} onClick={() => setQ({ day: sel ? q.day.filter((x) => x !== k) : [...q.day, k] })} className="k-press" style={chip(sel)}>
-                    <Tick on={sel} /><span>{icon}</span>{t(lk)}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {stepName === "out" && (
-          <div>
-            <div style={QTITLE}>{t("qq_out")}</div>
-            <p style={WHY}>{t("qz_why_out")}</p>
-            <div style={st("display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;")}>
-              {([[true, "☀️", "qq_out_yes"], [false, "🏠", "qq_out_no"]] as const).map(([v, icon, lk]) => (
-                <button key={String(v)} onClick={() => { track("quiz_answer", { q: "out", value: v }); setQ({ out: v }); }} className="k-press" style={chip(q.out === v, true)}>
-                  <span>{icon}</span>{t(lk)}
+              {q2Keys.map((k) => (
+                <button key={k} onClick={() => pick(1, k)} className="k-press" style={chip(q.picks[1] === k)}>
+                  <span>{ICON[k]}</span>{t("qc_" + k)}
                 </button>
               ))}
             </div>
@@ -169,7 +152,7 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
         {stepName === "hw" && (
           <div>
             <div style={QTITLE}>{t("qq_hw")}</div>
-            <p style={WHY}>{t("exp_hw_simple")}</p>
+            <p style={WHY}>{t("qc_hw_why")}</p>
             <div style={st("display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;")}>
               {HW.map(([k, icon, lk]) => (
                 <button key={k} onClick={() => toggleHw(k)} className="k-press" style={chip(q.hw.includes(k))}>
@@ -191,14 +174,14 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
             </div>
             <p style={st("margin:8px 0 0; font-size:14px; color:var(--mut2); line-height:1.55;")}>{t("qz_sum_s")}</p>
 
-            {form.priorities.length ? (
+            {q.picks.length ? (
               <div style={st("display:flex; flex-direction:column; gap:10px; margin-top:16px;")}>
-                {form.priorities.map((ax, i) => (
-                  <div key={ax} style={st("display:flex; gap:13px; align-items:flex-start; padding:13px 15px; border-radius:var(--r); background:var(--card);")}>
-                    <span style={st("display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:var(--r); flex-shrink:0; background:var(--teal); color:var(--onp); font-size:13px; font-weight:800;")}>{bnNum(String(i + 1))}</span>
+                {q.picks.filter((k) => CHOICES[k]).map((k, i) => (
+                  <div key={k} style={st("display:flex; gap:13px; align-items:flex-start; padding:13px 15px; border-radius:var(--r); background:var(--card);")}>
+                    <span style={st("display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:var(--r); flex-shrink:0; background:var(--teal); font-size:14px;")}>{ICON[k]}</span>
                     <div style={st("min-width:0;")}>
-                      <div style={st("font-size:11.5px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--lnk);")}>{t("qz_rank_" + Math.min(i + 1, 3))}</div>
-                      <p style={st("margin:3px 0 0; font-size:15px; color:var(--ink2); line-height:1.5; font-family:var(--f-bn); text-wrap:pretty;")}>{t("pw_" + ax)}</p>
+                      <div style={st("font-size:11.5px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--lnk);")}>{t(i === 0 ? "qc_r_first" : "qc_r_second")}</div>
+                      <p style={st("margin:3px 0 0; font-size:15px; color:var(--ink2); line-height:1.5; font-family:var(--f-bn); text-wrap:pretty;")}>{t("qc_" + k)}</p>
                     </div>
                   </div>
                 ))}
@@ -209,18 +192,13 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
 
             <p style={st("margin:12px 0 0; font-size:13px; color:var(--mut2); line-height:1.55;")}>{t("qz_sum_note")}</p>
 
-            {/* every answer stays editable from here */}
             <div style={st("display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;")}>
-              <EditChip onClick={() => go(0)} label={t("qz_r_who")} value={t("qq_who_" + q.who)} />
-              {q.who === "me" && (
-                <EditChip onClick={() => go(1)} label={t("qz_r_me")} value={q.me ? t("qq_me_" + q.me) : "—"} />
-              )}
-              <EditChip onClick={() => go(steps.indexOf("day"))} label={t("qz_r_day")} value={q.day.length ? q.day.map((d) => DAY_ICON[d]).join(" ") : "—"} />
-              <EditChip onClick={() => go(steps.indexOf("out"))} label={t("qz_r_out")} value={q.out === null ? "—" : t(q.out ? "qq_out_yes" : "qq_out_no")} />
-              <EditChip onClick={() => go(steps.indexOf("hw"))} label={t("qz_r_hw")} value={q.hw.length ? q.hw.map((h) => HW_ICON[h]).join(" ") : "—"} />
+              <EditChip onClick={() => go(0)} label={t("qc_r_first")} value={q.picks[0] ? t("qc_" + q.picks[0]) : t("qc_none")} />
+              <EditChip onClick={() => go(1)} label={t("qc_r_second")} value={q.picks[1] ? t("qc_" + q.picks[1]) : t("qc_none")} />
+              <EditChip onClick={() => go(2)} label={t("qc_r_hw")} value={q.hw.length ? q.hw.map((h) => HW_ICON[h]).join(" ") : t("qc_none")} />
             </div>
 
-            <button onClick={() => { track("quiz_complete", { who: q.who, me: q.who === "me" ? (q.me || "skipped") : "na", day: q.day.length ? [...q.day].sort().join(",") : "none", out: q.out === null ? "skipped" : q.out, hw: q.hw.length ? [...q.hw].sort().join(",") : "none", priorities: form.priorities.join(",") || "balanced" }); onNext(); }} className="k-press k-glow" style={PRIMARY}>
+            <button onClick={() => { track("quiz_complete", { first: q.picks[0] || "none", second: q.picks[1] || "none", hw: q.hw.length ? [...q.hw].sort().join(",") : "none", priorities: form.priorities.join(",") || "balanced" }); onNext(); }} className="k-press k-glow" style={PRIMARY}>
               {t("qz_done")}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="var(--card)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
@@ -228,10 +206,8 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
         )}
       </div>
 
-      {/* ONE control row under every question: back, skip, next. The skip was an
-          underlined text link that read as fine print, and next only existed on
-          the two multi-select questions — so the single-choice ones moved by
-          themselves and the buyer never got to decide when (owner 2026-07-26). */}
+      {/* ONE control row under every question: back, skip, next. Nothing
+          auto-advances — the buyer decides when to move (owner 2026-07-26). */}
       {cur < SUMMARY && (
         <div style={st("display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:26px;")}>
           <button onClick={() => (cur === 0 ? onBack() : go(cur - 1))} className="k-press" style={SECONDARY}>
@@ -239,11 +215,10 @@ export function QuizStep({ form, patch, onNext, onBack }: Props) {
             {t("qz_back")}
           </button>
           <div style={st("display:flex; align-items:center; gap:10px; flex-wrap:wrap;")}>
-            <button onClick={() => { track("quiz_skip", { at: steps[cur] }); go(SUMMARY); }} className="k-press" style={SECONDARY}>
-              {t("qz_skip")}
+            <button onClick={() => { track("quiz_skip", { at: STEPS[cur] }); go(SUMMARY); }} className="k-press" style={SECONDARY}>
+              {t(cur === 1 ? "qc_skip_q2" : "qz_skip")}
             </button>
-            <button onClick={() => { track("quiz_answer", { q: steps[cur], value: "next" }); go(cur + 1); }}
-              className="k-press k-glow" style={{ ...PRIMARY, marginTop: 0 }}>
+            <button onClick={() => go(cur + 1)} className="k-press k-glow" style={{ ...PRIMARY, marginTop: 0 }}>
               {t("qz_next")}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12h14M12 6l6 6-6 6" stroke="var(--card)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>

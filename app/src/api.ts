@@ -311,6 +311,12 @@ export interface RecParams {
   priorities?: string;
   /** free-text buyer situation from the Simple quiz — embedded as the intent */
   use_case?: string;
+  /** The forced-choice quiz's own weight vector, "axis:weight,axis:weight".
+      Sent INSTEAD of `priorities`: an ordered list of names makes the server
+      invent magnitudes back from rank order, which is what flattened the
+      quiz's signal before. Unknown axes are dropped and values clamped
+      server-side. */
+  weights?: string;
   current_phone?: string;
   official_only?: boolean;
   include_cn?: boolean;

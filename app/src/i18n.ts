@@ -453,6 +453,37 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qq_hw_ir: { en: "TV/AC remote (IR)", bn: "টিভি/এসি রিমোট (IR)" },
   qq_hw_fm: { en: "FM radio", bn: "এফএম রেডিও" },
 
+  // ---- forced-choice quiz (spec section 7). The old quiz asked what you DO;
+  // this asks what you would GIVE UP, because a recommendation is a choice
+  // under a budget. Two questions, single answer each, ordered = weighted. ----
+  qc_q1: { en: "Same money. What must this phone do best?",
+           bn: "একই টাকায় — ফোনটা কোন কাজে সবচেয়ে ভালো হতে হবে?" },
+  qc_q1_why: {
+    en: "One phone cannot be best at everything at this price — something always gives. Whatever you pick here, we hunt for first.",
+    bn: "এই দামে একটা ফোন সব দিকেই সেরা হয় না — কিছু না কিছু ছাড়তেই হয়। এখানে যা বাছবেন, আমরা সেটাই আগে খুঁজব।"
+  },
+  qc_q2: { en: "And after that, what would you hate to give up?",
+           bn: "এরপর কোনটা ছাড়তে সবচেয়ে খারাপ লাগবে?" },
+  qc_q2_why: {
+    en: "This one counts for less than your first answer — that is on purpose. The first choice is the real decision.",
+    bn: "এটা প্রথম উত্তরের চেয়ে কম গুরুত্ব পাবে — এটা ইচ্ছে করেই। আসল সিদ্ধান্ত প্রথমটাই।"
+  },
+  qc_camera: { en: "Photos that actually look good", bn: "ছবি — যেন সত্যিই ভালো ওঠে" },
+  qc_battery: { en: "Battery that lasts into day two", bn: "ব্যাটারি — দ্বিতীয় দিনেও যেন চার্জ থাকে" },
+  qc_speed: { en: "Speed that never stutters", bn: "স্পিড — কখনো যেন আটকে না যায়" },
+  qc_simple: { en: "Simple to use, nothing confusing", bn: "সহজ — বড় স্পষ্ট লেখা, ঝামেলা নেই" },
+  qc_gaming: { en: "Heavy games running smooth", bn: "গেমিং — হেভি গেম স্মুথ চলবে" },
+  qc_video: { en: "Video and reels that look sharp", bn: "ভিডিও-রিল — যেন ঝকঝকে হয়" },
+  qc_hw_why: {
+    en: "These are dealbreakers, not preferences — tick one and every phone without it is dropped. Pick as many as you truly need.",
+    bn: "এগুলো শখ নয়, শর্ত — টিক দিলে যেসব ফোনে নেই সব বাদ পড়বে। সত্যিই যা যা লাগবে, তত গুলোই বাছুন।"
+  },
+  qc_r_first: { en: "Most important", bn: "সবচেয়ে জরুরি" },
+  qc_r_second: { en: "Then", bn: "এরপর" },
+  qc_r_hw: { en: "Must have", bn: "থাকতেই হবে" },
+  qc_none: { en: "—", bn: "—" },
+  qc_skip_q2: { en: "Only the first matters to me", bn: "আমার কাছে প্রথমটাই আসল" },
+
   // ---- one-by-one quiz redesign (feedback #4): dynamic intent, no buckets ----
   qz_why_who: {
     en: "Why we ask — an elder needs simple and clear; a student needs value that lasts. The answer changes what we hunt for.",
