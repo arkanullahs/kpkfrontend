@@ -924,6 +924,19 @@ padding:10px 15px 11px;border-radius:var(--r)}
 .hdots{display:none}
 .hbtn,.bandcard,.mcard,.mcchips a{transition:none}
 }
+/* ---- brand chips. Same reason as the device card below: they render on the
+   homepage and the /best hub now, and those load this sheet alone. Moved out of
+   device_pages' _CSS_EXTRA 2026-08-07 when the brand hubs became the crawl path
+   into the catalogue -- /phone/page/2..14 are noindex, so every device past the
+   first hub page hung off links Google stops following. ---- */
+.bnav{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 0}
+.bnav a{display:inline-flex;align-items:baseline;gap:6px;font-size:13px;
+  font-weight:700;color:var(--tx);background:var(--card);
+  border:1px solid var(--rule);border-radius:var(--r);padding:7px 13px;
+  transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s,color .16s}
+.bnav a:hover{text-decoration:none;color:var(--lnk);
+  box-shadow:inset 0 0 0 1px var(--teal)}
+.bnav a i{font-style:normal;font-size:11px;font-weight:700;color:var(--mut)}
 /* ---- the device card: one design for the homepage teaser, the /phone
    directory and every /brand hub. It lives HERE, not in device_pages'
    _CSS_EXTRA, because the homepage loads this sheet alone. ---- */
