@@ -453,6 +453,74 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qq_hw_ir: { en: "TV/AC remote (IR)", bn: "টিভি/এসি রিমোট (IR)" },
   qq_hw_fm: { en: "FM radio", bn: "এফএম রেডিও" },
 
+  // ---- filter groups (spec 2026-08-07 section 4.2). Labels name the OUTCOME,
+  // not the feature: a buyer knows what "works as a TV remote" means and has
+  // never heard of an IR blaster. Every help line is ALWAYS visible, never
+  // behind a tap, and says what the control costs as well as what it does.
+  // owner: verify every bn string in this block.
+  fg_warranty: { en: "Official warranty only", bn: "শুধু অফিশিয়াল ওয়ারেন্টি" },
+  fg_warranty_help: {
+    en: "Only phones sold through the brand's Bangladesh distributor, so the brand fixes it if it breaks. Costs more, and most shops here sell imported stock instead.",
+    bn: "শুধু সেসব ফোন যেগুলো ব্র্যান্ডের বাংলাদেশ ডিস্ট্রিবিউটরের মাধ্যমে বিক্রি হয় — নষ্ট হলে ব্র্যান্ড নিজে ঠিক করে দেয়। দাম একটু বেশি, আর দেশের বেশিরভাগ দোকান ইমপোর্ট করা ফোন বিক্রি করে।" },
+  fg_warranty_on: { en: "official only", bn: "শুধু অফিশিয়াল" },
+
+  fg_hardware: { en: "Things it must have", bn: "যা থাকতেই হবে" },
+  fg_hardware_help: {
+    en: "Pick only what you truly need. Each one drops every phone without it, and these parts are getting rare on new phones.",
+    bn: "সত্যিই যা দরকার শুধু সেটাই বাছুন। একেকটা বাছলে যেসব ফোনে ওটা নেই সব বাদ পড়বে, আর নতুন ফোনে এগুলো এখন কমই থাকে।" },
+  fg_hw_jack: { en: "Headphone jack", bn: "হেডফোন জ্যাক" },
+  fg_hw_ir: { en: "Works as a TV / AC remote", bn: "টিভি বা এসির রিমোট হিসেবে চলে" },
+  fg_hw_fm: { en: "FM radio without internet", bn: "ইন্টারনেট ছাড়া এফএম রেডিও" },
+
+  fg_avoid: { en: "Brands to avoid", bn: "যেসব ব্র্যান্ড বাদ" },
+  fg_avoid_help: {
+    en: "Hides brands you do not want to see at all. Leave this alone unless you have a reason.",
+    bn: "যেসব ব্র্যান্ড একদমই দেখতে চান না সেগুলো লুকিয়ে দেয়। কারণ না থাকলে এটা ছুঁয়ে দেখার দরকার নেই।" },
+  fg_avoid_cn: { en: "Chinese brands", bn: "চীনা ব্র্যান্ড" },
+
+  fg_type: { en: "Kind of phone", bn: "কেমন ফোন" },
+  fg_type_help: {
+    en: "iPhone or Android, and whether you want plain software or one packed with extra features.",
+    bn: "আইফোন না অ্যান্ড্রয়েড, আর সফটওয়্যার সাদামাটা চান নাকি অনেক ফিচারে ভরা।" },
+  fg_platform_android: { en: "Android", bn: "অ্যান্ড্রয়েড" },
+  fg_platform_ios: { en: "iPhone", bn: "আইফোন" },
+  fg_os_clean: { en: "plain software", bn: "সাদামাটা সফটওয়্যার" },
+  fg_os_feature: { en: "feature-packed", bn: "ফিচারে ভরা" },
+
+  fg_power: { en: "Speed and memory floor", bn: "স্পিড আর মেমোরির সর্বনিম্ন" },
+  fg_power_help: {
+    en: "Sets a minimum so slower phones drop out. Higher is not automatically better value — a big number costs money you could have spent on the camera or the battery.",
+    bn: "একটা সর্বনিম্ন ঠিক করে দেয়, যাতে ধীর ফোনগুলো বাদ পড়ে। বেশি মানেই ভালো দাম নয় — বড় সংখ্যার পেছনে যে টাকা যায়, সেটা ক্যামেরা বা ব্যাটারিতেও দেওয়া যেত।" },
+  fg_soc_snapdragon: { en: "Snapdragon", bn: "স্ন্যাপড্রাগন" },
+  fg_soc_mediatek: { en: "MediaTek", bn: "মিডিয়াটেক" },
+
+  fg_only: { en: "Only these brands", bn: "শুধু এই ব্র্যান্ডগুলো" },
+  fg_only_help: {
+    en: "Shows nothing except the brands you pick. Strict — one or two can leave very few phones.",
+    bn: "আপনি যেগুলো বাছবেন তার বাইরে কিছুই দেখাবে না। কড়া নিয়ম — এক-দুইটা বাছলে খুব কম ফোনই থাকতে পারে।" },
+
+  fg_market: { en: "Which country it was made for", bn: "কোন দেশের জন্য বানানো" },
+  fg_market_help: {
+    en: "Imported phones are built for one market. An India unit takes two SIMs; a China unit may have no Play Store. Leave this alone unless you know you need it.",
+    bn: "ইমপোর্ট করা ফোন এক-একটা দেশের জন্য বানানো। ইন্ডিয়ার ইউনিটে দুইটা সিম চলে; চীনের ইউনিটে প্লে স্টোর না-ও থাকতে পারে। দরকার আছে নিশ্চিত না হলে এটা ছোঁবেন না।" },
+  fg_rom_on: { en: "custom ROM support", bn: "কাস্টম রম চলে" },
+  fg_strict_on: { en: "verified only", bn: "শুধু যাচাই করা" },
+
+  fg_any: { en: "any", bn: "যেকোনো" },
+  fg_tier2: { en: "More controls", bn: "আরও অপশন" },
+  fg_of: { en: "of", bn: "টির মধ্যে" },
+  fg_zero: { en: "nothing matches", bn: "কিছুই মেলে না" },
+  fg_clear: { en: "Clear", bn: "মুছে দিন" },
+
+  // ---- the narrow-down nudge. owner: verify every bn string.
+  ns_title: { en: "Want to narrow it down first?", bn: "আগে আরেকটু কমিয়ে নেবেন?" },
+  ns_body: {
+    en: "{n} phones fit your budget right now. One or two filters make the pick sharper — or skip this, it is optional.",
+    bn: "এখন আপনার বাজেটে {n}টি ফোন মিলছে। দু-একটা শর্ত দিলে বাছাই আরও নিখুঁত হয় — না চাইলে বাদ দিন, এটা বাধ্যতামূলক নয়।" },
+  ns_no: { en: "No, show them now", bn: "না, এখনই দেখান" },
+  ns_yes: { en: "Narrow it down", bn: "কমিয়ে নিই" },
+  ns_dismiss: { en: "Close", bn: "বন্ধ করুন" },
+
   // ---- forced-choice quiz (spec section 7). The old quiz asked what you DO;
   // this asks what you would GIVE UP, because a recommendation is a choice
   // under a budget. Two questions, single answer each, ordered = weighted. ----
@@ -602,6 +670,17 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   feedback_thanks: { en: "Thanks! That helps us improve.", bn: "ধন্যবাদ! এটা আমাদের উন্নতিতে সাহায্য করে।" },
   feedback_skip: { en: "Skip", bn: "বাদ দিন" },
 };
+
+/* Every key in the table, for checks. A key the UI asks for but the table
+   lacks renders as the raw key name, which ships to a buyer as gibberish and
+   is invisible in review — so it is worth asserting on rather than eyeballing. */
+export const STRING_KEYS = Object.keys(STRINGS);
+
+/** True only when BOTH languages carry real text for this key. */
+export function hasBothLangs(key: string): boolean {
+  const e = STRINGS[key];
+  return !!e && !!e.en.trim() && !!e.bn.trim();
+}
 
 const BN_DIGITS = "০১২৩৪৫৬৭৮৯";
 

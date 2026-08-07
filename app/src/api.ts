@@ -336,6 +336,9 @@ export interface RecParams {
   regions?: string;
   /** only phones with an official LineageOS build */
   require_custom_rom?: boolean;
+  /** spec-level RAM/storage floor in GB; ANY variant satisfying it passes */
+  min_ram?: number;
+  min_storage?: number;
   os_style?: string;
   platform?: string;
   channel?: string;

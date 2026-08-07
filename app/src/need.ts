@@ -30,6 +30,10 @@ export interface Form {
   hwStrict: boolean;             // unverified hardware also fails must-have filters
   regions: string[];             // accepted import markets (Rio-labeled offers only)
   requireRom: boolean;           // only phones with an official LineageOS build
+  // spec-level floors in GB, 0 = no floor. engine.Params has accepted these
+  // since the variant work; they have simply never had a control.
+  minRam: number;
+  minStorage: number;
   // Simple-mode quiz answers (feedback #4) — dynamically weighted, no buckets.
   // `me` is the branch question asked only when the buyer answers "for myself".
   // picks[0] is the buyer's biggest trade-off, picks[1] the runner-up.
@@ -46,6 +50,7 @@ export const DEFAULT_FORM: Form = {
   excludeBrands: [], traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
   socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
+  minRam: 0, minStorage: 0,
   q: { picks: [], hw: [] },
   useCase: "", priorities: [], weights: {},
 };
@@ -138,6 +143,8 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.includeBrands.length) p.brand = f.includeBrands.join(",");
   if (f.hwStrict) p.hw_strict = true;
   if (f.regions.length) p.regions = f.regions.join(",");
+  if (f.minRam > 0) p.min_ram = f.minRam;
+  if (f.minStorage > 0) p.min_storage = f.minStorage;
   if (f.requireRom) p.require_custom_rom = true;
   return p;
 }
