@@ -1,4 +1,4 @@
-# bhalophone
+# Bhalo Phone
 
 > AI-powered phone recommendations for Bangladesh. Best-phone
 > guides for every budget, ranked from live Bangladesh shop data:
