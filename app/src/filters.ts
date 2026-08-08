@@ -1,4 +1,4 @@
-import { CHOICES, type Form } from "./need";
+import { CHOICES, deriveIntent, type Form } from "./need";
 import { t } from "./i18n";
 import { taka } from "./theme";
 
@@ -114,6 +114,25 @@ export function toggleBrand(f: Form, brand: string, side: "only" | "avoid"): Par
   return side === "only"
     ? { includeBrands: flip(f.includeBrands), excludeBrands: drop(f.excludeBrands) }
     : { excludeBrands: flip(f.excludeBrands), includeBrands: drop(f.includeBrands) };
+}
+
+const HW_FLAG = { jack: "requireJack", ir: "requireIr", fm: "requireFm" } as const;
+export type HwKey = keyof typeof HW_FLAG;
+
+/** Toggle a hardware dealbreaker.
+
+    It lives in TWO places at once — `q.hw` builds the sentence the ranker
+    reads, `requireJack` and friends are the hard filter — and the hardware
+    group's `patchOff` already clears both. Setting has to write both for the
+    same reason: a form claiming the buyer wants a jack we do not filter for
+    (or the reverse) describes a buyer who does not exist. */
+export function toggleHardware(f: Form, key: HwKey): Partial<Form> {
+  const hw = f.q.hw.includes(key) ? f.q.hw.filter((x) => x !== key) : [...f.q.hw, key];
+  const q = { ...f.q, hw };
+  return {
+    q, ...deriveIntent(q),
+    requireJack: hw.includes("jack"), requireIr: hw.includes("ir"), requireFm: hw.includes("fm"),
+  };
 }
 
 /** How many groups the buyer has actually set. Drives the nudge trigger and the

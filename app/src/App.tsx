@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { api, type Archetype, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
+import { api, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
 import { st } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
+import { anyFilterSet, buildBrief } from "./filters";
 import { AskScreen } from "./components/AskScreen";
+import { NarrowSheet } from "./components/NarrowSheet";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { DetailScreen } from "./components/DetailScreen";
 import { MethodScreen } from "./components/MethodScreen";
@@ -13,15 +15,9 @@ import { PriceAlert } from "./components/PriceAlert";
 import { Dock } from "./components/Dock";
 import { BootNotice, Breadcrumbs } from "./components/Chrome";
 import { track } from "./track";
-import { DEFAULT_FORM, deriveIntent, toParams, type Form } from "./need";
+import { DEFAULT_FORM, toParams, type Form } from "./need";
 
 export type Screen = "ask" | "results" | "detail" | "method";
-
-/* Simple/Advanced mode (feedback #2): Simple keeps the ask flow to the
-   essentials a first-time buyer can answer; Advanced unlocks every filter.
-   The choice is per-visit on purpose — once picked, the other mode's controls
-   never appear (no pressure to "upgrade"); reloading re-offers the gate. */
-export type Mode = "simple" | "advanced";
 
 export type { Form, QuizIntent } from "./need";
 export { DEFAULT_FORM, CHOICE_LADDER, CHOICES, deriveIntent, toParams } from "./need";
@@ -31,32 +27,8 @@ export default function App() {
   const [lang, setLangState] = useState<Lang>(getLang());
   const toggleLang = () => { const n = lang === "en" ? "bn" : "en"; setLang(n); setLangState(n); };
   const [screen, setScreen] = useState<Screen>("ask");
-  const [askStep, setAskStep] = useState(0); // wizard step on the ask screen
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
-  // switching to Simple resets the advanced-only fields so no invisible
-  // filter keeps shaping results after the controls disappear
-  const [mode, setMode] = useState<Mode>("simple");
-  // every visit: ask Simple-or-Advanced before the wizard (feedback #2/#4).
-  // Not persisted — a reload is the way to change modes (v2 decision #1).
-  const [modeChosen, setModeChosen] = useState<boolean>(false);
-  const changeMode = useCallback((m: Mode) => {
-    track("mode_gate", { mode: m });
-    setMode(m);
-    setModeChosen(true);
-    setForm((f) => m === "simple"
-      ? {
-        ...f, excludeBrands: [], osStyle: "any",
-        requireJack: f.q.hw.includes("jack"), requireIr: f.q.hw.includes("ir"), requireFm: f.q.hw.includes("fm"),
-        socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
-        archetypes: [],               // quiz intent replaces the purpose cards
-        ...deriveIntent(f.q),
-      }
-      // Advanced ranks by the purpose cards — drop the quiz intent so a stale
-      // use_case cannot silently override the picked archetypes
-      : { ...f, useCase: "", priorities: [], weights: {} });
-  }, []);
   const [meta, setMeta] = useState<Meta | null>(null);
-  const [archetypes, setArchetypes] = useState<Archetype[]>([]);
 
   const [result, setResult] = useState<RecommendResp | null>(null);
   const [recLoading, setRecLoading] = useState(false);
@@ -85,7 +57,6 @@ export default function App() {
         .catch(() => { if (!stop) window.setTimeout(load, 2500); });
     };
     load();
-    api.archetypes().then(setArchetypes).catch(() => { });
     return () => { stop = true; window.clearInterval(tick); };
   }, []);
   // only after a beat: a warm server answers in ~200ms and must never flash it
@@ -97,16 +68,15 @@ export default function App() {
      history entry; every back control calls history.back(), so the button and
      the on-screen "Back" do the same thing. A popstate with no state of ours
      is a real exit — we let it through. */
-  const pushNav = useCallback((s: Screen, step = 0) => {
-    window.history.pushState({ kpk: true, screen: s, askStep: step }, "");
+  const pushNav = useCallback((s: Screen) => {
+    window.history.pushState({ kpk: true, screen: s }, "");
   }, []);
   useEffect(() => {
-    window.history.replaceState({ kpk: true, screen: "ask", askStep: 0 }, "");
+    window.history.replaceState({ kpk: true, screen: "ask" }, "");
     const onPop = (e: PopStateEvent) => {
-      const h = e.state as { kpk?: boolean; screen?: Screen; askStep?: number } | null;
+      const h = e.state as { kpk?: boolean; screen?: Screen } | null;
       if (!h?.kpk) return;
       setScreen(h.screen || "ask");
-      setAskStep(h.askStep ?? 0);
       window.scrollTo({ top: 0 });
     };
     window.addEventListener("popstate", onPop);
@@ -115,19 +85,6 @@ export default function App() {
   const goBack = useCallback(() => window.history.back(), []);
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
-
-  // 3-step ask wizard (budget → purpose → fine-tune). Stepping the query makes
-  // giving the answer feel as considered as the answer we work for, so the RAG
-  // wait reads as care rather than a fast-in / slow-out mismatch. (The old
-  // official/unofficial step is gone — those flags proved too unreliable to ask
-  // buyers to choose on.)
-  const ASK_STEPS = 3;
-  const askNext = useCallback(() => setAskStep((s) => {
-    const n = Math.min(s + 1, ASK_STEPS - 1);
-    if (n !== s) window.history.pushState({ kpk: true, screen: "ask", askStep: n }, "");
-    return n;
-  }), []);
-  const askBack = useCallback(() => window.history.back(), []);
 
   // live candidate count for the "See results" badge (debounced). Hits the
   // lightweight /count endpoint — structured pre-filter only, no embed/LLM —
@@ -161,7 +118,7 @@ export default function App() {
   const runRecommend = useCallback(async () => {
     const requestId = crypto.randomUUID();
     requestIdRef.current = requestId;
-    track("see_results", { mode, budget: form.budget, quiz: !!(form.useCase || form.priorities.length) });
+    track("see_results", { budget: form.budget, quiz: !!(form.useCase || form.priorities.length) });
     const params: RecParams = { ...toParams(form, 5), request_id: requestId };
     lastRunKey.current = JSON.stringify(toParams(form, 5));
     setScreen("results");
@@ -182,7 +139,31 @@ export default function App() {
       setRecError(e?.message || "Could not load recommendations");
       setRecLoading(false);       // errors skip the finish beat
     }
-  }, [form, mode]);
+  }, [form]);
+
+  /* The nudge. Fires ONCE, and only when a buyer commits without having set a
+     single filter — the case where one tap would sharpen the pick a lot and
+     they do not know the controls exist. `sheetSeen` flips before the sheet
+     opens, so a buyer who dismisses it and immediately commits again goes
+     straight through. */
+  const [sheetSeen, setSheetSeen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const onSeeResults = useCallback(() => {
+    if (!sheetSeen && !anyFilterSet(form)) {
+      setSheetSeen(true);
+      setSheetOpen(true);
+      track("narrow_nudge", { shown: true });
+      return;
+    }
+    runRecommend();
+  }, [form, sheetSeen, runRecommend]);
+
+  // the affirmative button does NOT rank — it closes the sheet and scrolls to
+  // the filters. Only the brief bar spends a ranking call.
+  const editJump = useCallback((id: string) => {
+    setSheetOpen(false);
+    document.getElementById("brief-" + id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
   // RagProgress finished its completion beat -> reveal the results
   const onLoaderDone = useCallback(() => { setRecLoading(false); setRecReady(false); }, []);
@@ -209,7 +190,7 @@ export default function App() {
     }
   }, [result]);
 
-  const goAsk = () => { setScreen("ask"); setAskStep(0); pushNav("ask", 0); window.scrollTo({ top: 0 }); };
+  const goAsk = () => { setScreen("ask"); pushNav("ask"); window.scrollTo({ top: 0 }); };
   // "back to results" from a detail/method screen IS a back navigation — going
   // through history keeps the browser button and this button in step
   const goResults = () => goBack();
@@ -312,10 +293,8 @@ export default function App() {
         )}
         {screen === "ask" && (
           <AskScreen
-            form={form} patch={patch} archetypes={archetypes} meta={meta}
-            mode={mode} onMode={changeMode} modeChosen={modeChosen}
-            metaStock={metaStock} onSubmit={runRecommend} matchCount={matchCount}
-            step={askStep} totalSteps={ASK_STEPS} onNext={askNext} onBack={askBack}
+            form={form} patch={patch} meta={meta}
+            metaStock={metaStock} matchCount={matchCount}
           />
         )}
         {screen === "results" && (
@@ -338,12 +317,15 @@ export default function App() {
 
       <Dock
         screen={screen} matchCount={matchCount} loading={recLoading}
-        askStep={askStep} askLast={askStep === ASK_STEPS - 1}
-        quizActive={screen === "ask" && modeChosen && mode === "simple" && askStep === 1}
-        detailReady={!!result}
-        onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
+        brief={buildBrief(form)} detailReady={!!result}
+        onSeeResults={onSeeResults} onEditJump={editJump} onHome={goAsk}
         onBackResults={goResults}
       />
+      {sheetOpen && (
+        <NarrowSheet matchCount={matchCount}
+          onDismiss={() => setSheetOpen(false)}
+          onNarrow={() => editJump("filters")} />
+      )}
       {showNotice && screen === "results" && <ResultsNotice onClose={dismissNotice} />}
       {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
       {booting && <BootNotice seconds={bootSecs} />}
@@ -382,7 +364,7 @@ export default function App() {
         {/* the 96px well under the copyright was dock clearance, and it read as
             a dead black slab on every screen the dock is hidden on (owner
             2026-07-26). Clearance only when the dock is actually there. */}
-        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "ask" && askStep === 0 ? 26 : 86}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>
+        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "method" ? 26 : 116}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>
           © {new Date().getFullYear()} bhalophone. All rights reserved.
           {/* the trademark notice, quieter than the copyright above it and on
               its own line so it reads as a disclaimer rather than a byline.

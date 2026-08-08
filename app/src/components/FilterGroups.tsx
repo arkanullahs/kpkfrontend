@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { st } from "../theme";
 import { t } from "../i18n";
-import { GROUPS, toggleBrand, type FilterGroup } from "../filters";
+import { GROUPS, toggleBrand, toggleHardware, type FilterGroup } from "../filters";
 import { useCounts } from "../useCounts";
 import type { Form } from "../need";
 
@@ -148,11 +148,11 @@ function GroupBody({ g, form, patch, matchCount }: {
     return (
       <div className="k-stagger">
         <Toggle label={t("fg_hw_jack")} on={form.requireJack} count={counts.jack ?? null} total={matchCount}
-          onClick={() => patch({ requireJack: !form.requireJack })} />
+          onClick={() => patch(toggleHardware(form, "jack"))} />
         <Toggle label={t("fg_hw_ir")} on={form.requireIr} count={counts.ir ?? null} total={matchCount}
-          onClick={() => patch({ requireIr: !form.requireIr })} />
+          onClick={() => patch(toggleHardware(form, "ir"))} />
         <Toggle label={t("fg_hw_fm")} on={form.requireFm} count={counts.fm ?? null} total={matchCount}
-          onClick={() => patch({ requireFm: !form.requireFm })} />
+          onClick={() => patch(toggleHardware(form, "fm"))} />
       </div>
     );
   }

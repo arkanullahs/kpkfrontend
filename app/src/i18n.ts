@@ -453,6 +453,24 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qq_hw_ir: { en: "TV/AC remote (IR)", bn: "টিভি/এসি রিমোট (IR)" },
   qq_hw_fm: { en: "FM radio", bn: "এফএম রেডিও" },
 
+  // ---- the single ask screen (spec 2026-08-07). One title for the whole
+  // page, because there are no steps left to title separately.
+  // owner: verify every bn string in this block.
+  ask_title: { en: "Let's find your phone", bn: "চলুন আপনার ফোনটা খুঁজি" },
+  ask_sub: {
+    en: "Answer as much or as little as you like. Nothing here is required, and you can change any answer before you ask for results.",
+    bn: "যতটুকু ইচ্ছা ততটুকু উত্তর দিন। কোনোটাই বাধ্যতামূলক নয়, আর ফলাফল দেখার আগে যেকোনো উত্তর বদলাতে পারবেন।" },
+
+  // BudgetStep's own lines. These were hardcoded English, so a Bangla buyer
+  // read them in English on the very first screen.
+  q_budget_own: {
+    en: "Type the number you can actually spend. Not sure? Start from one of these and edit it.",
+    bn: "আপনি সত্যিই যত খরচ করতে পারবেন সেই সংখ্যাটা লিখুন। নিশ্চিত না হলে নিচের একটা থেকে শুরু করে বদলে নিন।" },
+  q_budget_live_1: { en: "Live prices across", bn: "বাংলাদেশের" },
+  q_budget_live_2: {
+    en: "phones in Bangladesh. We look for the best fit, not the cheapest box.",
+    bn: "ফোনের এখনকার দাম দেখা হচ্ছে। আমরা সবচেয়ে সস্তা নয়, সবচেয়ে মানানসই ফোনটা খুঁজি।" },
+
   // ---- the brief bar. An unanswered clause says so in words rather than
   // going blank, so the bar never looks complete when it is not.
   // owner: verify every bn string in this block.

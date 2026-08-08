@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GROUPS, activeGroupCount, anyFilterSet, buildBrief, toggleBrand } from "./filters";
+import { GROUPS, activeGroupCount, anyFilterSet, buildBrief, toggleBrand, toggleHardware } from "./filters";
 import { DEFAULT_FORM, type Form } from "./need";
 import { STRING_KEYS, hasBothLangs, t } from "./i18n";
 import { taka } from "./theme";
@@ -49,6 +49,31 @@ describe("clearing a group really clears it", () => {
       const after = { ...loud, ...g.patchOff(loud) };
       expect(g.summary(after), `${g.id} did not clear`).toBeNull();
     }
+  });
+
+  it("setting hardware writes BOTH places, the way clearing does", () => {
+    // the hardware question left the quiz and lives only in this group now, so
+    // this toggle is the ONLY thing keeping q.hw and the require* flags in step
+    const f = form();
+    const on = { ...f, ...toggleHardware(f, "jack") } as Form;
+    expect(on.requireJack).toBe(true);
+    expect(on.q.hw).toEqual(["jack"]);
+    expect(on.useCase).toContain("headphone jack");
+
+    const off = { ...on, ...toggleHardware(on, "jack") } as Form;
+    expect(off.requireJack).toBe(false);
+    expect(off.q.hw).toEqual([]);
+    expect(off.useCase).not.toContain("headphone jack");
+  });
+
+  it("one hardware toggle never disturbs another", () => {
+    const f = form();
+    const a = { ...f, ...toggleHardware(f, "jack") } as Form;
+    const b = { ...a, ...toggleHardware(a, "fm") } as Form;
+    expect(b.requireJack).toBe(true);
+    expect(b.requireFm).toBe(true);
+    expect(b.requireIr).toBe(false);
+    expect(b.q.hw.slice().sort()).toEqual(["fm", "jack"]);
   });
 
   it("clearing hardware also clears the quiz answer behind it", () => {
