@@ -697,6 +697,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   fg_tier2: { en: "More controls", bn: "আরও অপশন" },
   fg_of: { en: "of", bn: "টির মধ্যে" },
   fg_zero: { en: "nothing matches", bn: "কিছুই মেলে না" },
+  fg_n_of_m: { en: "{n} of {m}", bn: "{m}টির মধ্যে {n}" },
   fg_clear: { en: "Clear", bn: "মুছে দিন" },
 
   // ---- the narrow-down nudge. owner: verify every bn string.

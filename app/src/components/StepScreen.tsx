@@ -67,8 +67,11 @@ export function StepScreen({ nodeId, dir, form, counts, patch, matchCount, metaS
           </button>
         ) : <span />}
 
+        {/* same template as the count pills — see CountPill: assembling this
+            as `n + "of" + m` printed the two numbers the wrong way round in
+            Bangla */}
         <span style={st("font-size:14.5px; font-weight:700; color:var(--tx); white-space:nowrap;")}>
-          {bnNum(String(at + 1))} {t("s_of")} {bnNum(String(of))}
+          {t("fg_n_of_m").replace("{n}", bnNum(String(at + 1))).replace("{m}", bnNum(String(of)))}
         </span>
 
         {/* No exit on the first three asks: budget and the leading need axis

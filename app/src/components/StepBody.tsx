@@ -361,7 +361,12 @@ function GroupLabel({ children }: { children: React.ReactNode }) {
 
    An option can also ADD. "Any brand is fine" clears a filter, so it widens
    the pool -- and rendered as a fraction that came out "45 of 5", which is
-   not a sentence. Widening reads as "+40" instead. */
+   not a sentence. Widening reads as "+40" instead.
+
+   ONE TEMPLATE, not `n + t("of") + m`. Bangla's "টির মধ্যে" is a
+   postposition: concatenating in English order rendered "৩ টির মধ্যে ৩৭",
+   which a Bangla reader reads as "37 out of 3". Every pill in the picker
+   stated the inverse of the truth. Each language owns its own word order. */
 function CountPill({ n, total }: { n: number | null; total: number | null }) {
   if (n === null) return null;
   if (n === 0) {
@@ -376,7 +381,9 @@ function CountPill({ n, total }: { n: number | null; total: number | null }) {
     <span style={st("display:inline-block; font-size:14px; font-weight:700; padding:5px 11px; border-radius:var(--r); background:var(--tint); color:var(--lnk);")}>
       {wider
         ? `+${bnNum(String(n - total!))}`
-        : `${bnNum(String(n))} ${t("fg_of")} ${total != null ? bnNum(String(total)) : "?"}`}
+        : t("fg_n_of_m")
+            .replace("{n}", bnNum(String(n)))
+            .replace("{m}", total != null ? bnNum(String(total)) : "?")}
     </span>
   );
 }

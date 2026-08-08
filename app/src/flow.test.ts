@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { NODES, ENTRY, FEW, replay, nextNode, prevNode, askPosition, screenOf, type Counts } from "./flow";
 import { FORM_PATHS, UNOWNED, SCREENS, type Screen, type StepOption } from "./steps";
 import { DEFAULT_FORM, type Form } from "./need";
-import { hasBothLangs } from "./i18n";
+import { hasBothLangs, setLang, t } from "./i18n";
 
 const form = (o: Partial<Form> = {}): Form => ({ ...DEFAULT_FORM, ...o });
 const COUNTS: Counts = { pool: 50, cheapestIphone: 80000 };
@@ -51,6 +51,25 @@ describe("the screens own every control", () => {
         expect(hasBothLangs(s.sheet.buttonKey), `${s.id} sheet button`).toBe(true);
       }
     }
+  });
+
+  /* Every count in the picker -- the pills and the step position -- runs
+     through one template, because assembling it as `n + t("of") + m` printed
+     the numbers the wrong way round in Bangla: "টির মধ্যে" is a postposition,
+     so "3 of 37" came out as "৩ টির মধ্যে ৩৭", which reads "37 out of 3".
+     A template can only be got wrong once, per language, visibly. */
+  it("the count template names both numbers, in each language's own order", () => {
+    for (const lang of ["en", "bn"] as const) {
+      setLang(lang);
+      const s = t("fg_n_of_m");
+      expect(s, `${lang} template`).toContain("{n}");
+      expect(s, `${lang} template`).toContain("{m}");
+    }
+    setLang("bn");
+    // the small number is the survivors, the big one the pool it came from
+    expect(t("fg_n_of_m").indexOf("{m}")).toBeLessThan(t("fg_n_of_m").indexOf("{n}"));
+    setLang("en");
+    expect(t("fg_n_of_m").indexOf("{n}")).toBeLessThan(t("fg_n_of_m").indexOf("{m}"));
   });
 
   /* A screen whose options cannot all be reached is a dead control. The

@@ -19,6 +19,15 @@ SRC = Path(__file__).resolve().parent.parent / "src" / "i18n.ts"
 # key -> (en, bn). The add-more screen stopped being a one-pick screen inside a
 # popup loop and became one multi-select screen, so its copy has to say so.
 COPY = {
+    # "3 of 37" was built as `n + t("of") + m`, which reads correctly in
+    # English and BACKWARDS in Bangla: "টির মধ্যে" is a postposition, so the
+    # concatenation rendered "৩ টির মধ্যে ৩৭" -- "37 out of 3". Every count
+    # pill and the step position said the opposite of the truth in Bangla.
+    # One template per language, each owning its own word order.
+    "fg_n_of_m": (
+        "{n} of {m}",
+        "{m}টির মধ্যে {n}",
+    ),
     "qc_q2": (
         "What else matters? Add as many as you like.",
         "\u0986\u09b0 \u0995\u09c0 \u0995\u09c0 \u099c\u09b0\u09c1\u09b0\u09bf? \u09af\u09a4 \u0996\u09c1\u09b6\u09bf \u09af\u09cb\u0997 \u0995\u09b0\u09c1\u09a8\u0964",
@@ -41,24 +50,32 @@ COPY = {
 }
 
 
+# a key that does not exist yet is inserted after this one, which does
+ANCHOR = "fg_zero"
+
+
 def main() -> int:
     text = SRC.read_text(encoding="utf-8")
-    missed = []
+    added = 0
     for key, (en, bn) in COPY.items():
         entry = '%s: { en: %s, bn: %s },' % (key, _q(en), _q(bn))
         # match `key: { ... },` across lines, non-greedy up to the closing brace
         pat = re.compile(r"^(\s*)%s:\s*\{.*?\},\s*$" % re.escape(key),
                          re.MULTILINE | re.DOTALL)
-        if not pat.search(text):
-            missed.append(key)
+        if pat.search(text):
+            text = pat.sub(lambda m: m.group(1) + entry, text, count=1)
             continue
-        text = pat.sub(lambda m: m.group(1) + entry, text, count=1)
+        anchor = re.compile(r"^(\s*)%s:\s*\{.*?\},\s*$" % ANCHOR,
+                            re.MULTILINE | re.DOTALL)
+        m = anchor.search(text)
+        if not m:
+            print("anchor %s missing; nothing written" % ANCHOR)
+            return 1
+        text = text[:m.end()] + "\n" + m.group(1) + entry + text[m.end():]
+        added += 1
 
-    if missed:
-        print("NOT FOUND (nothing written):", ", ".join(missed))
-        return 1
     SRC.write_text(text, encoding="utf-8")
-    print("patched %d keys in %s" % (len(COPY), SRC.name))
+    print("patched %d keys in %s (%d new)" % (len(COPY), SRC.name, added))
     return 0
 
 
