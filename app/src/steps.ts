@@ -8,16 +8,42 @@ import { toggleBrand, toggleHardware } from "./filters";
    owned by exactly one step" -- can be asserted without booting React.
 
    `owns` is a PATH, not a field name, because the two need questions share
-   `q.picks` and own different slots of it. */
+   `q.picks` and own different slots of it.
+
+   Revision 2026-08-08b, from the owner's walk-through of the live build:
+   long scrolling lists became grids, two conflated questions were split
+   (a platform is not a software skin; a chipset is not an amount of RAM),
+   the official/unofficial channel was promoted to its own screen because it
+   is what buyers here care about most, and the overflow lists moved into
+   sheets instead of growing the page. */
 
 export type StepKind = "budget" | "single" | "multi";
+
+/** How a step lays its options out.
+    `grid2` -- icon tiles, two up. The default: a nine-screen walk of
+      full-width rows reads as a queue, which is what the owner saw.
+    `grid3` -- compact tiles, three up. Brands.
+    `chips` -- a wrapping row of short text pills. Sizes and markets. */
+export type StepLayout = "grid2" | "grid3" | "chips";
 
 export interface StepOption {
   /** stable across renders: it keys the /count probe map and the tests */
   id: string;
   labelKey: string;
-  /** SVG path `d`. Omitted on chip lists, which are text. */
+  /** the trade-off, one line under the label. An option a buyer cannot price
+      is an option they guess at — "official" and "unofficial" are the case
+      that proved it. */
+  subKey?: string;
+  /** SVG path `d`. Omitted on chips, which are text. */
   icon?: string;
+  /** the brand's own colour, as the fill behind its mark. */
+  dot?: string;
+  /** the brand's mark, drawn in white on `dot`. Xiaomi's MI and OnePlus's 1+
+      are the real marks; the single letters stand in for wordmarks, which
+      cannot be hand-traced without becoming both brand misuse and an
+      illegible squiggle at 40px. Swap in the vendors' own SVG files and this
+      field is what they replace. */
+  mark?: string;
   patch: (f: Form) => Partial<Form>;
   isOn: (f: Form) => boolean;
   /** the form to count against, for the "1 of 46" pill. Omitted = no pill;
@@ -25,22 +51,51 @@ export interface StepOption {
   probe?: (f: Form) => Partial<Form>;
 }
 
+/** A second, labelled group on the same screen, shown only when the main
+    answer makes it meaningful. This is progressive disclosure, not a tenth
+    screen: "which Android skin" is not a question to ask someone who just
+    said iPhone, and "which import market" is noise to someone who just asked
+    for official warranty. */
+export interface StepGroup {
+  when: (f: Form) => boolean;
+  titleKey: string;
+  layout: StepLayout;
+  options: (f: Form) => StepOption[];
+}
+
+/** The overflow list, behind a button. A list long enough to scroll past the
+    question is a list that stops being read. */
+export interface StepSheet {
+  buttonKey: string;
+  titleKey: string;
+  options: (f: Form) => StepOption[];
+}
+
 export interface Step {
   id: string;
   kind: StepKind;
   titleKey: string;
   whyKey: string;
+  layout: StepLayout;
   /** paths on Form this step is the only owner of */
   owns: string[];
   options: (f: Form) => StepOption[];
+  reveal?: StepGroup;
+  sheet?: StepSheet;
   /** what "doesn't matter" does */
   clear: (f: Form) => Partial<Form>;
   /** "doesn't matter" as a full-size peer of the real answers, or as a quiet
       line below them. The two need questions are FORCED CHOICES -- that is the
       finding the whole quiz rests on (an evenly-weighted pair is flat 70% of
-      the time) -- so their skip is quiet. Every filter step's is equal. */
+      the time) -- so their skip is quiet. Every filter step's is equal.
+      `equal` now means what it says: the skip renders as a TILE in the same
+      grid, not as a wide bare box under it. The channel screen is why -- with
+      "official" as a tile and "unofficial" as a box, one of two equal answers
+      looked like the way out. */
   skipStyle: "quiet" | "equal";
   skipKey: string;
+  skipSubKey?: string;
+  skipIcon?: string;
 }
 
 /** Every settable path on Form. The test asserts this is exactly the union of
@@ -50,12 +105,13 @@ export const FORM_PATHS = [
   "officialOnly", "requireJack", "requireIr", "requireFm",
   "includeBrands", "excludeBrands", "avoidChinese",
   "platform", "osStyle", "socVendor", "minRam", "minStorage",
-  "regions", "requireRom", "hwStrict",
+  "regions", "requireRom",
 ] as const;
 
 /** Fields on Form that no step owns, and why. Anything else uncovered fails
     the test — which is the point. */
 export const UNOWNED: Record<string, string> = {
+  hwStrict: "no control, by owner ruling 2026-08-08 ('remove How strict? / verified only'). It asked the buyer to arbitrate our own data coverage, which is our problem, not theirs. It stays on Form at its default because toParams still sends it.",
   archetypes: "the deleted door. Still on Form only because toParams branches on it; removing it is its own change.",
   traitText: "the free-text door. Owner ruled it out 2026-08-07: 'no free text, llm may interpret wrong'.",
   useCase: "derived from q by deriveIntent",
@@ -83,11 +139,19 @@ const ICON = {
 
 const Q1_KEYS = ["camera", "battery", "speed", "simple"];
 const Q2_KEYS = ["camera", "battery", "speed", "simple", "gaming", "video"];
-const BRANDS = ["Samsung", "Xiaomi", "vivo", "OnePlus", "realme", "Apple"];
-const MARKETS: [string, string][] = [
-  ["IN", "India"], ["Global", "Global"], ["CN", "China"],
-  ["US", "USA"], ["JP", "Japan"], ["SG", "Singapore"], ["AU", "Australia"],
+
+/* Each brand's own colour, used as a delineated dot beside the name — never
+   as the label's colour and never as a fill.
+
+   These are the brands' real palette values, not approximations of their
+   wordmarks. Redrawing a logo from memory is how brand misuse happens, and a
+   guessed path is worse than no path: the name in the product's own type is
+   both accurate and legible, which a hand-traced wordmark is neither. */
+const BRANDS: [string, string, string][] = [
+  ["Samsung", "#1428A0", "S"], ["Xiaomi", "#FF6900", "MI"], ["vivo", "#415FFF", "v"],
+  ["OnePlus", "#EB0028", "1+"], ["realme", "#FFC915", "r"], ["Apple", "#1D1D1F", ""],
 ];
+const MARKETS = ["IN", "Global", "CN", "US", "JP", "SG", "AU"];
 
 /** Answering slot i REPLACES it — this is a choice, not an accumulation. */
 function pickPatch(f: Form, slot: number, key: string): Partial<Form> {
@@ -130,7 +194,7 @@ const toggleIn = (list: string[], v: string) =>
 
 export const STEPS: Step[] = [
   {
-    id: "budget", kind: "budget",
+    id: "budget", kind: "budget", layout: "grid2",
     titleKey: "s_budget_t", whyKey: "s_budget_why",
     owns: ["budget"],
     options: () => [],
@@ -138,7 +202,7 @@ export const STEPS: Step[] = [
     skipStyle: "quiet", skipKey: "s_skip",
   },
   {
-    id: "need1", kind: "single",
+    id: "need1", kind: "single", layout: "grid2",
     titleKey: "qc_q1", whyKey: "qc_q1_why",
     owns: ["q.picks[0]"],
     options: () => Q1_KEYS.map((k) => needOption(0, k)),
@@ -153,7 +217,7 @@ export const STEPS: Step[] = [
     skipStyle: "quiet", skipKey: "s_skip_need",
   },
   {
-    id: "need2", kind: "single",
+    id: "need2", kind: "single", layout: "grid2",
     titleKey: "qc_q2", whyKey: "qc_q2_why",
     owns: ["q.picks[1]"],
     // Q2 never re-offers what Q1 already won: "camera matters most" followed
@@ -172,20 +236,133 @@ export const STEPS: Step[] = [
     skipStyle: "quiet", skipKey: "s_skip_need",
   },
   {
-    id: "warranty", kind: "single",
-    titleKey: "s_warranty_t", whyKey: "s_warranty_why",
-    owns: ["officialOnly"],
+    /* The channel. Owner 2026-08-08: "people care most about those."
+       Official and unofficial are not a warranty checkbox — they are two
+       different things to buy, at two different prices, with two different
+       answers to "who fixes it". So the screen says that, and the import
+       market rides behind it, because a market is only a question for
+       someone who has already accepted an unofficial set. */
+    id: "channel", kind: "single", layout: "grid2",
+    titleKey: "s_channel_t", whyKey: "s_channel_why",
+    owns: ["officialOnly", "regions"],
     options: () => [{
-      id: "official", labelKey: "fg_warranty", icon: ICON.shield,
-      patch: () => ({ officialOnly: true }),
+      id: "official", labelKey: "s_official", subKey: "s_official_sub", icon: ICON.shield,
+      patch: () => ({ officialOnly: true, regions: [] }),
       isOn: (f) => f.officialOnly,
       probe: () => ({ officialOnly: true }),
     }],
-    clear: () => ({ officialOnly: false }),
-    skipStyle: "equal", skipKey: "s_skip_warranty",
+    sheet: {
+      buttonKey: "s_market_open", titleKey: "s_market_t",
+      options: () => MARKETS.map((code) => chip("mkt:" + code, "mkt_" + code,
+        (f) => ({ regions: toggleIn(f.regions, code) }), (f) => f.regions.includes(code))),
+    },
+    clear: () => ({ officialOnly: false, regions: [] }),
+    // the second half of a two-sided answer, so it is a tile with its own
+    // trade-off spelled out -- not a way to leave the question
+    skipStyle: "equal", skipKey: "s_unofficial",
+    skipSubKey: "s_unofficial_sub", skipIcon: ICON.globe,
   },
   {
-    id: "hardware", kind: "multi",
+    id: "brands", kind: "multi", layout: "grid3",
+    titleKey: "s_brands_t", whyKey: "s_brands_why",
+    owns: ["includeBrands", "excludeBrands", "avoidChinese"],
+    // Tapping a tile means "only this one". Ruling a brand OUT is the rarer
+    // intent and a different question, so it lives in the sheet rather than
+    // doubling the grid into twelve tiles where half of them repeat the names
+    // in the other half.
+    options: () => BRANDS.map(([b, dot, mark]) => ({
+      id: "only:" + b, labelKey: "brand_" + b, dot, mark,
+      patch: (f: Form) => toggleBrand(f, b, "only"),
+      isOn: (f: Form) => f.includeBrands.includes(b),
+    })),
+    sheet: {
+      buttonKey: "s_brands_hide", titleKey: "s_brands_hide",
+      options: () => [
+        ...BRANDS.map(([b, dot, mark]) => ({
+          id: "not:" + b, labelKey: "brand_" + b, dot, mark,
+          patch: (f: Form) => toggleBrand(f, b, "avoid"),
+          isOn: (f: Form) => f.excludeBrands.includes(b),
+        })),
+        chip("nocn", "fg_avoid_cn",
+          (f) => ({ avoidChinese: !f.avoidChinese }), (f) => f.avoidChinese),
+      ],
+    },
+    clear: () => ({ includeBrands: [], excludeBrands: [], avoidChinese: false }),
+    skipStyle: "equal", skipKey: "s_skip_brands",
+  },
+  {
+    /* Platform only. The skin question used to sit in the same list, which
+       made "iPhone" and "plain software" look like alternatives to each
+       other — they are not, and the owner read it as one confused screen. */
+    id: "platform", kind: "single", layout: "grid2",
+    titleKey: "s_type_t", whyKey: "s_type_why",
+    owns: ["platform", "osStyle", "requireRom"],
+    options: () => [
+      { id: "android", labelKey: "fg_platform_android", icon: ICON.android,
+        patch: () => ({ platform: "android" as const }), isOn: (f) => f.platform === "android",
+        probe: () => ({ platform: "android" as const }) },
+      { id: "ios", labelKey: "fg_platform_ios", icon: ICON.apple,
+        patch: () => ({ platform: "ios" as const, osStyle: "any" as const, requireRom: false }),
+        isOn: (f) => f.platform === "ios",
+        probe: () => ({ platform: "ios" as const }) },
+    ],
+    // Skins and custom ROMs are Android facts. Asking an iPhone buyer about
+    // them is asking a question with no answer.
+    reveal: {
+      when: (f) => f.platform === "android",
+      titleKey: "s_skin_t", layout: "grid2",
+      options: () => [
+        { id: "clean", labelKey: "fg_os_clean", icon: ICON.clean,
+          patch: () => ({ osStyle: "clean" as const }), isOn: (f) => f.osStyle === "clean",
+          probe: () => ({ osStyle: "clean" as const }) },
+        { id: "feature", labelKey: "fg_os_feature", icon: ICON.chip,
+          patch: () => ({ osStyle: "feature" as const }), isOn: (f) => f.osStyle === "feature",
+          probe: () => ({ osStyle: "feature" as const }) },
+        chip("lineage", "fg_rom_on",
+          (f) => ({ requireRom: !f.requireRom }), (f) => f.requireRom),
+      ],
+    },
+    clear: () => ({ platform: "any" as const, osStyle: "any" as const, requireRom: false }),
+    skipStyle: "equal", skipKey: "s_skip_type",
+  },
+  {
+    /* Chipset alone. It used to share a screen with RAM and storage — three
+       unrelated axes in one eight-item list, which is the other conflation
+       the owner named. */
+    id: "chipset", kind: "single", layout: "grid2",
+    titleKey: "s_power_t", whyKey: "s_power_why",
+    owns: ["socVendor"],
+    options: () => [
+      { id: "snapdragon", labelKey: "fg_soc_snapdragon", icon: ICON.chip,
+        patch: (f) => ({ socVendor: f.socVendor === "snapdragon" ? "any" as const : "snapdragon" as const }),
+        isOn: (f) => f.socVendor === "snapdragon",
+        probe: () => ({ socVendor: "snapdragon" as const }) },
+      { id: "mediatek", labelKey: "fg_soc_mediatek", icon: ICON.speed,
+        patch: (f) => ({ socVendor: f.socVendor === "mediatek" ? "any" as const : "mediatek" as const }),
+        isOn: (f) => f.socVendor === "mediatek",
+        probe: () => ({ socVendor: "mediatek" as const }) },
+    ],
+    clear: () => ({ socVendor: "any" as const }),
+    skipStyle: "equal", skipKey: "s_skip_power",
+  },
+  {
+    id: "memory", kind: "multi", layout: "chips",
+    titleKey: "s_memory_t", whyKey: "s_memory_why",
+    owns: ["minRam", "minStorage"],
+    options: () => [6, 8, 12].map((n) => chip("ram" + n, "s_ram_" + n,
+      (f) => ({ minRam: f.minRam === n ? 0 : n }), (f) => f.minRam === n)),
+    // storage is its own axis, always asked, never mixed into the RAM row
+    reveal: {
+      when: () => true,
+      titleKey: "s_storage_t", layout: "chips",
+      options: () => [128, 256, 512].map((n) => chip("rom" + n, "s_rom_" + n,
+        (f) => ({ minStorage: f.minStorage === n ? 0 : n }), (f) => f.minStorage === n)),
+    },
+    clear: () => ({ minRam: 0, minStorage: 0 }),
+    skipStyle: "equal", skipKey: "s_skip_memory",
+  },
+  {
+    id: "musthave", kind: "multi", layout: "grid2",
     titleKey: "s_hardware_t", whyKey: "s_hardware_why",
     // q.hw and the three flags move together or the prompt and the filter
     // describe different buyers
@@ -206,79 +383,14 @@ export const STEPS: Step[] = [
         isOn: (f: Form) => f.q.hw.includes("fm"),
         probe: () => ({ requireFm: true }) },
     ],
+    // No "verified only" follow-up. Owner 2026-08-08: it asked the buyer to
+    // arbitrate our own data coverage, which is our problem to fix, not a
+    // question to put in front of someone buying a phone.
     clear: (f) => ({
       requireJack: false, requireIr: false, requireFm: false,
       q: { ...f.q, hw: [] },
     }),
     skipStyle: "equal", skipKey: "s_skip_hardware",
-  },
-  {
-    id: "brands", kind: "multi",
-    titleKey: "s_brands_t", whyKey: "s_brands_why",
-    owns: ["includeBrands", "excludeBrands", "avoidChinese"],
-    options: () => [
-      ...BRANDS.map((b) => chip("only:" + b, "brand_" + b,
-        (f) => toggleBrand(f, b, "only"), (f) => f.includeBrands.includes(b))),
-      ...BRANDS.map((b) => chip("not:" + b, "brand_" + b,
-        (f) => toggleBrand(f, b, "avoid"), (f) => f.excludeBrands.includes(b))),
-      chip("nocn", "fg_avoid_cn",
-        (f) => ({ avoidChinese: !f.avoidChinese }), (f) => f.avoidChinese),
-    ],
-    clear: () => ({ includeBrands: [], excludeBrands: [], avoidChinese: false }),
-    skipStyle: "equal", skipKey: "s_skip_brands",
-  },
-  {
-    id: "type", kind: "single",
-    titleKey: "s_type_t", whyKey: "s_type_why",
-    owns: ["platform", "osStyle"],
-    options: () => [
-      { id: "android", labelKey: "fg_platform_android", icon: ICON.android,
-        patch: () => ({ platform: "android" as const }), isOn: (f) => f.platform === "android",
-        probe: () => ({ platform: "android" as const }) },
-      { id: "ios", labelKey: "fg_platform_ios", icon: ICON.apple,
-        patch: () => ({ platform: "ios" as const }), isOn: (f) => f.platform === "ios",
-        probe: () => ({ platform: "ios" as const }) },
-      { id: "clean", labelKey: "fg_os_clean", icon: ICON.clean,
-        patch: () => ({ osStyle: "clean" as const }), isOn: (f) => f.osStyle === "clean",
-        probe: () => ({ osStyle: "clean" as const }) },
-      { id: "feature", labelKey: "fg_os_feature", icon: ICON.chip,
-        patch: () => ({ osStyle: "feature" as const }), isOn: (f) => f.osStyle === "feature",
-        probe: () => ({ osStyle: "feature" as const }) },
-    ],
-    clear: () => ({ platform: "any" as const, osStyle: "any" as const }),
-    skipStyle: "equal", skipKey: "s_skip_type",
-  },
-  {
-    id: "power", kind: "multi",
-    titleKey: "s_power_t", whyKey: "s_power_why",
-    owns: ["socVendor", "minRam", "minStorage"],
-    options: () => [
-      chip("snapdragon", "fg_soc_snapdragon",
-        (f) => ({ socVendor: f.socVendor === "snapdragon" ? "any" : "snapdragon" }),
-        (f) => f.socVendor === "snapdragon"),
-      chip("mediatek", "fg_soc_mediatek",
-        (f) => ({ socVendor: f.socVendor === "mediatek" ? "any" : "mediatek" }),
-        (f) => f.socVendor === "mediatek"),
-      ...[6, 8, 12].map((n) => chip("ram" + n, "s_ram_" + n,
-        (f) => ({ minRam: f.minRam === n ? 0 : n }), (f) => f.minRam === n)),
-      ...[128, 256, 512].map((n) => chip("rom" + n, "s_rom_" + n,
-        (f) => ({ minStorage: f.minStorage === n ? 0 : n }), (f) => f.minStorage === n)),
-    ],
-    clear: () => ({ socVendor: "any" as const, minRam: 0, minStorage: 0 }),
-    skipStyle: "equal", skipKey: "s_skip_power",
-  },
-  {
-    id: "market", kind: "multi",
-    titleKey: "s_market_t", whyKey: "s_market_why",
-    owns: ["regions", "requireRom", "hwStrict"],
-    options: () => [
-      ...MARKETS.map(([code]) => chip("mkt:" + code, "mkt_" + code,
-        (f) => ({ regions: toggleIn(f.regions, code) }), (f) => f.regions.includes(code))),
-      chip("lineage", "fg_rom_on", (f) => ({ requireRom: !f.requireRom }), (f) => f.requireRom),
-      chip("strict", "fg_strict_on", (f) => ({ hwStrict: !f.hwStrict }), (f) => f.hwStrict),
-    ],
-    clear: () => ({ regions: [], requireRom: false, hwStrict: false }),
-    skipStyle: "equal", skipKey: "s_skip_market",
   },
 ];
 

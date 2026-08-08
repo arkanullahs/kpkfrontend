@@ -1,6 +1,7 @@
 import { st } from "../theme";
 import { bnNum, t } from "../i18n";
 import { EXIT_FROM, LAST, STEPS, stepAt } from "../steps";
+import { buildBrief } from "../filters";
 import { useCountUp } from "../useCounts";
 import { StepBody } from "./StepBody";
 import type { Form } from "../need";
@@ -36,42 +37,69 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
   const shown = useCountUp(matchCount);
 
   return (
-    <div style={st("max-width:680px; margin:0 auto;")}>
+    /* overflow-x:clip on the WRAPPER, not on .k-step: the entry slide moves
+       the step layer 8% off its own box, so the layer is the overflow and
+       cannot clip itself. `clip` rather than `hidden` because clip does not
+       create a scroll container — the rail below still pins to the viewport
+       and the page still grows downward. */
+    <div style={st("max-width:680px; margin:0 auto; overflow-x:clip;")}>
       <Rail step={step} />
 
-      <div style={st("display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:10px; min-height:44px;")}>
+      {/* Every control here is a real 48px target with a border you can see.
+          The first build drew them as bare 13.5px text: technically 44px tall
+          because of the padding, but with nothing on screen saying where to
+          press, which the owner read as "too small and inaccessible". */}
+      <div style={st("display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; min-height:48px;")}>
         {step > 0 ? (
-          <button onClick={onBack} className="k-press" aria-label={t("s_back")}
-            style={st("display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:8px 12px 8px 6px; border:none; background:none; cursor:pointer; font-size:14px; font-weight:600; color:var(--tx); font-family:var(--f-bn);")}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M19 12H5M11 6l-6 6 6 6" stroke="var(--tx)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <button onClick={onBack} className="k-press"
+            style={st("display:inline-flex; align-items:center; gap:8px; min-height:48px; padding:10px 18px 10px 14px; border-radius:var(--r); border:1.5px solid var(--rule); background:var(--card); cursor:pointer; font-size:15px; font-weight:600; color:var(--ink); font-family:var(--f-bn);")}>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M19 12H5M11 6l-6 6 6 6" stroke="var(--ink)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             {t("s_back")}
           </button>
         ) : <span />}
 
-        <span style={st("font-size:13.5px; font-weight:600; color:var(--mut); white-space:nowrap;")}>
+        <span style={st("font-size:14.5px; font-weight:700; color:var(--tx); white-space:nowrap;")}>
           {bnNum(String(step + 1))} {t("s_of")} {bnNum(String(STEPS.length))}
         </span>
 
         {/* No exit before step 4: budget and the leading need axis are what the
             ranker actually consumes. Step 9's own button is its exit, so it
-            gets none either. A text link, never amber -- amber is the commit. */}
+            gets none either. Outlined, never amber -- amber is the commit. */}
         {step >= EXIT_FROM && step < LAST ? (
           <button onClick={onExit} className="k-press"
-            style={st("min-height:44px; padding:8px 4px; border:none; background:none; cursor:pointer; font-size:13.5px; font-weight:600; color:var(--lnk); font-family:var(--f-bn); text-decoration:underline dotted; text-underline-offset:3px; white-space:nowrap;")}>
-            {t("s_see_n")} {shown != null ? bnNum(String(shown)) : "…"} →
+            style={st("display:inline-flex; align-items:center; gap:7px; min-height:48px; padding:10px 16px; border-radius:var(--r); border:1.5px solid var(--tint2); background:var(--tint); cursor:pointer; font-size:15px; font-weight:700; color:var(--lnk); font-family:var(--f-bn); white-space:nowrap;")}>
+            {t("s_see_n")} {shown != null ? bnNum(String(shown)) : "…"}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="var(--lnk)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
         ) : <span />}
       </div>
 
+      <SoFar form={form} step={step} />
+
       {/* keyed on the step id, so React remounts and the entry animation runs
           on every swap rather than only the first */}
-      <div key={s.id} className="k-step" style={{ ...st("margin-top:20px;"), ["--dir" as string]: String(dir) }}>
-        <h1 style={st("margin:0; font-family:var(--f-bn); font-size:clamp(23px,4.4vw,31px); font-weight:700; color:var(--ink); line-height:1.22; letter-spacing:-.4px; text-wrap:balance;")}>
+      <div key={s.id} className="k-step" style={{ ...st("margin-top:18px;"), ["--dir" as string]: String(dir) }}>
+        {/* The second need question kept reading as the first one again. It
+            says the first answer back now, so the screen is visibly a
+            follow-up rather than the same list a second time. */}
+        {s.id === "need2" && form.q.picks[0] && (
+          <div style={st("display:flex; align-items:center; gap:9px; margin-bottom:14px; padding:11px 14px; border-radius:var(--r); background:var(--tint); border:1px solid var(--tint2);")}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={st("flex-shrink:0;")}>
+              <path d="M5 13l4 4L19 7" stroke="var(--lnk)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span style={st("font-size:14.5px; color:var(--tx); font-family:var(--f-bn); line-height:1.4;")}>
+              {t("s_echo")} <b style={st("color:var(--lnk); font-weight:700;")}>{t("qs_" + form.q.picks[0])}</b>
+            </span>
+          </div>
+        )}
+        <h1 style={st("margin:0; font-family:var(--f-bn); font-size:clamp(25px,4.8vw,33px); font-weight:700; color:var(--ink); line-height:1.2; letter-spacing:-.5px; text-wrap:balance;")}>
           {t(s.titleKey)}
         </h1>
-        <p style={st("margin:11px 0 0; font-size:15px; color:var(--tx); line-height:1.55; max-width:520px; text-wrap:pretty;")}>
+        <p style={st("margin:12px 0 0; font-size:16.5px; color:var(--tx); line-height:1.55; max-width:540px; text-wrap:pretty;")}>
           {t(s.whyKey)}
         </p>
         <div style={st("margin-top:22px;")}>
@@ -79,6 +107,36 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
             metaStock={metaStock} onAnswered={onNext} onCommit={onCommit} />
         </div>
       </div>
+    </div>
+  );
+}
+
+/* What the buyer has said so far, on every screen after the first.
+
+   Owner 2026-08-08: "users should also be able to see their choice made so
+   far every screen." In a replace-model walk nothing else keeps the earlier
+   answers visible, so by screen six the buyer is being asked to trust that we
+   remembered. Only SET clauses appear -- the placeholders buildBrief emits
+   for unanswered ones would fill this with "no preference yet" and say
+   nothing. buildBrief is the same pure function step 9's restatement uses, so
+   the two can never drift. */
+function SoFar({ form, step }: { form: Form; step: number }) {
+  if (step === 0) return null;
+  const said = buildBrief(form).filter((b) => b.set);
+  if (!said.length) return null;
+  return (
+    <div style={st("display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin-top:14px;")}>
+      <span style={st("font-size:13px; font-weight:700; color:var(--mut); letter-spacing:.3px; text-transform:uppercase; margin-right:2px;")}>
+        {t("s_sofar")}
+      </span>
+      {said.map((b) => (
+        <span key={b.id} style={st("display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:var(--r); background:var(--tint); border:1px solid var(--tint2); font-size:13.5px; font-weight:600; color:var(--lnk); font-family:var(--f-bn);")}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 13l4 4L19 7" stroke="var(--lnk)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          {b.text}
+        </span>
+      ))}
     </div>
   );
 }
@@ -91,7 +149,7 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
 function Rail({ step }: { step: number }) {
   return (
     <div className="k-glass"
-      style={st("position:sticky; top:74px; z-index:40; display:flex; gap:4px; padding:10px 2px; margin:0 -2px; background:var(--hdr-bg); backdrop-filter:blur(14px) saturate(1.6); -webkit-backdrop-filter:blur(14px) saturate(1.6);")}>
+      style={st("position:sticky; top:74px; z-index:40; display:flex; gap:4px; padding:10px 0; background:var(--hdr-bg); backdrop-filter:blur(14px) saturate(1.6); -webkit-backdrop-filter:blur(14px) saturate(1.6);")}>
       {STEPS.map((s, i) => (
         <span key={s.id} aria-hidden="true"
           style={st(`flex:1; height:4px; border-radius:var(--r); transition:background .3s ease; background:${i <= step ? "var(--teal)" : "var(--rule)"};`)} />

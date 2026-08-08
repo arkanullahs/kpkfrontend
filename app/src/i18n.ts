@@ -487,11 +487,11 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   s_brands_t: { en: "Any brand you want, or don't?", bn: "কোনো ব্র্যান্ড চান, বা চান না?" },
   s_brands_why: { en: "Pick a favourite, or rule one out. Leaving this alone is fine.", bn: "পছন্দেরটা বেছে নিন, বা যেটা চান না বাদ দিন।" },
 
-  s_type_t: { en: "What kind of phone?", bn: "কেমন ফোন চান?" },
-  s_type_why: { en: "Android or iPhone, and whether you want the software plain or packed.", bn: "অ্যান্ডরয়েড না আইফোন, আর সফটওয়্যার সাদাসিধে না ভরা।" },
+  s_type_t: { en: "Android or iPhone?", bn: "অ্যান্ডরয়েড না আইফোন?" },
+  s_type_why: { en: "Two different worlds, and you cannot move apps between them. Say Android and we will ask about the software next.", bn: "দুটো আলাদা জগৎ, অ্যাপ একটা থেকে আরকটায় নেওয়া যায় না। অ্যান্ডরয়েড বললে সফটওয়্যার নিয়ে পরে জিজ্ঞেস করব।" },
 
-  s_power_t: { en: "How hard will you push it?", bn: "কতটা চাপ দেবেন?" },
-  s_power_why: { en: "A floor, not a target. Higher is not automatically better -- it costs money you could spend on the camera.", bn: "এটা সর্বনিম্ন, লক্ষ্য নয়। বেশি হলেই ভালো নয় -- সেই টাকা ক্যামেরায় যেতে পারত।" },
+  s_power_t: { en: "Any chipset preference?", bn: "চিপসেট নিয়ে পছন্দ আছে?" },
+  s_power_why: { en: "Most people have none, and that is the right answer. Skip it unless a game or an app you use needs one.", bn: "বেশিরভাগ মানুষের নেই, আর সেটাই সঠিক। কোনো গেম বা অ্যাপে দরকার না হলে বাদ দিন।" },
 
   s_market_t: { en: "Where was it made for?", bn: "কোন দেশের জন্য বানানো?" },
   s_market_why: { en: "An import market changes the software, the charger and who honours a repair.", bn: "ইমপোর্ট মার্কেট সফটওয়্যার, চার্জার আর রিপেয়ার বদলে দেয়।" },
@@ -536,6 +536,39 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   s_see_n: { en: "see", bn: "দেখুন" },
   s_commit: { en: "Find my phone", bn: "আমার ফোন খুঁজুন" },
   s_brief_t: { en: "What we will look for", bn: "যা খুঁজব" },
+
+  // ---- the restructure (owner walk-through 2026-08-08). The channel got its
+  // own screen, the platform/skin and chipset/memory pairs were split, and the
+  // overflow lists moved into sheets.
+  // owner: verify every bn string in this block.
+  s_channel_t: { en: "Official set, or unofficial?", bn: "অফিশিয়াল না আনঅফিশিয়াল?" },
+  s_channel_why: { en: "Official costs more and a service centre will take it. Unofficial is cheaper with far more choice, but repairs are on you.", bn: "অফিশিয়ালের দাম বেশি, তবে সার্ভিস সেন্টার নেবে। আনঅফিশিয়াল সস্তা আর অনেক বেশি পছন্দ, কিন্তু রিপেয়ার নিজের।" },
+  s_skip_channel: { en: "Unofficial is fine", bn: "আনঅফিশিয়াল হলেও চলবে" },
+  s_market_open: { en: "Choose an import market", bn: "ইমপোর্ট মার্কেট বাছুন" },
+
+  s_brands_hide: { en: "Hide a brand instead", bn: "বরং কোনো ব্র্যান্ড লুকান" },
+  s_skin_t: { en: "And the software?", bn: "আর সফটওয়্যার?" },
+  s_storage_t: { en: "Storage", bn: "স্টোরেজ" },
+  s_strict_t: { en: "How strict?", bn: "কতটা কঠোর?" },
+
+  s_memory_t: { en: "How much memory?", bn: "কতটুকু মেমরি?" },
+  s_memory_why: { en: "A floor, not a target. More RAM and storage cost money you could spend on the camera instead.", bn: "এটা সর্বনিম্ন, লক্ষ্য নয়। বেশি র্‍যাম আর স্টোরেজের টাকা ক্যামেরায় যেতে পারত।" },
+  s_skip_memory: { en: "Whatever fits the budget", bn: "বাজেটে যা হয়" },
+
+  s_sheet_done: { en: "Done", bn: "হয়েছে" },
+
+  // ---- owner round 2, 2026-08-08. Official and unofficial are two answers
+  // with two prices, so both are spelled out; the choices-so-far bar keeps
+  // the earlier answers on screen; the second need question names the first
+  // one back, so the two stop reading as the same question twice.
+  // owner: verify every bn string in this block.
+  s_official: { en: "Official set", bn: "অফিশিয়াল" },
+  s_official_sub: { en: "Pricier, but a real warranty and a service centre that will take it.", bn: "দাম বেশি, কিন্তু আসল ওয়ারেন্টি আর সার্ভিস সেন্টার নেবে।" },
+  s_unofficial: { en: "Unofficial too", bn: "আনঅফিশিয়ালও" },
+  s_unofficial_sub: { en: "Cheaper and far more models — but usually only 10 days' shop warranty.", bn: "সস্তা আর অনেক বেশি মডেল -- তবে সাধারণত ১০ দিনের দোকান ওয়ারেন্টি।" },
+
+  s_sofar: { en: "So far", bn: "এ পর্যন্ত" },
+  s_echo: { en: "You said this matters most:", bn: "আপনি বলেছেন এটাই সবচেয়ে জরুরি:" },
 
   // ---- short forms, for the brief bar only. The quiz labels are whole
   // sentences ("Photos that actually look good"), which is right where the
