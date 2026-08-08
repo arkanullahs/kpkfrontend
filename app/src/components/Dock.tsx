@@ -88,8 +88,13 @@ function Brief({ brief, onEditJump }: {
       {brief.map((b, i) => (
         <span key={b.id} style={st("display:inline-flex; align-items:baseline; gap:8px; min-width:0;")}>
           {i > 0 && <span aria-hidden="true" style={st("color:var(--faint); font-size:13px;")}>·</span>}
+          {/* 32px, not 44. WCAG 2.5.8's minimum is 24x24, and 2.5.5's 44x44
+              exempts a target that has a full-size duplicate on the same page
+              -- which every clause does: the section it jumps to is on this
+              same scroll. Three 44px clauses would put the bar past 200px on a
+              phone, which costs more than it buys. */}
           <button onClick={() => onEditJump(b.id)} className="k-press" title={t("brief_change")}
-            style={st(`padding:2px 0; border:none; background:none; cursor:pointer; font-size:13.5px; line-height:1.45; text-align:left; font-family:var(--f-bn); text-decoration:underline dotted; text-underline-offset:3px; text-decoration-color:var(--faint); color:${b.set ? "var(--ink)" : "var(--mut)"}; font-weight:${b.set ? 600 : 400};`)}>
+            style={st(`min-height:32px; padding:6px 0; border:none; background:none; cursor:pointer; font-size:13.5px; line-height:1.45; text-align:left; font-family:var(--f-bn); text-decoration:underline dotted; text-underline-offset:3px; text-decoration-color:var(--faint); color:${b.set ? "var(--ink)" : "var(--mut)"}; font-weight:${b.set ? 600 : 400};`)}>
             {b.text}
           </button>
         </span>

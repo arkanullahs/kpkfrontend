@@ -286,7 +286,7 @@ export default function App() {
                   <span style={st("font-size:12.5px; font-weight:600; white-space:nowrap;")}>{t("prices_loading")}</span>
                 </span>}
             <button onClick={toggleLang} title="Language / ভাষা" aria-label="Toggle language" className="k-press k-glow"
-              style={st("display:inline-flex; align-items:center; gap:6px; flex-shrink:0; padding:8px 14px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); box-shadow:0 4px 12px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.35); font-size:13px; font-weight:700; color:var(--onp); font-family:'Anek Bangla',sans-serif;")}>
+              style={st("display:inline-flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0; min-height:44px; padding:8px 14px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); box-shadow:0 4px 12px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.35); font-size:13px; font-weight:700; color:var(--onp); font-family:'Anek Bangla',sans-serif;")}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--card)" strokeWidth="1.7" /><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" stroke="var(--card)" strokeWidth="1.5" /></svg>
               {lang === "en" ? "বাংলা" : "EN"}
             </button>

@@ -109,7 +109,7 @@ function BudgetStep({ form, patch, metaStock }: { form: Form; patch: Props["patc
           const sel = b === q;
           return (
             <button key={q} onClick={() => { patch({ budget: q }); focusBudget(); }} className="k-press"
-              style={st(`padding:8px 14px; border-radius:var(--r); cursor:pointer; font-size:13px; font-weight:600; transition:all .15s ease; background:${sel ? "var(--tint)" : "transparent"}; color:${sel ? "var(--lnk)" : "var(--tx)"}; border:.5px solid ${sel ? "var(--tint2)" : "rgba(var(--rgb-ink),.12)"};`)}>
+              style={st(`min-height:44px; padding:8px 14px; border-radius:var(--r); cursor:pointer; font-size:13px; font-weight:600; transition:all .15s ease; background:${sel ? "var(--tint)" : "transparent"}; color:${sel ? "var(--lnk)" : "var(--tx)"}; border:.5px solid ${sel ? "var(--tint2)" : "rgba(var(--rgb-ink),.12)"};`)}>
               {taka(q)}
             </button>
           );

@@ -200,6 +200,21 @@
       .k-glass { backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
                  background: var(--card) !important; }
     }
+
+    /* The second and last glass: a modal scrim. It qualifies for the same
+       reason the header does -- live content sits behind it, so the blur is
+       material rather than decoration.
+       It needs its OWN class, not .k-glass. Two of that rule's parts are
+       header-specific and wrong full-screen: url(#lensglass) is an edge
+       refraction, and the reduced-transparency fallback resolves to
+       `background: var(--card)`, which would paint the whole viewport as an
+       opaque white card with the (also white) sheet invisible on top of it.
+       A scrim that cannot blur must DARKEN. */
+    .k-scrim { backdrop-filter: blur(13px) saturate(1.8); -webkit-backdrop-filter: blur(13px) saturate(1.8); }
+    @media (prefers-reduced-transparency: reduce) {
+      .k-scrim { backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+                 background: rgba(var(--rgb-ink), .74) !important; }
+    }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }

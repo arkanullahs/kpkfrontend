@@ -17,7 +17,9 @@ import { GROUPS } from "../filters";
    "the header is the only glass: real content scrolls under it. Over flat
    paper, glass is dirty translucency rather than material" -- is the reason
    this qualifies: a scrim has live content behind it, so blur is material.
-   Reuses .k-glass, so prefers-reduced-transparency already drops it to solid. */
+   It uses .k-scrim rather than .k-glass because that rule's reduced-transparency
+   fallback is `background: var(--card)`, which full-screen would paint an
+   opaque white viewport with this (also white) sheet invisible on top of it. */
 export function NarrowSheet({ matchCount, onDismiss, onNarrow }: {
   matchCount: number | null; onDismiss: () => void; onNarrow: () => void;
 }) {
@@ -31,8 +33,8 @@ export function NarrowSheet({ matchCount, onDismiss, onNarrow }: {
 
   return (
     <div onClick={onDismiss} role="dialog" aria-modal="true" aria-label={t("ns_title")}
-      className="k-glass"
-      style={st("position:fixed; inset:0; z-index:1000; display:flex; align-items:flex-end; justify-content:center; background:rgba(var(--rgb-ink),.42); backdrop-filter:blur(13px) saturate(1.8); -webkit-backdrop-filter:blur(13px) saturate(1.8); animation:kfade .28s ease both;")}>
+      className="k-scrim"
+      style={st("position:fixed; inset:0; z-index:1000; display:flex; align-items:flex-end; justify-content:center; background:rgba(var(--rgb-ink),.42); animation:kfade .28s ease both;")}>
       <div onClick={(e) => e.stopPropagation()}
         style={st("width:100%; max-width:640px; background:var(--card); border-radius:14px 14px 0 0; padding:22px 20px calc(20px + env(safe-area-inset-bottom)); box-shadow:0 -22px 40px -24px rgba(var(--rgb-ink),.45); animation:kslide .34s cubic-bezier(.2,.7,.2,1) both;")}>
         <style>{`@keyframes kslide{from{transform:translateY(26px);opacity:0}to{transform:none;opacity:1}}`}</style>
