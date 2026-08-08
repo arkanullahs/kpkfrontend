@@ -5,8 +5,9 @@ import { api, type Meta, type PhoneDetail, type Pick, type RecommendResp, type R
 import { st } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
 import { anyFilterSet } from "./filters";
-import { ENTRY, NODES, nextNode, prevNode, type Counts } from "./flow";
+import { ENTRY, NODES, nextNode, type Counts } from "./flow";
 import { StepScreen } from "./components/StepScreen";
+import { MorePopup } from "./components/MorePopup";
 import { NarrowSheet } from "./components/NarrowSheet";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { DetailScreen } from "./components/DetailScreen";
@@ -112,6 +113,33 @@ export default function App() {
     window.scrollTo({ top: 0 });
   }, [pushNav]);
 
+  // the `more` popup, open over the priority screen the buyer just answered.
+  // Holds the popup node id so its own next() resolves the route on answer.
+  const [popup, setPopup] = useState<string | null>(null);
+  // onSeeResults is defined further down (it needs runRecommend); the flow
+  // callbacks reach it through a ref to avoid a use-before-declaration cycle.
+  const onSeeResultsRef = useRef<() => void>(() => {});
+
+  // one forward step from an ask node: END commits, a popup opens its dialog,
+  // an ask node is navigated to. Guards are already skipped by nextNode.
+  const advance = useCallback((fromNode: string, f = form) => {
+    const nxt = nextNode(f, { pool: matchCount, officialPool, cheapestIphone }, fromNode);
+    if (nxt === "END") { onSeeResultsRef.current(); return; }
+    if (NODES[nxt].kind === "popup") { setPopup(nxt); return; }
+    goTo(nxt);
+  }, [form, matchCount, officialPool, cheapestIphone, goTo]);
+
+  const answerMore = useCallback((yes: boolean) => {
+    const nf = { ...form, wantMore: yes };
+    patch({ wantMore: yes });
+    const pnode = popup!;
+    setPopup(null);
+    // resolve the popup's own route from its node, with the answer applied
+    const after = nextNode(nf, { pool: matchCount, officialPool, cheapestIphone }, pnode);
+    if (after === "END") { onSeeResultsRef.current(); return; }
+    goTo(after);
+  }, [form, popup, patch, matchCount, officialPool, cheapestIphone, goTo]);
+
   // hydrate once from the URL, so a shared or reloaded brief comes back on the
   // node it was shared from rather than at the start of the walk
   useEffect(() => {
@@ -214,6 +242,7 @@ export default function App() {
     }
     runRecommend();
   }, [form, sheetSeen, runRecommend]);
+  onSeeResultsRef.current = onSeeResults;
 
   // the affirmative button does NOT rank — it returns the buyer to the walk at
   // the first filter step. Only the commit spends a ranking call.
@@ -353,16 +382,13 @@ export default function App() {
           <StepScreen
             nodeId={nodeId} dir={dir} form={form} counts={counts} patch={patch}
             matchCount={matchCount} metaStock={metaStock}
-            onNext={() => {
-              const nxt = nextNode(form, counts, nodeId);
-              if (nxt === "END") { onSeeResults(); return; }
-              goTo(nxt);
-            }}
+            onNext={() => advance(nodeId)}
             onBack={goBack}
             onExit={onSeeResults}
             onCommit={onSeeResults}
           />
         )}
+        {popup && <MorePopup onYes={() => answerMore(true)} onNo={() => answerMore(false)} />}
         {screen === "results" && (
           <ResultsScreen
             result={result} loading={recLoading} error={recError}

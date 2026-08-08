@@ -78,40 +78,69 @@ export const NODES: Record<string, FlowNode> = {
 export function replay(f: Form, c: Counts): string[] {
   const path: string[] = [];
   const seenGuards = new Set<string>();
+  const visited = new Set<string>();
   let id = ENTRY;
   // hard ceiling: the graph has ~16 nodes; a well-formed walk is far shorter.
   // The ceiling is a backstop against a table edit that reintroduces a cycle,
   // caught by the termination test rather than hanging a buyer.
   for (let hops = 0; hops < 64 && id !== "END"; hops++) {
     path.push(id);
+    visited.add(id);
     const node = NODES[id];
+    let to: string;
     if (node.kind === "guard") {
-      if (seenGuards.has(id)) {
-        // already diverted once — pass through with ample counts so the guard
-        // takes its forward successor. The dialog becomes advisory (Task 1.4).
-        id = node.next(f, { pool: Infinity, officialPool: Infinity, cheapestIphone: c.cheapestIphone });
-        continue;
-      }
+      // A guard diverts at most once; a second firing passes through with
+      // ample counts so it takes its forward successor (spec §8, §13).
+      to = seenGuards.has(id)
+        ? node.next(f, { pool: Infinity, officialPool: Infinity, cheapestIphone: c.cheapestIphone })
+        : node.next(f, c);
       seenGuards.add(id);
-      id = node.next(f, c);
-      continue;
+    } else {
+      to = node.next(f, c);
     }
-    id = node.next(f, c);
+    // The priority loop (needN -> g_prio -> more -> needN) is driven by the
+    // buyer answering the `more` popup again and again at RUNTIME; statically
+    // it is a cycle. When the next node was already visited, re-resolve it as
+    // if the buyer had stopped adding (every "more"-style flag false), which
+    // is the loop's exit. If that still points back, stop.
+    if (visited.has(to)) {
+      to = node.next({ ...f, wantMore: false }, c);
+      if (visited.has(to)) break;
+    }
+    id = to;
   }
   path.push("END");
   return path;
 }
 
+/** The next node the buyer interacts with: an ask, the `more` popup, or END.
+    Walks the graph ONE step forward from `from` with live counts, chaining
+    through any guards (which render nothing) to the first interactive node.
+
+    Deliberately NOT read off replay(): replay collapses the priority loop for
+    termination, so from needN it would report `brands`. A single forward step
+    must instead land on the `more` popup, which is what lets the buyer add
+    another priority -- the whole point of the loop. */
 export function nextNode(f: Form, c: Counts, from: string): string {
-  const path = replay(f, c);
-  const i = path.indexOf(from);
-  return i >= 0 && i < path.length - 1 ? path[i + 1] : from;
+  let id = NODES[from].next(f, c);
+  const seen = new Set<string>([from]);
+  while (id !== "END" && NODES[id].kind === "guard") {
+    if (seen.has(id)) break;   // guard cycle guard: never spin
+    seen.add(id);
+    id = NODES[id].next(f, c);
+  }
+  return id;
 }
 
+/** The previous interactive node, guards skipped, or null at the entry. */
 export function prevNode(f: Form, c: Counts, from: string): string | null {
   const path = replay(f, c);
   const i = path.indexOf(from);
-  return i > 0 ? path[i - 1] : null;
+  if (i <= 0) return null;
+  for (let j = i - 1; j >= 0; j--) {
+    if (NODES[path[j]].kind !== "guard") return path[j];
+  }
+  return null;
 }
 
 export function askPosition(f: Form, c: Counts, id: string): { at: number; of: number } {

@@ -114,6 +114,22 @@ describe("nextNode / prevNode walk the resolved path", () => {
     const after = nextNode(f, COUNTS, "channel");
     expect(prevNode(f, COUNTS, after)).toBe("channel");
   });
+  it("skips guard nodes — never returns one to navigate to", () => {
+    // elderly budget -> g_official/g_iphone (guards) -> plat_e or extras
+    const nxt = nextNode(form({ forElderly: true, budget: 95000 }),
+                         { pool: 50, officialPool: 50, cheapestIphone: 60000 }, "budget");
+    expect(NODES[nxt].kind).not.toBe("guard");
+  });
+  it("need1 leads to the more popup, not straight to brands", () => {
+    expect(nextNode(form(), COUNTS, "need1")).toBe("more");
+  });
+  it("needN loops back to the more popup, guard skipped", () => {
+    expect(nextNode(form({ q: { picks: ["camera", "battery"], hw: [] } }), COUNTS, "needN")).toBe("more");
+  });
+  it("the more popup routes on wantMore", () => {
+    expect(nextNode(form({ wantMore: true }), COUNTS, "more")).toBe("needN");
+    expect(nextNode(form({ wantMore: false }), COUNTS, "more")).toBe("brands");
+  });
 });
 
 describe("askPosition counts only ask screens on the live path", () => {

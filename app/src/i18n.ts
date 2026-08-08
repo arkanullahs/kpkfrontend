@@ -579,6 +579,11 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   s_soft_cn_sub: { en: "Cheaper, if you'll flash it", bn: "সস্তা, যদি ফ্ল্যাশ করেন" },
 
   s_rom_support_t: { en: "Custom ROM support?", bn: "কাস্টম রম সাপোর্ট?" },
+  // the add-another-priority popup (spec 2026-08-08 §5). owner: verify bn.
+  s_more_t: { en: "Add another priority?", bn: "আরেকটা অগ্রাধিকার যোগ করবেন?" },
+  s_more_body: { en: "You can add as many as you like. Each one counts less than the one before, so your first choice always leads.", bn: "যত খুশি যোগ করতে পারেন। প্রতিটা আগেরটার চেয়ে কম গোনা হয়, তাই আপনার প্রথম পছন্দই সবসময় এগিয়ে থাকে।" },
+  s_more_yes: { en: "Add one more", bn: "আরেকটা যোগ করুন" },
+  s_more_no: { en: "No, that's all", bn: "না, এটুকুই" },
 
   s_sheet_done: { en: "Done", bn: "হয়েছে" },
 
