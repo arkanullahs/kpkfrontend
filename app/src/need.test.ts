@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CHOICES, CHOICE_LADDER, DEFAULT_FORM, deriveIntent, formToQuery, queryToForm, toParams, type Form } from "./need";
+import { CHOICES, weightAt, DEFAULT_FORM, deriveIntent, formToQuery, queryToForm, toParams, type Form } from "./need";
 
 /* Pure logic only -- no React, no DOM, no network. These cover the two places
    the picker has already been silently wrong:
@@ -26,9 +26,19 @@ function isFlat(w: Record<string, number>): boolean {
   return mid ? vals[0] < 2 * mid : false;
 }
 
-describe("the ladder", () => {
-  it("is 3.0 then 1.0 -- the gap is the design, not a taste call", () => {
-    expect(CHOICE_LADDER).toEqual([3.0, 1.0]);
+describe("the geometric ladder", () => {
+  it("is 3*(1/3)^i: slot 0 = 3, each next a third", () => {
+    expect(weightAt(0)).toBe(3);
+    expect(weightAt(1)).toBeCloseTo(1);
+    expect(weightAt(2)).toBeCloseTo(1 / 3);
+  });
+
+  it("first priority outweighs all others combined at any count", () => {
+    for (const n of [2, 4, 8, 20]) {
+      const rest = Array.from({ length: n - 1 }, (_, i) => weightAt(i + 1))
+        .reduce((s, v) => s + v, 0);
+      expect(weightAt(0)).toBeGreaterThan(rest);
+    }
   });
 
   it("gives no flat vector on ANY reachable answer path", () => {
@@ -66,10 +76,14 @@ describe("the ladder", () => {
     expect(w.gaming).toBe(1.0);
   });
 
-  it("ignores a third answer -- the ladder only has two rungs", () => {
+  it("keeps every answer -- the list is unbounded now, not two rungs", () => {
     const two = deriveIntent({ picks: ["camera", "battery"], hw: [] }).weights;
     const three = deriveIntent({ picks: ["camera", "battery", "gaming"], hw: [] }).weights;
-    expect(three).toEqual(two);
+    // the third answer adds its axis; the vector grows rather than being sliced
+    expect(three).not.toEqual(two);
+    expect(three.gaming).toBeCloseTo(weightAt(2));
+    // and the leader is untouched by later additions
+    expect(three.camera).toBe(two.camera);
   });
 });
 
@@ -197,5 +211,27 @@ describe("the step index survives the URL", () => {
     expect(back.step).toBe(6);
     expect(back.budget).toBe(42000);
     expect(back.officialOnly).toBe(true);
+  });
+});
+
+describe("flow-graph control fields in the URL", () => {
+  it("forElderly and includeCnRom serialise and restore", () => {
+    const q = formToQuery({ ...DEFAULT_FORM, forElderly: true, includeCnRom: true });
+    expect(q).toContain("eld=1");
+    expect(q).toContain("cnrom=1");
+    const back = queryToForm(q);
+    expect(back.forElderly).toBe(true);
+    expect(back.includeCnRom).toBe(true);
+  });
+
+  it("transient loop flags never serialise", () => {
+    const q = formToQuery({ ...DEFAULT_FORM, wantMore: true, rechannelWiden: true });
+    expect(q).not.toContain("more");
+    expect(q).not.toContain("widen");
+  });
+
+  it("includeCnRom drives include_cn on the wire", () => {
+    expect(toParams({ ...DEFAULT_FORM, includeCnRom: true }).include_cn).toBe(true);
+    expect(toParams(DEFAULT_FORM).include_cn).toBeUndefined();
   });
 });

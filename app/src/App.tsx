@@ -21,7 +21,7 @@ import { DEFAULT_FORM, formToQuery, queryToForm, toParams, type Form } from "./n
 export type Screen = "ask" | "results" | "detail" | "method";
 
 export type { Form, QuizIntent } from "./need";
-export { DEFAULT_FORM, CHOICE_LADDER, CHOICES, deriveIntent, toParams, formToQuery, queryToForm } from "./need";
+export { DEFAULT_FORM, weightAt, CHOICES, deriveIntent, toParams, formToQuery, queryToForm } from "./need";
 
 
 export default function App() {

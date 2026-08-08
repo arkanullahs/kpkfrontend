@@ -126,6 +126,13 @@ export const UNOWNED: Record<string, string> = {
   useCase: "derived from q by deriveIntent",
   priorities: "derived from q by deriveIntent",
   weights: "derived from q by deriveIntent",
+  // flow-graph fields (spec 2026-08-08). Owned by the new NODES in flow.ts,
+  // not by STEPS; this whole steps.ts array is retired in Phase 2. Listed here
+  // only so the interim ownership test stays green across the Phase 1 commit.
+  forElderly: "owned by the elderly node in flow.ts",
+  rechannelWiden: "transient, owned by the rechannel node in flow.ts",
+  wantMore: "transient, owned by the more popup in flow.ts",
+  includeCnRom: "owned by the rom node in flow.ts",
 };
 
 const ICON = {

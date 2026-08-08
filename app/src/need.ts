@@ -42,6 +42,14 @@ export interface Form {
   useCase: string;               // EN sentence sent as use_case (embedded intent)
   priorities: string[];          // ordered axes, for the summary screen
   weights: Record<string, number>; // the REAL vector — now sent to the server
+  // flow-graph control (spec 2026-08-08). forElderly forks the whole flow and
+  // rides in the URL; the other two are transient answers to a guard's dialog
+  // and a popup, never serialised.
+  forElderly: boolean;
+  rechannelWiden: boolean;
+  wantMore: boolean;
+  includeCnRom: boolean;         // "a China ROM is fine" — actively re-admits
+                                 // cn_rom phones the engine excludes by default
 }
 
 export const DEFAULT_FORM: Form = {
@@ -53,6 +61,7 @@ export const DEFAULT_FORM: Form = {
   minRam: 0, minStorage: 0,
   q: { picks: [], hw: [] },
   useCase: "", priorities: [], weights: {},
+  forElderly: false, rechannelWiden: false, wantMore: false, includeCnRom: false,
 };
 
 /** The forced-choice quiz → the buyer's need.
@@ -66,21 +75,28 @@ export const DEFAULT_FORM: Form = {
     numbers it had just computed died in the browser, and the server had to
     invent magnitudes back from rank order.
 
-    Now: two forced choices about TRADE-OFFS, and the weights go over the wire.
+    Now: an UNBOUNDED ordered list of trade-off choices, and the weights go
+    over the wire (weights= on /recommend, live since the flow-graph work).
 
-    THE LADDER (3.0 then 1.0) IS THE DESIGN, not a taste call. is_flat() on the
-    server takes the median of the axes actually touched, so answer 1 must be
-    at least twice answer 2, and two answers landing on one axis must not
-    out-weigh answer 1. Measured across every reachable path:
-      3.0 / 1.8 → 150 of 216 flat;  3.0 / 1.4 → 30;  3.0 / 1.0 → 0.
-    Mirrors _CHOICE_LADDER and _CHOICES in kpk_backend/core/need.py. */
+    THE GEOMETRIC LADDER IS THE DESIGN, not a taste call. See weightAt below:
+    3*(1/3)^i means the first priority (3.0) outweighs every later slot summed
+    to infinity (1.5), so the vector cannot flatten no matter how many the
+    buyer adds. That replaced the fixed [3.0, 1.0] two-slot array, which capped
+    the list at two and still needed hand-tuning to beat is_flat(). */
 export interface QuizIntent {
   useCase: string;
   priorities: string[];
   weights: Record<string, number>;
 }
 
-export const CHOICE_LADDER = [3.0, 1.0];
+/* The geometric ladder: slot i weighs 3*(1/3)^i. Slot 0 = 3.0, and every
+   later slot summed to infinity = 1.5, so the first priority outweighs all
+   others combined AT ANY COUNT. That is what lets the picker offer an
+   unbounded priority list (spec 2026-08-08 §5) without the vector flattening
+   -- the failure the old additive multi-select shipped (44 of 672 paths
+   produced a dominant axis; measured 08-03 §1.3). The guarantee is arithmetic,
+   not a cap. */
+export const weightAt = (i: number): number => 3 * (1 / 3) ** i;
 
 /** option key → [axis shares, English sentence fragment]. The fraction is the
     axis that genuinely rides along: a camera buyer gets some video, a speed
@@ -103,9 +119,9 @@ const HW_TEXT: Record<string, string> = {
 export function deriveIntent(q: Form["q"]): QuizIntent {
   const w: Record<string, number> = {};
   const bits: string[] = [];
-  q.picks.filter((k) => CHOICES[k]).slice(0, CHOICE_LADDER.length).forEach((k, i) => {
+  q.picks.filter((k) => CHOICES[k]).forEach((k, i) => {
     for (const [ax, share] of CHOICES[k].votes) {
-      w[ax] = Math.round(((w[ax] || 0) + share * CHOICE_LADDER[i]) * 100) / 100;
+      w[ax] = Math.round(((w[ax] || 0) + share * weightAt(i)) * 100) / 100;
     }
     bits.push(CHOICES[k].text);
   });
@@ -134,6 +150,7 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.platform !== "any") p.platform = f.platform;
   if (f.osStyle !== "any") p.os_style = f.osStyle;
   if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
+  if (f.includeCnRom) p.include_cn = true;   // re-admit cn_rom phones (rom node)
   if (f.officialOnly) p.official_only = true;
   if (f.excludeBrands.length) p.exclude_brand = f.excludeBrands.join(",");
   if (f.requireJack) p.require_jack = true;
@@ -170,6 +187,8 @@ export function formToQuery(f: Form, step = 0): string {
   // written only when it is not the first, so a fresh visit still looks clean
   if (step > 0) p.set("s", String(Math.min(LAST_STEP, Math.floor(step))));
   if (f.budget !== DEFAULT_FORM.budget) p.set("b", String(f.budget));
+  if (f.forElderly) p.set("eld", "1");
+  if (f.includeCnRom) p.set("cnrom", "1");
   if (f.q.picks.length) p.set("w", f.q.picks.join(","));
   if (f.q.hw.length) p.set("hw", f.q.hw.join(","));
   if (f.officialOnly) p.set("official", "1");
@@ -208,6 +227,8 @@ export function queryToForm(s: string): Partial<Form> & { step: number } {
     : 0;
   const out: Partial<Form> = {
     budget: nat("b") || DEFAULT_FORM.budget,
+    forElderly: p.get("eld") === "1",
+    includeCnRom: p.get("cnrom") === "1",
     q: { picks: list("w"), hw },
     officialOnly: p.get("official") === "1",
     avoidChinese: p.get("nocn") === "1",
