@@ -5,6 +5,7 @@ import { bnNum, bnToAscii, t } from "../i18n";
 import { buildBrief } from "../filters";
 import { type Screen, type StepLayout, type StepOption } from "../steps";
 import { useCounts } from "../useCounts";
+import { PriorityLadder } from "./PriorityLadder";
 import type { Form } from "../need";
 
 /* One step's controls.
@@ -34,9 +35,12 @@ const BUDGET_MAX = 500000;
 const FEW_LEFT = 4;
 const DEEP_CUT = 0.2;
 
-export function StepBody({ s, form, patch, matchCount, metaStock, isLast, onAnswered, onCommit }: {
+export function StepBody({ s, form, patch, matchCount, metaStock, isLast, floorPrice,
+                           onAnswered, onCommit }: {
   s: Screen; form: Form; patch: (d: Partial<Form>) => void;
   matchCount: number | null; metaStock: string; isLast: boolean;
+  /** cheapest phone this buyer's channel/preset can buy, or null while loading */
+  floorPrice: number | null;
   /* Takes the form the answer PRODUCED, not the one on screen. `patch` is a
      state update: the `form` this closure holds is the one from before the
      tap, and the flow routes on it. That is what sent an elderly buyer who
@@ -102,14 +106,29 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, onAnsw
   // it -- it needs the same explicit Next the multi steps use, or the walk
   // dead-ends on its first screen. It gets no skip: the field always holds a
   // number, so there is nothing to decline.
-  if (s.kind === "budget") return (
-    <>
-      <BudgetBody form={form} patch={patch} metaStock={metaStock} />
-      {/* budget drives every count and the ranking itself, so the walk cannot
-          advance past it empty */}
-      <Next onClick={() => onAnswered()} disabled={form.budget <= 0} />
-    </>
-  );
+  /* Owner 2026-08-09: "it shouldnt let anyone to finding 0 phones."
+
+     The budget screen is the ONE place a buyer can walk themselves into an
+     empty result, because every later screen already refuses: an option whose
+     probe comes back 0 renders disabled (`dead` in Tile), and the probes are
+     cumulative against the current form, so no tap can empty the pool. Typing
+     ৳3,000 could — and did: eight more questions, then "No phones matched".
+
+     So the walk stops here instead, and says what the floor actually is
+     rather than "try something else". `floorPrice` is live (/cheapest under
+     this buyer's channel and preset), never a constant. */
+  if (s.kind === "budget") {
+    const empty = form.budget > 0 && matchCount === 0;
+    return (
+      <>
+        <BudgetBody form={form} patch={patch} metaStock={metaStock} />
+        {empty && <BudgetFloor floor={floorPrice} onUse={(n) => patch({ budget: n })} />}
+        {/* budget drives every count and the ranking itself, so the walk
+            cannot advance past it empty — or past a number nothing fits */}
+        <Next onClick={() => onAnswered()} disabled={form.budget <= 0 || empty} />
+      </>
+    );
+  }
 
   const last = isLast;
   /* A step needs an explicit Next whenever tapping one option cannot mean
@@ -180,7 +199,7 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, onAnsw
 
       {needsNext && !last && <Next onClick={() => onAnswered()} />}
 
-      {last && <Commit form={form} matchCount={matchCount} onCommit={onCommit} />}
+      {last && <Commit form={form} matchCount={matchCount} onCommit={onCommit} disabled={matchCount === 0} />}
 
       {sheet && s.sheet && (
         <Sheet title={t(s.sheet.titleKey)} onClose={() => setSheet(false)}>
@@ -525,6 +544,46 @@ function BudgetBody({ form, patch, metaStock }: {
   );
 }
 
+/* The dead end, caught where it is made.
+
+   Not a dialog: the buyer is typing, and a modal over a number field steals
+   the caret and the context at once. It is the same amber the app uses for
+   "this needs your attention" and it carries the fix as a button, because
+   "nothing fits ৳3,000" without the floor is a scold, not an answer.
+
+   `floor` can be null (the probe is still in flight, or the buyer's own
+   filters have no floor to report). The warning still stands — the count IS
+   zero — it simply cannot offer the one-tap fix. */
+function BudgetFloor({ floor, onUse }: { floor: number | null; onUse: (n: number) => void }) {
+  return (
+    <div role="status"
+      style={st("margin-top:16px; padding:15px 16px; border-radius:var(--r); background:var(--acL, rgba(var(--rgb-amber),.12)); border:1.5px solid rgba(var(--rgb-amber),.45);")}>
+      <div style={st("display:flex; align-items:flex-start; gap:11px;")}>
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={st("flex-shrink:0; margin-top:1px;")}>
+          <path d="M12 8v5M12 16.5v.01M10.3 3.9L2.6 17.4A2 2 0 004.3 20.4h15.4a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"
+            stroke="var(--acd)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <div style={st("min-width:0;")}>
+          <div style={st("font-size:16px; font-weight:700; color:var(--ink); font-family:var(--f-bn); line-height:1.35;")}>
+            {t("s_budget_none_t")}
+          </div>
+          <p style={st("margin:6px 0 0; font-size:14.5px; color:var(--tx); line-height:1.5; font-family:var(--f-bn);")}>
+            {floor
+              ? t("s_budget_none_floor").replace("{price}", taka(floor))
+              : t("s_budget_none_body")}
+          </p>
+          {floor && (
+            <button onClick={() => onUse(floor)} className="k-press"
+              style={st("margin-top:12px; min-height:48px; padding:12px 18px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); color:var(--onp); font-size:15.5px; font-weight:700; font-family:var(--f-bn);")}>
+              {t("s_budget_none_use").replace("{price}", taka(floor))}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- shared ---------- */
 
 /* The explicit advance, for the steps where no single tap can mean "done":
@@ -547,8 +606,8 @@ function Next({ onClick, disabled = false }: { onClick: () => void; disabled?: b
 /* The whole ask, restated above the only button that spends a ranking call.
    This is why there is no tenth review screen. buildBrief is the same pure
    function the deleted brief bar used, so the two can never drift. */
-function Commit({ form, matchCount, onCommit }: {
-  form: Form; matchCount: number | null; onCommit: () => void;
+function Commit({ form, matchCount, onCommit, disabled }: {
+  form: Form; matchCount: number | null; onCommit: () => void; disabled: boolean;
 }) {
   return (
     <div style={st("margin-top:26px; padding:16px; border-radius:var(--r); background:var(--card); box-shadow:var(--sh-card);")}>
@@ -563,13 +622,29 @@ function Commit({ form, matchCount, onCommit }: {
           </span>
         ))}
       </div>
+
+      {/* The weights, at the moment of committing to them. The brief says
+          "Camera, Battery" and gives no hint that the first is worth three of
+          the second — which is the single biggest thing the ranker is about to
+          do with these answers (owner 2026-08-09). */}
+      {form.q.picks.length > 0 && (
+        <div style={st("margin-top:14px;")}><PriorityLadder picks={form.q.picks} /></div>
+      )}
+
       {/* THE one amber control in the whole flow. White on --ac alone is
           4.29:1 and fails AA at this size; fading to --acd puts 5.0:1 behind
           the text's own line, which is the same gradient PriceAlert ships. */}
-      <button onClick={onCommit} className="k-press k-glow"
-        style={st("margin-top:16px; width:100%; min-height:58px; border-radius:var(--r); border:none; cursor:pointer; background:linear-gradient(180deg,var(--ac),var(--acd)); box-shadow:0 6px 18px rgba(var(--rgb-amber),.35); color:var(--onp); font-size:17px; font-weight:700; font-family:var(--f-bn);")}>
+      <button onClick={onCommit} className="k-press k-glow" disabled={disabled}
+        style={st(`margin-top:16px; width:100%; min-height:58px; border-radius:var(--r); border:none; cursor:${disabled ? "not-allowed" : "pointer"}; background:linear-gradient(180deg,var(--ac),var(--acd)); box-shadow:0 6px 18px rgba(var(--rgb-amber),.35); color:var(--onp); font-size:17px; font-weight:700; font-family:var(--f-bn); opacity:${disabled ? .45 : 1};`)}>
         {t("s_commit")}{matchCount != null ? ` · ${bnNum(String(matchCount))}` : ""} →
       </button>
+      {/* the only way to reach this is a filter combination the per-option
+          probes could not individually see coming */}
+      {disabled && (
+        <p style={st("margin:10px 0 0; font-size:14px; color:var(--tx); line-height:1.5; font-family:var(--f-bn); text-align:center;")}>
+          {t("s_commit_none")}
+        </p>
+      )}
     </div>
   );
 }

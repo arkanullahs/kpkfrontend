@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GROUPS, activeGroupCount, anyFilterSet, buildBrief, toggleBrand, toggleHardware } from "./filters";
+import { GROUPS, activeGroupCount, anyFilterSet, buildBrief, clearClause, toggleBrand, toggleHardware } from "./filters";
 import { CHOICES, DEFAULT_FORM, type Form } from "./need";
 import { STRING_KEYS, hasBothLangs, t } from "./i18n";
 import { taka } from "./theme";
@@ -218,6 +218,89 @@ describe("the groups are well-formed", () => {
     for (const g of GROUPS) {
       expect(g.icon).toMatch(/^M[\d.\s]/);
       expect(g.icon).not.toMatch(/[\u{1F300}-\u{1FAFF}]/u);
+    }
+  });
+});
+
+/* Owner 2026-08-09: "option to reset and clear". Every chip the SoFar row
+   marks clearable has to actually clear, and clear COMPLETELY -- a filter left
+   half-set is worse than one the buyer can see, because the count moves and
+   nothing on screen explains why. */
+describe("a brief clause can be taken back", () => {
+  const loaded = () => form({
+    budget: 40000,
+    q: { picks: ["camera", "battery"], hw: ["jack", "ir"] },
+    officialOnly: true, requireJack: true, requireIr: true,
+    avoidChinese: true, excludeBrands: ["Xiaomi"], includeBrands: ["Samsung"],
+    platform: "android", socVendor: "snapdragon", minRam: 8, minStorage: 256,
+    regions: ["IN"], requireRom: true, hwStrict: true, includeCnRom: true,
+    wantMore: true,
+  });
+
+  it("clearing the filters clause leaves NO group set", () => {
+    const f = loaded();
+    const after = { ...f, ...clearClause(f, "filters") } as Form;
+    expect(activeGroupCount(after)).toBe(0);
+    expect(anyFilterSet(after)).toBe(false);
+    // the two groups that both write `q` must BOTH land — a shallow merge
+    // would drop one of them
+    expect(after.q.hw).toEqual([]);
+    expect(after.requireJack).toBe(false);
+    expect(after.includeCnRom).toBe(false);
+  });
+
+  it("clearing the filters clause keeps the budget and the priorities", () => {
+    const f = loaded();
+    const after = { ...f, ...clearClause(f, "filters") } as Form;
+    expect(after.budget).toBe(40000);
+    expect(after.q.picks).toEqual(["camera", "battery"]);
+  });
+
+  it("clearing the need clause drops the picks, the weights and the popup answer", () => {
+    const f = loaded();
+    const after = { ...f, ...clearClause(f, "need") } as Form;
+    expect(after.q.picks).toEqual([]);
+    expect(after.weights).toEqual({});
+    expect(after.priorities).toEqual([]);
+    // the hardware sentences survive: q.hw is the extras screen's answer and
+    // belongs to the FILTERS clause, so clearing "need" must not take it
+    expect(after.useCase).not.toContain("camera");
+    expect(after.useCase).toContain("headphone jack");
+    // wantMore described a list that no longer exists
+    expect(after.wantMore).toBe(false);
+    // and it is not a filter reset
+    expect(after.officialOnly).toBe(true);
+  });
+
+  it("budget is not clearable — the walk cannot advance without one", () => {
+    const f = loaded();
+    expect(clearClause(f, "budget")).toEqual({});
+  });
+
+  it("every clause the brief marks set is either budget or clearable", () => {
+    const f = loaded();
+    for (const b of buildBrief(f).filter((c) => c.set)) {
+      if (b.id === "budget") continue;
+      const after = { ...f, ...clearClause(f, b.id) } as Form;
+      expect(buildBrief(after).find((c) => c.id === b.id)!.set,
+        `${b.id} still reads as set after being cleared`).toBe(false);
+    }
+  });
+
+  it("translates every string the reset controls render", () => {
+    for (const k of ["s_reset", "s_reset_t", "s_reset_body", "s_reset_yes",
+                     "s_reset_no", "s_clear_one",
+                     "s_budget_none_t", "s_budget_none_floor",
+                     "s_budget_none_body", "s_budget_none_use",
+                     "s_commit_none"]) {
+      expect(hasBothLangs(k), `${k} missing`).toBe(true);
+    }
+  });
+
+  it("the placeholders the reset copy interpolates all survive translation", () => {
+    for (const [k, ph] of [["s_clear_one", "{what}"], ["s_budget_none_floor", "{price}"],
+                           ["s_budget_none_use", "{price}"]] as const) {
+      expect(t(k)).toContain(ph);
     }
   });
 });

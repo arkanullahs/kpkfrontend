@@ -4,10 +4,11 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { api, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
 import { st } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
-import { anyFilterSet } from "./filters";
+import { anyFilterSet, clearClause } from "./filters";
 import { ENTRY, NODES, nextNode, type Counts } from "./flow";
 import { StepScreen } from "./components/StepScreen";
 import { MorePopup } from "./components/MorePopup";
+import { ResetConfirm } from "./components/ResetConfirm";
 import { NarrowSheet } from "./components/NarrowSheet";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { DetailScreen } from "./components/DetailScreen";
@@ -82,6 +83,14 @@ export default function App() {
       // the node rides in the history entry, so Back walks the graph rather
       // than jumping straight out of the flow
       if ((h.screen || "ask") === "ask") { setDir(-1); setNodeId(h.node && NODES[h.node] ? h.node : ENTRY); }
+      /* And the ANSWERS ride in that entry's URL, which is the whole reason
+         the form is mirrored there. Restoring only the node moved the buyer
+         without moving what they had said — most visibly after "start over",
+         where Back landed on screen six of a walk whose answers had all just
+         been thrown away. Undo now restores both. */
+      const q = window.location.search.slice(1);
+      const { node: _n, ...f } = queryToForm(q);
+      setForm((prev) => ({ ...DEFAULT_FORM, ...f, wantMore: prev.wantMore }));
       window.scrollTo({ top: 0 });
     };
     window.addEventListener("popstate", onPop);
@@ -103,6 +112,11 @@ export default function App() {
   // blocks on the network.
   const [cheapestIphone, setCheapestIphone] = useState<number | null>(null);
   const counts: Counts = { pool: matchCount, cheapestIphone };
+
+  // the cheapest phone this buyer's channel + preset can buy at all. The
+  // budget screen refuses to advance below it (owner: "it shouldnt let anyone
+  // to finding 0 phones"), and it is the number the refusal quotes.
+  const [floorPrice, setFloorPrice] = useState<number | null>(null);
 
   // forward move to an explicit node; Back always arrives via history (popstate)
   const goTo = useCallback((target: string) => {
@@ -185,13 +199,28 @@ export default function App() {
       // Only worth fetching on the elderly path — it is the only branch with a
       // guard that reads it.
       if (form.forElderly) {
-        api.cheapest("Apple", form.officialOnly)
+        api.cheapest({ brand: "Apple", official_only: form.officialOnly })
           .then((r) => setCheapestIphone(r.price))
           .catch(() => setCheapestIphone(null));
       }
     }, 350);
     return () => window.clearTimeout(debounceRef.current);
   }, [form]);
+
+  /* The price floor. Depends on the channel and the elderly preset and NOT on
+     the budget — which is the point: it has to be known while the buyer is
+     still typing the budget, including while that budget is zero, so the
+     debounced /count effect above cannot carry it. */
+  useEffect(() => {
+    let stop = false;
+    api.cheapest({
+      official_only: form.officialOnly,
+      ...(form.forElderly ? { bd_service_floor: 6 } : {}),
+    })
+      .then((r) => { if (!stop) setFloorPrice(r.price); })
+      .catch(() => { if (!stop) setFloorPrice(null); });
+    return () => { stop = true; };
+  }, [form.officialOnly, form.forElderly]);
 
   // signature of the form the current `result` was computed from, so navigating
   // back to Results after editing the query re-runs instead of showing stale picks
@@ -262,6 +291,35 @@ export default function App() {
     // return the buyer to the walk at the first real filter screen
     goTo("brands");
   }, [goTo]);
+
+  /* Reset and clear (owner 2026-08-09).
+
+     Clearing one clause stays where the buyer is — they undid an answer, they
+     did not ask to go anywhere. Starting over returns to the entry with a
+     blank form and a clean URL, and asks first, because it is the one control
+     in the walk that Back cannot undo. */
+  const onClear = useCallback((id: string) => {
+    setForm((f) => ({ ...f, ...clearClause(f, id) }));
+  }, []);
+
+  const [resetting, setResetting] = useState(false);
+  const doReset = useCallback(() => {
+    setResetting(false);
+    setForm(DEFAULT_FORM);
+    setPopup(null);
+    setMatchCount(null);
+    setCheapestIphone(null);
+    // a fresh walk earns the nudge again — it is once per search, not once
+    // per browser session
+    setSheetSeen(false);
+    setSheetOpen(false);
+    setDir(-1);
+    setNodeId(ENTRY);
+    window.history.pushState({ kpk: true, screen: "ask", node: ENTRY }, "", window.location.pathname);
+    setScreen("ask");
+    window.scrollTo({ top: 0 });
+    track("picker_reset", {});
+  }, []);
 
   // RagProgress finished its completion beat -> reveal the results
   const onLoaderDone = useCallback(() => { setRecLoading(false); setRecReady(false); }, []);
@@ -397,9 +455,16 @@ export default function App() {
             onBack={goBack}
             onExit={onExitEarly}
             onCommit={runRecommend}
+            onClear={onClear}
+            onReset={() => setResetting(true)}
+            floorPrice={floorPrice}
           />
         )}
-        {popup && <MorePopup onYes={() => answerMore(true)} onNo={() => answerMore(false)} />}
+        {popup && (
+          <MorePopup picks={form.q.picks}
+            onYes={() => answerMore(true)} onNo={() => answerMore(false)} />
+        )}
+        {resetting && <ResetConfirm onYes={doReset} onNo={() => setResetting(false)} />}
         {screen === "results" && (
           <ResultsScreen
             result={result} loading={recLoading} error={recError}

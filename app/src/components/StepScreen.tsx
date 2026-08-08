@@ -4,7 +4,8 @@ import { screenOf, nextNode, askPosition, type Counts } from "../flow";
 import { buildBrief } from "../filters";
 import { useCountUp } from "../useCounts";
 import { StepBody } from "./StepBody";
-import { weightAt, type Form } from "../need";
+import { PriorityLadder } from "./PriorityLadder";
+import { type Form } from "../need";
 
 /* One step owns the screen (spec 2026-08-08).
 
@@ -31,10 +32,18 @@ interface Props {
   onBack: () => void;
   onExit: () => void;
   onCommit: () => void;
+  /** undo one clause of the brief, from the chip that states it */
+  onClear: (id: string) => void;
+  /** back to a blank walk — asks first, it throws away every answer */
+  onReset: () => void;
+  /** the cheapest phone the buyer's channel/preset can buy right now, or null
+      while it loads. The budget screen refuses to advance below it. */
+  floorPrice: number | null;
 }
 
 export function StepScreen({ nodeId, dir, form, counts, patch, matchCount, metaStock,
-                             onNext, onBack, onExit, onCommit }: Props) {
+                             onNext, onBack, onExit, onCommit,
+                             onClear, onReset, floorPrice }: Props) {
   const s = screenOf(nodeId)!;
   const shown = useCountUp(matchCount);
   // "4 of 8", counting only the ask screens on THIS buyer's live path. A total
@@ -77,9 +86,12 @@ export function StepScreen({ nodeId, dir, form, counts, patch, matchCount, metaS
         {/* No exit on the first three asks: budget and the leading need axis
             are what the ranker consumes. The last screen's own Commit button is
             its exit, so it gets none either. Outlined, never amber. */}
+        {/* and never while nothing matches: "see 0" spends a ranking call to
+            render an empty page. The last screen's commit is disabled on the
+            same rule (owner: "it shouldnt let anyone to finding 0 phones"). */}
         {at >= 3 && !isLast ? (
-          <button onClick={onExit} className="k-press"
-            style={st("display:inline-flex; align-items:center; gap:7px; min-height:48px; padding:10px 16px; border-radius:var(--r); border:1.5px solid var(--tint2); background:var(--tint); cursor:pointer; font-size:15px; font-weight:700; color:var(--lnk); font-family:var(--f-bn); white-space:nowrap;")}>
+          <button onClick={onExit} className="k-press" disabled={matchCount === 0}
+            style={st(`display:inline-flex; align-items:center; gap:7px; min-height:48px; padding:10px 16px; border-radius:var(--r); border:1.5px solid var(--tint2); background:var(--tint); cursor:${matchCount === 0 ? "not-allowed" : "pointer"}; opacity:${matchCount === 0 ? .45 : 1}; font-size:15px; font-weight:700; color:var(--lnk); font-family:var(--f-bn); white-space:nowrap;`)}>
             {t("s_see_n")} {shown != null ? bnNum(String(shown)) : "…"}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6" stroke="var(--lnk)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
@@ -88,7 +100,7 @@ export function StepScreen({ nodeId, dir, form, counts, patch, matchCount, metaS
         ) : <span />}
       </div>
 
-      <SoFar form={form} isFirst={isFirst} />
+      <SoFar form={form} isFirst={isFirst} onClear={onClear} onReset={onReset} />
 
       {/* keyed on the node id, so React remounts and the entry animation runs
           on every swap rather than only the first */}
@@ -96,7 +108,9 @@ export function StepScreen({ nodeId, dir, form, counts, patch, matchCount, metaS
         {/* The add-more screen shows the ladder so far, each priority a shorter
             bar than the last. This is the owner's "warning" made honest: not
             "too many hurts precision", but each pick's real share on screen. */}
-        {nodeId === "needN" && form.q.picks[0] && <PriorityLadder picks={form.q.picks} />}
+        {nodeId === "needN" && form.q.picks[0] && (
+          <div style={st("margin-bottom:16px;")}><PriorityLadder picks={form.q.picks} /></div>
+        )}
         <h1 style={st("margin:0; font-family:var(--f-bn); font-size:clamp(25px,4.8vw,33px); font-weight:700; color:var(--ink); line-height:1.2; letter-spacing:-.5px; text-wrap:balance;")}>
           {t(s.titleKey)}
         </h1>
@@ -105,23 +119,36 @@ export function StepScreen({ nodeId, dir, form, counts, patch, matchCount, metaS
         </p>
         <div style={st("margin-top:22px;")}>
           <StepBody s={s} form={form} patch={patch} matchCount={matchCount}
-            metaStock={metaStock} isLast={isLast} onAnswered={onNext} onCommit={onCommit} />
+            metaStock={metaStock} isLast={isLast} floorPrice={floorPrice}
+            onAnswered={onNext} onCommit={onCommit} />
         </div>
       </div>
     </div>
   );
 }
 
-/* What the buyer has said so far, on every screen after the first.
+/* What the buyer has said so far, on every screen after the first -- and the
+   only place they can take any of it back.
 
    Owner 2026-08-08: "users should also be able to see their choice made so
    far every screen." In a replace-model walk nothing else keeps the earlier
    answers visible, so by screen six the buyer is being asked to trust that we
    remembered. Only SET clauses appear -- the placeholders buildBrief emits
    for unanswered ones would fill this with "no preference yet" and say
-   nothing. buildBrief is the same pure function step 9's restatement uses, so
-   the two can never drift. */
-function SoFar({ form, isFirst }: { form: Form; isFirst: boolean }) {
+   nothing. buildBrief is the same pure function the commit card's restatement
+   uses, so the two can never drift.
+
+   Owner 2026-08-09: "option to reset and clear". The chips were read-only, so
+   undoing an answer three screens back meant walking Back through every
+   screen between here and there and re-answering each one. Every clearable
+   chip carries an x now, and "start over" sits at the end of the same row --
+   with the answers it erases, not buried in a menu. Budget carries no x: the
+   walk cannot proceed without one, so "clearing" it would only produce a
+   screen that refuses to advance. */
+function SoFar({ form, isFirst, onClear, onReset }: {
+  form: Form; isFirst: boolean;
+  onClear: (id: string) => void; onReset: () => void;
+}) {
   if (isFirst) return null;
   const said = buildBrief(form).filter((b) => b.set);
   if (!said.length) return null;
@@ -131,52 +158,40 @@ function SoFar({ form, isFirst }: { form: Form; isFirst: boolean }) {
         {t("s_sofar")}
       </span>
       {said.map((b) => (
-        <span key={b.id} style={st("display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:var(--r); background:var(--tint); border:1px solid var(--tint2); font-size:13.5px; font-weight:600; color:var(--lnk); font-family:var(--f-bn);")}>
+        <span key={b.id} style={st("display:inline-flex; align-items:center; gap:6px; padding:6px 6px 6px 12px; border-radius:var(--r); background:var(--tint); border:1px solid var(--tint2); font-size:13.5px; font-weight:600; color:var(--lnk); font-family:var(--f-bn);")}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M5 13l4 4L19 7" stroke="var(--lnk)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           {b.text}
+          {CLEARABLE.has(b.id) ? (
+            <button onClick={() => onClear(b.id)} className="k-press"
+              aria-label={t("s_clear_one").replace("{what}", b.text)}
+              /* 28px, not 44: it sits inside a 13.5px chip in a wrapping row,
+                 and a 44px hit box would overlap the neighbouring chip's -- a
+                 target you cannot hit without hitting the wrong one is worse
+                 than a small one. The whole-answer escape is "start over",
+                 which is full size. */
+              style={st("display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; margin-left:1px; border:none; border-radius:var(--r); background:transparent; cursor:pointer; color:var(--lnk); flex-shrink:0;")}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+              </svg>
+            </button>
+          ) : <span style={st("width:6px;")} />}
         </span>
       ))}
+      <button onClick={onReset} className="k-press"
+        style={st("display:inline-flex; align-items:center; gap:6px; min-height:34px; padding:6px 12px; border-radius:var(--r); background:transparent; border:1px dashed var(--rule); cursor:pointer; font-size:13.5px; font-weight:600; color:var(--mut); font-family:var(--f-bn);")}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 12a8 8 0 108-8M4 12l-1-4M4 12l4-1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        {t("s_reset")}
+      </button>
     </div>
   );
 }
 
-/* The geometric ladder, drawn. Each priority the buyer has picked is a bar
-   whose width is its share of the top pick -- 100%, 33%, 11%, 4% -- so the
-   fourth is visibly a sliver. The share caption on every bar past the first is
-   the "warning" the owner asked for, shown as a true number rather than a
-   scold: an unbounded list is safe precisely because it looks like this. */
-function PriorityLadder({ picks }: { picks: string[] }) {
-  const known = picks.filter((k) => t("qs_" + k) !== "qs_" + k);
-  if (!known.length) return null;
-  const top = weightAt(0);
-  return (
-    <div style={st("margin-bottom:16px; padding:14px 16px; border-radius:var(--r); background:var(--tint); border:1px solid var(--tint2);")}>
-      <div style={st("font-size:12.5px; font-weight:700; color:var(--mut); letter-spacing:.3px; text-transform:uppercase; margin-bottom:10px;")}>
-        {t("s_prio_ladder_t")}
-      </div>
-      {known.map((k, i) => {
-        const pct = Math.round((weightAt(i) / top) * 100);
-        return (
-          <div key={k} style={st("display:flex; align-items:center; gap:10px; margin-top:" + (i ? "9px" : "0") + ";")}>
-            <div style={st("flex-shrink:0; width:96px; font-size:14px; font-weight:700; color:var(--ink); font-family:var(--f-bn);")}>
-              {t("qs_" + k)}
-            </div>
-            <div style={st("flex:1; height:9px; border-radius:var(--r); background:var(--card); overflow:hidden;")}>
-              <div style={st(`height:100%; width:${pct}%; background:var(--teal); border-radius:var(--r); transition:width .35s ease;`)} />
-            </div>
-            {i > 0 && (
-              <div style={st("flex-shrink:0; font-size:12px; color:var(--mut); font-family:var(--f-bn); white-space:nowrap;")}>
-                {t("s_prio_share").replace("{pct}", bnNum(String(pct)))}
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+/** Budget is not clearable — the walk cannot advance without one. */
+const CLEARABLE = new Set(["need", "filters"]);
 
 /* ONE bar, sticky, glass — not a row of segments.
 

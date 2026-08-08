@@ -171,6 +171,32 @@ function clause(parts: string[]): string {
     + t("brief_more").replace("{n}", String(parts.length - MAX_NAMED));
 }
 
+/** Undo one clause of the brief, from the chip that states it.
+
+    Owner 2026-08-09: "option to reset and clear". Without this, taking back an
+    answer three screens back meant walking Back through every screen in
+    between and re-answering each one — the picker could be filled in but not
+    edited.
+
+    `budget` is deliberately absent: the walk cannot advance without one, so
+    clearing it would only produce a screen that refuses to move. The filters
+    clause folds every group's own `patchOff`, applied in sequence rather than
+    merged, because two groups write the same `q` object and a shallow merge
+    would drop one of them. */
+export function clearClause(f: Form, id: string): Partial<Form> {
+  if (id === "need") {
+    const q = { ...f.q, picks: [] as string[] };
+    // wantMore too: the popup's answer described a list that no longer exists
+    return { q, wantMore: false, ...deriveIntent(q) };
+  }
+  if (id === "filters") {
+    let out: Partial<Form> = { includeCnRom: false };
+    for (const g of GROUPS) out = { ...out, ...g.patchOff({ ...f, ...out }) };
+    return out;
+  }
+  return {};
+}
+
 export function buildBrief(f: Form): BriefClause[] {
   // qs_* not qc_*: the short form exists for this bar and nowhere else
   const picks = f.q.picks.filter((k) => CHOICES[k]).map((k) => t("qs_" + k));

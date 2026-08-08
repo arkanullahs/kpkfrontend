@@ -392,8 +392,10 @@ export const api = {
   archetypes: () => get<Archetype[]>("/archetypes"),
   recommend: (p: RecParams) => get<RecommendResp>("/recommend", p as any),
   count: (p: RecParams) => get<CountResp>("/count", p as any),
-  cheapest: (brand: string, official_only = false) =>
-    get<{ price: number | null }>("/cheapest", { brand, official_only } as any),
+  /** The least this buyer could spend. No brand = the catalogue floor, which
+      is what the budget screen refuses to let them type under. */
+  cheapest: (p: { brand?: string; official_only?: boolean; bd_service_floor?: number }) =>
+    get<{ price: number | null }>("/cheapest", p as any),
   phone: (id: string) => get<PhoneDetail>("/phones/" + id.split("/").map(encodeURIComponent).join("/")),
   phoneImage: (id: string) => get<{ url: string | null }>("/phone-image/" + id.split("/").map(encodeURIComponent).join("/")),
   browse: (p: { q?: string; brand?: string; min_price?: number; max_price?: number; in_stock?: boolean; limit?: number; offset?: number }) =>

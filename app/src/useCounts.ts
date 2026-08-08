@@ -71,21 +71,32 @@ export function useCountUp(n: number | null): number | null {
     if (n === null) { setShown(null); from.current = null; return; }
     const start = from.current;
     if (start === null || start === n) { setShown(n); from.current = n; return; }
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    // A hidden tab does not run rAF AT ALL, so a tween started in one freezes
+    // on its first frame and never corrects -- the effect only re-runs when
+    // `n` changes, and it has not. Backgrounding the picker mid-count left the
+    // exit button reading a number that was never true. Nothing to animate for
+    // an audience that cannot see it: land on the value.
+    if (document.hidden || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
       setShown(n); from.current = n; return;
     }
     const t0 = performance.now();
     const DUR = 320;
     let raf = 0;
+    let done = false;
     const tick = (now: number) => {
       const p = Math.min(1, (now - t0) / DUR);
       const eased = 1 - Math.pow(1 - p, 3);
       setShown(Math.round(start + (n - start) * eased));
       if (p < 1) raf = requestAnimationFrame(tick);
-      else from.current = n;
+      else { done = true; from.current = n; }
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    // an interrupted tween settles rather than stranding a half-eased number:
+    // the next run then starts from a value that was really on screen
+    return () => {
+      cancelAnimationFrame(raf);
+      if (!done) { setShown(n); from.current = n; }
+    };
   }, [n]);
 
   return shown;
