@@ -156,8 +156,19 @@ export function toParams(f: Form, top = 5): RecParams {
    URL and Back exited the app entirely.
 
    Only non-default fields are written, so a fresh visit has a clean URL. */
-export function formToQuery(f: Form): string {
+
+/** The last screen's index.
+
+    Deliberately NOT imported from steps.ts: steps imports filters imports
+    need, and closing that loop would be a real cycle. steps.test.ts asserts
+    this against STEPS.length instead, so adding or merging a step fails a
+    test rather than silently clamping people onto the wrong screen. */
+const LAST_STEP = 8;
+
+export function formToQuery(f: Form, step = 0): string {
   const p = new URLSearchParams();
+  // written only when it is not the first, so a fresh visit still looks clean
+  if (step > 0) p.set("s", String(Math.min(LAST_STEP, Math.floor(step))));
   if (f.budget !== DEFAULT_FORM.budget) p.set("b", String(f.budget));
   if (f.q.picks.length) p.set("w", f.q.picks.join(","));
   if (f.q.hw.length) p.set("hw", f.q.hw.join(","));
@@ -180,7 +191,7 @@ export function formToQuery(f: Form): string {
     shared link is exactly where hand-edited junk arrives. Every scalar is
     validated back to a legal value rather than cast: `?b=abc` would otherwise
     put NaN in the form and 422 every /count call with no visible cause. */
-export function queryToForm(s: string): Partial<Form> {
+export function queryToForm(s: string): Partial<Form> & { step: number } {
   const p = new URLSearchParams(s);
   const list = (k: string) => (p.get(k) ? p.get(k)!.split(",").filter(Boolean) : []);
   const nat = (k: string) => { const n = Number(p.get(k)); return Number.isFinite(n) && n > 0 ? n : 0; };
@@ -189,6 +200,12 @@ export function queryToForm(s: string): Partial<Form> {
     return v && ok.includes(v) ? v : dflt;
   };
   const hw = list("hw").filter((k) => k === "jack" || k === "ir" || k === "fm");
+  // clamped, not cast: "?s=99" must land on the last screen and "?s=abc" on
+  // the first, never on undefined
+  const stepRaw = Number(p.get("s"));
+  const step = Number.isFinite(stepRaw)
+    ? Math.min(LAST_STEP, Math.max(0, Math.floor(stepRaw)))
+    : 0;
   const out: Partial<Form> = {
     budget: nat("b") || DEFAULT_FORM.budget,
     q: { picks: list("w"), hw },
@@ -212,5 +229,5 @@ export function queryToForm(s: string): Partial<Form> {
   };
   // deriveIntent already drops picks it does not recognise, so ?w=telepathy
   // costs a clause in the brief and nothing else
-  return { ...out, ...deriveIntent(out.q!) };
+  return { ...out, ...deriveIntent(out.q!), step };
 }

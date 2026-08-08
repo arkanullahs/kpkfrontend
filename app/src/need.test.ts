@@ -169,3 +169,33 @@ describe("the brief survives a reload", () => {
     expect(bad.requireJack).toBe(false);
   });
 });
+
+describe("the step index survives the URL", () => {
+  it("writes the step only when it is not the first", () => {
+    expect(formToQuery(DEFAULT_FORM, 0)).toBe("");
+    expect(formToQuery(DEFAULT_FORM, 4)).toBe("s=4");
+  });
+
+  it("reads it back", () => {
+    expect(queryToForm("s=4").step).toBe(4);
+  });
+
+  it("clamps junk to a real step rather than trusting it", () => {
+    // a shared link is exactly where hand-edited junk arrives
+    for (const q of ["s=abc", "s=-3", "s=99", "s=", "s=4.7e9"]) {
+      const n = queryToForm(q).step!;
+      expect(n, q).toBeGreaterThanOrEqual(0);
+      expect(n, q).toBeLessThanOrEqual(8);
+    }
+    expect(queryToForm("s=abc").step).toBe(0);
+    expect(queryToForm("s=99").step).toBe(8);
+  });
+
+  it("carries the step alongside a full brief", () => {
+    const q = formToQuery({ ...DEFAULT_FORM, budget: 42000, officialOnly: true }, 6);
+    const back = queryToForm(q);
+    expect(back.step).toBe(6);
+    expect(back.budget).toBe(42000);
+    expect(back.officialOnly).toBe(true);
+  });
+});

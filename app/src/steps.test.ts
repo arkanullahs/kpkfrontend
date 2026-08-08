@@ -44,11 +44,8 @@ describe("the table is well-formed", () => {
 
   it("agrees with need.ts about the last step index", () => {
     // need.ts hard-codes 8 to avoid an import cycle; this is what keeps the two
-    // honest if a step is ever added or merged.
-    // The cast is here because queryToForm does not carry `step` yet — that is
-    // the URL task. It keeps the build compiling while this still fails.
-    const parsed = queryToForm("s=99") as Partial<Form> & { step?: number };
-    expect(parsed.step).toBe(STEPS.length - 1);
+    // honest if a step is ever added or merged
+    expect(queryToForm("s=99").step).toBe(STEPS.length - 1);
   });
 
   it("translates every title and help line into both languages", () => {
