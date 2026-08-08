@@ -339,6 +339,8 @@ export interface RecParams {
   /** spec-level RAM/storage floor in GB; ANY variant satisfying it passes */
   min_ram?: number;
   min_storage?: number;
+  /** elderly preset: minimum BD service-network score (brand_reliability) */
+  bd_service_floor?: number;
   os_style?: string;
   platform?: string;
   channel?: string;

@@ -151,6 +151,9 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.osStyle !== "any") p.os_style = f.osStyle;
   if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
   if (f.includeCnRom) p.include_cn = true;   // re-admit cn_rom phones (rom node)
+  // elderly preset: a service-network floor stands in for "renowned" (spec §7).
+  // 6 is the opening value; the golden set tunes it so Tk12-15k stays non-empty.
+  if (f.forElderly) p.bd_service_floor = 6;
   if (f.officialOnly) p.official_only = true;
   if (f.excludeBrands.length) p.exclude_brand = f.excludeBrands.join(",");
   if (f.requireJack) p.require_jack = true;

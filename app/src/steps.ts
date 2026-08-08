@@ -212,11 +212,15 @@ export const SCREENS: Record<string, Screen> = {
     owns: ["forElderly"],
     options: () => [
       { id: "eld_yes", labelKey: "s_elderly_yes", subKey: "s_elderly_yes_sub", icon: ICON.elder,
-        // ease_of_use leads, global software, and the ranker sizes for the
-        // price; the bd_service floor is applied server-side (Phase 5).
+        // ease_of_use leads; the ranker sizes for the price; the bd_service
+        // floor is applied server-side (toParams sends it when forElderly).
+        // NOT avoidChinese: "global software" means excluding China-ROM gray
+        // units (include_cn stays false by default), not excluding Chinese
+        // brands -- a Xiaomi on a global ROM is fine, and dropping every
+        // Chinese brand would empty a Tk12-15k elderly budget.
         patch: (f) => {
           const q = { ...f.q, picks: ["simple"] };
-          return { forElderly: true, avoidChinese: true, q, ...deriveIntent(q) };
+          return { forElderly: true, q, ...deriveIntent(q) };
         },
         isOn: (f) => f.forElderly },
       { id: "eld_no", labelKey: "s_elderly_no", subKey: "s_elderly_no_sub", icon: ICON.any,
