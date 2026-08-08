@@ -5,7 +5,7 @@ import { api, type Meta, type PhoneDetail, type Pick, type RecommendResp, type R
 import { st } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
 import { anyFilterSet } from "./filters";
-import { EXIT_FROM, LAST } from "./steps";
+import { EXIT_FROM, LAST, nextLive } from "./steps";
 import { StepScreen } from "./components/StepScreen";
 import { NarrowSheet } from "./components/NarrowSheet";
 import { ResultsScreen } from "./components/ResultsScreen";
@@ -95,13 +95,21 @@ export default function App() {
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState<1 | -1>(1);
   const goStep = useCallback((next: number) => {
-    const to = Math.min(LAST, Math.max(0, next));
-    setDir(to >= step ? 1 : -1);
+    const want = Math.min(LAST, Math.max(0, next));
+    const way: 1 | -1 = want >= step ? 1 : -1;
+    /* Walk past any screen whose question an earlier answer already settled,
+       applying what it settled on the way. Asking an Apple buyer to pick
+       Android or iPhone, and then a chipset vendor Apple does not use, is a
+       screen that can only be answered wrong. */
+    const { i, patch: implied } = nextLive(form, want, way);
+    const to = Math.min(LAST, Math.max(0, i));
+    if (Object.keys(implied).length) patch(implied);
+    setDir(way);
     setStep(to);
     // forward moves push; backward ones arrive FROM history.back() and must not
     if (to > step) pushNav("ask", to);
     window.scrollTo({ top: 0 });
-  }, [step, pushNav]);
+  }, [step, pushNav, form, patch]);
 
   // hydrate once from the URL, so a shared or reloaded brief comes back on the
   // step it was shared from rather than at the start of a nine-screen walk

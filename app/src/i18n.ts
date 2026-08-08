@@ -542,7 +542,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   // overflow lists moved into sheets.
   // owner: verify every bn string in this block.
   s_channel_t: { en: "Official set, or unofficial?", bn: "অফিশিয়াল না আনঅফিশিয়াল?" },
-  s_channel_why: { en: "Official costs more and a service centre will take it. Unofficial is cheaper with far more choice, but repairs are on you.", bn: "অফিশিয়ালের দাম বেশি, তবে সার্ভিস সেন্টার নেবে। আনঅফিশিয়াল সস্তা আর অনেক বেশি পছন্দ, কিন্তু রিপেয়ার নিজের।" },
+  s_channel_why: { en: "The same phone is sold both ways in Bangladesh, at two different prices.", bn: "অফিশিয়ালের দাম বেশি, তবে সার্ভিস সেন্টার নেবে। আনঅফিশিয়াল সস্তা আর অনেক বেশি পছন্দ, কিন্তু রিপেয়ার নিজের।" },
   s_skip_channel: { en: "Unofficial is fine", bn: "আনঅফিশিয়াল হলেও চলবে" },
   s_market_open: { en: "Choose an import market", bn: "ইমপোর্ট মার্কেট বাছুন" },
 
@@ -562,13 +562,29 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   // the earlier answers on screen; the second need question names the first
   // one back, so the two stop reading as the same question twice.
   // owner: verify every bn string in this block.
-  s_official: { en: "Official set", bn: "অফিশিয়াল" },
-  s_official_sub: { en: "Pricier, but a real warranty and a service centre that will take it.", bn: "দাম বেশি, কিন্তু আসল ওয়ারেন্টি আর সার্ভিস সেন্টার নেবে।" },
-  s_unofficial: { en: "Unofficial too", bn: "আনঅফিশিয়ালও" },
-  s_unofficial_sub: { en: "Cheaper and far more models — but usually only 10 days' shop warranty.", bn: "সস্তা আর অনেক বেশি মডেল -- তবে সাধারণত ১০ দিনের দোকান ওয়ারেন্টি।" },
+  s_official: { en: "Official", bn: "অফিশিয়াল" },
+  s_official_sub: { en: "Brand warranty and a service centre that will take it. Costs more, fewer models.", bn: "ব্র্যান্ড ওয়ারেন্টি আর সার্ভিস সেন্টার নেবে। দাম বেশি, মডেল কম।" },
+  s_unofficial: { en: "Unofficial", bn: "আনঅফিশিয়াল" },
+  s_unofficial_sub: { en: "Costs less and far more models to choose from. Warranty is the shop's, usually 10 days.", bn: "দাম কম, বাছাইয়ের মডেলও অনেক বেশি। ওয়ারেন্টি দোকানের, সাধারণত ১০ দিন।" },
 
   s_sofar: { en: "So far", bn: "এ পর্যন্ত" },
   s_echo: { en: "You said this matters most:", bn: "আপনি বলেছেন এটাই সবচেয়ে জরুরি:" },
+
+  // ---- owner round 3, 2026-08-08. A size is a number a buyer cannot price,
+  // so every one says what it actually buys; and an option that would empty
+  // the results asks before it does it.
+  // owner: verify every bn string in this block.
+  s_ram_6_sub: { en: "Chat, browsing, a couple of apps at once.", bn: "চ্যাট, ব্রাউজিং, একসাথে দু‘টা অ্যাপ।" },
+  s_ram_8_sub: { en: "Comfortable for years. Most people should stop here.", bn: "কয়েক বছর আরামে চলবে। বেশিরভাগের এখানেই থামা উচিত।" },
+  s_ram_12_sub: { en: "Only for heavy games or many apps kept open.", bn: "ভারি গেম বা অনেক অ্যাপ খুলে রাখলেই দরকার।" },
+  s_rom_128_sub: { en: "Enough unless you shoot a lot of video.", bn: "অনেক ভিডিও করা না হলে যথেষ্ট।" },
+  s_rom_256_sub: { en: "Years of photos without deleting anything.", bn: "কিছু মুছতে হবে না -- বছরের পর বছর ছবি।" },
+  s_rom_512_sub: { en: "Only if you keep everything on the phone, offline.", bn: "সব ফোনেই রাখলে তবেই।" },
+
+  s_narrow_t: { en: "That cuts a lot", bn: "এতে অনেক কমে যাবে" },
+  s_narrow_body: { en: "This leaves {n} phones out of {m}. You can still change it later.", bn: "{m}টার মধ্যে শুধু {n}টা থাকবে। পরে বদলানো যাবে।" },
+  s_narrow_yes: { en: "Keep it", bn: "রাখুন" },
+  s_narrow_no: { en: "Never mind", bn: "থাক" },
 
   // ---- short forms, for the brief bar only. The quiz labels are whole
   // sentences ("Photos that actually look good"), which is right where the

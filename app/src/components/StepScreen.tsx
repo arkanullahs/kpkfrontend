@@ -1,6 +1,6 @@
 import { st } from "../theme";
 import { bnNum, t } from "../i18n";
-import { EXIT_FROM, LAST, STEPS, stepAt } from "../steps";
+import { EXIT_FROM, LAST, stepAt, stepPosition } from "../steps";
 import { buildBrief } from "../filters";
 import { useCountUp } from "../useCounts";
 import { StepBody } from "./StepBody";
@@ -35,6 +35,10 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
                              onNext, onBack, onExit, onCommit }: Props) {
   const s = stepAt(step);
   const shown = useCountUp(matchCount);
+  // "4 of 8", not "4 of 9", when a screen dropped out because an earlier
+  // answer settled it. A total that counts screens the buyer will never see
+  // is a progress bar that lies.
+  const { at, of } = stepPosition(form, step);
 
   return (
     /* overflow-x:clip on the WRAPPER, not on .k-step: the entry slide moves
@@ -43,7 +47,7 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
        create a scroll container — the rail below still pins to the viewport
        and the page still grows downward. */
     <div style={st("max-width:680px; margin:0 auto; overflow-x:clip;")}>
-      <Rail step={step} />
+      <Rail at={at} of={of} />
 
       {/* Every control here is a real 48px target with a border you can see.
           The first build drew them as bare 13.5px text: technically 44px tall
@@ -61,7 +65,7 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
         ) : <span />}
 
         <span style={st("font-size:14.5px; font-weight:700; color:var(--tx); white-space:nowrap;")}>
-          {bnNum(String(step + 1))} {t("s_of")} {bnNum(String(STEPS.length))}
+          {bnNum(String(at + 1))} {t("s_of")} {bnNum(String(of))}
         </span>
 
         {/* No exit before step 4: budget and the leading need axis are what the
@@ -146,15 +150,15 @@ function SoFar({ form, step }: { form: Form; step: number }) {
 
    The segments are aria-hidden and a live text position sits beside them: nine
    decorative bars announce nothing, and a screen reader needs the number. */
-function Rail({ step }: { step: number }) {
+function Rail({ at, of }: { at: number; of: number }) {
   return (
     <div className="k-glass"
       style={st("position:sticky; top:74px; z-index:40; display:flex; gap:4px; padding:10px 0; background:var(--hdr-bg); backdrop-filter:blur(14px) saturate(1.6); -webkit-backdrop-filter:blur(14px) saturate(1.6);")}>
-      {STEPS.map((s, i) => (
-        <span key={s.id} aria-hidden="true"
-          style={st(`flex:1; height:4px; border-radius:var(--r); transition:background .3s ease; background:${i <= step ? "var(--teal)" : "var(--rule)"};`)} />
+      {Array.from({ length: of }, (_, i) => (
+        <span key={i} aria-hidden="true"
+          style={st(`flex:1; height:4px; border-radius:var(--r); transition:background .3s ease; background:${i <= at ? "var(--teal)" : "var(--rule)"};`)} />
       ))}
-      <span className="sr-only" aria-live="polite">{`${step + 1} / ${STEPS.length}`}</span>
+      <span className="sr-only" aria-live="polite">{`${at + 1} / ${of}`}</span>
     </div>
   );
 }

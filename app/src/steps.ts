@@ -82,6 +82,15 @@ export interface Step {
   options: (f: Form) => StepOption[];
   reveal?: StepGroup;
   sheet?: StepSheet;
+  /** The answer an earlier screen already settled, or null if the question is
+      still open. A non-null result means this screen is SKIPPED and the patch
+      applied on the way past.
+
+      Owner 2026-08-08: "if someone choose apple why fucking ask this stupid
+      question again?" Asking an Apple buyer to choose Android or iPhone, and
+      then to pick a chipset vendor Apple does not use, is not a question --
+      it is a screen that can only be answered wrong. */
+  moot?: (f: Form) => Partial<Form> | null;
   /** what "doesn't matter" does */
   clear: (f: Form) => Partial<Form>;
   /** "doesn't matter" as a full-size peer of the real answers, or as a quiet
@@ -135,6 +144,11 @@ const ICON = {
   clean: "M4 7h16M4 12h10M4 17h7",
   chip: "M7 7h10v10H7V7zM4 10h3M4 14h3M17 10h3M17 14h3M10 4v3M14 4v3M10 17v3M14 17v3",
   globe: "M12 3a9 9 0 100 18 9 9 0 000-18zM3.5 9h17M3.5 15h17M12 3c2.5 2.4 3.8 5.6 3.8 9s-1.3 6.6-3.8 9c-2.5-2.4-3.8-5.6-3.8-9S9.5 5.4 12 3z",
+  ram: "M4 8h16v8H4V8zM7 16v3M12 16v3M17 16v3M8 11h2v2H8zM14 11h2v2h-2z",
+  rom: "M4 6h16v12H4V6zM4 12h16M7 9h.01M7 15h.01M11 15h6",
+  // every "doesn't matter" tile carries this, so no grid has a tile with no
+  // icon sitting next to tiles that do
+  any: "M4 12l5 5L20 6M4 18h6",
 };
 
 const Q1_KEYS = ["camera", "battery", "speed", "simple"];
@@ -191,6 +205,17 @@ const chip = (id: string, labelKey: string,
 
 const toggleIn = (list: string[], v: string) =>
   list.includes(v) ? list.filter((x) => x !== v) : [...list, v];
+
+/** The buyer asked for Apple and nothing else, which settles both the platform
+    and the chipset without another screen. */
+const onlyApple = (f: Form) =>
+  f.includeBrands.length === 1 && f.includeBrands[0] === "Apple";
+
+/** A size tile: icon, the number, and what that number actually buys. */
+const sizeTile = (id: string, labelKey: string, icon: string,
+                  patch: StepOption["patch"], isOn: StepOption["isOn"],
+                  probe: StepOption["probe"]): StepOption =>
+  ({ id, labelKey, subKey: labelKey + "_sub", icon, patch, isOn, probe });
 
 export const STEPS: Step[] = [
   {
@@ -257,8 +282,11 @@ export const STEPS: Step[] = [
         (f) => ({ regions: toggleIn(f.regions, code) }), (f) => f.regions.includes(code))),
     },
     clear: () => ({ officialOnly: false, regions: [] }),
-    // the second half of a two-sided answer, so it is a tile with its own
-    // trade-off spelled out -- not a way to leave the question
+    /* The second half of a two-sided answer: a tile, with its own trade-off,
+       its own icon and its own count. Owner 2026-08-08 on the first cut --
+       "why u make sound unofficial too much bad or sub option like" -- so it
+       is named plainly, its upside is stated first, and the count that used
+       to appear on official alone now appears on both. */
     skipStyle: "equal", skipKey: "s_unofficial",
     skipSubKey: "s_unofficial_sub", skipIcon: ICON.globe,
   },
@@ -288,7 +316,7 @@ export const STEPS: Step[] = [
       ],
     },
     clear: () => ({ includeBrands: [], excludeBrands: [], avoidChinese: false }),
-    skipStyle: "equal", skipKey: "s_skip_brands",
+    skipStyle: "equal", skipKey: "s_skip_brands", skipIcon: ICON.any,
   },
   {
     /* Platform only. The skin question used to sit in the same list, which
@@ -297,6 +325,8 @@ export const STEPS: Step[] = [
     id: "platform", kind: "single", layout: "grid2",
     titleKey: "s_type_t", whyKey: "s_type_why",
     owns: ["platform", "osStyle", "requireRom"],
+    // Apple only makes iPhones. Asking is not a question.
+    moot: (f) => (onlyApple(f) ? { platform: "ios" as const, osStyle: "any" as const, requireRom: false } : null),
     options: () => [
       { id: "android", labelKey: "fg_platform_android", icon: ICON.android,
         patch: () => ({ platform: "android" as const }), isOn: (f) => f.platform === "android",
@@ -318,12 +348,14 @@ export const STEPS: Step[] = [
         { id: "feature", labelKey: "fg_os_feature", icon: ICON.chip,
           patch: () => ({ osStyle: "feature" as const }), isOn: (f) => f.osStyle === "feature",
           probe: () => ({ osStyle: "feature" as const }) },
-        chip("lineage", "fg_rom_on",
-          (f) => ({ requireRom: !f.requireRom }), (f) => f.requireRom),
+        { id: "lineage", labelKey: "fg_rom_on", icon: ICON.rom,
+          patch: (f: Form) => ({ requireRom: !f.requireRom }),
+          isOn: (f: Form) => f.requireRom,
+          probe: () => ({ requireRom: true }) },
       ],
     },
     clear: () => ({ platform: "any" as const, osStyle: "any" as const, requireRom: false }),
-    skipStyle: "equal", skipKey: "s_skip_type",
+    skipStyle: "equal", skipKey: "s_skip_type", skipIcon: ICON.any,
   },
   {
     /* Chipset alone. It used to share a screen with RAM and storage — three
@@ -332,6 +364,10 @@ export const STEPS: Step[] = [
     id: "chipset", kind: "single", layout: "grid2",
     titleKey: "s_power_t", whyKey: "s_power_why",
     owns: ["socVendor"],
+    // Apple designs its own silicon: neither answer on this screen exists on
+    // an iPhone, so both would read "nothing matches" and the screen would be
+    // a dead end wearing a question mark
+    moot: (f) => (onlyApple(f) || f.platform === "ios" ? { socVendor: "any" as const } : null),
     options: () => [
       { id: "snapdragon", labelKey: "fg_soc_snapdragon", icon: ICON.chip,
         patch: (f) => ({ socVendor: f.socVendor === "snapdragon" ? "any" as const : "snapdragon" as const }),
@@ -343,23 +379,29 @@ export const STEPS: Step[] = [
         probe: () => ({ socVendor: "mediatek" as const }) },
     ],
     clear: () => ({ socVendor: "any" as const }),
-    skipStyle: "equal", skipKey: "s_skip_power",
+    skipStyle: "equal", skipKey: "s_skip_power", skipIcon: ICON.any,
   },
   {
-    id: "memory", kind: "multi", layout: "chips",
+    /* Sizes as explained tiles, not bare chips. "8GB" is a number a buyer
+       cannot price; "comfortable for years, and where most people should
+       stop" is a decision. Every one carries its own live count, so the cost
+       of asking for more is on screen before the tap. */
+    id: "memory", kind: "multi", layout: "grid3",
     titleKey: "s_memory_t", whyKey: "s_memory_why",
     owns: ["minRam", "minStorage"],
-    options: () => [6, 8, 12].map((n) => chip("ram" + n, "s_ram_" + n,
-      (f) => ({ minRam: f.minRam === n ? 0 : n }), (f) => f.minRam === n)),
+    options: () => [6, 8, 12].map((n) => sizeTile("ram" + n, "s_ram_" + n, ICON.ram,
+      (f) => ({ minRam: f.minRam === n ? 0 : n }), (f) => f.minRam === n,
+      () => ({ minRam: n }))),
     // storage is its own axis, always asked, never mixed into the RAM row
     reveal: {
       when: () => true,
-      titleKey: "s_storage_t", layout: "chips",
-      options: () => [128, 256, 512].map((n) => chip("rom" + n, "s_rom_" + n,
-        (f) => ({ minStorage: f.minStorage === n ? 0 : n }), (f) => f.minStorage === n)),
+      titleKey: "s_storage_t", layout: "grid3",
+      options: () => [128, 256, 512].map((n) => sizeTile("rom" + n, "s_rom_" + n, ICON.rom,
+        (f) => ({ minStorage: f.minStorage === n ? 0 : n }), (f) => f.minStorage === n,
+        () => ({ minStorage: n }))),
     },
     clear: () => ({ minRam: 0, minStorage: 0 }),
-    skipStyle: "equal", skipKey: "s_skip_memory",
+    skipStyle: "equal", skipKey: "s_skip_memory", skipIcon: ICON.any,
   },
   {
     id: "musthave", kind: "multi", layout: "grid2",
@@ -390,13 +432,40 @@ export const STEPS: Step[] = [
       requireJack: false, requireIr: false, requireFm: false,
       q: { ...f.q, hw: [] },
     }),
-    skipStyle: "equal", skipKey: "s_skip_hardware",
+    skipStyle: "equal", skipKey: "s_skip_hardware", skipIcon: ICON.any,
   },
 ];
 
 /** The index arrives from the URL, so it is clamped rather than trusted. */
 export function stepAt(i: number): Step {
   return STEPS[Math.min(STEPS.length - 1, Math.max(0, Math.floor(i) || 0))];
+}
+
+/** The screens this buyer will actually see. A moot screen is not hidden to
+    save them time -- it is hidden because its question has no answer left. */
+export const liveSteps = (f: Form): Step[] => STEPS.filter((s) => !s.moot?.(f));
+
+/** Where `i` lands among the screens that apply, for "4 of 8". */
+export function stepPosition(f: Form, i: number): { at: number; of: number } {
+  const live = liveSteps(f);
+  const id = stepAt(i).id;
+  const at = live.findIndex((s) => s.id === id);
+  return { at: at < 0 ? 0 : at, of: live.length };
+}
+
+/** The next screen in `dir` that still has a question, and everything its
+    skipped neighbours already settled. Returns the index unchanged when the
+    walk runs out, which the caller clamps. */
+export function nextLive(f: Form, from: number, dir: 1 | -1): { i: number; patch: Partial<Form> } {
+  let patch: Partial<Form> = {};
+  let i = from;
+  while (i >= 0 && i <= LAST) {
+    const settled = STEPS[i].moot?.({ ...f, ...patch });
+    if (!settled) return { i, patch };
+    patch = { ...patch, ...settled };
+    i += dir;
+  }
+  return { i: Math.min(LAST, Math.max(0, i)), patch };
 }
 
 /** Where the escape link appears (spec §5.2): budget and the leading need axis

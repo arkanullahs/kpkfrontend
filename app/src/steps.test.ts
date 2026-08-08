@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { FORM_PATHS, STEPS, UNOWNED, stepAt, type Step, type StepOption } from "./steps";
+import {
+  FORM_PATHS, STEPS, UNOWNED, liveSteps, nextLive, stepAt, stepPosition,
+  type Step, type StepOption,
+} from "./steps";
 import { DEFAULT_FORM, queryToForm, type Form } from "./need";
 import { STRING_KEYS, hasBothLangs } from "./i18n";
 
@@ -86,6 +89,36 @@ describe("the table is well-formed", () => {
         expect(o.icon).toMatch(/^M[\d.\s]/);
         expect(o.icon).not.toMatch(/[\u{1F300}-\u{1FAFF}]/u);
       }
+    }
+  });
+
+  it("draws every tile in a grid the same way — icon or logo, never bare", () => {
+    // owner 2026-08-08: "some grid have icons and some not. must be uniform".
+    // A grid where one tile is text and its neighbours are illustrated reads
+    // as a mistake, and the bare one was always the skip.
+    for (const s of STEPS) {
+      if (s.kind === "budget" || s.layout === "chips") continue;
+      for (const o of s.options(form())) {
+        expect(o.icon || o.dot, `${s.id}/${o.id} has neither icon nor logo`).toBeTruthy();
+      }
+      if (s.skipStyle === "equal") {
+        expect(s.skipIcon, `${s.id} skip tile has no icon`).toBeTruthy();
+      }
+      if (s.reveal && s.reveal.layout !== "chips") {
+        for (const o of s.reveal.options(form())) {
+          expect(o.icon || o.dot, `${s.id} follow-up /${o.id} is bare`).toBeTruthy();
+        }
+      }
+    }
+  });
+
+  it("prices every size instead of showing a bare number", () => {
+    // "8GB" is a number a buyer cannot price; what it buys is a decision
+    const mem = STEPS.find((s) => s.id === "memory")!;
+    for (const o of [...mem.options(form()), ...mem.reveal!.options(form())]) {
+      expect(o.subKey, `${o.id} has no explanation`).toBeTruthy();
+      expect(hasBothLangs(o.subKey!), o.subKey!).toBe(true);
+      expect(o.probe, `${o.id} shows no live count`).toBeTruthy();
     }
   });
 
@@ -252,13 +285,58 @@ describe("options do what they say", () => {
     expect(back.includeBrands).toEqual([]);
   });
 
-  it("probes at most four options per step", () => {
-    // each probe is a /count call on every form edit. Six brand tiles times
-    // two sides would be thirteen requests per keystroke — which is why the
-    // exclude side lives in a sheet and carries no pills at all.
+  it("keeps the live counts under a fixed ceiling per step", () => {
+    // Each probe is a /count call on every form edit. The owner asked for a
+    // count on every visible option, including the skip, so the ceiling moved
+    // from four to eight -- memory is the widest at three RAM, three storage
+    // and a skip. It is still a ceiling: the brands' exclude side stays in a
+    // sheet with no pills, because thirteen calls per keystroke is not a UI.
     for (const s of STEPS) {
-      const probed = everyOption(s).filter((o) => o.probe).length;
-      expect(probed, `${s.id} probes ${probed}`).toBeLessThanOrEqual(4);
+      const onScreen = [...s.options(form()), ...(s.reveal ? s.reveal.options(form()) : [])];
+      const probed = onScreen.filter((o) => o.probe).length + (s.skipStyle === "equal" ? 1 : 0);
+      expect(probed, `${s.id} probes ${probed}`).toBeLessThanOrEqual(8);
     }
+  });
+
+  it("skips the screens an earlier answer already settled", () => {
+    // owner 2026-08-08: "if someone choose apple why fucking ask this stupid
+    // question again? apple dont have soc choice etc."
+    const apple = form({ includeBrands: ["Apple"] });
+    const platform = STEPS.find((s) => s.id === "platform")!;
+    const chipset = STEPS.find((s) => s.id === "chipset")!;
+    expect(platform.moot!(apple), "Apple only makes iPhones").toEqual({
+      platform: "ios", osStyle: "any", requireRom: false,
+    });
+    expect(chipset.moot!(apple), "Apple designs its own silicon").toEqual({ socVendor: "any" });
+    expect(chipset.moot!(form({ platform: "ios" })), "an iPhone by any route").toBeTruthy();
+
+    // and stay put for everyone else
+    expect(platform.moot!(form())).toBeNull();
+    expect(chipset.moot!(form())).toBeNull();
+    expect(platform.moot!(form({ includeBrands: ["Apple", "Samsung"] })), "two brands").toBeNull();
+  });
+
+  it("counts only the screens this buyer will actually see", () => {
+    // a total that includes screens nobody will reach is a progress bar that
+    // lies, and the buyer is watching it to know how much is left
+    expect(liveSteps(form())).toHaveLength(9);
+    const apple = form({ includeBrands: ["Apple"] });
+    expect(liveSteps(apple)).toHaveLength(7);
+    expect(liveSteps(apple).map((s) => s.id)).not.toContain("platform");
+    expect(liveSteps(apple).map((s) => s.id)).not.toContain("chipset");
+    expect(stepPosition(apple, 8), "the last screen of seven").toEqual({ at: 6, of: 7 });
+  });
+
+  it("walks past a settled screen and applies what it settled", () => {
+    const apple = form({ includeBrands: ["Apple"] });
+    // 5 is `platform`, which Apple settles, and 6 is `chipset`, which it also
+    // settles -- so a forward move from brands lands on memory
+    const fwd = nextLive(apple, 5, 1);
+    expect(STEPS[fwd.i].id).toBe("memory");
+    expect(fwd.patch.platform).toBe("ios");
+    expect(fwd.patch.socVendor).toBe("any");
+
+    // and backward from memory lands on brands, not on the settled pair
+    expect(STEPS[nextLive(apple, 6, -1).i].id).toBe("brands");
   });
 });

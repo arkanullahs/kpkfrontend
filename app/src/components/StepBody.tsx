@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { fmt, st, taka } from "../theme";
 import { bnNum, bnToAscii, t } from "../i18n";
 import { buildBrief } from "../filters";
@@ -23,6 +24,16 @@ const TAP_MS = 140;
 const QUICK = [15000, 25000, 40000, 70000, 120000];
 const BUDGET_MAX = 500000;
 
+/* When an option is worth stopping the buyer over.
+
+   Measured against the pool the probe already reports: four or fewer phones
+   left is a shortlist a buyer did not ask for, and losing four in five is a
+   cut they will not have predicted from a chip that says "8GB". Above both
+   lines the pill alone is enough -- a dialog on every tap is its own kind of
+   half-baked. */
+const FEW_LEFT = 4;
+const DEEP_CUT = 0.2;
+
 export function StepBody({ s, form, patch, matchCount, metaStock, onAnswered, onCommit }: {
   s: Step; form: Form; patch: (d: Partial<Form>) => void;
   matchCount: number | null; metaStock: string;
@@ -30,15 +41,31 @@ export function StepBody({ s, form, patch, matchCount, metaStock, onAnswered, on
 }) {
   const [tapped, setTapped] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
+  const [confirming, setConfirming] = useState<{ o: StepOption; n: number } | null>(null);
   const opts = s.options(form);
+  const revealed = s.reveal && s.reveal.when(form) ? s.reveal : null;
 
-  // only the CURRENT step probes, and the table caps it at four options, so
-  // this is at most four /count calls in flight -- never twelve
+  /* Every option the buyer can see is probed, including the ones in the
+     follow-up group and "doesn't matter" itself.
+
+     The owner asked why official showed a count and unofficial did not: it is
+     the same question, and we have the answer for both sides. The cap is
+     asserted in steps.test.ts and lives on the TABLE, so a step cannot grow a
+     twelve-chip grid that fires twelve /count calls per keystroke. */
   const probes: Record<string, Partial<Form>> = {};
-  for (const o of opts) if (o.probe) probes[o.id] = o.probe(form);
+  for (const o of [...opts, ...(revealed ? revealed.options(form) : [])]) {
+    if (o.probe) probes[o.id] = o.probe(form);
+  }
+  if (s.skipStyle === "equal") probes.__skip = s.clear(form);
   const counts = useCounts(form, probes);
 
-  const answer = (o: StepOption) => {
+  const apply = (o: StepOption) => {
+    if (o.id === "__skip") {
+      patch(s.clear(form));
+      setTapped("__skip");
+      window.setTimeout(onAnswered, TAP_MS);
+      return;
+    }
     patch(o.patch(form));
     // a step with a follow-up group cannot auto-advance: the answer that was
     // just given is what makes the next question appear, and leaving the
@@ -48,11 +75,17 @@ export function StepBody({ s, form, patch, matchCount, metaStock, onAnswered, on
     window.setTimeout(onAnswered, TAP_MS);
   };
 
-  const skip = () => {
-    patch(s.clear(form));
-    setTapped("__skip");
-    window.setTimeout(onAnswered, TAP_MS);
+  /* The guard sits between the tap and the patch, and only fires when the
+     probe actually came back -- an unknown count must never block an answer. */
+  const pick = (o: StepOption) => {
+    const n = counts[o.id];
+    const cuts = n != null && !o.isOn(form) &&
+      (n <= FEW_LEFT || (matchCount != null && matchCount > 0 && n / matchCount <= DEEP_CUT));
+    if (cuts) { setConfirming({ o, n: n! }); return; }
+    apply(o);
   };
+
+  const skip = () => apply({ id: "__skip" } as StepOption);
 
   // Budget has no options to tap, so nothing would ever call onAnswered for
   // it -- it needs the same explicit Next the multi steps use, or the walk
@@ -66,7 +99,6 @@ export function StepBody({ s, form, patch, matchCount, metaStock, onAnswered, on
   );
 
   const last = s.id === STEPS[LAST].id;
-  const revealed = s.reveal && s.reveal.when(form) ? s.reveal : null;
   /* A step needs an explicit Next whenever tapping one option cannot mean
      "done": multi steps, steps that reveal a follow-up, and steps with a
      sheet. The sheet case is not theoretical — the channel screen shipped
@@ -90,7 +122,6 @@ export function StepBody({ s, form, patch, matchCount, metaStock, onAnswered, on
      budget" sits in the RAM row and reads as an answer about RAM alone. */
   const skipInGrid = skipTile && !revealed ? skipTile : null;
   const skipAfter = skipTile && revealed ? skipTile : null;
-  const pick = (o: StepOption) => (o.id === "__skip" ? skip() : answer(o));
 
   return (
     <>
@@ -101,7 +132,7 @@ export function StepBody({ s, form, patch, matchCount, metaStock, onAnswered, on
         <div style={st("margin-top:26px;")}>
           <GroupLabel>{t(revealed.titleKey)}</GroupLabel>
           <Options layout={revealed.layout} opts={revealed.options(form)} form={form}
-            counts={counts} total={matchCount} tapped={tapped} onPick={answer} />
+            counts={counts} total={matchCount} tapped={tapped} onPick={pick} />
         </div>
       )}
 
@@ -143,6 +174,12 @@ export function StepBody({ s, form, patch, matchCount, metaStock, onAnswered, on
           <Options layout="chips" opts={s.sheet.options(form)} form={form}
             counts={{}} total={null} tapped={null} onPick={(o) => patch(o.patch(form))} />
         </Sheet>
+      )}
+
+      {confirming && (
+        <Confirm n={confirming.n} total={matchCount}
+          onNo={() => setConfirming(null)}
+          onYes={() => { const o = confirming.o; setConfirming(null); apply(o); }} />
       )}
     </>
   );
@@ -211,7 +248,7 @@ function Tile({ o, form, count, total, tapped, compact, onPick }: {
             strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       )}
-      {o.dot && <BrandMark dot={o.dot} mark={o.mark} />}
+      {o.dot && <BrandMark brand={o.id.split(":")[1]} dot={o.dot} mark={o.mark} />}
 
       <span style={st(`width:100%; font-size:${compact ? 15.5 : 18}px; font-weight:700; line-height:1.28; letter-spacing:-.2px; color:${lit ? "var(--onp)" : "var(--ink)"}; font-family:var(--f-bn); text-wrap:balance;`)}>
         {t(o.labelKey)}
@@ -228,20 +265,37 @@ function Tile({ o, form, count, total, tapped, compact, onPick }: {
   );
 }
 
-/* The brand's own colour, filled, with its mark on top.
+/* The brand's logo.
 
-   MI and 1+ are the marks those brands actually use. The single letters stand
-   in for wordmarks: a hand-traced Samsung or realme wordmark would be brand
-   misuse AND unreadable at 40px, so the name sits right below every one of
-   these and carries the meaning by itself. Drop the vendors' own SVG files in
-   here and this component is the only thing that changes. */
-function BrandMark({ dot, mark }: { dot: string; mark?: string }) {
+   It loads `/brandlogo/<name>.svg` first. Drop the vendors' own files there --
+   public/brandlogo/Samsung.svg, Xiaomi.svg, vivo.svg, OnePlus.svg,
+   realme.svg, Apple.svg -- and every tile picks them up with no code change.
+
+   Until a file exists the tile falls back to the brand's own colour with its
+   mark on it. MI and 1+ are the marks those brands really use; the single
+   letters stand in for wordmarks, because a hand-traced Samsung or realme
+   wordmark is brand misuse AND an illegible squiggle at 40px. The brand name
+   sits directly below every one of these either way, so nothing depends on
+   the glyph. */
+function BrandMark({ brand, dot, mark }: { brand: string; dot: string; mark?: string }) {
+  const [real, setReal] = useState(true);
+  const box = "display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:var(--r); flex-shrink:0;";
+
+  if (real) {
+    return (
+      <span aria-hidden="true" style={st(box + "background:#fff; box-shadow:0 0 0 1px rgba(var(--rgb-ink),.1);")}>
+        <img src={`/brandlogo/${brand}.svg`} alt="" width={30} height={30}
+          onError={() => setReal(false)}
+          style={st("width:30px; height:30px; object-fit:contain; display:block;")} />
+      </span>
+    );
+  }
   return (
     <span aria-hidden="true"
-      style={st(`display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:var(--r); flex-shrink:0; background:${dot}; box-shadow:0 0 0 1px rgba(var(--rgb-ink),.14), 0 4px 10px -6px rgba(var(--rgb-ink),.5);`)}>
+      style={st(box + `background:${dot}; box-shadow:0 0 0 1px rgba(var(--rgb-ink),.14), 0 4px 10px -6px rgba(var(--rgb-ink),.5);`)}>
       {mark
-        ? <span style={st("font-family:var(--f-display); font-size:16px; font-weight:800; letter-spacing:-.5px; color:#fff; line-height:1;")}>{mark}</span>
-        : <svg width="21" height="21" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+        ? <span style={st("font-family:var(--f-display); font-size:17px; font-weight:800; letter-spacing:-.5px; color:#fff; line-height:1;")}>{mark}</span>
+        : <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
             <path d="M16.4 12.7c0-2 1.6-3 1.7-3-.9-1.4-2.4-1.5-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7-1.3 0-2.6.8-3.2 2-1.4 2.4-.4 6 1 8 .7 1 1.5 2 2.5 2 1 0 1.4-.6 2.6-.6s1.5.6 2.6.6 1.7-1 2.4-1.9c.7-1.1 1-2.2 1-2.2s-1.9-.8-1.9-3.3zM14.5 6.6c.5-.7.9-1.6.8-2.6-.8 0-1.8.5-2.4 1.2-.5.6-.9 1.6-.8 2.5.9.1 1.8-.4 2.4-1.1z" />
           </svg>}
     </span>
@@ -269,13 +323,26 @@ function GroupLabel({ children }: { children: React.ReactNode }) {
 }
 
 /* Fractions, never arrows: "1 of 46" says what the option costs. "→ 18" makes
-   the buyer work out what they are losing. */
+   the buyer work out what they are losing.
+
+   An option can also ADD. "Any brand is fine" clears a filter, so it widens
+   the pool -- and rendered as a fraction that came out "45 of 5", which is
+   not a sentence. Widening reads as "+40" instead. */
 function CountPill({ n, total }: { n: number | null; total: number | null }) {
   if (n === null) return null;
-  const dead = n === 0;
+  if (n === 0) {
+    return (
+      <span style={st("display:inline-block; font-size:14px; font-weight:700; padding:5px 11px; border-radius:var(--r); background:var(--dangerL); color:var(--danger);")}>
+        {t("fg_zero")}
+      </span>
+    );
+  }
+  const wider = total != null && n > total;
   return (
-    <span style={st(`display:inline-block; font-size:14px; font-weight:700; padding:5px 11px; border-radius:var(--r); background:${dead ? "var(--dangerL)" : "var(--tint)"}; color:${dead ? "var(--danger)" : "var(--lnk)"};`)}>
-      {dead ? t("fg_zero") : `${bnNum(String(n))} ${t("fg_of")} ${total != null ? bnNum(String(total)) : "?"}`}
+    <span style={st("display:inline-block; font-size:14px; font-weight:700; padding:5px 11px; border-radius:var(--r); background:var(--tint); color:var(--lnk);")}>
+      {wider
+        ? `+${bnNum(String(n - total!))}`
+        : `${bnNum(String(n))} ${t("fg_of")} ${total != null ? bnNum(String(total)) : "?"}`}
     </span>
   );
 }
@@ -284,7 +351,14 @@ function CountPill({ n, total }: { n: number | null; total: number | null }) {
 
 /* Same material as NarrowSheet: .k-scrim, because live content sits behind it,
    which is the whole test for whether a blur is material or decoration.
-   Three gestures dismiss it -- the handle, the scrim, and Escape. */
+   Three gestures dismiss it -- the handle, the scrim, and Escape.
+
+   PORTALLED TO document.body, and that is not a detail. `.k-step` animates a
+   transform, and a transformed element becomes the containing block for its
+   `position: fixed` descendants -- so rendered in place, this "full-screen"
+   scrim was positioned against the step layer instead of the viewport, left
+   the site header undimmed, and then got cropped by the wrapper's
+   overflow-x:clip. A portal is what makes it an actual popup. */
 function Sheet({ title, children, onClose }: {
   title: string; children: React.ReactNode; onClose: () => void;
 }) {
@@ -296,22 +370,65 @@ function Sheet({ title, children, onClose }: {
     return () => { window.removeEventListener("keydown", esc); document.body.style.overflow = prev; };
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div onClick={onClose} role="dialog" aria-modal="true" aria-label={title} className="k-scrim"
       style={st("position:fixed; inset:0; z-index:1000; display:flex; align-items:flex-end; justify-content:center; background:rgba(var(--rgb-ink),.42); animation:kfade .28s ease both;")}>
       <div onClick={(e) => e.stopPropagation()}
-        style={st("width:100%; max-width:640px; background:var(--card); border-radius:14px 14px 0 0; padding:22px 20px calc(20px + env(safe-area-inset-bottom)); box-shadow:0 -22px 40px -24px rgba(var(--rgb-ink),.45); animation:kslide .34s cubic-bezier(.2,.7,.2,1) both;")}>
+        style={st("width:100%; max-width:640px; max-height:88vh; overflow-y:auto; background:var(--card); border-radius:14px 14px 0 0; padding:22px 20px calc(20px + env(safe-area-inset-bottom)); box-shadow:0 -22px 40px -24px rgba(var(--rgb-ink),.45); animation:kslide .34s cubic-bezier(.2,.7,.2,1) both;")}>
         <style>{"@keyframes kslide{from{transform:translateY(26px);opacity:0}to{transform:none;opacity:1}}"}</style>
         <button onClick={onClose} aria-label={t("s_sheet_done")}
           style={st("display:block; width:44px; height:5px; background:var(--mut); border:none; border-radius:3px; margin:0 auto 18px; cursor:pointer; padding:0;")} />
-        <div style={st("margin-bottom:16px; font-size:20px; font-weight:700; color:var(--ink); font-family:var(--f-bn);")}>{title}</div>
+        <div style={st("margin-bottom:16px; font-size:21px; font-weight:700; color:var(--ink); font-family:var(--f-bn);")}>{title}</div>
         {children}
         <button onClick={onClose} className="k-press"
           style={st("margin-top:20px; width:100%; min-height:54px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); color:var(--onp); font-size:16.5px; font-weight:700; font-family:var(--f-bn);")}>
           {t("s_sheet_done")}
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
+  );
+}
+
+/* The narrowing guard.
+
+   Owner 2026-08-08: "stop user and reassure if they want this option because
+   it narrows way too much whenever faced." The probe already knows what an
+   option costs BEFORE it is tapped, so an option that would cut the pool to
+   almost nothing asks first instead of silently emptying the results. */
+function Confirm({ n, total, onYes, onNo }: {
+  n: number; total: number | null; onYes: () => void; onNo: () => void;
+}) {
+  useEffect(() => {
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") onNo(); };
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [onNo]);
+
+  return createPortal(
+    <div onClick={onNo} role="dialog" aria-modal="true" aria-label={t("s_narrow_t")} className="k-scrim"
+      style={st("position:fixed; inset:0; z-index:1100; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(var(--rgb-ink),.5); animation:kfade .24s ease both;")}>
+      <div onClick={(e) => e.stopPropagation()}
+        style={st("width:100%; max-width:420px; background:var(--card); border-radius:16px; padding:24px 22px; box-shadow:0 30px 60px -28px rgba(var(--rgb-ink),.6);")}>
+        <div style={st("font-size:21px; font-weight:700; color:var(--ink); font-family:var(--f-bn); line-height:1.3;")}>{t("s_narrow_t")}</div>
+        <p style={st("margin:10px 0 0; font-size:16px; color:var(--tx); line-height:1.55; font-family:var(--f-bn);")}>
+          {t("s_narrow_body")
+            .replace("{n}", bnNum(String(n)))
+            .replace("{m}", total != null ? bnNum(String(total)) : "?")}
+        </p>
+        <div style={st("display:flex; gap:10px; margin-top:20px;")}>
+          <button onClick={onNo} className="k-press"
+            style={st("flex:1; min-height:52px; border-radius:var(--r); border:1.5px solid var(--rule); background:var(--card); cursor:pointer; font-size:16px; font-weight:700; color:var(--ink); font-family:var(--f-bn);")}>
+            {t("s_narrow_no")}
+          </button>
+          <button onClick={onYes} className="k-press"
+            style={st("flex:1; min-height:52px; border-radius:var(--r); border:none; background:var(--teal); cursor:pointer; font-size:16px; font-weight:700; color:var(--onp); font-family:var(--f-bn);")}>
+            {t("s_narrow_yes")}
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body,
   );
 }
 
