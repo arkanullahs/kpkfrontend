@@ -146,7 +146,11 @@ export default function App() {
     const q = window.location.search.slice(1);
     if (!q) return;
     const { node, ...f } = queryToForm(q);
-    setForm((prev) => ({ ...prev, ...f }));
+    // `wantMore` is the popup's answer and does not ride in the URL — but
+    // standing on the add-more screen IS that answer. Without this a shared or
+    // reloaded needN link replays a path that does not contain the screen the
+    // buyer is looking at, and the rail reads "1 of 8" on screen five.
+    setForm((prev) => ({ ...prev, ...f, wantMore: node === "needN" }));
     if (node && NODES[node]) setNodeId(node);
   }, []);
 
