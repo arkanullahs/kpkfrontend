@@ -311,6 +311,12 @@ export interface RecParams {
   priorities?: string;
   /** free-text buyer situation from the Simple quiz — embedded as the intent */
   use_case?: string;
+  /** The forced-choice quiz's own weight vector, "axis:weight,axis:weight".
+      Sent INSTEAD of `priorities`: an ordered list of names makes the server
+      invent magnitudes back from rank order, which is what flattened the
+      quiz's signal before. Unknown axes are dropped and values clamped
+      server-side. */
+  weights?: string;
   current_phone?: string;
   official_only?: boolean;
   include_cn?: boolean;
@@ -330,6 +336,11 @@ export interface RecParams {
   regions?: string;
   /** only phones with an official LineageOS build */
   require_custom_rom?: boolean;
+  /** spec-level RAM/storage floor in GB; ANY variant satisfying it passes */
+  min_ram?: number;
+  min_storage?: number;
+  /** elderly preset: minimum BD service-network score (brand_reliability) */
+  bd_service_floor?: number;
   os_style?: string;
   platform?: string;
   channel?: string;
@@ -381,6 +392,10 @@ export const api = {
   archetypes: () => get<Archetype[]>("/archetypes"),
   recommend: (p: RecParams) => get<RecommendResp>("/recommend", p as any),
   count: (p: RecParams) => get<CountResp>("/count", p as any),
+  /** The least this buyer could spend. No brand = the catalogue floor, which
+      is what the budget screen refuses to let them type under. */
+  cheapest: (p: { brand?: string; official_only?: boolean; bd_service_floor?: number }) =>
+    get<{ price: number | null }>("/cheapest", p as any),
   phone: (id: string) => get<PhoneDetail>("/phones/" + id.split("/").map(encodeURIComponent).join("/")),
   phoneImage: (id: string) => get<{ url: string | null }>("/phone-image/" + id.split("/").map(encodeURIComponent).join("/")),
   browse: (p: { q?: string; brand?: string; min_price?: number; max_price?: number; in_stock?: boolean; limit?: number; offset?: number }) =>

@@ -1,10 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { api, type Archetype, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
+import { api, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
 import { st } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
-import { AskScreen } from "./components/AskScreen";
+import { anyFilterSet, clearClause } from "./filters";
+import { ENTRY, NODES, nextNode, type Counts } from "./flow";
+import { StepScreen } from "./components/StepScreen";
+import { MorePopup } from "./components/MorePopup";
+import { ResetConfirm } from "./components/ResetConfirm";
+import { NarrowSheet } from "./components/NarrowSheet";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { DetailScreen } from "./components/DetailScreen";
 import { MethodScreen } from "./components/MethodScreen";
@@ -13,168 +18,20 @@ import { PriceAlert } from "./components/PriceAlert";
 import { Dock } from "./components/Dock";
 import { BootNotice, Breadcrumbs } from "./components/Chrome";
 import { track } from "./track";
+import { DEFAULT_FORM, formToQuery, queryToForm, toParams, type Form } from "./need";
 
 export type Screen = "ask" | "results" | "detail" | "method";
 
-/* Simple/Advanced mode (feedback #2): Simple keeps the ask flow to the
-   essentials a first-time buyer can answer; Advanced unlocks every filter.
-   The choice is per-visit on purpose — once picked, the other mode's controls
-   never appear (no pressure to "upgrade"); reloading re-offers the gate. */
-export type Mode = "simple" | "advanced";
+export type { Form, QuizIntent } from "./need";
+export { DEFAULT_FORM, weightAt, CHOICES, deriveIntent, toParams, formToQuery, queryToForm } from "./need";
 
-export interface Form {
-  budget: number;
-  archetypes: string[];          // multi-select: the buyer can pick several needs
-  platform: "any" | "android" | "ios";
-  osStyle: "any" | "clean" | "feature";
-  avoidChinese: boolean;         // hide China-HQ brands entirely (Xiaomi, Oppo…)
-  officialOnly: boolean;         // only phones with an official-warranty listing
-  excludeBrands: string[];
-  traitText: string;
-  // advanced mode (feedback #2/#7) — hardware dealbreakers + brand whitelist
-  requireJack: boolean;
-  requireIr: boolean;
-  requireFm: boolean;
-  socVendor: "any" | "snapdragon" | "mediatek";
-  includeBrands: string[];       // only these brands (engine `brand` whitelist)
-  hwStrict: boolean;             // unverified hardware also fails must-have filters
-  regions: string[];             // accepted import markets (Rio-labeled offers only)
-  requireRom: boolean;           // only phones with an official LineageOS build
-  // Simple-mode quiz answers (feedback #4) — dynamically weighted, no buckets.
-  // `me` is the branch question asked only when the buyer answers "for myself".
-  q: { who: string; me: string; day: string[]; out: boolean | null; hw: string[] };
-  useCase: string;               // EN sentence sent as use_case (embedded intent)
-  priorities: string[];          // ordered axes derived from the quiz answers
-}
-
-const DEFAULT_FORM: Form = {
-  budget: 95000, archetypes: [], platform: "any",
-  osStyle: "any", avoidChinese: false, officialOnly: false,
-  excludeBrands: [], traitText: "",
-  requireJack: false, requireIr: false, requireFm: false,
-  socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
-  q: { who: "me", me: "", day: [], out: null, hw: [] },
-  useCase: "", priorities: [],
-};
-
-/** Simple-mode quiz → dynamic intent (feedback #4 redesign). No archetype
-    buckets: every answer adds weighted votes to the priority axes AND a plain
-    sentence fragment. The sentence goes to the server as `use_case` (embedded
-    verbatim and shown to the ranking LLM); the strongest axes ride along as
-    `priorities`. Always English — the evidence cards it is matched against
-    are English. Nothing answered = balanced (empty intent, server default). */
-export interface QuizIntent { useCase: string; priorities: string[] }
-
-const QUIZ_DAY_VOTES: Record<string, [string, number][]> = {
-  photos: [["camera", 2]],
-  games: [["gaming", 2], ["performance", 0.8]],
-  reels: [["video", 2], ["camera", 0.8]],
-  work: [["performance", 1.2], ["battery", 0.8]],
-  chat: [["ease_of_use", 0.5], ["battery", 0.5]],
-  watch: [["battery", 1], ["performance", 0.4]],
-};
-const QUIZ_DAY_TEXT: Record<string, string> = {
-  photos: "takes lots of photos",
-  games: "plays games seriously",
-  reels: "shoots videos and reels for social media",
-  work: "runs office and business apps all day",
-  chat: "mostly calls, WhatsApp and Facebook",
-  watch: "watches shows and videos for hours",
-};
-
-export function deriveIntent(q: Form["q"]): QuizIntent {
-  const w: Record<string, number> = {};
-  const add = (ax: string, v: number) => { w[ax] = (w[ax] || 0) + v; };
-  const bits: string[] = [];
-  if (q.who === "elder") {
-    add("ease_of_use", 2.2); add("battery", 0.8);
-    bits.push("for an older parent - must be simple and forgiving, loud clear sound, no ad spam");
-  }
-  if (q.who === "other") {
-    add("ease_of_use", 0.6);
-    bits.push("a gift for someone else - safe well-rounded choice that is easy to like");
-  }
-  if (q.who === "me" && q.me === "student") {
-    add("performance", 0.8); add("battery", 0.8);
-    bits.push("for a student - best value that stays good for years");
-  }
-  for (const d of q.day) for (const [ax, v] of QUIZ_DAY_VOTES[d] || []) add(ax, v);
-  const dayBits = q.day.filter((d) => QUIZ_DAY_TEXT[d]).map((d) => QUIZ_DAY_TEXT[d]);
-  if (dayBits.length) bits.push("day on the phone: " + dayBits.join(", "));
-  if (q.out) {
-    add("battery", 1.4);
-    bits.push("outdoors most of the day - screen must stay readable in sunlight, battery must last");
-  }
-  const hwText: Record<string, string> = {
-    jack: "wants a headphone jack for wired earphones",
-    ir: "wants an IR blaster to control the TV or AC",
-    fm: "wants FM radio that works without internet",
-  };
-  for (const h of q.hw) if (hwText[h]) bits.push(hwText[h]);
-  const priorities = Object.keys(w).sort((a, b) => w[b] - w[a]).slice(0, 3);
-  return { useCase: bits.join("; "), priorities };
-}
-
-/** form → /recommend query params */
-export function toParams(f: Form, top = 5): RecParams {
-  const p: RecParams = { budget: f.budget, top };
-  // NL trait text takes over (server maps it to archetype/priorities/filters)
-  if (f.traitText.trim()) {
-    p.traits = f.traitText.trim();
-  } else if (f.useCase || f.priorities.length) {
-    // Simple quiz: dynamic intent — no archetype buckets (feedback #4)
-    if (f.useCase) p.use_case = f.useCase;
-    if (f.priorities.length) p.priorities = f.priorities.join(",");
-  } else if (f.archetypes.length) {
-    // multiple selected needs merge server-side (engine.resolve_intent)
-    p.archetype = f.archetypes.join(",");
-  }
-  if (f.platform !== "any") p.platform = f.platform;
-  if (f.osStyle !== "any") p.os_style = f.osStyle;
-  if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
-  if (f.officialOnly) p.official_only = true;
-  if (f.excludeBrands.length) p.exclude_brand = f.excludeBrands.join(",");
-  if (f.requireJack) p.require_jack = true;
-  if (f.requireIr) p.require_ir = true;
-  if (f.requireFm) p.require_fm = true;
-  if (f.socVendor !== "any") p.soc_vendor = f.socVendor;
-  if (f.includeBrands.length) p.brand = f.includeBrands.join(",");
-  if (f.hwStrict) p.hw_strict = true;
-  if (f.regions.length) p.regions = f.regions.join(",");
-  if (f.requireRom) p.require_custom_rom = true;
-  return p;
-}
 
 export default function App() {
   const [lang, setLangState] = useState<Lang>(getLang());
   const toggleLang = () => { const n = lang === "en" ? "bn" : "en"; setLang(n); setLangState(n); };
   const [screen, setScreen] = useState<Screen>("ask");
-  const [askStep, setAskStep] = useState(0); // wizard step on the ask screen
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
-  // switching to Simple resets the advanced-only fields so no invisible
-  // filter keeps shaping results after the controls disappear
-  const [mode, setMode] = useState<Mode>("simple");
-  // every visit: ask Simple-or-Advanced before the wizard (feedback #2/#4).
-  // Not persisted — a reload is the way to change modes (v2 decision #1).
-  const [modeChosen, setModeChosen] = useState<boolean>(false);
-  const changeMode = useCallback((m: Mode) => {
-    track("mode_gate", { mode: m });
-    setMode(m);
-    setModeChosen(true);
-    setForm((f) => m === "simple"
-      ? {
-        ...f, excludeBrands: [], osStyle: "any",
-        requireJack: f.q.hw.includes("jack"), requireIr: f.q.hw.includes("ir"), requireFm: f.q.hw.includes("fm"),
-        socVendor: "any", includeBrands: [], hwStrict: false, regions: [], requireRom: false,
-        archetypes: [],               // quiz intent replaces the purpose cards
-        ...deriveIntent(f.q),
-      }
-      // Advanced ranks by the purpose cards — drop the quiz intent so a stale
-      // use_case cannot silently override the picked archetypes
-      : { ...f, useCase: "", priorities: [] });
-  }, []);
   const [meta, setMeta] = useState<Meta | null>(null);
-  const [archetypes, setArchetypes] = useState<Archetype[]>([]);
 
   const [result, setResult] = useState<RecommendResp | null>(null);
   const [recLoading, setRecLoading] = useState(false);
@@ -203,7 +60,6 @@ export default function App() {
         .catch(() => { if (!stop) window.setTimeout(load, 2500); });
     };
     load();
-    api.archetypes().then(setArchetypes).catch(() => { });
     return () => { stop = true; window.clearInterval(tick); };
   }, []);
   // only after a beat: a warm server answers in ~200ms and must never flash it
@@ -215,16 +71,26 @@ export default function App() {
      history entry; every back control calls history.back(), so the button and
      the on-screen "Back" do the same thing. A popstate with no state of ours
      is a real exit — we let it through. */
-  const pushNav = useCallback((s: Screen, step = 0) => {
-    window.history.pushState({ kpk: true, screen: s, askStep: step }, "");
+  const pushNav = useCallback((s: Screen, node: string = ENTRY) => {
+    window.history.pushState({ kpk: true, screen: s, node }, "");
   }, []);
   useEffect(() => {
-    window.history.replaceState({ kpk: true, screen: "ask", askStep: 0 }, "");
+    window.history.replaceState({ kpk: true, screen: "ask", node: ENTRY }, "");
     const onPop = (e: PopStateEvent) => {
-      const h = e.state as { kpk?: boolean; screen?: Screen; askStep?: number } | null;
+      const h = e.state as { kpk?: boolean; screen?: Screen; node?: string } | null;
       if (!h?.kpk) return;
       setScreen(h.screen || "ask");
-      setAskStep(h.askStep ?? 0);
+      // the node rides in the history entry, so Back walks the graph rather
+      // than jumping straight out of the flow
+      if ((h.screen || "ask") === "ask") { setDir(-1); setNodeId(h.node && NODES[h.node] ? h.node : ENTRY); }
+      /* And the ANSWERS ride in that entry's URL, which is the whole reason
+         the form is mirrored there. Restoring only the node moved the buyer
+         without moving what they had said — most visibly after "start over",
+         where Back landed on screen six of a walk whose answers had all just
+         been thrown away. Undo now restores both. */
+      const q = window.location.search.slice(1);
+      const { node: _n, ...f } = queryToForm(q);
+      setForm((prev) => ({ ...DEFAULT_FORM, ...f, wantMore: prev.wantMore }));
       window.scrollTo({ top: 0 });
     };
     window.addEventListener("popstate", onPop);
@@ -234,18 +100,84 @@ export default function App() {
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
 
-  // 3-step ask wizard (budget → purpose → fine-tune). Stepping the query makes
-  // giving the answer feel as considered as the answer we work for, so the RAG
-  // wait reads as care rather than a fast-in / slow-out mismatch. (The old
-  // official/unofficial step is gone — those flags proved too unreliable to ask
-  // buyers to choose on.)
-  const ASK_STEPS = 3;
-  const askNext = useCallback(() => setAskStep((s) => {
-    const n = Math.min(s + 1, ASK_STEPS - 1);
-    if (n !== s) window.history.pushState({ kpk: true, screen: "ask", askStep: n }, "");
-    return n;
-  }), []);
-  const askBack = useCallback(() => window.history.back(), []);
+  /* The current flow node. `dir` drives the transition's mirror — Back runs the
+     same keyframes with the sign flipped rather than needing its own pair. */
+  const [nodeId, setNodeId] = useState<string>(ENTRY);
+  const [dir, setDir] = useState<1 | -1>(1);
+
+  // the live counts the guards read. `pool` is the headline candidate count,
+  // which already reflects the channel the buyer asked for (toParams sends
+  // official_only), so the thin-official-pool guard needs no count of its own.
+  // A null count makes a guard pass through (spec §4.2), so the flow never
+  // blocks on the network.
+  const [cheapestIphone, setCheapestIphone] = useState<number | null>(null);
+  const counts: Counts = { pool: matchCount, cheapestIphone };
+
+  // the cheapest phone this buyer's channel + preset can buy at all. The
+  // budget screen refuses to advance below it (owner: "it shouldnt let anyone
+  // to finding 0 phones"), and it is the number the refusal quotes.
+  const [floorPrice, setFloorPrice] = useState<number | null>(null);
+
+  // forward move to an explicit node; Back always arrives via history (popstate)
+  const goTo = useCallback((target: string) => {
+    if (!NODES[target]) return;
+    setDir(1);
+    setNodeId(target);
+    pushNav("ask", target);
+    window.scrollTo({ top: 0 });
+  }, [pushNav]);
+
+  // the `more` popup, open over the priority screen the buyer just answered.
+  // Holds the popup node id so its own next() resolves the route on answer.
+  const [popup, setPopup] = useState<string | null>(null);
+  // onSeeResults is defined further down (it needs runRecommend); the flow
+  // callbacks reach it through a ref to avoid a use-before-declaration cycle.
+  const onSeeResultsRef = useRef<() => void>(() => {});
+
+  // one forward step from an ask node: END commits, a popup opens its dialog,
+  // an ask node is navigated to. Guards are already skipped by nextNode.
+  const advance = useCallback((fromNode: string, f = form) => {
+    const nxt = nextNode(f, { pool: matchCount, cheapestIphone }, fromNode);
+    if (nxt === "END") { onSeeResultsRef.current(); return; }
+    if (NODES[nxt].kind === "popup") { setPopup(nxt); return; }
+    goTo(nxt);
+  }, [form, matchCount, cheapestIphone, goTo]);
+
+  const answerMore = useCallback((yes: boolean) => {
+    const nf = { ...form, wantMore: yes };
+    patch({ wantMore: yes });
+    const pnode = popup!;
+    setPopup(null);
+    // resolve the popup's own route from its node, with the answer applied
+    const after = nextNode(nf, { pool: matchCount, cheapestIphone }, pnode);
+    if (after === "END") { onSeeResultsRef.current(); return; }
+    goTo(after);
+  }, [form, popup, patch, matchCount, cheapestIphone, goTo]);
+
+  // hydrate once from the URL, so a shared or reloaded brief comes back on the
+  // node it was shared from rather than at the start of the walk
+  useEffect(() => {
+    const q = window.location.search.slice(1);
+    if (!q) return;
+    const { node, ...f } = queryToForm(q);
+    // `wantMore` is the popup's answer and does not ride in the URL — but
+    // standing on the add-more screen IS that answer. Without this a shared or
+    // reloaded needN link replays a path that does not contain the screen the
+    // buyer is looking at, and the rail reads "1 of 8" on screen five.
+    setForm((prev) => ({ ...prev, ...f, wantMore: node === "needN" }));
+    if (node && NODES[node]) setNodeId(node);
+  }, []);
+
+  // mirror the form back into the URL. replaceState, NOT pushState: a keystroke
+  // in the budget field must not become a history entry. The NODE pushes (goTo)
+  // because walking back through the graph is what the browser button should do.
+  useEffect(() => {
+    const q = formToQuery(form, nodeId);
+    const next = q ? `${window.location.pathname}?${q}` : window.location.pathname;
+    if (next !== window.location.pathname + window.location.search) {
+      window.history.replaceState(window.history.state, "", next);
+    }
+  }, [form, nodeId]);
 
   // live candidate count for the "See results" badge (debounced). Hits the
   // lightweight /count endpoint — structured pre-filter only, no embed/LLM —
@@ -254,13 +186,41 @@ export default function App() {
   const debounceRef = useRef<number | undefined>(undefined);
   useEffect(() => {
     window.clearTimeout(debounceRef.current);
+    // no budget yet -> no count. The channel and elderly screens come BEFORE
+    // budget in the owner's flow, and a candidate count against no budget is
+    // meaningless (and the backend requires budget > 0). Pills stay hidden
+    // until the buyer sets a number.
+    if (form.budget <= 0) { setMatchCount(null); setCheapestIphone(null); return; }
     debounceRef.current = window.setTimeout(() => {
       api.count(toParams(form))
         .then((r) => setMatchCount(r.candidates))
         .catch(() => setMatchCount(null));
+      // the live iPhone threshold, the one count the pool cannot stand in for.
+      // Only worth fetching on the elderly path — it is the only branch with a
+      // guard that reads it.
+      if (form.forElderly) {
+        api.cheapest({ brand: "Apple", official_only: form.officialOnly })
+          .then((r) => setCheapestIphone(r.price))
+          .catch(() => setCheapestIphone(null));
+      }
     }, 350);
     return () => window.clearTimeout(debounceRef.current);
   }, [form]);
+
+  /* The price floor. Depends on the channel and the elderly preset and NOT on
+     the budget — which is the point: it has to be known while the buyer is
+     still typing the budget, including while that budget is zero, so the
+     debounced /count effect above cannot carry it. */
+  useEffect(() => {
+    let stop = false;
+    api.cheapest({
+      official_only: form.officialOnly,
+      ...(form.forElderly ? { bd_service_floor: 6 } : {}),
+    })
+      .then((r) => { if (!stop) setFloorPrice(r.price); })
+      .catch(() => { if (!stop) setFloorPrice(null); });
+    return () => { stop = true; };
+  }, [form.officialOnly, form.forElderly]);
 
   // signature of the form the current `result` was computed from, so navigating
   // back to Results after editing the query re-runs instead of showing stale picks
@@ -279,7 +239,7 @@ export default function App() {
   const runRecommend = useCallback(async () => {
     const requestId = crypto.randomUUID();
     requestIdRef.current = requestId;
-    track("see_results", { mode, budget: form.budget, quiz: !!(form.useCase || form.priorities.length) });
+    track("see_results", { budget: form.budget, quiz: !!(form.useCase || form.priorities.length) });
     const params: RecParams = { ...toParams(form, 5), request_id: requestId };
     lastRunKey.current = JSON.stringify(toParams(form, 5));
     setScreen("results");
@@ -300,7 +260,66 @@ export default function App() {
       setRecError(e?.message || "Could not load recommendations");
       setRecLoading(false);       // errors skip the finish beat
     }
-  }, [form, mode]);
+  }, [form]);
+
+  /* The nudge. Fires ONCE, and only when a buyer LEAVES THE WALK EARLY without
+     having set a single filter — the case where one tap would sharpen the pick
+     a lot and they do not know the controls exist.
+
+     It used to fire on the final commit too, which is where the owner met it:
+     nine screens answered, then a dialog suggesting they go back and narrow,
+     whose affirmative button returned them to the brand screen they had just
+     filled in. On the last screen there is nothing left to suggest. */
+  const [sheetSeen, setSheetSeen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const onExitEarly = useCallback(() => {
+    if (!sheetSeen && !anyFilterSet(form)) {
+      setSheetSeen(true);
+      setSheetOpen(true);
+      track("narrow_nudge", { shown: true });
+      return;
+    }
+    runRecommend();
+  }, [form, sheetSeen, runRecommend]);
+  // reaching END is a commit, never a nudge
+  onSeeResultsRef.current = runRecommend;
+
+  // the affirmative button does NOT rank — it returns the buyer to the walk at
+  // the first filter step. Only the commit spends a ranking call.
+  const onNarrow = useCallback(() => {
+    setSheetOpen(false);
+    // return the buyer to the walk at the first real filter screen
+    goTo("brands");
+  }, [goTo]);
+
+  /* Reset and clear (owner 2026-08-09).
+
+     Clearing one clause stays where the buyer is — they undid an answer, they
+     did not ask to go anywhere. Starting over returns to the entry with a
+     blank form and a clean URL, and asks first, because it is the one control
+     in the walk that Back cannot undo. */
+  const onClear = useCallback((id: string) => {
+    setForm((f) => ({ ...f, ...clearClause(f, id) }));
+  }, []);
+
+  const [resetting, setResetting] = useState(false);
+  const doReset = useCallback(() => {
+    setResetting(false);
+    setForm(DEFAULT_FORM);
+    setPopup(null);
+    setMatchCount(null);
+    setCheapestIphone(null);
+    // a fresh walk earns the nudge again — it is once per search, not once
+    // per browser session
+    setSheetSeen(false);
+    setSheetOpen(false);
+    setDir(-1);
+    setNodeId(ENTRY);
+    window.history.pushState({ kpk: true, screen: "ask", node: ENTRY }, "", window.location.pathname);
+    setScreen("ask");
+    window.scrollTo({ top: 0 });
+    track("picker_reset", {});
+  }, []);
 
   // RagProgress finished its completion beat -> reveal the results
   const onLoaderDone = useCallback(() => { setRecLoading(false); setRecReady(false); }, []);
@@ -327,7 +346,7 @@ export default function App() {
     }
   }, [result]);
 
-  const goAsk = () => { setScreen("ask"); setAskStep(0); pushNav("ask", 0); window.scrollTo({ top: 0 }); };
+  const goAsk = () => { setScreen("ask"); pushNav("ask"); window.scrollTo({ top: 0 }); };
   // "back to results" from a detail/method screen IS a back navigation — going
   // through history keeps the browser button and this button in step
   const goResults = () => goBack();
@@ -406,7 +425,7 @@ export default function App() {
                   <span style={st("font-size:12.5px; font-weight:600; white-space:nowrap;")}>{t("prices_loading")}</span>
                 </span>}
             <button onClick={toggleLang} title="Language / ভাষা" aria-label="Toggle language" className="k-press k-glow"
-              style={st("display:inline-flex; align-items:center; gap:6px; flex-shrink:0; padding:8px 14px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); box-shadow:0 4px 12px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.35); font-size:13px; font-weight:700; color:var(--onp); font-family:'Anek Bangla',sans-serif;")}>
+              style={st("display:inline-flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0; min-height:44px; padding:8px 14px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); box-shadow:0 4px 12px rgba(var(--rgb-ink),.14), inset 0 1px 0 rgba(var(--rgb-white),.35); font-size:13px; font-weight:700; color:var(--onp); font-family:'Anek Bangla',sans-serif;")}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="var(--card)" strokeWidth="1.7" /><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" stroke="var(--card)" strokeWidth="1.5" /></svg>
               {lang === "en" ? "বাংলা" : "EN"}
             </button>
@@ -429,13 +448,23 @@ export default function App() {
           </div>
         )}
         {screen === "ask" && (
-          <AskScreen
-            form={form} patch={patch} archetypes={archetypes} meta={meta}
-            mode={mode} onMode={changeMode} modeChosen={modeChosen}
-            metaStock={metaStock} onSubmit={runRecommend} matchCount={matchCount}
-            step={askStep} totalSteps={ASK_STEPS} onNext={askNext} onBack={askBack}
+          <StepScreen
+            nodeId={nodeId} dir={dir} form={form} counts={counts} patch={patch}
+            matchCount={matchCount} metaStock={metaStock}
+            onNext={(next) => advance(nodeId, next)}
+            onBack={goBack}
+            onExit={onExitEarly}
+            onCommit={runRecommend}
+            onClear={onClear}
+            onReset={() => setResetting(true)}
+            floorPrice={floorPrice}
           />
         )}
+        {popup && (
+          <MorePopup picks={form.q.picks}
+            onYes={() => answerMore(true)} onNo={() => answerMore(false)} />
+        )}
+        {resetting && <ResetConfirm onYes={doReset} onNo={() => setResetting(false)} />}
         {screen === "results" && (
           <ResultsScreen
             result={result} loading={recLoading} error={recError}
@@ -455,13 +484,15 @@ export default function App() {
       </div>
 
       <Dock
-        screen={screen} matchCount={matchCount} loading={recLoading}
-        askStep={askStep} askLast={askStep === ASK_STEPS - 1}
-        quizActive={screen === "ask" && modeChosen && mode === "simple" && askStep === 1}
-        detailReady={!!result}
-        onAskNext={askNext} onAskBack={askBack} onSeeResults={runRecommend} onHome={goAsk}
-        onBackResults={goResults}
+        screen={screen} loading={recLoading} detailReady={!!result}
+        onHome={goAsk} onBackResults={goResults}
       />
+      {sheetOpen && (
+        <NarrowSheet matchCount={matchCount}
+          onDismiss={() => setSheetOpen(false)}
+          onShowNow={() => { setSheetOpen(false); runRecommend(); }}
+          onNarrow={onNarrow} />
+      )}
       {showNotice && screen === "results" && <ResultsNotice onClose={dismissNotice} />}
       {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
       {booting && <BootNotice seconds={bootSecs} />}
@@ -500,7 +531,7 @@ export default function App() {
         {/* the 96px well under the copyright was dock clearance, and it read as
             a dead black slab on every screen the dock is hidden on (owner
             2026-07-26). Clearance only when the dock is actually there. */}
-        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "ask" && askStep === 0 ? 26 : 86}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>
+        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "results" || screen === "detail" ? 116 : 26}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>
           © {new Date().getFullYear()} bhalophone. All rights reserved.
           {/* the trademark notice, quieter than the copyright above it and on
               its own line so it reads as a disclaimer rather than a byline.

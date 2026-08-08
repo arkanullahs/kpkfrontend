@@ -453,6 +453,300 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qq_hw_ir: { en: "TV/AC remote (IR)", bn: "টিভি/এসি রিমোট (IR)" },
   qq_hw_fm: { en: "FM radio", bn: "এফএম রেডিও" },
 
+  // ---- the single ask screen (spec 2026-08-07). One title for the whole
+  // page, because there are no steps left to title separately.
+  // owner: verify every bn string in this block.
+  ask_title: { en: "Let's find your phone", bn: "চলুন আপনার ফোনটা খুঁজি" },
+  ask_sub: {
+    en: "Answer as much or as little as you like. Nothing here is required, and you can change any answer before you ask for results.",
+    bn: "যতটুকু ইচ্ছা ততটুকু উত্তর দিন। কোনোটাই বাধ্যতামূলক নয়, আর ফলাফল দেখার আগে যেকোনো উত্তর বদলাতে পারবেন।" },
+
+  // BudgetStep's own lines. These were hardcoded English, so a Bangla buyer
+  // read them in English on the very first screen.
+  q_budget_own: {
+    en: "Type the number you can actually spend. Not sure? Start from one of these and edit it.",
+    bn: "আপনি সত্যিই যত খরচ করতে পারবেন সেই সংখ্যাটা লিখুন। নিশ্চিত না হলে নিচের একটা থেকে শুরু করে বদলে নিন।" },
+  q_budget_live_1: { en: "Live prices across", bn: "বাংলাদেশের" },
+  q_budget_live_2: {
+    en: "phones in Bangladesh. We look for the best fit, not the cheapest box.",
+    bn: "ফোনের এখনকার দাম দেখা হচ্ছে। আমরা সবচেয়ে সস্তা নয়, সবচেয়ে মানানসই ফোনটা খুঁজি।" },
+
+  // ---- the nine steps (spec 2026-08-08). Titles ask a question in words a
+  // buyer would use; the `why` line says what the answer costs, and is always
+  // visible rather than behind a tap.
+  // owner: verify every bn string in this block.
+  s_budget_ph: { en: "type your budget", bn: "আপনার বাজেট লিখুন" },
+  s_budget_t: { en: "What can you spend?", bn: "কত টাকা খরচ করতে পারবেন?" },
+  s_budget_why: { en: "Type your real number. We look for the best phone at it, not the cheapest.", bn: "আপনার সত্যিকার বাজেট লিখুন। আমরা এই দামে সেরা ফোন খুঁজি, সবচেয়ে সস্তাটা নয়।" },
+
+  s_warranty_t: { en: "Do you want official warranty?", bn: "অফিশিয়াল ওয়ারেন্টি চান?" },
+  s_warranty_why: { en: "Official phones cost more but a service centre will take them.", bn: "অফিশিয়াল ফোনের দাম বেশি, কিন্তু সার্ভিস সেন্টার নেবে।" },
+
+  s_hardware_t: { en: "Anything it must have?", bn: "এমন কিছু আছে যা থাকতেই হবে?" },
+  s_hardware_why: { en: "Most new phones dropped these. Asking for one cuts the list a lot.", bn: "বেশিরভাগ নতুন ফোনে এগুলো নেই। একটা চাইলেই তালিকা অনেক ছোট হয়।" },
+
+  s_brands_t: { en: "Any brand you want, or don't?", bn: "কোনো ব্র্যান্ড চান, বা চান না?" },
+  s_brands_why: { en: "Pick a favourite, or rule one out. Leaving this alone is fine.", bn: "পছন্দেরটা বেছে নিন, বা যেটা চান না বাদ দিন।" },
+
+  s_type_t: { en: "Android or iPhone?", bn: "অ্যান্ডরয়েড না আইফোন?" },
+  s_type_why: { en: "Two different worlds, and you cannot move apps between them. ", bn: "দুটো আলাদা জগৎ, অ্যাপ একটা থেকে আরকটায় নেওয়া যায় না। অ্যান্ডরয়েড বললে সফটওয়্যার নিয়ে পরে জিজ্ঞেস করব।" },
+
+  s_power_t: { en: "Any chipset preference?", bn: "চিপসেট নিয়ে পছন্দ আছে?" },
+  s_power_why: { en: "Most people have none, and that is the right answer. Skip it unless a game or an app you use needs one.", bn: "বেশিরভাগ মানুষের নেই, আর সেটাই সঠিক। কোনো গেম বা অ্যাপে দরকার না হলে বাদ দিন।" },
+
+  s_market_t: { en: "Where was it made for?", bn: "কোন দেশের জন্য বানানো?" },
+  s_market_why: { en: "An import market changes the software, the charger and who honours a repair.", bn: "ইমপোর্ট মার্কেট সফটওয়্যার, চার্জার আর রিপেয়ার বদলে দেয়।" },
+
+  // "doesn't matter" is a first-class answer on the filter steps, so it is
+  // worded as an ANSWER, not as a refusal to answer.
+  s_skip: { en: "Skip", bn: "স্কিপ" },
+  s_skip_need: { en: "I'm not sure", bn: "আমি নিশ্চিত নই" },
+  s_skip_warranty: { en: "Doesn't matter", bn: "কোনো সমস্যা নেই" },
+  s_skip_hardware: { en: "None of these", bn: "এগুলোর কোনোটাই নয়" },
+  s_skip_brands: { en: "Any brand is fine", bn: "যেকোনো ব্র্যান্ড চলবে" },
+  s_skip_type: { en: "Either is fine", bn: "যেকোনোটাই চলবে" },
+  s_skip_power: { en: "Whatever fits the budget", bn: "বাজেটে যা হয়" },
+  s_skip_market: { en: "Doesn't matter", bn: "কোনো সমস্যা নেই" },
+
+  s_ram_6: { en: "6GB RAM", bn: "৬জিবি র্‍যাম" },
+  s_ram_8: { en: "8GB RAM", bn: "৮জিবি র্‍যাম" },
+  s_ram_12: { en: "12GB RAM", bn: "১২জিবি র্‍যাম" },
+  s_rom_128: { en: "128GB storage", bn: "১২৮জিবি স্টোরেজ" },
+  s_rom_256: { en: "256GB storage", bn: "২৫৬জিবি স্টোরেজ" },
+  s_rom_512: { en: "512GB storage", bn: "৫১২জিবি স্টোরেজ" },
+
+  // brand and market names are proper nouns -- identical in both languages,
+  // and listed anyway so the both-languages test covers them
+  brand_Samsung: { en: "Samsung", bn: "Samsung" },
+  brand_Xiaomi: { en: "Xiaomi", bn: "Xiaomi" },
+  brand_vivo: { en: "vivo", bn: "vivo" },
+  brand_OnePlus: { en: "OnePlus", bn: "OnePlus" },
+  brand_realme: { en: "realme", bn: "realme" },
+  brand_Apple: { en: "Apple", bn: "Apple" },
+  mkt_IN: { en: "India", bn: "ভারত" },
+  mkt_Global: { en: "Global", bn: "গ্লোবাল" },
+  mkt_CN: { en: "China", bn: "চীন" },
+  mkt_US: { en: "USA", bn: "ইউএসএ" },
+  mkt_JP: { en: "Japan", bn: "জাপান" },
+  mkt_SG: { en: "Singapore", bn: "সিঙ্গাপুর" },
+  mkt_AU: { en: "Australia", bn: "অস্ট্রেলিয়া" },
+
+  // the frame
+  s_of: { en: "of", bn: "এর মধ্যে" },
+  s_back: { en: "Back", bn: "ফিরে যান" },
+  s_see_n: { en: "see", bn: "দেখুন" },
+  s_commit: { en: "Find my phone", bn: "আমার ফোন খুঁজুন" },
+  s_brief_t: { en: "What we will look for", bn: "যা খুঁজব" },
+
+  // ---- the restructure (owner walk-through 2026-08-08). The channel got its
+  // own screen, the platform/skin and chipset/memory pairs were split, and the
+  // overflow lists moved into sheets.
+  // owner: verify every bn string in this block.
+  s_channel_t: { en: "Official set, or unofficial?", bn: "অফিশিয়াল না আনঅফিশিয়াল?" },
+  s_channel_why: { en: "The same phone is sold both ways in Bangladesh, at two different prices.", bn: "অফিশিয়ালের দাম বেশি, তবে সার্ভিস সেন্টার নেবে। আনঅফিশিয়াল সস্তা আর অনেক বেশি পছন্দ, কিন্তু রিপেয়ার নিজের।" },
+  s_skip_channel: { en: "Unofficial is fine", bn: "আনঅফিশিয়াল হলেও চলবে" },
+  s_market_open: { en: "Choose an import market", bn: "ইমপোর্ট মার্কেট বাছুন" },
+
+  s_brands_hide: { en: "Hide a brand instead", bn: "বরং কোনো ব্র্যান্ড লুকান" },
+  s_skin_t: { en: "And the software?", bn: "আর সফটওয়্যার?" },
+  s_storage_t: { en: "Storage", bn: "স্টোরেজ" },
+  s_strict_t: { en: "How strict?", bn: "কতটা কঠোর?" },
+
+  s_memory_t: { en: "How much memory?", bn: "কতটুকু মেমরি?" },
+  s_memory_why: { en: "A floor, not a target. More RAM and storage cost money you could spend on the camera instead.", bn: "এটা সর্বনিম্ন, লক্ষ্য নয়। বেশি র্‍যাম আর স্টোরেজের টাকা ক্যামেরায় যেতে পারত।" },
+  s_skip_memory: { en: "Whatever fits the budget", bn: "বাজেটে যা হয়" },
+
+  // ---- flow-graph screens (spec 2026-08-08). elderly fork, rechannel divert,
+  // china-vs-global software, custom-rom support. owner: verify every bn string.
+  s_elderly_t: { en: "Is this phone for an elderly person?", bn: "এই ফোনটি কি কোনো বয়স্ক মানুষের জন্য?" },
+  s_elderly_why: { en: "We'll keep it simple — clear text, real service, no confusing extras.", bn: "আমরা সহজ রাখব — বড় পরিষ্কার লেখা, আসল সার্ভিস, কোনো ঝামেলা নয়।" },
+  s_elderly_yes: { en: "Yes, for an elder", bn: "হ্যাঁ, বয়স্কদের জন্য" },
+  s_elderly_yes_sub: { en: "We'll pick an easy, reliable phone", bn: "আমরা সহজ, নির্ভরযোগ্য ফোন বাছব" },
+  s_elderly_no: { en: "No, general use", bn: "না, সাধারণ ব্যবহারে" },
+  s_elderly_no_sub: { en: "A few quick questions instead", bn: "বদলে কয়েকটা দ্রুত প্রশ্ন" },
+
+  s_rechannel_t: { en: "Very few official phones at this budget", bn: "এই বাজেটে অফিশিয়াল ফোন খুব কম" },
+  s_rechannel_why: { en: "Unofficial sets cost less and there are far more of them. Include them?", bn: "আনঅফিশিয়াল সেট সস্তা আর অনেক বেশি। যোগ করব?" },
+  s_rechannel_widen: { en: "Yes, include unofficial", bn: "হ্যাঁ, আনঅফিশিয়াল যোগ করুন" },
+  s_rechannel_widen_sub: { en: "Far more phones at this price. The shop's warranty, usually 10 days.", bn: "এই দামে অনেক বেশি ফোন। ওয়ারেন্টি দোকানের, সাধারণত ১০ দিন।" },
+  s_rechannel_keep: { en: "No, official only", bn: "না, শুধু অফিশিয়াল" },
+  s_rechannel_keep_sub: { en: "Stay official. We'll take you back to the budget so you can raise it.", bn: "অফিশিয়ালই থাকুক। বাজেটে ফিরিয়ে নিচ্ছি, বাড়াতে পারবেন।" },
+  s_soft_t: { en: "Global software, or is a China ROM fine?", bn: "গ্লোবাল সফটওয়্যার, না চায়না রম চলবে?" },
+  s_soft_why: { en: "China-ROM phones cost less but need a software flash for Google apps and English.", bn: "চায়না-রম ফোন সস্তা, কিন্তু গুগল অ্যাপ আর ইংরেজির জন্য সফটওয়্যার ফ্ল্যাশ লাগে।" },
+  s_soft_global: { en: "Global software only", bn: "শুধু গ্লোবাল সফটওয়্যার" },
+  s_soft_global_sub: { en: "Works out of the box", bn: "খুলেই ব্যবহার করা যায়" },
+  s_soft_cn: { en: "A China ROM is fine", bn: "চায়না রম চলবে" },
+  s_soft_cn_sub: { en: "Cheaper, if you'll flash it", bn: "সস্তা, যদি ফ্ল্যাশ করেন" },
+
+  s_rom_support_t: { en: "Custom ROM support?", bn: "কাস্টম রম সাপোর্ট?" },
+  // the add-another-priority popup (spec 2026-08-08 §5). owner: verify bn.
+  s_more_t: { en: "Add another priority?", bn: "আরেকটা অগ্রাধিকার যোগ করবেন?" },
+  s_more_body: { en: "You can add as many as you like. Each one counts less than the one before, so your first choice always leads.", bn: "যত খুশি যোগ করতে পারেন। প্রতিটা আগেরটার চেয়ে কম গোনা হয়, তাই আপনার প্রথম পছন্দই সবসময় এগিয়ে থাকে।" },
+  s_more_yes: { en: "Add one more", bn: "আরেকটা যোগ করুন" },
+  s_more_no: { en: "No, that's all", bn: "না, এটুকুই" },
+  // the shrinking priority ladder on the needN screen (spec 2026-08-08 §5.1):
+  // the warning is SHOWN as each added priority's real share, not scolded.
+  s_prio_ladder_t: { en: "Your priorities, strongest first", bn: "আপনার অগ্রাধিকার, সবচেয়ে জরুরিটা আগে" },
+  s_prio_share: { en: "counts about {pct}% as much as your top pick", bn: "আপনার প্রথম পছন্দের প্রায় {pct}% গোনা হয়" },
+
+  s_sheet_done: { en: "Done", bn: "হয়েছে" },
+
+  // ---- owner round 2, 2026-08-08. Official and unofficial are two answers
+  // with two prices, so both are spelled out; the choices-so-far bar keeps
+  // the earlier answers on screen; the second need question names the first
+  // one back, so the two stop reading as the same question twice.
+  // owner: verify every bn string in this block.
+  s_official: { en: "Official", bn: "অফিশিয়াল" },
+  s_official_sub: { en: "Brand warranty and a service centre that will take it. Costs more, fewer models.", bn: "ব্র্যান্ড ওয়ারেন্টি আর সার্ভিস সেন্টার নেবে। দাম বেশি, মডেল কম।" },
+  s_unofficial: { en: "Unofficial", bn: "আনঅফিশিয়াল" },
+  s_unofficial_sub: { en: "Costs less and far more models to choose from. Warranty is the shop's, usually 10 days.", bn: "দাম কম, বাছাইয়ের মডেলও অনেক বেশি। ওয়ারেন্টি দোকানের, সাধারণত ১০ দিন।" },
+
+  s_sofar: { en: "So far", bn: "এ পর্যন্ত" },
+  s_echo: { en: "You said this matters most:", bn: "আপনি বলেছেন এটাই সবচেয়ে জরুরি:" },
+
+  // ---- owner round 3, 2026-08-08. A size is a number a buyer cannot price,
+  // so every one says what it actually buys; and an option that would empty
+  // the results asks before it does it.
+  // owner: verify every bn string in this block.
+  s_ram_6_sub: { en: "Chat, browsing, a couple of apps at once.", bn: "চ্যাট, ব্রাউজিং, একসাথে দু‘টা অ্যাপ।" },
+  s_ram_8_sub: { en: "Comfortable for years. Most people should stop here.", bn: "কয়েক বছর আরামে চলবে। বেশিরভাগের এখানেই থামা উচিত।" },
+  s_ram_12_sub: { en: "Only for heavy games or many apps kept open.", bn: "ভারি গেম বা অনেক অ্যাপ খুলে রাখলেই দরকার।" },
+  s_rom_128_sub: { en: "Enough unless you shoot a lot of video.", bn: "অনেক ভিডিও করা না হলে যথেষ্ট।" },
+  s_rom_256_sub: { en: "Years of photos without deleting anything.", bn: "কিছু মুছতে হবে না -- বছরের পর বছর ছবি।" },
+  s_rom_512_sub: { en: "Only if you keep everything on the phone, offline.", bn: "সব ফোনেই রাখলে তবেই।" },
+
+  s_narrow_t: { en: "That cuts a lot", bn: "এতে অনেক কমে যাবে" },
+  s_narrow_body: { en: "This leaves {n} phones out of {m}. You can still change it later.", bn: "{m}টার মধ্যে শুধু {n}টা থাকবে। পরে বদলানো যাবে।" },
+  s_narrow_yes: { en: "Keep it", bn: "রাখুন" },
+  s_narrow_no: { en: "Never mind", bn: "থাক" },
+
+  // ---- short forms, for the brief bar only. The quiz labels are whole
+  // sentences ("Photos that actually look good"), which is right where the
+  // buyer is deciding and wrong in a bar that restates three answers at 375px
+  // -- measured, it made the bar 233px tall, 29% of the viewport.
+  // owner: verify every bn string in this block.
+  qs_camera: { en: "Camera", bn: "ক্যামেরা" },
+  qs_battery: { en: "Battery", bn: "ব্যাটারি" },
+  qs_speed: { en: "Speed", bn: "স্পিড" },
+  qs_simple: { en: "Simple to use", bn: "সহজ" },
+  qs_gaming: { en: "Gaming", bn: "গেমিং" },
+  qs_video: { en: "Video", bn: "ভিডিও" },
+  brief_more: { en: "+{n} more", bn: "আরও {n}টি" },
+
+  // ---- the brief bar. An unanswered clause says so in words rather than
+  // going blank, so the bar never looks complete when it is not.
+  // owner: verify every bn string in this block.
+  brief_need_none: { en: "no preference yet", bn: "এখনো কিছু বাছা হয়নি" },
+  brief_filters_none: { en: "no filters", bn: "কোনো শর্ত নেই" },
+  brief_change: { en: "tap to change", bn: "বদলাতে চাপ দিন" },
+
+  // ---- filter groups (spec 2026-08-07 section 4.2). Labels name the OUTCOME,
+  // not the feature: a buyer knows what "works as a TV remote" means and has
+  // never heard of an IR blaster. Every help line is ALWAYS visible, never
+  // behind a tap, and says what the control costs as well as what it does.
+  // owner: verify every bn string in this block.
+  fg_warranty: { en: "Official warranty only", bn: "শুধু অফিশিয়াল ওয়ারেন্টি" },
+  fg_warranty_help: {
+    en: "Only phones sold through the brand's Bangladesh distributor, so the brand fixes it if it breaks. Costs more, and most shops here sell imported stock instead.",
+    bn: "শুধু সেসব ফোন যেগুলো ব্র্যান্ডের বাংলাদেশ ডিস্ট্রিবিউটরের মাধ্যমে বিক্রি হয় — নষ্ট হলে ব্র্যান্ড নিজে ঠিক করে দেয়। দাম একটু বেশি, আর দেশের বেশিরভাগ দোকান ইমপোর্ট করা ফোন বিক্রি করে।" },
+  fg_warranty_on: { en: "official only", bn: "শুধু অফিশিয়াল" },
+
+  fg_hardware: { en: "Things it must have", bn: "যা থাকতেই হবে" },
+  fg_hardware_help: {
+    en: "Pick only what you truly need. Each one drops every phone without it, and these parts are getting rare on new phones.",
+    bn: "সত্যিই যা দরকার শুধু সেটাই বাছুন। একেকটা বাছলে যেসব ফোনে ওটা নেই সব বাদ পড়বে, আর নতুন ফোনে এগুলো এখন কমই থাকে।" },
+  fg_hw_jack: { en: "Headphone jack", bn: "হেডফোন জ্যাক" },
+  fg_hw_ir: { en: "Works as a TV / AC remote", bn: "টিভি বা এসির রিমোট হিসেবে চলে" },
+  fg_hw_fm: { en: "FM radio without internet", bn: "ইন্টারনেট ছাড়া এফএম রেডিও" },
+
+  fg_avoid: { en: "Brands to avoid", bn: "যেসব ব্র্যান্ড বাদ" },
+  fg_avoid_help: {
+    en: "Hides brands you do not want to see at all. Leave this alone unless you have a reason.",
+    bn: "যেসব ব্র্যান্ড একদমই দেখতে চান না সেগুলো লুকিয়ে দেয়। কারণ না থাকলে এটা ছুঁয়ে দেখার দরকার নেই।" },
+  fg_avoid_cn: { en: "Chinese brands", bn: "চীনা ব্র্যান্ড" },
+
+  fg_type: { en: "Kind of phone", bn: "কেমন ফোন" },
+  fg_type_help: {
+    en: "iPhone or Android, and whether you want plain software or one packed with extra features.",
+    bn: "আইফোন না অ্যান্ড্রয়েড, আর সফটওয়্যার সাদামাটা চান নাকি অনেক ফিচারে ভরা।" },
+  fg_platform_android: { en: "Android", bn: "অ্যান্ড্রয়েড" },
+  fg_platform_ios: { en: "iPhone", bn: "আইফোন" },
+  fg_os_clean: { en: "plain software", bn: "সাদামাটা সফটওয়্যার" },
+  fg_os_feature: { en: "feature-packed", bn: "ফিচারে ভরা" },
+
+  fg_power: { en: "Speed and memory floor", bn: "স্পিড আর মেমোরির সর্বনিম্ন" },
+  fg_power_help: {
+    en: "Sets a minimum so slower phones drop out. Higher is not automatically better value — a big number costs money you could have spent on the camera or the battery.",
+    bn: "একটা সর্বনিম্ন ঠিক করে দেয়, যাতে ধীর ফোনগুলো বাদ পড়ে। বেশি মানেই ভালো দাম নয় — বড় সংখ্যার পেছনে যে টাকা যায়, সেটা ক্যামেরা বা ব্যাটারিতেও দেওয়া যেত।" },
+  fg_soc_snapdragon: { en: "Snapdragon", bn: "স্ন্যাপড্রাগন" },
+  fg_soc_mediatek: { en: "MediaTek", bn: "মিডিয়াটেক" },
+
+  fg_only: { en: "Only these brands", bn: "শুধু এই ব্র্যান্ডগুলো" },
+  fg_only_help: {
+    en: "Shows nothing except the brands you pick. Strict — one or two can leave very few phones.",
+    bn: "আপনি যেগুলো বাছবেন তার বাইরে কিছুই দেখাবে না। কড়া নিয়ম — এক-দুইটা বাছলে খুব কম ফোনই থাকতে পারে।" },
+
+  fg_market: { en: "Which country it was made for", bn: "কোন দেশের জন্য বানানো" },
+  fg_market_help: {
+    en: "Imported phones are built for one market. An India unit takes two SIMs; a China unit may have no Play Store. Leave this alone unless you know you need it.",
+    bn: "ইমপোর্ট করা ফোন এক-একটা দেশের জন্য বানানো। ইন্ডিয়ার ইউনিটে দুইটা সিম চলে; চীনের ইউনিটে প্লে স্টোর না-ও থাকতে পারে। দরকার আছে নিশ্চিত না হলে এটা ছোঁবেন না।" },
+  fg_rom_on: { en: "custom ROM support", bn: "কাস্টম রম চলে" },
+  fg_strict_on: { en: "verified only", bn: "শুধু যাচাই করা" },
+
+  fg_any: { en: "any", bn: "যেকোনো" },
+  fg_tier2: { en: "More controls", bn: "আরও অপশন" },
+  fg_of: { en: "of", bn: "টির মধ্যে" },
+  fg_zero: { en: "nothing matches", bn: "কিছুই মেলে না" },
+  s_reset_no: { en: "Keep my answers", bn: "উত্তরগুলো থাক" },
+  s_reset_yes: { en: "Yes, clear it all", bn: "হ্যাঁ, সব মুছুন" },
+  s_reset_body: { en: "This clears every answer and takes you back to the first question.", bn: "এতে আপনার সব উত্তর মুছে যাবে আর প্রথম প্রশ্নে ফিরে যাবেন।" },
+  s_reset_t: { en: "Start over?", bn: "নতুন করে শুরু করবেন?" },
+  s_clear_one: { en: "Clear {what}", bn: "{what} মুছে ফেলুন" },
+  s_reset: { en: "Start over", bn: "নতুন করে শুরু" },
+  s_commit_none: { en: "Nothing matches all of these together. Take one back above.", bn: "সবগুলো একসাথে মেলে এমন কিছু নেই। উপর থেকে একটা বাদ দিন।" },
+  s_budget_none_use: { en: "Use {price}", bn: "{price} ব্যবহার করুন" },
+  s_budget_none_body: { en: "No phone in Bangladesh matches this amount with your answers. Try a higher number.", bn: "আপনার উত্তরগুলোর সাথে এই টাকায় বাংলাদেশে কোনো ফোন মেলে না। একটু বেশি লিখে দেখুন।" },
+  s_budget_none_floor: { en: "The cheapest phone we can find right now is {price}. Below that there is nothing to recommend.", bn: "এখন সবচেয়ে সস্তা যে ফোনটা পাওয়া যাচ্ছে সেটা {price}। এর নিচে সাজেস্ট করার মতো কিছু নেই।" },
+  s_budget_none_t: { en: "Nothing sells at this budget", bn: "এই বাজেটে কোনো ফোন নেই" },
+  fg_n_of_m: { en: "{n} of {m}", bn: "{m}টির মধ্যে {n}" },
+  fg_clear: { en: "Clear", bn: "মুছে দিন" },
+
+  // ---- the narrow-down nudge. owner: verify every bn string.
+  ns_title: { en: "Want to narrow it down first?", bn: "আগে আরেকটু কমিয়ে নেবেন?" },
+  ns_body: {
+    en: "{n} phones fit your budget right now. One or two filters make the pick sharper — or skip this, it is optional.",
+    bn: "এখন আপনার বাজেটে {n}টি ফোন মিলছে। দু-একটা শর্ত দিলে বাছাই আরও নিখুঁত হয় — না চাইলে বাদ দিন, এটা বাধ্যতামূলক নয়।" },
+  ns_no: { en: "No, show them now", bn: "না, এখনই দেখান" },
+  ns_yes: { en: "Narrow it down", bn: "কমিয়ে নিই" },
+  ns_dismiss: { en: "Close", bn: "বন্ধ করুন" },
+
+  // ---- forced-choice quiz (spec section 7). The old quiz asked what you DO;
+  // this asks what you would GIVE UP, because a recommendation is a choice
+  // under a budget. Two questions, single answer each, ordered = weighted. ----
+  qc_q1: { en: "Same money. What must this phone do best?",
+           bn: "একই টাকায় — ফোনটা কোন কাজে সবচেয়ে ভালো হতে হবে?" },
+  qc_q1_why: {
+    en: "One phone cannot be best at everything at this price — something always gives. Whatever you pick here, we hunt for first.",
+    bn: "এই দামে একটা ফোন সব দিকেই সেরা হয় না — কিছু না কিছু ছাড়তেই হয়। এখানে যা বাছবেন, আমরা সেটাই আগে খুঁজব।"
+  },
+  qc_q2: { en: "What else matters? Add as many as you like.", bn: "আর কী কী জরুরি? যত খুশি যোগ করুন।" },
+  qc_q2_why: { en: "Tap them in the order they matter to you. Each one counts for less than the one above it -- the bars show exactly how much.", bn: "যেই ক্রমে জরুরি, সেই ক্রমেই চাপুন। প্রতিটা এর উপরেরটার চেয়ে কম গোনা হয় -- পাশের বারগুলোতে কতটা দেখা যাচ্ছে।" },
+  qc_camera: { en: "Photos that actually look good", bn: "ছবি — যেন সত্যিই ভালো ওঠে" },
+  qc_battery: { en: "Battery that lasts into day two", bn: "ব্যাটারি — দ্বিতীয় দিনেও যেন চার্জ থাকে" },
+  qc_speed: { en: "Speed that never stutters", bn: "স্পিড — কখনো যেন আটকে না যায়" },
+  qc_simple: { en: "Simple to use, nothing confusing", bn: "সহজ — বড় স্পষ্ট লেখা, ঝামেলা নেই" },
+  qc_gaming: { en: "Heavy games running smooth", bn: "গেমিং — হেভি গেম স্মুথ চলবে" },
+  qc_video: { en: "Video and reels that look sharp", bn: "ভিডিও-রিল — যেন ঝকঝকে হয়" },
+  qc_hw_why: {
+    en: "These are dealbreakers, not preferences — tick one and every phone without it is dropped. Pick as many as you truly need.",
+    bn: "এগুলো শখ নয়, শর্ত — টিক দিলে যেসব ফোনে নেই সব বাদ পড়বে। সত্যিই যা যা লাগবে, তত গুলোই বাছুন।"
+  },
+  qc_r_first: { en: "Most important", bn: "সবচেয়ে জরুরি" },
+  qc_r_second: { en: "Then", bn: "এরপর" },
+  qc_r_hw: { en: "Must have", bn: "থাকতেই হবে" },
+  qc_none: { en: "—", bn: "—" },
+  qc_skip_q2: { en: "Only the first matters to me", bn: "আমার কাছে প্রথমটাই আসল" },
+
   // ---- one-by-one quiz redesign (feedback #4): dynamic intent, no buckets ----
   qz_why_who: {
     en: "Why we ask — an elder needs simple and clear; a student needs value that lasts. The answer changes what we hunt for.",
@@ -571,6 +865,17 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   feedback_thanks: { en: "Thanks! That helps us improve.", bn: "ধন্যবাদ! এটা আমাদের উন্নতিতে সাহায্য করে।" },
   feedback_skip: { en: "Skip", bn: "বাদ দিন" },
 };
+
+/* Every key in the table, for checks. A key the UI asks for but the table
+   lacks renders as the raw key name, which ships to a buyer as gibberish and
+   is invisible in review — so it is worth asserting on rather than eyeballing. */
+export const STRING_KEYS = Object.keys(STRINGS);
+
+/** True only when BOTH languages carry real text for this key. */
+export function hasBothLangs(key: string): boolean {
+  const e = STRINGS[key];
+  return !!e && !!e.en.trim() && !!e.bn.trim();
+}
 
 const BN_DIGITS = "০১২৩৪৫৬৭৮৯";
 
