@@ -159,12 +159,25 @@ export function anyFilterSet(f: Form): boolean {
     from the form, the bar lies with total confidence. */
 export interface BriefClause { id: string; text: string; set: boolean; }
 
+/** Two named values then "+N more". Measured at 375px, spelling every value
+    out made the bar 233px tall — 29% of the viewport — because the quiz labels
+    are whole sentences and a buyer can set seven filter groups. A brief that
+    eats a third of the screen is not a brief. The full text is never more than
+    one tap away: the clause jumps to the section that lists all of it. */
+const MAX_NAMED = 2;
+function clause(parts: string[]): string {
+  if (parts.length <= MAX_NAMED) return parts.join(", ");
+  return parts.slice(0, MAX_NAMED).join(", ") + ", "
+    + t("brief_more").replace("{n}", String(parts.length - MAX_NAMED));
+}
+
 export function buildBrief(f: Form): BriefClause[] {
-  const picks = f.q.picks.filter((k) => CHOICES[k]).map((k) => t("qc_" + k));
+  // qs_* not qc_*: the short form exists for this bar and nowhere else
+  const picks = f.q.picks.filter((k) => CHOICES[k]).map((k) => t("qs_" + k));
   const filters = GROUPS.map((g) => g.summary(f)).filter(Boolean) as string[];
   return [
     { id: "budget", text: taka(f.budget), set: true },
-    { id: "need", text: picks.length ? picks.join(", ") : t("brief_need_none"), set: picks.length > 0 },
-    { id: "filters", text: filters.length ? filters.join(", ") : t("brief_filters_none"), set: filters.length > 0 },
+    { id: "need", text: picks.length ? clause(picks) : t("brief_need_none"), set: picks.length > 0 },
+    { id: "filters", text: filters.length ? clause(filters) : t("brief_filters_none"), set: filters.length > 0 },
   ];
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GROUPS, activeGroupCount, anyFilterSet, buildBrief, toggleBrand, toggleHardware } from "./filters";
-import { DEFAULT_FORM, type Form } from "./need";
+import { CHOICES, DEFAULT_FORM, type Form } from "./need";
 import { STRING_KEYS, hasBothLangs, t } from "./i18n";
 import { taka } from "./theme";
 
@@ -138,16 +138,30 @@ describe("the brief restates the whole ask", () => {
       officialOnly: true, requireJack: true,
     }));
     expect(b[0].text).toBe(taka(40000));
-    expect(b[1].text).toBe(`${t("qc_camera")}, ${t("qc_battery")}`);
+    // the SHORT form, not the quiz's full sentence
+    expect(b[1].text).toBe(`${t("qs_camera")}, ${t("qs_battery")}`);
     expect(b[2].text).toContain(t("fg_warranty_on"));
     expect(b[2].text).toContain(t("fg_hw_jack"));
     expect(b.every((c) => c.set)).toBe(true);
   });
 
+  it("caps a long clause instead of letting the bar grow", () => {
+    // measured at 375px: spelling out every value made the bar 233px tall,
+    // 29% of the viewport. Two named plus a count, and the clause jumps to the
+    // section that lists all of it.
+    const f = form({
+      officialOnly: true, requireJack: true, avoidChinese: true,
+      platform: "android", socVendor: "mediatek", includeBrands: ["Samsung"], regions: ["IN"],
+    });
+    const b = buildBrief(f);
+    expect(b[2].text).toContain(t("brief_more").replace("{n}", "5"));
+    expect(b[2].text.split(",")).toHaveLength(3);
+  });
+
   it("drops a quiz pick the CHOICES table does not know", () => {
     // picks come back from the URL too, where anything can be typed
     const b = buildBrief(form({ q: { picks: ["camera", "telepathy"], hw: [] } }));
-    expect(b[1].text).toBe(t("qc_camera"));
+    expect(b[1].text).toBe(t("qs_camera"));
   });
 
   it("says the same thing the filter rows say", () => {
@@ -157,6 +171,14 @@ describe("the brief restates the whole ask", () => {
     for (const g of GROUPS) {
       const s = g.summary(f);
       if (s) expect(b[2].text).toContain(s);
+    }
+  });
+
+  it("has a short form for every quiz option", () => {
+    // a missing qs_ key would render the raw key name in the bar
+    for (const k of Object.keys(CHOICES)) {
+      expect(STRING_KEYS, `qs_${k} missing`).toContain("qs_" + k);
+      expect(hasBothLangs("qs_" + k), `qs_${k} missing a language`).toBe(true);
     }
   });
 });

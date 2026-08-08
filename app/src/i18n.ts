@@ -471,6 +471,19 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "phones in Bangladesh. We look for the best fit, not the cheapest box.",
     bn: "ফোনের এখনকার দাম দেখা হচ্ছে। আমরা সবচেয়ে সস্তা নয়, সবচেয়ে মানানসই ফোনটা খুঁজি।" },
 
+  // ---- short forms, for the brief bar only. The quiz labels are whole
+  // sentences ("Photos that actually look good"), which is right where the
+  // buyer is deciding and wrong in a bar that restates three answers at 375px
+  // -- measured, it made the bar 233px tall, 29% of the viewport.
+  // owner: verify every bn string in this block.
+  qs_camera: { en: "Camera", bn: "ক্যামেরা" },
+  qs_battery: { en: "Battery", bn: "ব্যাটারি" },
+  qs_speed: { en: "Speed", bn: "স্পিড" },
+  qs_simple: { en: "Simple to use", bn: "সহজ" },
+  qs_gaming: { en: "Gaming", bn: "গেমিং" },
+  qs_video: { en: "Video", bn: "ভিডিও" },
+  brief_more: { en: "+{n} more", bn: "আরও {n}টি" },
+
   // ---- the brief bar. An unanswered clause says so in words rather than
   // going blank, so the bar never looks complete when it is not.
   // owner: verify every bn string in this block.
