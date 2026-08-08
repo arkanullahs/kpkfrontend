@@ -49,3 +49,40 @@ export function useCounts(form: Form, probes: Record<string, Partial<Form>>) {
 
   return counts;
 }
+
+/** Tween a match count so 46 -> 12 is watched rather than blinked.
+
+    It is the one number that proves a step did something; landed instantly, a
+    swap reads as a re-render rather than as a consequence.
+
+    rAF, not setInterval: a dropped frame on a cheap Android should shorten the
+    tween, not desync it. The blanket prefers-reduced-motion rule in the sheet
+    cannot reach this one because it is JavaScript, so it checks the query
+    itself. */
+export function useCountUp(n: number | null): number | null {
+  const [shown, setShown] = useState<number | null>(n);
+  const from = useRef<number | null>(n);
+
+  useEffect(() => {
+    if (n === null) { setShown(null); from.current = null; return; }
+    const start = from.current;
+    if (start === null || start === n) { setShown(n); from.current = n; return; }
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setShown(n); from.current = n; return;
+    }
+    const t0 = performance.now();
+    const DUR = 320;
+    let raf = 0;
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / DUR);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setShown(Math.round(start + (n - start) * eased));
+      if (p < 1) raf = requestAnimationFrame(tick);
+      else from.current = n;
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [n]);
+
+  return shown;
+}

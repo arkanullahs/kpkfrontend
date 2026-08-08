@@ -186,6 +186,26 @@
     .k-stagger > *:nth-child(6){animation-delay:.27s}
     .k-stagger > *:nth-child(7){animation-delay:.32s}
 
+    /* The step swap. One pair of keyframes with a direction sign, so Back runs
+       the same animation mirrored rather than needing its own.
+       The leaving layer uses `filter`, NOT `backdrop-filter`: it blurs ITSELF
+       on the way out, which is cheap and lasts 260ms. Only the rail carries a
+       real backdrop blur continuously. */
+    @keyframes kstepin {
+      from { opacity: 0; transform: translateX(calc(8% * var(--dir, 1))) scale(.98); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes kstepout {
+      from { opacity: 1; transform: none; filter: blur(0); }
+      to   { opacity: 0; transform: translateX(calc(-8% * var(--dir, 1))) scale(.98); filter: blur(6px); }
+    }
+    .k-step { animation: kstepin .32s cubic-bezier(.2,.7,.2,1) both; }
+    .k-step-out { animation: kstepout .26s cubic-bezier(.4,0,1,1) both; pointer-events: none; }
+
+    /* the rail's live position, for screen readers only */
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+               overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+
     /* keyboard accessibility — visible focus ring that respects the accent */
     :focus { outline: none; }
     :focus-visible { outline: 2.5px solid var(--teal); outline-offset: 3px; border-radius: var(--r); }
