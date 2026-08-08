@@ -99,6 +99,22 @@ export const GROUPS: FilterGroup[] = [
   },
 ];
 
+/** Toggle a brand in the "only these" or "never these" list.
+
+    The two lists live in separate groups now, so unlike the old screen -- which
+    held one list at a time behind a mode switch -- they CAN both name the same
+    brand, and "only Samsung, never Samsung" filters to nothing. Resolved where
+    the contradiction is created: picking a side removes the brand from the
+    other list. */
+export function toggleBrand(f: Form, brand: string, side: "only" | "avoid"): Partial<Form> {
+  const flip = (list: string[]) =>
+    list.includes(brand) ? list.filter((x) => x !== brand) : [...list, brand];
+  const drop = (list: string[]) => list.filter((x) => x !== brand);
+  return side === "only"
+    ? { includeBrands: flip(f.includeBrands), excludeBrands: drop(f.excludeBrands) }
+    : { excludeBrands: flip(f.excludeBrands), includeBrands: drop(f.includeBrands) };
+}
+
 /** How many groups the buyer has actually set. Drives the nudge trigger and the
     "N set" badge on the tier-2 opener. */
 export function activeGroupCount(f: Form): number {

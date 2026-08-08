@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GROUPS, activeGroupCount, anyFilterSet } from "./filters";
+import { GROUPS, activeGroupCount, anyFilterSet, toggleBrand } from "./filters";
 import { DEFAULT_FORM, type Form } from "./need";
 import { STRING_KEYS, hasBothLangs, t } from "./i18n";
 
@@ -67,6 +67,30 @@ describe("clearing a group really clears it", () => {
     const g = GROUPS.find((x) => x.id === "warranty")!;
     const after = { ...loud, ...g.patchOff(loud) };
     expect(activeGroupCount(after)).toBe(1);
+  });
+});
+
+describe("a brand can never be in both lists", () => {
+  // the two lists now live in SEPARATE groups, so nothing structural stops
+  // "only Samsung" and "never Samsung" from both being true — which filters to
+  // zero phones with no visible cause
+  it("picking a side removes the brand from the other list", () => {
+    const f = form({ excludeBrands: ["Samsung", "Apple"] });
+    const after = { ...f, ...toggleBrand(f, "Samsung", "only") } as Form;
+    expect(after.includeBrands).toEqual(["Samsung"]);
+    expect(after.excludeBrands).toEqual(["Apple"]);
+
+    const back = { ...after, ...toggleBrand(after, "Samsung", "avoid") } as Form;
+    expect(back.includeBrands).toEqual([]);
+    expect(back.excludeBrands).toEqual(["Apple", "Samsung"]);
+  });
+
+  it("tapping the same chip twice is a plain toggle off", () => {
+    const f = form();
+    const on = { ...f, ...toggleBrand(f, "vivo", "only") } as Form;
+    const off = { ...on, ...toggleBrand(on, "vivo", "only") } as Form;
+    expect(on.includeBrands).toEqual(["vivo"]);
+    expect(off.includeBrands).toEqual([]);
   });
 });
 
