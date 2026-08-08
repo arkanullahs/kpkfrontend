@@ -584,6 +584,10 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   s_more_body: { en: "You can add as many as you like. Each one counts less than the one before, so your first choice always leads.", bn: "যত খুশি যোগ করতে পারেন। প্রতিটা আগেরটার চেয়ে কম গোনা হয়, তাই আপনার প্রথম পছন্দই সবসময় এগিয়ে থাকে।" },
   s_more_yes: { en: "Add one more", bn: "আরেকটা যোগ করুন" },
   s_more_no: { en: "No, that's all", bn: "না, এটুকুই" },
+  // the shrinking priority ladder on the needN screen (spec 2026-08-08 §5.1):
+  // the warning is SHOWN as each added priority's real share, not scolded.
+  s_prio_ladder_t: { en: "Your priorities, strongest first", bn: "আপনার অগ্রাধিকার, সবচেয়ে জরুরিটা আগে" },
+  s_prio_share: { en: "counts about {pct}% as much as your top pick", bn: "আপনার প্রথম পছন্দের প্রায় {pct}% গোনা হয়" },
 
   s_sheet_done: { en: "Done", bn: "হয়েছে" },
 

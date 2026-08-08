@@ -4,7 +4,7 @@ import { screenOf, nextNode, askPosition, type Counts } from "../flow";
 import { buildBrief } from "../filters";
 import { useCountUp } from "../useCounts";
 import { StepBody } from "./StepBody";
-import type { Form } from "../need";
+import { weightAt, type Form } from "../need";
 
 /* One step owns the screen (spec 2026-08-08).
 
@@ -89,19 +89,10 @@ export function StepScreen({ nodeId, dir, form, counts, patch, matchCount, metaS
       {/* keyed on the node id, so React remounts and the entry animation runs
           on every swap rather than only the first */}
       <div key={nodeId} className="k-step" style={{ ...st("margin-top:18px;"), ["--dir" as string]: String(dir) }}>
-        {/* The add-more need question kept reading as the first one again. It
-            says the first answer back now, so the screen is visibly a
-            follow-up rather than the same list a second time. */}
-        {nodeId === "needN" && form.q.picks[0] && (
-          <div style={st("display:flex; align-items:center; gap:9px; margin-bottom:14px; padding:11px 14px; border-radius:var(--r); background:var(--tint); border:1px solid var(--tint2);")}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={st("flex-shrink:0;")}>
-              <path d="M5 13l4 4L19 7" stroke="var(--lnk)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span style={st("font-size:14.5px; color:var(--tx); font-family:var(--f-bn); line-height:1.4;")}>
-              {t("s_echo")} <b style={st("color:var(--lnk); font-weight:700;")}>{t("qs_" + form.q.picks[0])}</b>
-            </span>
-          </div>
-        )}
+        {/* The add-more screen shows the ladder so far, each priority a shorter
+            bar than the last. This is the owner's "warning" made honest: not
+            "too many hurts precision", but each pick's real share on screen. */}
+        {nodeId === "needN" && form.q.picks[0] && <PriorityLadder picks={form.q.picks} />}
         <h1 style={st("margin:0; font-family:var(--f-bn); font-size:clamp(25px,4.8vw,33px); font-weight:700; color:var(--ink); line-height:1.2; letter-spacing:-.5px; text-wrap:balance;")}>
           {t(s.titleKey)}
         </h1>
@@ -143,6 +134,42 @@ function SoFar({ form, isFirst }: { form: Form; isFirst: boolean }) {
           {b.text}
         </span>
       ))}
+    </div>
+  );
+}
+
+/* The geometric ladder, drawn. Each priority the buyer has picked is a bar
+   whose width is its share of the top pick -- 100%, 33%, 11%, 4% -- so the
+   fourth is visibly a sliver. The share caption on every bar past the first is
+   the "warning" the owner asked for, shown as a true number rather than a
+   scold: an unbounded list is safe precisely because it looks like this. */
+function PriorityLadder({ picks }: { picks: string[] }) {
+  const known = picks.filter((k) => t("qs_" + k) !== "qs_" + k);
+  if (!known.length) return null;
+  const top = weightAt(0);
+  return (
+    <div style={st("margin-bottom:16px; padding:14px 16px; border-radius:var(--r); background:var(--tint); border:1px solid var(--tint2);")}>
+      <div style={st("font-size:12.5px; font-weight:700; color:var(--mut); letter-spacing:.3px; text-transform:uppercase; margin-bottom:10px;")}>
+        {t("s_prio_ladder_t")}
+      </div>
+      {known.map((k, i) => {
+        const pct = Math.round((weightAt(i) / top) * 100);
+        return (
+          <div key={k} style={st("display:flex; align-items:center; gap:10px; margin-top:" + (i ? "9px" : "0") + ";")}>
+            <div style={st("flex-shrink:0; width:96px; font-size:14px; font-weight:700; color:var(--ink); font-family:var(--f-bn);")}>
+              {t("qs_" + k)}
+            </div>
+            <div style={st("flex:1; height:9px; border-radius:var(--r); background:var(--card); overflow:hidden;")}>
+              <div style={st(`height:100%; width:${pct}%; background:var(--teal); border-radius:var(--r); transition:width .35s ease;`)} />
+            </div>
+            {i > 0 && (
+              <div style={st("flex-shrink:0; font-size:12px; color:var(--mut); font-family:var(--f-bn); white-space:nowrap;")}>
+                {t("s_prio_share").replace("{pct}", bnNum(String(pct)))}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
