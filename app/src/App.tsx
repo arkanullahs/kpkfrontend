@@ -4,8 +4,9 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { api, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
 import { st } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
-import { anyFilterSet, buildBrief } from "./filters";
-import { AskScreen } from "./components/AskScreen";
+import { anyFilterSet } from "./filters";
+import { EXIT_FROM, LAST } from "./steps";
+import { StepScreen } from "./components/StepScreen";
 import { NarrowSheet } from "./components/NarrowSheet";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { DetailScreen } from "./components/DetailScreen";
@@ -68,15 +69,18 @@ export default function App() {
      history entry; every back control calls history.back(), so the button and
      the on-screen "Back" do the same thing. A popstate with no state of ours
      is a real exit — we let it through. */
-  const pushNav = useCallback((s: Screen) => {
-    window.history.pushState({ kpk: true, screen: s }, "");
+  const pushNav = useCallback((s: Screen, stepIx = 0) => {
+    window.history.pushState({ kpk: true, screen: s, step: stepIx }, "");
   }, []);
   useEffect(() => {
-    window.history.replaceState({ kpk: true, screen: "ask" }, "");
+    window.history.replaceState({ kpk: true, screen: "ask", step: 0 }, "");
     const onPop = (e: PopStateEvent) => {
-      const h = e.state as { kpk?: boolean; screen?: Screen } | null;
+      const h = e.state as { kpk?: boolean; screen?: Screen; step?: number } | null;
       if (!h?.kpk) return;
       setScreen(h.screen || "ask");
+      // the step rides in the history entry, so Back walks the nine screens
+      // rather than jumping straight out of the flow
+      if ((h.screen || "ask") === "ask") { setDir(-1); setStep(h.step ?? 0); }
       window.scrollTo({ top: 0 });
     };
     window.addEventListener("popstate", onPop);
@@ -86,22 +90,40 @@ export default function App() {
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
 
-  // hydrate once from the URL, so a shared or reloaded brief comes back intact
+  /* The step index. `dir` drives the transition's mirror — Back runs the same
+     keyframes with the sign flipped rather than needing its own pair. */
+  const [step, setStep] = useState(0);
+  const [dir, setDir] = useState<1 | -1>(1);
+  const goStep = useCallback((next: number) => {
+    const to = Math.min(LAST, Math.max(0, next));
+    setDir(to >= step ? 1 : -1);
+    setStep(to);
+    // forward moves push; backward ones arrive FROM history.back() and must not
+    if (to > step) pushNav("ask", to);
+    window.scrollTo({ top: 0 });
+  }, [step, pushNav]);
+
+  // hydrate once from the URL, so a shared or reloaded brief comes back on the
+  // step it was shared from rather than at the start of a nine-screen walk
   useEffect(() => {
     const q = window.location.search.slice(1);
-    if (q) setForm((f) => ({ ...f, ...queryToForm(q) }));
+    if (!q) return;
+    const { step: s, ...f } = queryToForm(q);
+    setForm((prev) => ({ ...prev, ...f }));
+    if (s) setStep(s);
   }, []);
 
   // mirror the form back into the URL. replaceState, NOT pushState: a keystroke
   // in the budget field must not become a history entry the buyer has to press
-  // Back through forty times.
+  // Back through forty times. The STEP does push — see goStep — because walking
+  // back through the steps is exactly what the browser button should do.
   useEffect(() => {
-    const q = formToQuery(form);
+    const q = formToQuery(form, step);
     const next = q ? `${window.location.pathname}?${q}` : window.location.pathname;
     if (next !== window.location.pathname + window.location.search) {
       window.history.replaceState(window.history.state, "", next);
     }
-  }, [form]);
+  }, [form, step]);
 
   // live candidate count for the "See results" badge (debounced). Hits the
   // lightweight /count endpoint — structured pre-filter only, no embed/LLM —
@@ -175,12 +197,12 @@ export default function App() {
     runRecommend();
   }, [form, sheetSeen, runRecommend]);
 
-  // the affirmative button does NOT rank — it closes the sheet and scrolls to
-  // the filters. Only the brief bar spends a ranking call.
-  const editJump = useCallback((id: string) => {
+  // the affirmative button does NOT rank — it returns the buyer to the walk at
+  // the first filter step. Only the commit spends a ranking call.
+  const onNarrow = useCallback(() => {
     setSheetOpen(false);
-    document.getElementById("brief-" + id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
+    goStep(EXIT_FROM);
+  }, [goStep]);
 
   // RagProgress finished its completion beat -> reveal the results
   const onLoaderDone = useCallback(() => { setRecLoading(false); setRecReady(false); }, []);
@@ -309,9 +331,13 @@ export default function App() {
           </div>
         )}
         {screen === "ask" && (
-          <AskScreen
-            form={form} patch={patch} meta={meta}
-            metaStock={metaStock} matchCount={matchCount}
+          <StepScreen
+            step={step} dir={dir} form={form} patch={patch}
+            matchCount={matchCount} metaStock={metaStock}
+            onNext={() => goStep(step + 1)}
+            onBack={goBack}
+            onExit={onSeeResults}
+            onCommit={onSeeResults}
           />
         )}
         {screen === "results" && (
@@ -333,15 +359,13 @@ export default function App() {
       </div>
 
       <Dock
-        screen={screen} matchCount={matchCount} loading={recLoading}
-        brief={buildBrief(form)} detailReady={!!result}
-        onSeeResults={onSeeResults} onEditJump={editJump} onHome={goAsk}
-        onBackResults={goResults}
+        screen={screen} loading={recLoading} detailReady={!!result}
+        onHome={goAsk} onBackResults={goResults}
       />
       {sheetOpen && (
         <NarrowSheet matchCount={matchCount}
           onDismiss={() => setSheetOpen(false)}
-          onNarrow={() => editJump("filters")} />
+          onNarrow={onNarrow} />
       )}
       {showNotice && screen === "results" && <ResultsNotice onClose={dismissNotice} />}
       {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
@@ -381,7 +405,7 @@ export default function App() {
         {/* the 96px well under the copyright was dock clearance, and it read as
             a dead black slab on every screen the dock is hidden on (owner
             2026-07-26). Clearance only when the dock is actually there. */}
-        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "method" ? 26 : 116}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>
+        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "results" || screen === "detail" ? 116 : 26}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>
           © {new Date().getFullYear()} bhalophone. All rights reserved.
           {/* the trademark notice, quieter than the copyright above it and on
               its own line so it reads as a disclaimer rather than a byline.
