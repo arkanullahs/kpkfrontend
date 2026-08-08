@@ -10,10 +10,11 @@ Drop the vendors' own SVG files here, named exactly as the brand is spelled in
     realme.svg
     Apple.svg
 
-`BrandMark` in `src/components/StepBody.tsx` loads `/brandlogo/<name>.svg` and
-swaps it in with no code change. If a file is missing the request 404s and the
-tile falls back to the brand's colour with its mark on it — so a partial set is
-fine, and adding one file at a time works.
+`BrandMark` in `src/components/StepBody.tsx` picks these up with
+`import.meta.glob` and swaps them in with no code change. A missing file costs
+nothing — it is not requested at all, and the tile falls back to the brand's
+colour with its mark on it. A partial set is fine; adding one file at a time
+works.
 
 What the files need to be:
 

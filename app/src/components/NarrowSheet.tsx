@@ -20,8 +20,16 @@ import { GROUPS } from "../filters";
    It uses .k-scrim rather than .k-glass because that rule's reduced-transparency
    fallback is `background: var(--card)`, which full-screen would paint an
    opaque white viewport with this (also white) sheet invisible on top of it. */
-export function NarrowSheet({ matchCount, onDismiss, onNarrow }: {
-  matchCount: number | null; onDismiss: () => void; onNarrow: () => void;
+export function NarrowSheet({ matchCount, onDismiss, onShowNow, onNarrow }: {
+  matchCount: number | null;
+  /** the scrim, the handle, Escape — back to where you were, nothing spent */
+  onDismiss: () => void;
+  /** the labelled "No, show them now" button, which has to do what it says.
+      It was wired to onDismiss: the sheet closed and the buyer was returned to
+      the screen they had just committed from, with no results and no reason
+      given. */
+  onShowNow: () => void;
+  onNarrow: () => void;
 }) {
   useEffect(() => {
     const esc = (e: KeyboardEvent) => { if (e.key === "Escape") onDismiss(); };
@@ -62,7 +70,7 @@ export function NarrowSheet({ matchCount, onDismiss, onNarrow }: {
         </div>
 
         <div style={st("display:flex; gap:10px; margin-top:20px;")}>
-          <button onClick={onDismiss} className="k-press"
+          <button onClick={onShowNow} className="k-press"
             style={st("flex:1; padding:15px 10px; border-radius:var(--r); border:1.5px solid var(--mut); background:var(--card); cursor:pointer; font-size:15px; font-weight:600; color:var(--ink); font-family:var(--f-bn);")}>
             {t("ns_no")}
           </button>

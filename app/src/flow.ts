@@ -1,12 +1,20 @@
 /* The picker as a graph (spec 2026-08-08). Each node names its own successor
    given the answers so far; the flat step array could not express the owner's
    flowchart -- it branches (iphone-or-android exists only on the elderly
-   path), loops (priorities send you back), and exits early (Apple is done).
+   path), diverts backward (the channel re-offer), and exits early (Apple is
+   done).
 
    History is NOT stored: the URL carries every answer, so replaying the graph
    from those answers reproduces the path. Pure -- no React, no DOM -- so the
-   whole flow is asserted without booting the app, the property steps.test.ts
-   already relied on. */
+   whole flow is asserted without booting the app.
+
+   THE GRAPH IS ACYCLIC BY CONSTRUCTION. It did not start that way: the
+   priority question shipped as needN -> g_prio -> more -> needN, a real cycle
+   that put a modal on screen after every single tap. The owner walked it and
+   called it "a disgusting loop". The loop is gone -- `needN` is now one
+   multi-select screen where the ladder grows in place -- and the only backward
+   edge left (rechannel -> budget) is one the buyer chooses and which cannot
+   re-arm, because the guard that offered it reads the answer. */
 import type { Form } from "./need";
 import { SCREENS, type Screen } from "./steps";
 
@@ -15,9 +23,12 @@ export type NodeKind = "ask" | "guard" | "popup" | "end";
 /** Live counts a guard reads. null = not resolved yet; a guard with a null
     count passes through and re-evaluates when it lands (spec §4.2). */
 export interface Counts {
-  pool: number | null;          // candidates for the whole current form
-  officialPool: number | null;  // candidates with officialOnly forced true
-  cheapestIphone: number | null; // cheapest in-stock iPhone eff-price, or null
+  /** candidates for the whole current form. When the buyer has asked for the
+      official channel this IS the official pool -- toParams already sends
+      official_only -- which is why there is no second count to fetch. */
+  pool: number | null;
+  /** cheapest in-stock iPhone eff-price, or null. */
+  cheapestIphone: number | null;
 }
 
 /** The threshold below which a guard offers to loosen (Global Constraint). */
@@ -32,7 +43,8 @@ export interface FlowNode {
 }
 
 /** The screen an `ask` node renders, from steps.ts keyed by the node id. Guard
-    and end nodes have none; the `more` popup has one but renders as a dialog. */
+    and end nodes have none; the `more` popup has none either -- it is a
+    dialog, not a screen. */
 export const screenOf = (id: string): Screen | undefined => SCREENS[id];
 
 const onlyApple = (f: Form) =>
@@ -45,21 +57,36 @@ export const NODES: Record<string, FlowNode> = {
   elderly:  { id: "elderly",  kind: "ask",   next: () => "budget" },
   budget:   { id: "budget",   kind: "ask",   next: (f) => f.forElderly ? "g_official" : "need1" },
 
+  /* The channel re-offer (owner edge -29/-28), and the bug the owner hit
+     first: this used to fire on a thin pool ALONE, so a buyer who had just
+     chosen *unofficial* was asked official-or-unofficial a second time, two
+     screens after answering it. Three conditions now, all required:
+       - the buyer actually asked for official (else there is nothing to widen)
+       - they have not already answered this offer (else it re-arms forever,
+         because "keep official" returns to budget and lands here again)
+       - the pool really is thin. */
   g_official: { id: "g_official", kind: "guard",
-    next: (_f, c) => (c.officialPool !== null && c.officialPool <= FEW ? "rechannel" : "g_iphone") },
+    next: (f, c) => (f.officialOnly && !f.rechannel &&
+                     c.pool !== null && c.pool <= FEW ? "rechannel" : "g_iphone") },
   rechannel:  { id: "rechannel",  kind: "ask",
-    // "yes, widen" clears officialOnly and returns to the channel question;
-    // "no" returns to budget. The answer lives on a transient field.
-    next: (f) => (f.rechannelWiden ? "channel" : "budget") },
+    // "widen" already cleared officialOnly in its own patch, so the channel
+    // question is ANSWERED -- going forward is the whole point. Only "keep
+    // official" goes back, to the one screen that can actually help: budget.
+    next: (f) => (f.rechannel === "keep" ? "budget" : "g_iphone") },
   g_iphone:   { id: "g_iphone",   kind: "guard",
     next: (f, c) => (c.cheapestIphone !== null && f.budget >= c.cheapestIphone ? "plat_e" : "extras") },
   plat_e:     { id: "plat_e",     kind: "ask",
     next: (f) => (f.platform === "ios" ? "END" : "extras") },
 
   need1: { id: "need1", kind: "ask",   next: () => "more" },
+  /* The one popup the diagram asks for (edge -1 -> -42, labelled "popup"). It
+     fires ONCE, after the first priority. "Yes" opens needN, which takes as
+     many more as the buyer wants on a single screen -- that is what the
+     owner's "let them choose however many more they like" needs, and it does
+     not need a modal per tap. */
   more:  { id: "more",  kind: "popup", next: (f) => (f.wantMore ? "needN" : "brands") },
   needN: { id: "needN", kind: "ask",   next: () => "g_prio" },
-  g_prio:{ id: "g_prio",kind: "guard", next: () => "more" },
+  g_prio:{ id: "g_prio",kind: "guard", next: () => "brands" },
 
   brands:  { id: "brands",  kind: "ask",
     next: (f) => (onlyApple(f) ? "END" : "g_brands") },
@@ -72,55 +99,30 @@ export const NODES: Record<string, FlowNode> = {
   END: { id: "END", kind: "end", next: () => "END" },
 };
 
-/** The nodes this buyer actually visits, entry to END. A guard that would
-    divert to an ask node it has already diverted from is neutralised by
-    seenGuards, so the walk cannot cycle (spec §8, §13). */
+/** The nodes this buyer actually visits, entry to END, for THIS set of answers.
+
+    The graph is acyclic for any fixed form (the one backward edge is taken
+    only while `rechannel === "keep"`, and that same value disarms the guard
+    that leads to it), so this is a plain walk. The hop ceiling is a backstop
+    against a future table edit reintroducing a cycle -- caught by the
+    termination test rather than by hanging a buyer. */
 export function replay(f: Form, c: Counts): string[] {
   const path: string[] = [];
-  const seenGuards = new Set<string>();
-  const visited = new Set<string>();
+  const seen = new Set<string>();
   let id = ENTRY;
-  // hard ceiling: the graph has ~16 nodes; a well-formed walk is far shorter.
-  // The ceiling is a backstop against a table edit that reintroduces a cycle,
-  // caught by the termination test rather than hanging a buyer.
   for (let hops = 0; hops < 64 && id !== "END"; hops++) {
+    if (seen.has(id)) break;
     path.push(id);
-    visited.add(id);
-    const node = NODES[id];
-    let to: string;
-    if (node.kind === "guard") {
-      // A guard diverts at most once; a second firing passes through with
-      // ample counts so it takes its forward successor (spec §8, §13).
-      to = seenGuards.has(id)
-        ? node.next(f, { pool: Infinity, officialPool: Infinity, cheapestIphone: c.cheapestIphone })
-        : node.next(f, c);
-      seenGuards.add(id);
-    } else {
-      to = node.next(f, c);
-    }
-    // The priority loop (needN -> g_prio -> more -> needN) is driven by the
-    // buyer answering the `more` popup again and again at RUNTIME; statically
-    // it is a cycle. When the next node was already visited, re-resolve it as
-    // if the buyer had stopped adding (every "more"-style flag false), which
-    // is the loop's exit. If that still points back, stop.
-    if (visited.has(to)) {
-      to = node.next({ ...f, wantMore: false }, c);
-      if (visited.has(to)) break;
-    }
-    id = to;
+    seen.add(id);
+    id = NODES[id].next(f, c);
   }
   path.push("END");
   return path;
 }
 
 /** The next node the buyer interacts with: an ask, the `more` popup, or END.
-    Walks the graph ONE step forward from `from` with live counts, chaining
-    through any guards (which render nothing) to the first interactive node.
-
-    Deliberately NOT read off replay(): replay collapses the priority loop for
-    termination, so from needN it would report `brands`. A single forward step
-    must instead land on the `more` popup, which is what lets the buyer add
-    another priority -- the whole point of the loop. */
+    Walks ONE step forward from `from` with live counts, chaining through any
+    guards (which render nothing) to the first interactive node. */
 export function nextNode(f: Form, c: Counts, from: string): string {
   let id = NODES[from].next(f, c);
   const seen = new Set<string>([from]);
@@ -143,8 +145,15 @@ export function prevNode(f: Form, c: Counts, from: string): string | null {
   return null;
 }
 
+/** Where this screen sits on THIS buyer's live path, counting only screens.
+
+    `of` is honest, which means it can change: answering "for an elder" really
+    does shorten the walk. It never runs behind the buyer -- a node the walk
+    cannot reach from the current answers (the buyer is standing on it after a
+    divert) still counts as the position it occupies. */
 export function askPosition(f: Form, c: Counts, id: string): { at: number; of: number } {
   const asks = replay(f, c).filter((n) => NODES[n].kind === "ask");
   const at = asks.indexOf(id);
-  return { at: at < 0 ? 0 : at, of: asks.length };
+  if (at < 0) return { at: 0, of: Math.max(1, asks.length) };
+  return { at, of: asks.length };
 }

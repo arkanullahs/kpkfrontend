@@ -96,13 +96,13 @@ export default function App() {
   const [nodeId, setNodeId] = useState<string>(ENTRY);
   const [dir, setDir] = useState<1 | -1>(1);
 
-  // the live counts the guards read. pool is the headline candidate count;
-  // officialPool and cheapestIphone are the two the elderly guards need, filled
-  // by the debounced effect below. A null count makes a guard pass through
-  // (spec §4.2), so the flow never blocks on the network.
-  const [officialPool, setOfficialPool] = useState<number | null>(null);
+  // the live counts the guards read. `pool` is the headline candidate count,
+  // which already reflects the channel the buyer asked for (toParams sends
+  // official_only), so the thin-official-pool guard needs no count of its own.
+  // A null count makes a guard pass through (spec §4.2), so the flow never
+  // blocks on the network.
   const [cheapestIphone, setCheapestIphone] = useState<number | null>(null);
-  const counts: Counts = { pool: matchCount, officialPool, cheapestIphone };
+  const counts: Counts = { pool: matchCount, cheapestIphone };
 
   // forward move to an explicit node; Back always arrives via history (popstate)
   const goTo = useCallback((target: string) => {
@@ -123,11 +123,11 @@ export default function App() {
   // one forward step from an ask node: END commits, a popup opens its dialog,
   // an ask node is navigated to. Guards are already skipped by nextNode.
   const advance = useCallback((fromNode: string, f = form) => {
-    const nxt = nextNode(f, { pool: matchCount, officialPool, cheapestIphone }, fromNode);
+    const nxt = nextNode(f, { pool: matchCount, cheapestIphone }, fromNode);
     if (nxt === "END") { onSeeResultsRef.current(); return; }
     if (NODES[nxt].kind === "popup") { setPopup(nxt); return; }
     goTo(nxt);
-  }, [form, matchCount, officialPool, cheapestIphone, goTo]);
+  }, [form, matchCount, cheapestIphone, goTo]);
 
   const answerMore = useCallback((yes: boolean) => {
     const nf = { ...form, wantMore: yes };
@@ -135,10 +135,10 @@ export default function App() {
     const pnode = popup!;
     setPopup(null);
     // resolve the popup's own route from its node, with the answer applied
-    const after = nextNode(nf, { pool: matchCount, officialPool, cheapestIphone }, pnode);
+    const after = nextNode(nf, { pool: matchCount, cheapestIphone }, pnode);
     if (after === "END") { onSeeResultsRef.current(); return; }
     goTo(after);
-  }, [form, popup, patch, matchCount, officialPool, cheapestIphone, goTo]);
+  }, [form, popup, patch, matchCount, cheapestIphone, goTo]);
 
   // hydrate once from the URL, so a shared or reloaded brief comes back on the
   // node it was shared from rather than at the start of the walk
@@ -168,16 +168,19 @@ export default function App() {
   const debounceRef = useRef<number | undefined>(undefined);
   useEffect(() => {
     window.clearTimeout(debounceRef.current);
+    // no budget yet -> no count. The channel and elderly screens come BEFORE
+    // budget in the owner's flow, and a candidate count against no budget is
+    // meaningless (and the backend requires budget > 0). Pills stay hidden
+    // until the buyer sets a number.
+    if (form.budget <= 0) { setMatchCount(null); setCheapestIphone(null); return; }
     debounceRef.current = window.setTimeout(() => {
       api.count(toParams(form))
         .then((r) => setMatchCount(r.candidates))
         .catch(() => setMatchCount(null));
-      // the two extra counts the elderly guards read. Only worth fetching on
-      // the elderly path — the main flow has no guard that needs them.
+      // the live iPhone threshold, the one count the pool cannot stand in for.
+      // Only worth fetching on the elderly path — it is the only branch with a
+      // guard that reads it.
       if (form.forElderly) {
-        api.count({ ...toParams(form), official_only: true })
-          .then((r) => setOfficialPool(r.candidates))
-          .catch(() => setOfficialPool(null));
         api.cheapest("Apple", form.officialOnly)
           .then((r) => setCheapestIphone(r.price))
           .catch(() => setCheapestIphone(null));
@@ -226,14 +229,17 @@ export default function App() {
     }
   }, [form]);
 
-  /* The nudge. Fires ONCE, and only when a buyer commits without having set a
-     single filter — the case where one tap would sharpen the pick a lot and
-     they do not know the controls exist. `sheetSeen` flips before the sheet
-     opens, so a buyer who dismisses it and immediately commits again goes
-     straight through. */
+  /* The nudge. Fires ONCE, and only when a buyer LEAVES THE WALK EARLY without
+     having set a single filter — the case where one tap would sharpen the pick
+     a lot and they do not know the controls exist.
+
+     It used to fire on the final commit too, which is where the owner met it:
+     nine screens answered, then a dialog suggesting they go back and narrow,
+     whose affirmative button returned them to the brand screen they had just
+     filled in. On the last screen there is nothing left to suggest. */
   const [sheetSeen, setSheetSeen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const onSeeResults = useCallback(() => {
+  const onExitEarly = useCallback(() => {
     if (!sheetSeen && !anyFilterSet(form)) {
       setSheetSeen(true);
       setSheetOpen(true);
@@ -242,7 +248,8 @@ export default function App() {
     }
     runRecommend();
   }, [form, sheetSeen, runRecommend]);
-  onSeeResultsRef.current = onSeeResults;
+  // reaching END is a commit, never a nudge
+  onSeeResultsRef.current = runRecommend;
 
   // the affirmative button does NOT rank — it returns the buyer to the walk at
   // the first filter step. Only the commit spends a ranking call.
@@ -382,10 +389,10 @@ export default function App() {
           <StepScreen
             nodeId={nodeId} dir={dir} form={form} counts={counts} patch={patch}
             matchCount={matchCount} metaStock={metaStock}
-            onNext={() => advance(nodeId)}
+            onNext={(next) => advance(nodeId, next)}
             onBack={goBack}
-            onExit={onSeeResults}
-            onCommit={onSeeResults}
+            onExit={onExitEarly}
+            onCommit={runRecommend}
           />
         )}
         {popup && <MorePopup onYes={() => answerMore(true)} onNo={() => answerMore(false)} />}
@@ -414,6 +421,7 @@ export default function App() {
       {sheetOpen && (
         <NarrowSheet matchCount={matchCount}
           onDismiss={() => setSheetOpen(false)}
+          onShowNow={() => { setSheetOpen(false); runRecommend(); }}
           onNarrow={onNarrow} />
       )}
       {showNotice && screen === "results" && <ResultsNotice onClose={dismissNotice} />}

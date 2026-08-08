@@ -220,10 +220,19 @@ describe("flow-graph control fields in the URL", () => {
     expect(back.includeCnRom).toBe(true);
   });
 
-  it("transient loop flags never serialise", () => {
-    const q = formToQuery({ ...DEFAULT_FORM, wantMore: true, rechannelWiden: true });
-    expect(q).not.toContain("more");
-    expect(q).not.toContain("widen");
+  it("the popup's answer is transient and never serialises", () => {
+    expect(formToQuery({ ...DEFAULT_FORM, wantMore: true })).not.toContain("more");
+  });
+
+  /* `rechannel` DOES serialise, and has to: it is what stops the thin-official
+     -pool guard re-arming. A reload that dropped it put the buyer back in
+     front of the same offer. */
+  it("the channel divert answer survives the URL", () => {
+    const q = formToQuery({ ...DEFAULT_FORM, rechannel: "keep" });
+    expect(q).toContain("rech=keep");
+    expect(queryToForm(q).rechannel).toBe("keep");
+    // and junk in the URL lands on "never asked", not on a bogus answer
+    expect(queryToForm("rech=telepathy").rechannel).toBe("");
   });
 
   it("includeCnRom drives include_cn on the wire", () => {

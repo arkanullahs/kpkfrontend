@@ -37,7 +37,12 @@ const DEEP_CUT = 0.2;
 export function StepBody({ s, form, patch, matchCount, metaStock, isLast, onAnswered, onCommit }: {
   s: Screen; form: Form; patch: (d: Partial<Form>) => void;
   matchCount: number | null; metaStock: string; isLast: boolean;
-  onAnswered: () => void; onCommit: () => void;
+  /* Takes the form the answer PRODUCED, not the one on screen. `patch` is a
+     state update: the `form` this closure holds is the one from before the
+     tap, and the flow routes on it. That is what sent an elderly buyer who
+     chose iPhone on to the Android questions -- plat_e asks `platform ===
+     "ios"`, and the answer had not landed yet. */
+  onAnswered: (next?: Form) => void; onCommit: () => void;
 }) {
   const [tapped, setTapped] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
@@ -60,26 +65,32 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, onAnsw
   const counts = useCounts(form, probes);
 
   const apply = (o: StepOption) => {
-    if (o.id === "__skip") {
-      patch(s.clear(form));
-      setTapped("__skip");
-      window.setTimeout(onAnswered, TAP_MS);
-      return;
-    }
-    patch(o.patch(form));
+    const d = o.id === "__skip" ? s.clear(form) : o.patch(form);
+    patch(d);
+    // "doesn't matter" always ends the screen, even on a multi step -- it is
+    // the answer "none of these", and there is nothing left to add to it
+    const ends = o.id === "__skip" || (s.kind === "single" && !s.reveal);
     // a step with a follow-up group cannot auto-advance: the answer that was
     // just given is what makes the next question appear, and leaving the
     // screen would take it away in the same beat
-    if (s.kind !== "single" || s.reveal) return;
+    if (!ends) return;
     setTapped(o.id);
-    window.setTimeout(onAnswered, TAP_MS);
+    const next = { ...form, ...d } as Form;
+    window.setTimeout(() => onAnswered(next), TAP_MS);
   };
 
   /* The guard sits between the tap and the patch, and only fires when the
-     probe actually came back -- an unknown count must never block an answer. */
+     probe actually came back -- an unknown count must never block an answer.
+
+     MULTI STEPS ONLY. It is a warning about a filter stacked on top of an
+     answer, where the cost is invisible until afterwards. On a fork it is
+     nonsense: "Android or iPhone?" narrows to iPhones BY DESIGN, and the
+     elderly path met a dialog saying "this leaves 4 phones out of 31" for
+     answering the question it had just been asked. Both tiles already wear
+     their count. */
   const pick = (o: StepOption) => {
     const n = counts[o.id];
-    const cuts = n != null && !o.isOn(form) &&
+    const cuts = s.kind === "multi" && n != null && !o.isOn(form) &&
       (n <= FEW_LEFT || (matchCount != null && matchCount > 0 && n / matchCount <= DEEP_CUT));
     if (cuts) { setConfirming({ o, n: n! }); return; }
     apply(o);
@@ -94,7 +105,9 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, onAnsw
   if (s.kind === "budget") return (
     <>
       <BudgetBody form={form} patch={patch} metaStock={metaStock} />
-      <Next onClick={onAnswered} />
+      {/* budget drives every count and the ranking itself, so the walk cannot
+          advance past it empty */}
+      <Next onClick={() => onAnswered()} disabled={form.budget <= 0} />
     </>
   );
 
@@ -165,7 +178,7 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, onAnsw
         </button>
       )}
 
-      {needsNext && !last && <Next onClick={onAnswered} />}
+      {needsNext && !last && <Next onClick={() => onAnswered()} />}
 
       {last && <Commit form={form} matchCount={matchCount} onCommit={onCommit} />}
 
@@ -260,51 +273,53 @@ function Tile({ o, form, count, total, tapped, compact, onPick }: {
   );
 }
 
-/* The brand's logo.
+/* Owner-supplied artwork, BUNDLED rather than fetched by path.
 
-   It loads `/brandlogo/<name>.svg` first. Drop the vendors' own files there --
-   public/brandlogo/Samsung.svg, Xiaomi.svg, vivo.svg, OnePlus.svg,
-   realme.svg, Apple.svg -- and every tile picks them up with no code change.
+   Drop an SVG into `src/assets/icon/<option-id>.svg` (or
+   `src/assets/brandlogo/<Brand>.svg`) and the tile uses it, no code change --
+   the same drop-in promise as before. What changed is the mechanism: these
+   used to be `/icon/<id>.svg` and `/brandlogo/<b>.svg` under public/, which
+   meant an <img> request per tile, per screen, that 404'd for every id
+   because the owner has not supplied files yet. Ten red console lines and ten
+   real round trips per screen, on a data plan, to discover nothing is there.
+   A glob knows at build time. Missing file -> no element at all. */
+const ICON_FILES = import.meta.glob("../assets/icon/*.svg", {
+  eager: true, query: "?url", import: "default" }) as Record<string, string>;
+const BRAND_FILES = import.meta.glob("../assets/brandlogo/*.svg", {
+  eager: true, query: "?url", import: "default" }) as Record<string, string>;
 
-   Until a file exists the tile falls back to the brand's own colour with its
-   mark on it. MI and 1+ are the marks those brands really use; the single
-   letters stand in for wordmarks, because a hand-traced Samsung or realme
-   wordmark is brand misuse AND an illegible squiggle at 40px. The brand name
-   sits directly below every one of these either way, so nothing depends on
-   the glyph. */
-/* The option icon. Prefers an owner-supplied file at /icon/<option-id>.svg and
-   falls back to the hand-drawn placeholder path -- the same drop-in pattern as
-   BrandMark's /brandlogo. The placeholder shows immediately (so a catalogue
-   with no icon files yet has no blank flash) and the file, if present, fades in
-   over it on load. An owner SVG carries its own colour, which is where the
-   "friendly, colourful" comes from -- no per-axis hue needed in code.
-   README in public/icon states the viewBox and stroke conventions. */
+/* The option icon. An owner SVG carries its own colour -- that is where the
+   "friendly, colourful" comes from, no per-axis hue in code. Until one exists
+   the hand-drawn placeholder path shows, which tints with the tile. */
 function TileIcon({ id, path, lit }: { id: string; path: string; lit: boolean }) {
-  const [loaded, setLoaded] = useState(false);
+  const url = ICON_FILES[`../assets/icon/${id}.svg`];
+  if (url) {
+    return <img src={url} alt="" width={28} height={28} aria-hidden="true"
+      style={st("width:28px; height:28px; display:block; flex-shrink:0;")} />;
+  }
   return (
-    <span style={st("position:relative; display:block; width:28px; height:28px; flex-shrink:0;")}>
-      {!loaded && (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={st("display:block;")}>
-          <path d={path} stroke={lit ? "var(--onp)" : "var(--lnk)"} strokeWidth="1.9"
-            strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      )}
-      <img src={`/icon/${id}.svg`} alt="" width={28} height={28} aria-hidden="true"
-        onLoad={() => setLoaded(true)}
-        style={st(`position:absolute; inset:0; width:28px; height:28px; display:block; opacity:${loaded ? 1 : 0};`)} />
-    </span>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+      style={st("display:block; flex-shrink:0;")}>
+      <path d={path} stroke={lit ? "var(--onp)" : "var(--lnk)"} strokeWidth="1.9"
+        strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
-function BrandMark({ brand, dot, mark }: { brand: string; dot: string; mark?: string }) {
-  const [real, setReal] = useState(true);
-  const box = "display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:var(--r); flex-shrink:0;";
+/* The brand's logo, or its colour with its mark on it.
 
-  if (real) {
+   MI and 1+ are the marks those brands really use; the single letters stand in
+   for wordmarks, because a hand-traced Samsung or realme wordmark is brand
+   misuse AND an illegible squiggle at 40px. The brand name sits directly below
+   every one of these either way, so nothing depends on the glyph. */
+function BrandMark({ brand, dot, mark }: { brand: string; dot: string; mark?: string }) {
+  const box = "display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:var(--r); flex-shrink:0;";
+  const url = BRAND_FILES[`../assets/brandlogo/${brand}.svg`];
+
+  if (url) {
     return (
       <span aria-hidden="true" style={st(box + "background:#fff; box-shadow:0 0 0 1px rgba(var(--rgb-ink),.1);")}>
-        <img src={`/brandlogo/${brand}.svg`} alt="" width={30} height={30}
-          onError={() => setReal(false)}
+        <img src={url} alt="" width={30} height={30}
           style={st("width:30px; height:30px; object-fit:contain; display:block;")} />
       </span>
     );
@@ -467,7 +482,12 @@ function BudgetBody({ form, patch, metaStock }: {
     <>
       <div style={st("display:flex; align-items:center; gap:14px; padding:14px 22px; border-radius:var(--r); background:var(--card); border:.5px solid rgba(var(--rgb-white),.95); box-shadow:inset 0 1px 1px rgba(var(--rgb-white),.9), 0 10px 34px rgba(var(--rgb-ink),.08), 0 0 0 1px rgba(var(--rgb-ink),.04);")}>
         <span style={st("font-family:var(--f-display); font-size:clamp(38px,7vw,64px); font-weight:300; color:var(--faint); line-height:1;")}>৳</span>
-        <input ref={inputRef} className="kbudget" inputMode="numeric" autoFocus value={bnNum(fmt(form.budget))}
+        {/* empty until the buyer types: an arbitrary default budget anchors
+            every recommendation to a number that is not theirs, so 0 shows the
+            placeholder rather than a fake ৳0 */}
+        <input ref={inputRef} className="kbudget" inputMode="numeric" autoFocus
+          value={form.budget > 0 ? bnNum(fmt(form.budget)) : ""}
+          placeholder={t("s_budget_ph")}
           aria-label={t("s_budget_t")}
           onChange={(e) => setRaw(e.target.value)}
           onFocus={(e) => e.target.select()}
@@ -506,10 +526,10 @@ function BudgetBody({ form, patch, metaStock }: {
    that answered is what made the next question appear). The plain single
    steps never show it -- their answer IS the advance, which is what keeps
    nine screens down to nine taps. */
-function Next({ onClick }: { onClick: () => void }) {
+function Next({ onClick, disabled = false }: { onClick: () => void; disabled?: boolean }) {
   return (
-    <button onClick={onClick} className="k-press"
-      style={st("margin-top:18px; width:100%; min-height:56px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); color:var(--onp); font-size:16.5px; font-weight:700; font-family:var(--f-bn); box-shadow:0 10px 26px -14px rgba(var(--rgb-ink),.5);")}>
+    <button onClick={onClick} className="k-press" disabled={disabled}
+      style={st(`margin-top:18px; width:100%; min-height:56px; border-radius:var(--r); border:none; cursor:${disabled ? "not-allowed" : "pointer"}; background:var(--teal); color:var(--onp); font-size:16.5px; font-weight:700; font-family:var(--f-bn); box-shadow:0 10px 26px -14px rgba(var(--rgb-ink),.5); opacity:${disabled ? .45 : 1};`)}>
       {t("qz_next")} →
     </button>
   );

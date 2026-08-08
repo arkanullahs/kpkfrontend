@@ -74,10 +74,15 @@ export interface Screen {
   sheet?: StepSheet;
   /** what "doesn't matter" does */
   clear: (f: Form) => Partial<Form>;
-  /** "doesn't matter" as a full-size peer (`equal`) or a quiet line below
-      (`quiet`). The need questions are forced choices, so their skip is quiet;
-      every filter's is equal. */
-  skipStyle: "quiet" | "equal";
+  /** "doesn't matter" as a full-size peer (`equal`), a quiet line below
+      (`quiet`), or absent (`none`). The need questions are forced choices, so
+      their skip is quiet; every filter's is equal.
+
+      `none` is for the FORKS. "Is this for an elderly person?" shipped with
+      yes / no / Skip, where Skip did exactly what No did -- a third control
+      that adds a decision and answers nothing. A fork's two tiles already
+      cover the whole question. */
+  skipStyle: "quiet" | "equal" | "none";
   skipKey: string;
   skipSubKey?: string;
   skipIcon?: string;
@@ -90,12 +95,13 @@ export const FORM_PATHS = [
   "officialOnly", "requireJack", "requireIr", "requireFm",
   "includeBrands", "excludeBrands", "avoidChinese",
   "platform", "socVendor", "minRam", "minStorage",
-  "regions", "requireRom",
-  "forElderly", "rechannelWiden", "includeCnRom",
+  "requireRom",
+  "forElderly", "rechannel", "includeCnRom",
 ] as const;
 
 /** Fields on Form that no screen owns, and why. */
 export const UNOWNED: Record<string, string> = {
+  regions: "the import-market sheet was removed from the channel screen 2026-08-09. It could not be reached: both tiles on that screen auto-advance, so the sheet's own button and the Next it forced onto the screen were dead controls the owner read as clutter. The advanced Configure screen (filters.ts) still exposes markets.",
   hwStrict: "no control, by owner ruling 2026-08-08. It asked the buyer to arbitrate our own data coverage. Stays on Form at its default because toParams still sends it.",
   archetypes: "the deleted door. Still on Form only because toParams branches on it.",
   traitText: "the free-text door. Owner ruled it out 2026-08-07.",
@@ -135,7 +141,6 @@ const BRANDS: [string, string, string][] = [
   ["Samsung", "#1428A0", "S"], ["Xiaomi", "#FF6900", "MI"], ["vivo", "#415FFF", "v"],
   ["OnePlus", "#EB0028", "1+"], ["realme", "#FFC915", "r"], ["Apple", "#1D1D1F", ""],
 ];
-const MARKETS = ["IN", "Global", "CN", "US", "JP", "SG", "AU"];
 
 /** Answering slot i REPLACES it — this is a choice, not an accumulation. */
 function pickPatch(f: Form, slot: number, key: string): Partial<Form> {
@@ -155,18 +160,29 @@ function needOption(slot: number, k: string): StepOption {
   };
 }
 
-/** Which ladder slot the second question fills. `picks` is DENSE: deriveIntent
-    applies the geometric ladder by POSITION, so an empty leading slot cannot be
-    held. If the buyer skipped the first question, this one IS their first
-    priority: it fills slot 0. */
-const q2Slot = (f: Form) => (f.q.picks.length ? 1 : 0);
+/** Appending, for the add-more screen: tapping ranks an axis at the end of the
+    ladder, tapping it again takes it back off. `picks` stays DENSE, because
+    deriveIntent weighs by POSITION -- a hole would silently promote whatever
+    followed it. */
+function appendPatch(f: Form, key: string): Partial<Form> {
+  const picks = f.q.picks.includes(key)
+    ? f.q.picks.filter((k) => k !== key)
+    : [...f.q.picks, key];
+  const q = { ...f.q, picks };
+  return { q, ...deriveIntent(q) };
+}
+
+const appendOption = (k: string): StepOption => ({
+  id: k,
+  labelKey: "qc_" + k,
+  icon: ICON[k as keyof typeof ICON],
+  patch: (f) => appendPatch(f, k),
+  isOn: (f) => f.q.picks.includes(k),
+});
 
 const chip = (id: string, labelKey: string,
               patch: StepOption["patch"], isOn: StepOption["isOn"]): StepOption =>
   ({ id, labelKey, patch, isOn });
-
-const toggleIn = (list: string[], v: string) =>
-  list.includes(v) ? list.filter((x) => x !== v) : [...list, v];
 
 /** The buyer asked for Apple and nothing else, which settles the platform. */
 const onlyApple = (f: Form) =>
@@ -186,18 +202,13 @@ export const SCREENS: Record<string, Screen> = {
        with two answers to "who fixes it". The import market rides behind it. */
     id: "channel", kind: "single", layout: "grid2",
     titleKey: "s_channel_t", whyKey: "s_channel_why",
-    owns: ["officialOnly", "regions"],
+    owns: ["officialOnly"],
     options: () => [{
       id: "official", labelKey: "s_official", subKey: "s_official_sub", icon: ICON.shield,
       patch: () => ({ officialOnly: true, regions: [] }),
       isOn: (f) => f.officialOnly,
       probe: () => ({ officialOnly: true }),
     }],
-    sheet: {
-      buttonKey: "s_market_open", titleKey: "s_market_t",
-      options: () => MARKETS.map((code) => chip("mkt:" + code, "mkt_" + code,
-        (f) => ({ regions: toggleIn(f.regions, code) }), (f) => f.regions.includes(code))),
-    },
     clear: () => ({ officialOnly: false, regions: [] }),
     skipStyle: "equal", skipKey: "s_unofficial",
     skipSubKey: "s_unofficial_sub", skipIcon: ICON.globe,
@@ -228,7 +239,7 @@ export const SCREENS: Record<string, Screen> = {
         isOn: (f) => !f.forElderly },
     ],
     clear: () => ({ forElderly: false }),
-    skipStyle: "quiet", skipKey: "s_skip",
+    skipStyle: "none", skipKey: "s_skip",
   },
 
   budget: {
@@ -242,21 +253,26 @@ export const SCREENS: Record<string, Screen> = {
 
   rechannel: {
     /* The elderly channel divert (owner edge -28). Too few official phones at
-       this budget -> offer to widen to unofficial. "Yes" clears officialOnly
-       and re-asks the channel; "no" goes back to budget. */
+       this budget -> offer to widen to unofficial.
+
+       "Widen" IS the channel answer, so it carries on forward; sending the
+       buyer back to screen one to re-answer a question they just answered is
+       the loop the owner rejected. "Keep official" goes back to budget, the
+       one screen that can change the outcome, and the guard reads this answer
+       so it cannot ask twice. */
     id: "rechannel", kind: "single", layout: "grid2",
     titleKey: "s_rechannel_t", whyKey: "s_rechannel_why",
-    owns: ["rechannelWiden"],
+    owns: ["rechannel"],
     options: () => [
       { id: "widen", labelKey: "s_rechannel_widen", subKey: "s_rechannel_widen_sub", icon: ICON.globe,
-        patch: () => ({ rechannelWiden: true, officialOnly: false, regions: [] }),
-        isOn: (f) => f.rechannelWiden },
+        patch: () => ({ rechannel: "widen" as const, officialOnly: false, regions: [] }),
+        isOn: (f) => f.rechannel === "widen" },
       { id: "keep", labelKey: "s_rechannel_keep", subKey: "s_rechannel_keep_sub", icon: ICON.shield,
-        patch: () => ({ rechannelWiden: false }),
-        isOn: (f) => !f.rechannelWiden },
+        patch: () => ({ rechannel: "keep" as const }),
+        isOn: (f) => f.rechannel === "keep" },
     ],
-    clear: () => ({ rechannelWiden: false }),
-    skipStyle: "quiet", skipKey: "s_skip",
+    clear: () => ({ rechannel: "keep" as const }),
+    skipStyle: "none", skipKey: "s_skip",
   },
 
   plat_e: {
@@ -291,23 +307,28 @@ export const SCREENS: Record<string, Screen> = {
   },
 
   needN: {
-    /* The unbounded add-more priority (owner's "choose however many"). Each
-       pick appends to the geometric ladder, which cannot flatten (need.ts
-       weightAt). Never re-offers slot 0's axis. */
-    id: "needN", kind: "single", layout: "grid2",
+    /* The unbounded add-more priority (owner's "let them choose however many
+       more they like"). ONE screen, `multi`: each tap appends to the geometric
+       ladder -- which cannot flatten, whatever the count (need.ts weightAt) --
+       the ladder above redraws, and Next ends it.
+
+       This used to be a single-pick screen inside a needN -> guard -> popup ->
+       needN cycle, which put a modal on screen after every tap. Same
+       unbounded list, no loop, no modal. Order of tapping IS the order of the
+       ladder, so the tiles append rather than replace. */
+    id: "needN", kind: "multi", layout: "grid2",
     titleKey: "qc_q2", whyKey: "qc_q2_why",
     owns: ["q.picks[1]"],
-    options: (f) => {
-      const slot = q2Slot(f);
-      return Q2_KEYS
-        .filter((k) => slot === 0 || k !== f.q.picks[0])
-        .map((k) => needOption(slot, k));
-    },
+    // the leading priority is settled and already drawn in the ladder above;
+    // re-offering it would let a buyer rank the same axis twice
+    options: (f) => Q2_KEYS.filter((k) => k !== f.q.picks[0]).map(appendOption),
     clear: (f) => {
-      const q = { ...f.q, picks: f.q.picks.slice(0, q2Slot(f)) };
+      const q = { ...f.q, picks: f.q.picks.slice(0, 1) };
       return { q, ...deriveIntent(q) };
     },
-    skipStyle: "quiet", skipKey: "s_skip_need",
+    // no skip: this screen already has a Next, and "I'm not sure" next to it
+    // is the same button twice. Adding nothing and pressing Next IS the skip.
+    skipStyle: "none", skipKey: "s_skip_need",
   },
 
   brands: {
@@ -350,7 +371,9 @@ export const SCREENS: Record<string, Screen> = {
         probe: () => ({ includeCnRom: true }) },
     ],
     clear: () => ({ includeCnRom: false }),
-    skipStyle: "equal", skipKey: "s_skip", skipIcon: ICON.any,
+    // no skip tile: "global only" IS the default, so a third tile labelled
+    // "Skip" was a second button for the answer already sitting next to it
+    skipStyle: "none", skipKey: "s_skip",
   },
 
   sizes: {

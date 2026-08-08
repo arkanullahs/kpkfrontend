@@ -24,6 +24,10 @@ export function useCounts(form: Form, probes: Record<string, Partial<Form>>) {
   useEffect(() => {
     window.clearTimeout(timer.current);
     let cancelled = false;
+    // no budget set yet -> no per-option pills. The channel screen comes before
+    // budget in the flow, and "8 of 46" against a budget the buyer never picked
+    // is the number that confused the owner. /count also 422s on budget <= 0.
+    if (form.budget <= 0) { setCounts({}); return; }
     timer.current = window.setTimeout(() => {
       const entries = Object.entries(probes);
       if (!entries.length) return;

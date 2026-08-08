@@ -3,11 +3,16 @@
 Each picker option tile shows an icon. By default it renders a hand-drawn
 placeholder path baked into the app (`ICON` in `src/steps.ts`). Drop a file
 here named after the option **id** and the tile uses it instead, with no code
-change — the same mechanism `public/brandlogo/` uses for brand marks.
+change — the same mechanism `src/assets/brandlogo/` uses for brand marks.
+
+These are **bundled** (`import.meta.glob` in `StepBody.tsx`), not served from
+`public/`. That is deliberate: a public path makes the browser request every
+tile's icon on every screen and get a 404 for each one it has not been given
+yet. A missing file here costs nothing — no request, no console error.
 
 ## File name = option id
 
-`public/icon/<option-id>.svg`. The ids, by screen:
+`src/assets/icon/<option-id>.svg`. The ids, by screen:
 
 | screen | option ids |
 |---|---|
@@ -19,8 +24,9 @@ change — the same mechanism `public/brandlogo/` uses for brand marks.
 | rom (software) | `global` `cnrom` |
 | sizes | `snapdragon` `mediatek` `ram6` `ram8` `ram12` `rom128` `rom256` `rom512` |
 | extras | `jack` `ir` `fm` `lineage` |
+| every "doesn't matter" tile | `__skip` |
 
-(Brand tiles are not here — they load from `public/brandlogo/<Brand>.svg`.)
+(Brand tiles are not here — they load from `src/assets/brandlogo/<Brand>.svg`.)
 
 ## Requirements
 

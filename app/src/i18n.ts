@@ -475,6 +475,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   // buyer would use; the `why` line says what the answer costs, and is always
   // visible rather than behind a tap.
   // owner: verify every bn string in this block.
+  s_budget_ph: { en: "type your budget", bn: "আপনার বাজেট লিখুন" },
   s_budget_t: { en: "What can you spend?", bn: "কত টাকা খরচ করতে পারবেন?" },
   s_budget_why: { en: "Type your real number. We look for the best phone at it, not the cheapest.", bn: "আপনার সত্যিকার বাজেট লিখুন। আমরা এই দামে সেরা ফোন খুঁজি, সবচেয়ে সস্তাটা নয়।" },
 
@@ -567,10 +568,9 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   s_rechannel_t: { en: "Very few official phones at this budget", bn: "এই বাজেটে অফিশিয়াল ফোন খুব কম" },
   s_rechannel_why: { en: "Unofficial sets cost less and there are far more of them. Include them?", bn: "আনঅফিশিয়াল সেট সস্তা আর অনেক বেশি। যোগ করব?" },
   s_rechannel_widen: { en: "Yes, include unofficial", bn: "হ্যাঁ, আনঅফিশিয়াল যোগ করুন" },
-  s_rechannel_widen_sub: { en: "Many more phones to choose from", bn: "বাছার জন্য অনেক বেশি ফোন" },
+  s_rechannel_widen_sub: { en: "Far more phones at this price. The shop's warranty, usually 10 days.", bn: "এই দামে অনেক বেশি ফোন। ওয়ারেন্টি দোকানের, সাধারণত ১০ দিন।" },
   s_rechannel_keep: { en: "No, official only", bn: "না, শুধু অফিশিয়াল" },
-  s_rechannel_keep_sub: { en: "Warranty support matters more", bn: "ওয়ারেন্টি সার্ভিস বেশি জরুরি" },
-
+  s_rechannel_keep_sub: { en: "Stay official. We'll take you back to the budget so you can raise it.", bn: "অফিশিয়ালই থাকুক। বাজেটে ফিরিয়ে নিচ্ছি, বাড়াতে পারবেন।" },
   s_soft_t: { en: "Global software, or is a China ROM fine?", bn: "গ্লোবাল সফটওয়্যার, না চায়না রম চলবে?" },
   s_soft_why: { en: "China-ROM phones cost less but need a software flash for Google apps and English.", bn: "চায়না-রম ফোন সস্তা, কিন্তু গুগল অ্যাপ আর ইংরেজির জন্য সফটওয়্যার ফ্ল্যাশ লাগে।" },
   s_soft_global: { en: "Global software only", bn: "শুধু গ্লোবাল সফটওয়্যার" },
@@ -717,12 +717,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "One phone cannot be best at everything at this price — something always gives. Whatever you pick here, we hunt for first.",
     bn: "এই দামে একটা ফোন সব দিকেই সেরা হয় না — কিছু না কিছু ছাড়তেই হয়। এখানে যা বাছবেন, আমরা সেটাই আগে খুঁজব।"
   },
-  qc_q2: { en: "And after that, what would you hate to give up?",
-           bn: "এরপর কোনটা ছাড়তে সবচেয়ে খারাপ লাগবে?" },
-  qc_q2_why: {
-    en: "This one counts for less than your first answer — that is on purpose. The first choice is the real decision.",
-    bn: "এটা প্রথম উত্তরের চেয়ে কম গুরুত্ব পাবে — এটা ইচ্ছে করেই। আসল সিদ্ধান্ত প্রথমটাই।"
-  },
+  qc_q2: { en: "What else matters? Add as many as you like.", bn: "আর কী কী জরুরি? যত খুশি যোগ করুন।" },
+  qc_q2_why: { en: "Tap them in the order they matter to you. Each one counts for less than the one above it -- the bars show exactly how much.", bn: "যেই ক্রমে জরুরি, সেই ক্রমেই চাপুন। প্রতিটা এর উপরেরটার চেয়ে কম গোনা হয় -- পাশের বারগুলোতে কতটা দেখা যাচ্ছে।" },
   qc_camera: { en: "Photos that actually look good", bn: "ছবি — যেন সত্যিই ভালো ওঠে" },
   qc_battery: { en: "Battery that lasts into day two", bn: "ব্যাটারি — দ্বিতীয় দিনেও যেন চার্জ থাকে" },
   qc_speed: { en: "Speed that never stutters", bn: "স্পিড — কখনো যেন আটকে না যায়" },

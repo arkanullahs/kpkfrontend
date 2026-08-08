@@ -26,7 +26,8 @@ interface Props {
   patch: (d: Partial<Form>) => void;
   matchCount: number | null;
   metaStock: string;
-  onNext: () => void;
+  /** carries the form the answer produced — see StepBody's `onAnswered` */
+  onNext: (next?: Form) => void;
   onBack: () => void;
   onExit: () => void;
   onCommit: () => void;
@@ -174,19 +175,26 @@ function PriorityLadder({ picks }: { picks: string[] }) {
   );
 }
 
-/* Nine segments, sticky, glass. Answered segments teal, the rest --rule, and
-   the fill transitions rather than jumping.
+/* ONE bar, sticky, glass — not a row of segments.
 
-   The segments are aria-hidden and a live text position sits beside them: nine
-   decorative bars announce nothing, and a screen reader needs the number. */
+   The segment row was drawn with one span per remaining screen, so the honest
+   total re-flowed the whole rail: "2 / 8" on the elderly fork became "3 / 4"
+   one tap later, eight bars collapsing into four. The buyer reads that as the
+   thing breaking, not as good news. The total still changes — it must, a fork
+   really is shorter — but a single fill only ever slides forward, which is
+   what progress is supposed to look like.
+
+   The bar is aria-hidden and a live text position sits beside it: a
+   decorative bar announces nothing, and a screen reader needs the number. */
 function Rail({ at, of }: { at: number; of: number }) {
+  const pct = Math.round(((at + 1) / Math.max(1, of)) * 100);
   return (
     <div className="k-glass"
-      style={st("position:sticky; top:74px; z-index:40; display:flex; gap:4px; padding:10px 0; background:var(--hdr-bg); backdrop-filter:blur(14px) saturate(1.6); -webkit-backdrop-filter:blur(14px) saturate(1.6);")}>
-      {Array.from({ length: of }, (_, i) => (
-        <span key={i} aria-hidden="true"
-          style={st(`flex:1; height:4px; border-radius:var(--r); transition:background .3s ease; background:${i <= at ? "var(--teal)" : "var(--rule)"};`)} />
-      ))}
+      style={st("position:sticky; top:74px; z-index:40; padding:10px 0; background:var(--hdr-bg); backdrop-filter:blur(14px) saturate(1.6); -webkit-backdrop-filter:blur(14px) saturate(1.6);")}>
+      <div aria-hidden="true"
+        style={st("height:5px; border-radius:var(--r); background:var(--rule); overflow:hidden;")}>
+        <div style={st(`height:100%; width:${pct}%; border-radius:var(--r); background:var(--teal); transition:width .42s cubic-bezier(.2,.7,.2,1);`)} />
+      </div>
       <span className="sr-only" aria-live="polite">{`${at + 1} / ${of}`}</span>
     </div>
   );

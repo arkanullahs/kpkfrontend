@@ -42,18 +42,21 @@ export interface Form {
   useCase: string;               // EN sentence sent as use_case (embedded intent)
   priorities: string[];          // ordered axes, for the summary screen
   weights: Record<string, number>; // the REAL vector — now sent to the server
-  // flow-graph control (spec 2026-08-08). forElderly forks the whole flow and
-  // rides in the URL; the other two are transient answers to a guard's dialog
-  // and a popup, never serialised.
+  // flow-graph control (spec 2026-08-08). forElderly forks the whole flow.
+  // `rechannel` is the answer to the thin-official-pool offer and MUST be
+  // three-valued: with a boolean, "no, keep official" is indistinguishable
+  // from "never asked", so the guard re-armed on the way back from budget and
+  // the buyer was offered the same question forever. wantMore is transient
+  // (the popup's answer) and is never serialised.
   forElderly: boolean;
-  rechannelWiden: boolean;
+  rechannel: "" | "widen" | "keep";
   wantMore: boolean;
   includeCnRom: boolean;         // "a China ROM is fine" — actively re-admits
                                  // cn_rom phones the engine excludes by default
 }
 
 export const DEFAULT_FORM: Form = {
-  budget: 95000, archetypes: [], platform: "any",
+  budget: 0, archetypes: [], platform: "any",
   osStyle: "any", avoidChinese: false, officialOnly: false,
   excludeBrands: [], traitText: "",
   requireJack: false, requireIr: false, requireFm: false,
@@ -61,7 +64,7 @@ export const DEFAULT_FORM: Form = {
   minRam: 0, minStorage: 0,
   q: { picks: [], hw: [] },
   useCase: "", priorities: [], weights: {},
-  forElderly: false, rechannelWiden: false, wantMore: false, includeCnRom: false,
+  forElderly: false, rechannel: "", wantMore: false, includeCnRom: false,
 };
 
 /** The forced-choice quiz → the buyer's need.
@@ -190,6 +193,8 @@ export function formToQuery(f: Form, node: string = ENTRY_NODE): string {
   if (node && node !== ENTRY_NODE) p.set("s", node);
   if (f.budget !== DEFAULT_FORM.budget) p.set("b", String(f.budget));
   if (f.forElderly) p.set("eld", "1");
+  // serialised so a reload mid-divert does not re-arm the guard and ask again
+  if (f.rechannel) p.set("rech", f.rechannel);
   if (f.includeCnRom) p.set("cnrom", "1");
   if (f.q.picks.length) p.set("w", f.q.picks.join(","));
   if (f.q.hw.length) p.set("hw", f.q.hw.join(","));
@@ -227,6 +232,7 @@ export function queryToForm(s: string): Partial<Form> & { node: string } {
   const out: Partial<Form> = {
     budget: nat("b") || DEFAULT_FORM.budget,
     forElderly: p.get("eld") === "1",
+    rechannel: oneOf("rech", ["", "widen", "keep"] as const, ""),
     includeCnRom: p.get("cnrom") === "1",
     q: { picks: list("w"), hw },
     officialOnly: p.get("official") === "1",
