@@ -44,8 +44,14 @@ export interface StepOption {
   probe?: (f: Form) => Partial<Form>;
 }
 
-/** A second, labelled group on the same screen, shown only when the main
-    answer makes it meaningful. Progressive disclosure, not another screen. */
+/** A further labelled group on the same screen, shown only when the main
+    answer makes it meaningful. Progressive disclosure, not another screen.
+
+    A screen can carry SEVERAL. It carried one, and the chipset screen used it
+    to put RAM and storage in a single six-tile grid under "How much memory?" —
+    "6GB RAM" and "128GB storage" are the same shape, the same size, and near
+    enough the same icon, so the owner read the block as one confusing list of
+    numbers. They are two different questions and now say so. */
 export interface StepGroup {
   when: (f: Form) => boolean;
   titleKey: string;
@@ -70,7 +76,7 @@ export interface Screen {
   /** paths on Form this screen is the only owner of */
   owns: string[];
   options: (f: Form) => StepOption[];
-  reveal?: StepGroup;
+  groups?: StepGroup[];
   sheet?: StepSheet;
   /** what "doesn't matter" does */
   clear: (f: Form) => Partial<Form>;
@@ -112,26 +118,73 @@ export const UNOWNED: Record<string, string> = {
   weights: "derived from q by deriveIntent",
 };
 
+/* The tile icons.
+
+   One `d` per option, stroked at 1.9 in a 0 0 24 24 box, drawn at 28px. They
+   are PLACEHOLDERS: drop `src/assets/icon/<option-id>.svg` and the tile uses
+   that instead, colour and all (see the README there).
+
+   Redrawn 2026-08-09. The owner's screenshot showed "Any brand" wearing a tick
+   with a stray horizontal stroke through its tail -- that was a second subpath
+   (`M4 18h6`) welded onto the tick for no reason -- and the elderly tile
+   wearing a stick figure that at 28px reads as a smudge. Several others were
+   the same kind of sketch: open rectangles for a camera, a two-line "apple".
+
+   Rules that keep this set coherent:
+     - closed shapes close (`z`), so a stroke join never leaves a notch;
+     - nothing thinner than ~2px of real geometry, because 1.9 stroke eats it;
+     - `v.01` / `h.01` stubs are deliberate DOTS -- round caps render them as
+       circles, which is how eyes and indicator lights are drawn here;
+     - one metaphor per axis, and no two icons on the same screen may share a
+       silhouette. RAM and storage broke that rule and the owner could not
+       tell the two groups apart. */
 const ICON = {
-  camera: "M4 8h3l1.5-2h7L17 8h3v10H4V8zM12 11a3 3 0 100 6 3 3 0 000-6z",
-  battery: "M3 8h14v8H3V8zM17 11h2v2h-2zM6 10.5v3M9 10.5v3M12 10.5v3",
-  speed: "M13 2L4.5 13H11l-1 9 8.5-11H12l1-9z",
-  simple: "M12 20s-7-4.3-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.7-7 9-7 9z",
-  gaming: "M6 10h12a3 3 0 110 6H6a3 3 0 110-6zM7 11.5v3M5.5 13h3M16 12.5h.01M18 14h.01",
-  video: "M3 7h11v10H3V7zM14 10.5l7-3v9l-7-3",
-  shield: "M12 3l7 3v5.5c0 4.2-2.9 7.6-7 8.5-4.1-.9-7-4.3-7-8.5V6l7-3zM9 12l2 2 4-4",
-  jack: "M9 3h6v7h-6V3zM12 10v6M9.5 16h5v5h-5v-5z",
-  remote: "M8 3h8a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V5a2 2 0 012-2zM12 7v.01M9.5 11h5M9.5 14h5M9.5 17h5",
-  radio: "M4 9h16v10H4V9zM7 5l10-2M8 13h.01M12 13h4M12 16h4",
-  android: "M6 10h12v8H6v-8zM8 10V7a4 4 0 018 0v3M4 12v4M20 12v4",
-  apple: "M12 8c-3 0-5 2.3-5 5.5S9 21 12 21s5-4.3 5-7.5S15 8 12 8zM12 8c0-2 1.4-4 3.5-4",
-  chip: "M7 7h10v10H7V7zM4 10h3M4 14h3M17 10h3M17 14h3M10 4v3M14 4v3M10 17v3M14 17v3",
-  globe: "M12 3a9 9 0 100 18 9 9 0 000-18zM3.5 9h17M3.5 15h17M12 3c2.5 2.4 3.8 5.6 3.8 9s-1.3 6.6-3.8 9c-2.5-2.4-3.8-5.6-3.8-9S9.5 5.4 12 3z",
-  ram: "M4 8h16v8H4V8zM7 16v3M12 16v3M17 16v3M8 11h2v2H8zM14 11h2v2h-2z",
-  rom: "M4 6h16v12H4V6zM4 12h16M7 9h.01M7 15h.01M11 15h6",
-  elder: "M12 7a2 2 0 100-4 2 2 0 000 4zM10 21v-6l-2-3 1-3h6l1 3-2 3v6M9 12h6",
-  // every "doesn't matter" tile carries this
-  any: "M4 12l5 5L20 6M4 18h6",
+  // ---- the priority axes ----
+  camera: "M4 8h3.2L9 5.5h6L16.8 8H20a1.5 1.5 0 011.5 1.5v8A1.5 1.5 0 0120 19H4a1.5 1.5 0 01-1.5-1.5v-8A1.5 1.5 0 014 8zM12 16.6a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6z",
+  battery: "M4.5 8.5h11a2.5 2.5 0 012.5 2.5v2a2.5 2.5 0 01-2.5 2.5h-11A2.5 2.5 0 012 13v-2a2.5 2.5 0 012.5-2.5zM20.5 10.5v3M5.5 11v2M8.5 11v2M11.5 11v2",
+  speed: "M13 2.5L4.5 13.5H11l-1 8 8.5-11H12l1-8z",
+  // a face, not a heart: the axis is "simple, never confusing", and a heart
+  // read as "favourite"
+  // the smile is an explicit quadratic, not `s`: a smooth-curve command with
+  // no preceding curve reflects off the current point, which flattened it
+  simple: "M12 21a9 9 0 100-18 9 9 0 000 18zM8.4 14.6q3.6 3.2 7.2 0M9.2 9.8v.01M14.8 9.8v.01",
+  gaming: "M7 8.5h10a4 4 0 010 8H7a4 4 0 010-8zM9.5 11v3M8 12.5h3M15.4 11.6v.01M17.6 13.4v.01",
+  video: "M4 6.5h10.5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2v-7a2 2 0 012-2zM16.5 11.2l5-2.7v7l-5-2.7z",
+
+  // ---- channel ----
+  shield: "M12 2.5l7.5 3v6c0 4.6-3.1 8.3-7.5 9.2-4.4-.9-7.5-4.6-7.5-9.2v-6l7.5-3zM8.8 12l2.3 2.3 4.1-4.6",
+  globe: "M12 21a9 9 0 100-18 9 9 0 000 18zM3.4 9h17.2M3.4 15h17.2M12 3c2.4 2.4 3.7 5.6 3.7 9s-1.3 6.6-3.7 9c-2.4-2.4-3.7-5.6-3.7-9S9.6 5.4 12 3z",
+
+  // ---- the elderly fork: a person with a walking stick ----
+  elder: "M10 7.4a2.45 2.45 0 100-4.9 2.45 2.45 0 000 4.9zM10 9.6a3.1 3.1 0 00-3.1 3.1v3.4h1.3l.6 5.4h2.4l.6-5.4h1.3v-3.4A3.1 3.1 0 0010 9.6zM17.5 21.5v-7.2a2.1 2.1 0 014.2 0",
+
+  // ---- platform ----
+  android: "M6.6 11.6h10.8v5.9a1.5 1.5 0 01-1.5 1.5H8.1a1.5 1.5 0 01-1.5-1.5v-5.9zM6.6 11.6a5.4 5.4 0 0110.8 0M8.3 6.6L6.9 4.4M15.7 6.6l1.4-2.2M9.6 9.2v.01M14.4 9.2v.01M3.4 12.6v3.9M20.6 12.6v3.9",
+  // a piece of FRUIT — stem and leaf, no bite. The tile is labelled "iPhone",
+  // so the glyph does not need to be the vendor's mark, and tracing that mark
+  // would be brand misuse for an icon we drew ourselves
+  apple: "M12 21.4c-3.1 0-5.6-3.2-5.6-7.1S8.9 7.2 12 7.2s5.6 3.2 5.6 7.1-2.5 7.1-5.6 7.1zM12 7.2V4.1M12.1 5.6c1.5-2 3.5-1.8 3.5-1.8s.1 2-1.5 2.7c-1.1.5-2-.9-2-.9z",
+
+  // ---- software ----
+  chip: "M7.5 7.5h9a1 1 0 011 1v7a1 1 0 01-1 1h-9a1 1 0 01-1-1v-7a1 1 0 011-1zM10.2 10.2h3.6v3.6h-3.6zM9.8 3.5V6M14.2 3.5V6M9.8 18v2.5M14.2 18v2.5M3.5 9.8H6M3.5 14.2H6M18 9.8h2.5M18 14.2h2.5",
+  lineage: "M12 2.8l3 2.6 3.9.4.4 3.9 2.6 3-2.6 3-.4 3.9-3.9.4-3 2.6-3-2.6-3.9-.4-.4-3.9-2.6-3 2.6-3 .4-3.9 3.9-.4 3-2.6zM9.2 12.1l2 2 3.6-4",
+
+  /* ---- RAM and storage, deliberately unalike ----
+     A stick of memory (flat, pinned along one edge) against a stack of platters
+     (round, tall). They sat next to each other as two near-identical slabs, and
+     the buyer read six tiles of numbers with no idea which was which. */
+  ram: "M2.5 8.6h19a1 1 0 011 1v4.8a1 1 0 01-1 1h-19a1 1 0 01-1-1V9.6a1 1 0 011-1zM5.5 15.4v2.8M9.2 15.4v2.8M12.8 15.4v2.8M16.5 15.4v2.8M5.8 10.6h4v2.8h-4zM14.2 10.6h4v2.8h-4z",
+  storage: "M12 7.6c4.1 0 7.5-1.1 7.5-2.55S16.1 2.5 12 2.5 4.5 3.6 4.5 5.05 7.9 7.6 12 7.6zM19.5 5.05V19c0 1.4-3.4 2.55-7.5 2.55S4.5 20.4 4.5 19V5.05M19.5 12.05c0 1.4-3.4 2.55-7.5 2.55S4.5 13.45 4.5 12.05",
+
+  // ---- the extras ----
+  jack: "M4.5 15v-2.6a7.5 7.5 0 1115 0V15M4.6 14.4h1.6a1.4 1.4 0 011.4 1.4v3a1.4 1.4 0 01-1.4 1.4H4.6a1.4 1.4 0 01-1.4-1.4v-3a1.4 1.4 0 011.4-1.4zM17.8 14.4h1.6a1.4 1.4 0 011.4 1.4v3a1.4 1.4 0 01-1.4 1.4h-1.6a1.4 1.4 0 01-1.4-1.4v-3a1.4 1.4 0 011.4-1.4z",
+  remote: "M8.6 2.6h6.8a2 2 0 012 2v14.8a2 2 0 01-2 2H8.6a2 2 0 01-2-2V4.6a2 2 0 012-2zM12 6.2v.01M10 10h4M10 13h4M10 16h4",
+  radio: "M3.8 9.4h16.4a1.5 1.5 0 011.5 1.5v6.6a1.5 1.5 0 01-1.5 1.5H3.8a1.5 1.5 0 01-1.5-1.5v-6.6a1.5 1.5 0 011.5-1.5zM7.5 9.2L17.4 4.6M8.4 15.7a1.6 1.6 0 100-3.2 1.6 1.6 0 000 3.2zM13.5 13h4.8M13.5 15.6h4.8",
+
+  // ---- "doesn't matter", on every skip tile ----
+  // a plain, closed tick. It shipped with a second subpath grafted below it,
+  // which drew a stray line through the tail (owner screenshot 2026-08-09).
+  any: "M4.5 12.6l5 5L19.5 6.8",
 };
 
 const Q1_KEYS = ["camera", "battery", "speed", "simple"];
@@ -392,18 +445,28 @@ export const SCREENS: Record<string, Screen> = {
         isOn: (f) => f.socVendor === "mediatek",
         probe: () => ({ socVendor: "mediatek" as const }) },
     ],
-    reveal: {
-      when: () => true,
-      titleKey: "s_memory_t", layout: "grid3",
-      options: () => [
-        ...[6, 8, 12].map((n) => sizeTile("ram" + n, "s_ram_" + n, ICON.ram,
+    /* TWO groups, not one six-tile grid. RAM and storage were rendered
+       together under "How much memory?" as six identical compact tiles, and
+       the owner could not tell them apart -- correctly, because "8GB RAM" and
+       "128GB storage" differed only in the number. They answer different
+       questions (how much can it juggle vs how much can it hold), so they get
+       their own heading, their own icon, and their own row. */
+    groups: [
+      {
+        when: () => true,
+        titleKey: "s_ram_t", layout: "grid3",
+        options: () => [6, 8, 12].map((n) => sizeTile("ram" + n, "s_ram_" + n, ICON.ram,
           (f) => ({ minRam: f.minRam === n ? 0 : n }), (f) => f.minRam === n,
           () => ({ minRam: n }))),
-        ...[128, 256, 512].map((n) => sizeTile("rom" + n, "s_rom_" + n, ICON.rom,
+      },
+      {
+        when: () => true,
+        titleKey: "s_storage_t", layout: "grid3",
+        options: () => [128, 256, 512].map((n) => sizeTile("rom" + n, "s_rom_" + n, ICON.storage,
           (f) => ({ minStorage: f.minStorage === n ? 0 : n }), (f) => f.minStorage === n,
           () => ({ minStorage: n }))),
-      ],
-    },
+      },
+    ],
     clear: () => ({ socVendor: "any" as const, minRam: 0, minStorage: 0 }),
     skipStyle: "equal", skipKey: "s_skip_power", skipIcon: ICON.any,
   },
@@ -428,16 +491,16 @@ export const SCREENS: Record<string, Screen> = {
         isOn: (f: Form) => f.q.hw.includes("fm"),
         probe: () => ({ requireFm: true }) },
     ],
-    reveal: {
+    groups: [{
       when: (f) => !f.forElderly,
       titleKey: "s_rom_support_t", layout: "grid2",
       options: () => [
-        { id: "lineage", labelKey: "fg_rom_on", icon: ICON.rom,
+        { id: "lineage", labelKey: "fg_rom_on", icon: ICON.lineage,
           patch: (f: Form) => ({ requireRom: !f.requireRom }),
           isOn: (f: Form) => f.requireRom,
           probe: () => ({ requireRom: true }) },
       ],
-    },
+    }],
     clear: (f) => ({
       requireJack: false, requireIr: false, requireFm: false, requireRom: false,
       q: { ...f.q, hw: [] },

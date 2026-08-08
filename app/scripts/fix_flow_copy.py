@@ -97,6 +97,16 @@ COPY = {
         "Keep my answers",
         "\u0989\u09a4\u09cd\u09a4\u09b0\u0997\u09c1\u09b2\u09cb \u09a5\u09be\u0995",
     ),
+
+    # --- RAM and storage are two questions, not one grid (owner 2026-08-09) ---
+    "s_ram_t": (
+        "How much RAM? (what it can juggle)",
+        "\u0995\u09a4 RAM? (\u098f\u0995\u09b8\u09be\u09a5\u09c7 \u0995\u09a4\u099f\u09be \u09b8\u09be\u09ae\u09b2\u09be\u09ac\u09c7)",
+    ),
+    "s_storage_t": (
+        "How much storage? (what it can hold)",
+        "\u0995\u09a4 \u09b8\u09cd\u099f\u09cb\u09b0\u09c7\u099c? (\u0995\u09a4\u099f\u09be \u099c\u09ae\u09be \u09b0\u09be\u0996\u09ac\u09c7)",
+    ),
 }
 
 

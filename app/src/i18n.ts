@@ -549,7 +549,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
 
   s_brands_hide: { en: "Hide a brand instead", bn: "বরং কোনো ব্র্যান্ড লুকান" },
   s_skin_t: { en: "And the software?", bn: "আর সফটওয়্যার?" },
-  s_storage_t: { en: "Storage", bn: "স্টোরেজ" },
+  s_storage_t: { en: "How much storage? (what it can hold)", bn: "কত স্টোরেজ? (কতটা জমা রাখবে)" },
   s_strict_t: { en: "How strict?", bn: "কতটা কঠোর?" },
 
   s_memory_t: { en: "How much memory?", bn: "কতটুকু মেমরি?" },
@@ -697,6 +697,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   fg_tier2: { en: "More controls", bn: "আরও অপশন" },
   fg_of: { en: "of", bn: "টির মধ্যে" },
   fg_zero: { en: "nothing matches", bn: "কিছুই মেলে না" },
+  s_ram_t: { en: "How much RAM? (what it can juggle)", bn: "কত RAM? (একসাথে কতটা সামলাবে)" },
   s_reset_no: { en: "Keep my answers", bn: "উত্তরগুলো থাক" },
   s_reset_yes: { en: "Yes, clear it all", bn: "হ্যাঁ, সব মুছুন" },
   s_reset_body: { en: "This clears every answer and takes you back to the first question.", bn: "এতে আপনার সব উত্তর মুছে যাবে আর প্রথম প্রশ্নে ফিরে যাবেন।" },

@@ -52,7 +52,7 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, floorP
   const [sheet, setSheet] = useState(false);
   const [confirming, setConfirming] = useState<{ o: StepOption; n: number } | null>(null);
   const opts = s.options(form);
-  const revealed = s.reveal && s.reveal.when(form) ? s.reveal : null;
+  const revealed = (s.groups || []).filter((g) => g.when(form));
 
   /* Every option the buyer can see is probed, including the ones in the
      follow-up group and "doesn't matter" itself.
@@ -62,7 +62,7 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, floorP
      asserted in steps.test.ts and lives on the TABLE, so a step cannot grow a
      twelve-chip grid that fires twelve /count calls per keystroke. */
   const probes: Record<string, Partial<Form>> = {};
-  for (const o of [...opts, ...(revealed ? revealed.options(form) : [])]) {
+  for (const o of [...opts, ...revealed.flatMap((g) => g.options(form))]) {
     if (o.probe) probes[o.id] = o.probe(form);
   }
   if (s.skipStyle === "equal") probes.__skip = s.clear(form);
@@ -73,7 +73,7 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, floorP
     patch(d);
     // "doesn't matter" always ends the screen, even on a multi step -- it is
     // the answer "none of these", and there is nothing left to add to it
-    const ends = o.id === "__skip" || (s.kind === "single" && !s.reveal);
+    const ends = o.id === "__skip" || (s.kind === "single" && !s.groups?.length);
     // a step with a follow-up group cannot auto-advance: the answer that was
     // just given is what makes the next question appear, and leaving the
     // screen would take it away in the same beat
@@ -136,7 +136,7 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, floorP
      sheet. The sheet case is not theoretical — the channel screen shipped
      without it for one build, and a buyer who chose an import market had no
      way forward except the skip, which clears the market they just chose. */
-  const needsNext = s.kind === "multi" || !!s.reveal || !!s.sheet;
+  const needsNext = s.kind === "multi" || !!s.groups?.length || !!s.sheet;
 
   /* The skip joins the grid as a real tile on the `equal` steps. It used to
      render as a wide bare box under the options, which on the channel screen
@@ -150,23 +150,23 @@ export function StepBody({ s, form, patch, matchCount, metaStock, isLast, floorP
   };
 
   /* The skip joins the main grid only when this step asks one question. With
-     a follow-up group it has to come AFTER both, or "whatever fits the
+     follow-up groups it has to come AFTER all of them, or "whatever fits the
      budget" sits in the RAM row and reads as an answer about RAM alone. */
-  const skipInGrid = skipTile && !revealed ? skipTile : null;
-  const skipAfter = skipTile && revealed ? skipTile : null;
+  const skipInGrid = skipTile && !revealed.length ? skipTile : null;
+  const skipAfter = skipTile && revealed.length ? skipTile : null;
 
   return (
     <>
       <Options layout={s.layout} opts={skipInGrid ? [...opts, skipInGrid] : opts} form={form}
         counts={counts} total={matchCount} tapped={tapped} onPick={pick} />
 
-      {revealed && (
-        <div style={st("margin-top:26px;")}>
-          <GroupLabel>{t(revealed.titleKey)}</GroupLabel>
-          <Options layout={revealed.layout} opts={revealed.options(form)} form={form}
+      {revealed.map((g) => (
+        <div key={g.titleKey} style={st("margin-top:26px;")}>
+          <GroupLabel>{t(g.titleKey)}</GroupLabel>
+          <Options layout={g.layout} opts={g.options(form)} form={form}
             counts={counts} total={matchCount} tapped={tapped} onPick={pick} />
         </div>
-      )}
+      ))}
 
       {skipAfter && (
         <div style={st("margin-top:22px;")}>
@@ -367,9 +367,15 @@ function Chip({ o, on, onPick }: { o: StepOption; on: boolean; onPick: () => voi
   );
 }
 
+/* A group's own question.
+
+   It was a 16px bold line with nothing above it, which on the chipset screen
+   left RAM and storage looking like one continuous run of number tiles. The
+   rule is what makes them two blocks — the label alone was not enough
+   separation for two lists that are the same shape. */
 function GroupLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div style={st("margin:0 2px 12px; font-size:16px; font-weight:700; color:var(--ink); font-family:var(--f-bn);")}>
+    <div style={st("margin:0 0 13px; padding-top:16px; border-top:1px solid var(--rule); font-size:17px; font-weight:700; color:var(--ink); font-family:var(--f-bn); letter-spacing:-.2px;")}>
       {children}
     </div>
   );

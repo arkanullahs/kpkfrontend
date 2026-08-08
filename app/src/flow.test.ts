@@ -7,10 +7,10 @@ import { hasBothLangs, setLang, t } from "./i18n";
 const form = (o: Partial<Form> = {}): Form => ({ ...DEFAULT_FORM, ...o });
 const COUNTS: Counts = { pool: 50, cheapestIphone: 80000 };
 
-/** Everything a screen can put on glass: grid, revealed group, sheet. */
+/** Everything a screen can put on glass: grid, revealed groups, sheet. */
 const everyOption = (s: Screen, f: Form = form()): StepOption[] => [
   ...s.options(f),
-  ...(s.reveal ? s.reveal.options(f) : []),
+  ...(s.groups || []).flatMap((g) => g.options(f)),
   ...(s.sheet ? s.sheet.options(f) : []),
 ];
 
@@ -45,7 +45,9 @@ describe("the screens own every control", () => {
       for (const o of everyOption(s)) {
         expect(hasBothLangs(o.labelKey), `${s.id}/${o.id}`).toBe(true);
       }
-      if (s.reveal) expect(hasBothLangs(s.reveal.titleKey), `${s.id} reveal`).toBe(true);
+      for (const g of s.groups || []) {
+        expect(hasBothLangs(g.titleKey), `${s.id} group ${g.titleKey}`).toBe(true);
+      }
       if (s.sheet) {
         expect(hasBothLangs(s.sheet.titleKey), `${s.id} sheet title`).toBe(true);
         expect(hasBothLangs(s.sheet.buttonKey), `${s.id} sheet button`).toBe(true);
@@ -79,9 +81,61 @@ describe("the screens own every control", () => {
   it("a sheet only sits on a screen the buyer can stay on", () => {
     for (const s of Object.values(SCREENS)) {
       if (!s.sheet) continue;
-      expect(s.kind === "multi" || !!s.reveal,
+      expect(s.kind === "multi" || !!s.groups?.length,
         `${s.id} has a sheet but auto-advances on the first tap`).toBe(true);
     }
+  });
+
+  /* Icons are the tile's only picture, and a malformed one is invisible in
+     review — the owner found a tick with a stray line grafted under it, and a
+     stick figure that read as a smudge, only by looking at the running app.
+     These assertions catch the shapes that go wrong silently. */
+  describe("every tile icon is a well-formed path", () => {
+    const icons = () => Object.values(SCREENS).flatMap((s) =>
+      [...everyOption(s).map((o) => ({ id: s.id + "/" + o.id, d: o.icon })),
+       { id: s.id + "/skip", d: s.skipIcon }]).filter((x) => x.d) as
+      { id: string; d: string }[];
+
+    it("starts with an absolute move and uses no emoji or junk", () => {
+      for (const { id, d } of icons()) {
+        expect(d.startsWith("M"), `${id} does not start with M`).toBe(true);
+        expect(d, `${id} has non-path characters`).toMatch(/^[MmLlHhVvCcSsQqTtAaZz0-9.,\s-]+$/);
+      }
+    });
+
+    /* The bug the owner actually reported: RAM and storage wearing the same
+       slab, so six number tiles read as one undifferentiated list.
+
+       Within ONE group, sharing is correct — 6/8/12GB are three amounts of the
+       same thing and should look it. ACROSS groups it is the defect: each
+       block on a screen has to be recognisable as its own question. */
+    it("no two blocks on a screen share an icon", () => {
+      for (const s of Object.values(SCREENS)) {
+        const f = form();
+        const blocks: [string, (string | undefined)[]][] = [
+          ["options", s.options(f).map((o) => o.icon)],
+          ...(s.groups || []).map((g) =>
+            [g.titleKey, g.options(f).map((o) => o.icon)] as [string, (string | undefined)[]]),
+          ["skip", [s.skipIcon]],
+        ];
+        const seen = new Map<string, string>();
+        for (const [name, drawn] of blocks) {
+          for (const d of new Set(drawn.filter(Boolean) as string[])) {
+            const owner = seen.get(d);
+            expect(owner === undefined || owner === name,
+              `${s.id}: "${name}" draws the same icon as "${owner}"`).toBe(true);
+            seen.set(d, name);
+          }
+        }
+      }
+    });
+
+    it("options inside one block are told apart", () => {
+      for (const s of Object.values(SCREENS)) {
+        const drawn = s.options(form()).map((o) => o.icon).filter(Boolean);
+        expect(new Set(drawn).size, `${s.id} main grid repeats an icon`).toBe(drawn.length);
+      }
+    });
   });
 });
 
