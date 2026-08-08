@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
 import { st } from "../theme";
 import { bnNum, t } from "../i18n";
 import { EXIT_FROM, LAST, STEPS, stepAt } from "../steps";
 import { useCountUp } from "../useCounts";
+import { StepBody } from "./StepBody";
 import type { Form } from "../need";
 
 /* One step owns the screen (spec 2026-08-08).
@@ -28,10 +28,10 @@ interface Props {
   onBack: () => void;
   onExit: () => void;
   onCommit: () => void;
-  children: ReactNode;   // the step body
 }
 
-export function StepScreen({ step, dir, matchCount, onBack, onExit, children }: Props) {
+export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
+                             onNext, onBack, onExit, onCommit }: Props) {
   const s = stepAt(step);
   const shown = useCountUp(matchCount);
 
@@ -74,7 +74,10 @@ export function StepScreen({ step, dir, matchCount, onBack, onExit, children }: 
         <p style={st("margin:11px 0 0; font-size:15px; color:var(--tx); line-height:1.55; max-width:520px; text-wrap:pretty;")}>
           {t(s.whyKey)}
         </p>
-        <div style={st("margin-top:22px;")}>{children}</div>
+        <div style={st("margin-top:22px;")}>
+          <StepBody s={s} form={form} patch={patch} matchCount={matchCount}
+            metaStock={metaStock} onAnswered={onNext} onCommit={onCommit} />
+        </div>
       </div>
     </div>
   );
