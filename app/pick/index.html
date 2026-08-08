@@ -96,6 +96,11 @@
       --onp:var(--c-white); --onp2:rgba(var(--rgb-white),.66);
       --onp3:rgba(var(--rgb-white),.30); --onpfill:rgba(var(--rgb-white),.07);
       --r:2px;
+      /* the one loosening for the picker (spec 2026-08-08 §10): option TILES
+         get a softer corner so a grid of choices reads friendly, while every
+         other surface keeps the severe --r:2px. Two radii, not the fourteen the
+         reskin killed. */
+      --r-tile:12px;
 
       --sh-hair:inset 0 0 0 1px var(--rule);
       --sh-card:inset 0 0 0 1px var(--rule),inset 0 1px 0 rgba(var(--rgb-white),.9),

@@ -241,13 +241,8 @@ function Tile({ o, form, count, total, tapped, compact, onPick }: {
   const sub = o.subKey ? t(o.subKey) : null;
   return (
     <button onClick={onPick} disabled={dead} className="k-press" aria-pressed={on}
-      style={st(`display:flex; flex-direction:column; align-items:flex-start; gap:${compact ? 10 : 12}px; min-height:${compact ? 96 : 130}px; padding:${compact ? "14px 13px" : "18px 17px"}; border-radius:var(--r); cursor:${dead ? "not-allowed" : "pointer"}; text-align:left; transition:background .14s ease, box-shadow .14s ease, border-color .14s ease; opacity:${dead ? .5 : 1}; background:${lit ? "var(--teal)" : "var(--card)"}; border:1.5px solid ${lit ? "transparent" : "var(--rule)"}; box-shadow:${lit ? "0 10px 24px -14px rgba(var(--rgb-ink),.55)" : "none"};`)}>
-      {o.icon && (
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={st("flex-shrink:0;")}>
-          <path d={o.icon} stroke={lit ? "var(--onp)" : "var(--lnk)"} strokeWidth="1.9"
-            strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      )}
+      style={st(`display:flex; flex-direction:column; align-items:flex-start; gap:${compact ? 10 : 12}px; min-height:${compact ? 96 : 130}px; padding:${compact ? "14px 13px" : "18px 17px"}; border-radius:var(--r-tile); cursor:${dead ? "not-allowed" : "pointer"}; text-align:left; transition:background .14s ease, box-shadow .14s ease, border-color .14s ease; opacity:${dead ? .5 : 1}; background:${lit ? "var(--teal)" : "var(--card)"}; border:1.5px solid ${lit ? "transparent" : "var(--rule)"}; box-shadow:${lit ? "0 10px 24px -14px rgba(var(--rgb-ink),.55)" : "none"};`)}>
+      {o.icon && <TileIcon id={o.id} path={o.icon} lit={lit} />}
       {o.dot && <BrandMark brand={o.id.split(":")[1]} dot={o.dot} mark={o.mark} />}
 
       <span style={st(`width:100%; font-size:${compact ? 15.5 : 18}px; font-weight:700; line-height:1.28; letter-spacing:-.2px; color:${lit ? "var(--onp)" : "var(--ink)"}; font-family:var(--f-bn); text-wrap:balance;`)}>
@@ -277,6 +272,30 @@ function Tile({ o, form, count, total, tapped, compact, onPick }: {
    wordmark is brand misuse AND an illegible squiggle at 40px. The brand name
    sits directly below every one of these either way, so nothing depends on
    the glyph. */
+/* The option icon. Prefers an owner-supplied file at /icon/<option-id>.svg and
+   falls back to the hand-drawn placeholder path -- the same drop-in pattern as
+   BrandMark's /brandlogo. The placeholder shows immediately (so a catalogue
+   with no icon files yet has no blank flash) and the file, if present, fades in
+   over it on load. An owner SVG carries its own colour, which is where the
+   "friendly, colourful" comes from -- no per-axis hue needed in code.
+   README in public/icon states the viewBox and stroke conventions. */
+function TileIcon({ id, path, lit }: { id: string; path: string; lit: boolean }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <span style={st("position:relative; display:block; width:28px; height:28px; flex-shrink:0;")}>
+      {!loaded && (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={st("display:block;")}>
+          <path d={path} stroke={lit ? "var(--onp)" : "var(--lnk)"} strokeWidth="1.9"
+            strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
+      <img src={`/icon/${id}.svg`} alt="" width={28} height={28} aria-hidden="true"
+        onLoad={() => setLoaded(true)}
+        style={st(`position:absolute; inset:0; width:28px; height:28px; display:block; opacity:${loaded ? 1 : 0};`)} />
+    </span>
+  );
+}
+
 function BrandMark({ brand, dot, mark }: { brand: string; dot: string; mark?: string }) {
   const [real, setReal] = useState(true);
   const box = "display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:var(--r); flex-shrink:0;";
@@ -305,7 +324,7 @@ function BrandMark({ brand, dot, mark }: { brand: string; dot: string; mark?: st
 function Chip({ o, on, onPick }: { o: StepOption; on: boolean; onPick: () => void }) {
   return (
     <button onClick={onPick} className="k-press" aria-pressed={on}
-      style={st(`display:inline-flex; align-items:center; gap:9px; min-height:52px; padding:13px 19px; border-radius:var(--r); cursor:pointer; transition:background .14s ease; font-size:16.5px; font-weight:700; font-family:var(--f-bn); background:${on ? "var(--teal)" : "var(--card)"}; color:${on ? "var(--onp)" : "var(--ink)"}; border:1.5px solid ${on ? "transparent" : "var(--rule)"};`)}>
+      style={st(`display:inline-flex; align-items:center; gap:9px; min-height:52px; padding:13px 19px; border-radius:var(--r-tile); cursor:pointer; transition:background .14s ease; font-size:16.5px; font-weight:700; font-family:var(--f-bn); background:${on ? "var(--teal)" : "var(--card)"}; color:${on ? "var(--onp)" : "var(--ink)"}; border:1.5px solid ${on ? "transparent" : "var(--rule)"};`)}>
       {o.dot && (
         <span aria-hidden="true" style={st(`display:block; width:18px; height:18px; border-radius:var(--r); flex-shrink:0; background:${o.dot}; box-shadow:0 0 0 1px rgba(var(--rgb-ink),.18);`)} />
       )}
