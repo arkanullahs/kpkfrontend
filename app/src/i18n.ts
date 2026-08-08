@@ -471,6 +471,72 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "phones in Bangladesh. We look for the best fit, not the cheapest box.",
     bn: "ফোনের এখনকার দাম দেখা হচ্ছে। আমরা সবচেয়ে সস্তা নয়, সবচেয়ে মানানসই ফোনটা খুঁজি।" },
 
+  // ---- the nine steps (spec 2026-08-08). Titles ask a question in words a
+  // buyer would use; the `why` line says what the answer costs, and is always
+  // visible rather than behind a tap.
+  // owner: verify every bn string in this block.
+  s_budget_t: { en: "What can you spend?", bn: "কত টাকা খরচ করতে পারবেন?" },
+  s_budget_why: { en: "Type your real number. We look for the best phone at it, not the cheapest.", bn: "আপনার সত্যিকার বাজেট লিখুন। আমরা এই দামে সেরা ফোন খুঁজি, সবচেয়ে সস্তাটা নয়।" },
+
+  s_warranty_t: { en: "Do you want official warranty?", bn: "অফিশিয়াল ওয়ারেন্টি চান?" },
+  s_warranty_why: { en: "Official phones cost more but a service centre will take them.", bn: "অফিশিয়াল ফোনের দাম বেশি, কিন্তু সার্ভিস সেন্টার নেবে।" },
+
+  s_hardware_t: { en: "Anything it must have?", bn: "এমন কিছু আছে যা থাকতেই হবে?" },
+  s_hardware_why: { en: "Most new phones dropped these. Asking for one cuts the list a lot.", bn: "বেশিরভাগ নতুন ফোনে এগুলো নেই। একটা চাইলেই তালিকা অনেক ছোট হয়।" },
+
+  s_brands_t: { en: "Any brand you want, or don't?", bn: "কোনো ব্র্যান্ড চান, বা চান না?" },
+  s_brands_why: { en: "Pick a favourite, or rule one out. Leaving this alone is fine.", bn: "পছন্দেরটা বেছে নিন, বা যেটা চান না বাদ দিন।" },
+
+  s_type_t: { en: "What kind of phone?", bn: "কেমন ফোন চান?" },
+  s_type_why: { en: "Android or iPhone, and whether you want the software plain or packed.", bn: "অ্যান্ডরয়েড না আইফোন, আর সফটওয়্যার সাদাসিধে না ভরা।" },
+
+  s_power_t: { en: "How hard will you push it?", bn: "কতটা চাপ দেবেন?" },
+  s_power_why: { en: "A floor, not a target. Higher is not automatically better -- it costs money you could spend on the camera.", bn: "এটা সর্বনিম্ন, লক্ষ্য নয়। বেশি হলেই ভালো নয় -- সেই টাকা ক্যামেরায় যেতে পারত।" },
+
+  s_market_t: { en: "Where was it made for?", bn: "কোন দেশের জন্য বানানো?" },
+  s_market_why: { en: "An import market changes the software, the charger and who honours a repair.", bn: "ইমপোর্ট মার্কেট সফটওয়্যার, চার্জার আর রিপেয়ার বদলে দেয়।" },
+
+  // "doesn't matter" is a first-class answer on the filter steps, so it is
+  // worded as an ANSWER, not as a refusal to answer.
+  s_skip: { en: "Skip", bn: "স্কিপ" },
+  s_skip_need: { en: "I'm not sure", bn: "আমি নিশ্চিত নই" },
+  s_skip_warranty: { en: "Doesn't matter", bn: "কোনো সমস্যা নেই" },
+  s_skip_hardware: { en: "None of these", bn: "এগুলোর কোনোটাই নয়" },
+  s_skip_brands: { en: "Any brand is fine", bn: "যেকোনো ব্র্যান্ড চলবে" },
+  s_skip_type: { en: "Either is fine", bn: "যেকোনোটাই চলবে" },
+  s_skip_power: { en: "Whatever fits the budget", bn: "বাজেটে যা হয়" },
+  s_skip_market: { en: "Doesn't matter", bn: "কোনো সমস্যা নেই" },
+
+  s_ram_6: { en: "6GB RAM", bn: "৬জিবি র্‍যাম" },
+  s_ram_8: { en: "8GB RAM", bn: "৮জিবি র্‍যাম" },
+  s_ram_12: { en: "12GB RAM", bn: "১২জিবি র্‍যাম" },
+  s_rom_128: { en: "128GB storage", bn: "১২৮জিবি স্টোরেজ" },
+  s_rom_256: { en: "256GB storage", bn: "২৫৬জিবি স্টোরেজ" },
+  s_rom_512: { en: "512GB storage", bn: "৫১২জিবি স্টোরেজ" },
+
+  // brand and market names are proper nouns -- identical in both languages,
+  // and listed anyway so the both-languages test covers them
+  brand_Samsung: { en: "Samsung", bn: "Samsung" },
+  brand_Xiaomi: { en: "Xiaomi", bn: "Xiaomi" },
+  brand_vivo: { en: "vivo", bn: "vivo" },
+  brand_OnePlus: { en: "OnePlus", bn: "OnePlus" },
+  brand_realme: { en: "realme", bn: "realme" },
+  brand_Apple: { en: "Apple", bn: "Apple" },
+  mkt_IN: { en: "India", bn: "ভারত" },
+  mkt_Global: { en: "Global", bn: "গ্লোবাল" },
+  mkt_CN: { en: "China", bn: "চীন" },
+  mkt_US: { en: "USA", bn: "ইউএসএ" },
+  mkt_JP: { en: "Japan", bn: "জাপান" },
+  mkt_SG: { en: "Singapore", bn: "সিঙ্গাপুর" },
+  mkt_AU: { en: "Australia", bn: "অস্ট্রেলিয়া" },
+
+  // the frame
+  s_of: { en: "of", bn: "এর মধ্যে" },
+  s_back: { en: "Back", bn: "ফিরে যান" },
+  s_see_n: { en: "see", bn: "দেখুন" },
+  s_commit: { en: "Find my phone", bn: "আমার ফোন খুঁজুন" },
+  s_brief_t: { en: "What we will look for", bn: "যা খুঁজব" },
+
   // ---- short forms, for the brief bar only. The quiz labels are whole
   // sentences ("Photos that actually look good"), which is right where the
   // buyer is deciding and wrong in a bar that restates three answers at 375px
