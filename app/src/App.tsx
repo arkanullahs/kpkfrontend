@@ -15,12 +15,12 @@ import { PriceAlert } from "./components/PriceAlert";
 import { Dock } from "./components/Dock";
 import { BootNotice, Breadcrumbs } from "./components/Chrome";
 import { track } from "./track";
-import { DEFAULT_FORM, toParams, type Form } from "./need";
+import { DEFAULT_FORM, formToQuery, queryToForm, toParams, type Form } from "./need";
 
 export type Screen = "ask" | "results" | "detail" | "method";
 
 export type { Form, QuizIntent } from "./need";
-export { DEFAULT_FORM, CHOICE_LADDER, CHOICES, deriveIntent, toParams } from "./need";
+export { DEFAULT_FORM, CHOICE_LADDER, CHOICES, deriveIntent, toParams, formToQuery, queryToForm } from "./need";
 
 
 export default function App() {
@@ -85,6 +85,23 @@ export default function App() {
   const goBack = useCallback(() => window.history.back(), []);
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
+
+  // hydrate once from the URL, so a shared or reloaded brief comes back intact
+  useEffect(() => {
+    const q = window.location.search.slice(1);
+    if (q) setForm((f) => ({ ...f, ...queryToForm(q) }));
+  }, []);
+
+  // mirror the form back into the URL. replaceState, NOT pushState: a keystroke
+  // in the budget field must not become a history entry the buyer has to press
+  // Back through forty times.
+  useEffect(() => {
+    const q = formToQuery(form);
+    const next = q ? `${window.location.pathname}?${q}` : window.location.pathname;
+    if (next !== window.location.pathname + window.location.search) {
+      window.history.replaceState(window.history.state, "", next);
+    }
+  }, [form]);
 
   // live candidate count for the "See results" badge (debounced). Hits the
   // lightweight /count endpoint — structured pre-filter only, no embed/LLM —

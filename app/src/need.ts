@@ -148,3 +148,69 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.requireRom) p.require_custom_rom = true;
   return p;
 }
+
+/* ---------- the brief in the URL ----------
+
+   That is what makes browser back and forward genuinely work, survives a
+   reload, and makes a brief shareable -- before this the picker was one static
+   URL and Back exited the app entirely.
+
+   Only non-default fields are written, so a fresh visit has a clean URL. */
+export function formToQuery(f: Form): string {
+  const p = new URLSearchParams();
+  if (f.budget !== DEFAULT_FORM.budget) p.set("b", String(f.budget));
+  if (f.q.picks.length) p.set("w", f.q.picks.join(","));
+  if (f.q.hw.length) p.set("hw", f.q.hw.join(","));
+  if (f.officialOnly) p.set("official", "1");
+  if (f.avoidChinese) p.set("nocn", "1");
+  if (f.platform !== "any") p.set("plat", f.platform);
+  if (f.osStyle !== "any") p.set("os", f.osStyle);
+  if (f.socVendor !== "any") p.set("soc", f.socVendor);
+  if (f.minRam) p.set("ram", String(f.minRam));
+  if (f.minStorage) p.set("rom", String(f.minStorage));
+  if (f.includeBrands.length) p.set("only", f.includeBrands.join(","));
+  if (f.excludeBrands.length) p.set("not", f.excludeBrands.join(","));
+  if (f.regions.length) p.set("mkt", f.regions.join(","));
+  if (f.requireRom) p.set("lineage", "1");
+  if (f.hwStrict) p.set("strict", "1");
+  return p.toString();
+}
+
+/** A URL is a trust boundary — anything at all can be typed into it, and a
+    shared link is exactly where hand-edited junk arrives. Every scalar is
+    validated back to a legal value rather than cast: `?b=abc` would otherwise
+    put NaN in the form and 422 every /count call with no visible cause. */
+export function queryToForm(s: string): Partial<Form> {
+  const p = new URLSearchParams(s);
+  const list = (k: string) => (p.get(k) ? p.get(k)!.split(",").filter(Boolean) : []);
+  const nat = (k: string) => { const n = Number(p.get(k)); return Number.isFinite(n) && n > 0 ? n : 0; };
+  const oneOf = <T extends string>(k: string, ok: readonly T[], dflt: T): T => {
+    const v = p.get(k) as T | null;
+    return v && ok.includes(v) ? v : dflt;
+  };
+  const hw = list("hw").filter((k) => k === "jack" || k === "ir" || k === "fm");
+  const out: Partial<Form> = {
+    budget: nat("b") || DEFAULT_FORM.budget,
+    q: { picks: list("w"), hw },
+    officialOnly: p.get("official") === "1",
+    avoidChinese: p.get("nocn") === "1",
+    platform: oneOf("plat", ["any", "android", "ios"] as const, "any"),
+    osStyle: oneOf("os", ["any", "clean", "feature"] as const, "any"),
+    socVendor: oneOf("soc", ["any", "snapdragon", "mediatek"] as const, "any"),
+    minRam: nat("ram"),
+    minStorage: nat("rom"),
+    includeBrands: list("only"),
+    excludeBrands: list("not"),
+    regions: list("mkt"),
+    requireRom: p.get("lineage") === "1",
+    hwStrict: p.get("strict") === "1",
+    // the hardware answers are BOTH a need field and three hard filters, so
+    // they have to be rebuilt on both sides or a shared URL loses the filter
+    requireJack: hw.includes("jack"),
+    requireIr: hw.includes("ir"),
+    requireFm: hw.includes("fm"),
+  };
+  // deriveIntent already drops picks it does not recognise, so ?w=telepathy
+  // costs a clause in the brief and nothing else
+  return { ...out, ...deriveIntent(out.q!) };
+}

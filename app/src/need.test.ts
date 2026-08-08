@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CHOICES, CHOICE_LADDER, DEFAULT_FORM, deriveIntent, toParams, type Form } from "./need";
+import { CHOICES, CHOICE_LADDER, DEFAULT_FORM, deriveIntent, formToQuery, queryToForm, toParams, type Form } from "./need";
 
 /* Pure logic only -- no React, no DOM, no network. These cover the two places
    the picker has already been silently wrong:
@@ -120,5 +120,52 @@ describe("toParams -- what the server actually receives", () => {
     expect(p.weights).toBeUndefined();
     expect(p.use_case).toBeUndefined();
     expect(p.budget).toBe(DEFAULT_FORM.budget);
+  });
+});
+
+describe("the brief survives a reload", () => {
+  it("round-trips every field the form carries", () => {
+    const f = form({
+      budget: 42000,
+      q: { picks: ["camera", "gaming"], hw: ["jack", "fm"] },
+      officialOnly: true, avoidChinese: true,
+      platform: "android", osStyle: "clean", socVendor: "mediatek",
+      minRam: 8, minStorage: 256,
+      includeBrands: ["Samsung"], excludeBrands: ["Apple"],
+      regions: ["IN", "Global"], requireRom: true, hwStrict: true,
+      requireJack: true, requireFm: true,
+      ...deriveIntent({ picks: ["camera", "gaming"], hw: ["jack", "fm"] }),
+    });
+    const back = { ...DEFAULT_FORM, ...queryToForm(formToQuery(f)) } as Form;
+    for (const k of Object.keys(f) as (keyof Form)[]) {
+      expect(back[k], `${k} did not survive the URL`).toEqual(f[k]);
+    }
+  });
+
+  it("writes nothing for an untouched form", () => {
+    expect(formToQuery(form())).toBe("");
+  });
+
+  it("rebuilds the hard filters behind the hardware answers", () => {
+    // q.hw is the sentence the ranker reads; requireJack is the filter. Reading
+    // only one side would silently drop the filter from a shared link.
+    const back = queryToForm("hw=jack,ir");
+    expect(back.requireJack).toBe(true);
+    expect(back.requireIr).toBe(true);
+    expect(back.requireFm).toBe(false);
+  });
+
+  it("survives a hand-edited URL without poisoning the form", () => {
+    // a shared link is exactly where junk arrives, and NaN in `budget` would
+    // 422 every /count call with no visible cause
+    const bad = queryToForm("b=abc&ram=-4&plat=windows&os=&soc=intel&w=telepathy&hw=xray");
+    expect(bad.budget).toBe(DEFAULT_FORM.budget);
+    expect(bad.minRam).toBe(0);
+    expect(bad.platform).toBe("any");
+    expect(bad.osStyle).toBe("any");
+    expect(bad.socVendor).toBe("any");
+    expect(bad.weights).toEqual({});          // unknown pick contributes nothing
+    expect(bad.q!.hw).toEqual([]);            // unknown dealbreaker dropped
+    expect(bad.requireJack).toBe(false);
   });
 });
