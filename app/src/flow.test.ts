@@ -1,9 +1,57 @@
 import { describe, expect, it } from "vitest";
-import { NODES, ENTRY, replay, nextNode, prevNode, askPosition, type Counts } from "./flow";
+import { NODES, ENTRY, replay, nextNode, prevNode, askPosition, screenOf, type Counts } from "./flow";
+import { FORM_PATHS, UNOWNED, SCREENS, type Screen, type StepOption } from "./steps";
 import { DEFAULT_FORM, type Form } from "./need";
+import { hasBothLangs } from "./i18n";
 
 const form = (o: Partial<Form> = {}): Form => ({ ...DEFAULT_FORM, ...o });
 const COUNTS: Counts = { pool: 50, officialPool: 50, cheapestIphone: 80000 };
+
+/** Everything a screen can put on glass: grid, revealed group, sheet. */
+const everyOption = (s: Screen, f: Form = form()): StepOption[] => [
+  ...s.options(f),
+  ...(s.reveal ? s.reveal.options(f) : []),
+  ...(s.sheet ? s.sheet.options(f) : []),
+];
+
+describe("the screens own every control", () => {
+  it("every settable field belongs to exactly one screen", () => {
+    const owned = Object.values(SCREENS).flatMap((s) => s.owns);
+    expect(new Set(owned).size, "a field owned by two screens").toBe(owned.length);
+    expect(owned.slice().sort()).toEqual([...FORM_PATHS].sort());
+  });
+
+  it("names a reason for every Form field no screen owns", () => {
+    const root = new Set(Object.values(SCREENS).flatMap((s) => s.owns).map((p) => p.split(/[.[]/)[0]));
+    for (const k of Object.keys(DEFAULT_FORM)) {
+      if (root.has(k)) continue;
+      expect(UNOWNED[k], `${k} is on Form, owned by no screen, and unexplained`).toBeTruthy();
+    }
+  });
+
+  it("every ask node has a screen; guards and the end do not", () => {
+    for (const n of Object.values(NODES)) {
+      if (n.kind === "ask") expect(screenOf(n.id), `${n.id}`).toBeDefined();
+      if (n.kind === "guard" || n.kind === "end") expect(screenOf(n.id), `${n.id}`).toBeUndefined();
+    }
+  });
+
+  it("translates every screen's title, why, skip and option labels", () => {
+    for (const s of Object.values(SCREENS)) {
+      expect(hasBothLangs(s.titleKey), `${s.id} title`).toBe(true);
+      expect(hasBothLangs(s.whyKey), `${s.id} why`).toBe(true);
+      expect(hasBothLangs(s.skipKey), `${s.id} skip`).toBe(true);
+      for (const o of everyOption(s)) {
+        expect(hasBothLangs(o.labelKey), `${s.id}/${o.id}`).toBe(true);
+      }
+      if (s.reveal) expect(hasBothLangs(s.reveal.titleKey), `${s.id} reveal`).toBe(true);
+      if (s.sheet) {
+        expect(hasBothLangs(s.sheet.titleKey), `${s.id} sheet title`).toBe(true);
+        expect(hasBothLangs(s.sheet.buttonKey), `${s.id} sheet button`).toBe(true);
+      }
+    }
+  });
+});
 
 describe("the graph terminates", () => {
   it("every node's next() resolves to a real node id", () => {

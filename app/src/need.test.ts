@@ -184,31 +184,27 @@ describe("the brief survives a reload", () => {
   });
 });
 
-describe("the step index survives the URL", () => {
-  it("writes the step only when it is not the first", () => {
-    expect(formToQuery(DEFAULT_FORM, 0)).toBe("");
-    expect(formToQuery(DEFAULT_FORM, 4)).toBe("s=4");
+describe("the flow node survives the URL", () => {
+  it("writes the node only when it is not the entry", () => {
+    expect(formToQuery(DEFAULT_FORM, "channel")).toBe("");
+    expect(formToQuery(DEFAULT_FORM, "brands")).toBe("s=brands");
   });
 
   it("reads it back", () => {
-    expect(queryToForm("s=4").step).toBe(4);
+    expect(queryToForm("s=brands").node).toBe("brands");
   });
 
-  it("clamps junk to a real step rather than trusting it", () => {
-    // a shared link is exactly where hand-edited junk arrives
-    for (const q of ["s=abc", "s=-3", "s=99", "s=", "s=4.7e9"]) {
-      const n = queryToForm(q).step!;
-      expect(n, q).toBeGreaterThanOrEqual(0);
-      expect(n, q).toBeLessThanOrEqual(8);
-    }
-    expect(queryToForm("s=abc").step).toBe(0);
-    expect(queryToForm("s=99").step).toBe(8);
+  it("passes an unknown node through for App to validate, defaulting to entry", () => {
+    // App checks the id against NODES; need.ts only owes a non-empty string
+    expect(queryToForm("s=telepathy").node).toBe("telepathy");
+    expect(queryToForm("").node).toBe("channel");
+    expect(queryToForm("s=").node).toBe("channel");
   });
 
-  it("carries the step alongside a full brief", () => {
-    const q = formToQuery({ ...DEFAULT_FORM, budget: 42000, officialOnly: true }, 6);
+  it("carries the node alongside a full brief", () => {
+    const q = formToQuery({ ...DEFAULT_FORM, budget: 42000, officialOnly: true }, "sizes");
     const back = queryToForm(q);
-    expect(back.step).toBe(6);
+    expect(back.node).toBe("sizes");
     expect(back.budget).toBe(42000);
     expect(back.officialOnly).toBe(true);
   });

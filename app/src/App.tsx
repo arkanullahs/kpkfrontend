@@ -5,7 +5,7 @@ import { api, type Meta, type PhoneDetail, type Pick, type RecommendResp, type R
 import { st } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
 import { anyFilterSet } from "./filters";
-import { EXIT_FROM, LAST, nextLive } from "./steps";
+import { ENTRY, NODES, nextNode, prevNode, type Counts } from "./flow";
 import { StepScreen } from "./components/StepScreen";
 import { NarrowSheet } from "./components/NarrowSheet";
 import { ResultsScreen } from "./components/ResultsScreen";
@@ -69,18 +69,18 @@ export default function App() {
      history entry; every back control calls history.back(), so the button and
      the on-screen "Back" do the same thing. A popstate with no state of ours
      is a real exit — we let it through. */
-  const pushNav = useCallback((s: Screen, stepIx = 0) => {
-    window.history.pushState({ kpk: true, screen: s, step: stepIx }, "");
+  const pushNav = useCallback((s: Screen, node: string = ENTRY) => {
+    window.history.pushState({ kpk: true, screen: s, node }, "");
   }, []);
   useEffect(() => {
-    window.history.replaceState({ kpk: true, screen: "ask", step: 0 }, "");
+    window.history.replaceState({ kpk: true, screen: "ask", node: ENTRY }, "");
     const onPop = (e: PopStateEvent) => {
-      const h = e.state as { kpk?: boolean; screen?: Screen; step?: number } | null;
+      const h = e.state as { kpk?: boolean; screen?: Screen; node?: string } | null;
       if (!h?.kpk) return;
       setScreen(h.screen || "ask");
-      // the step rides in the history entry, so Back walks the nine screens
-      // rather than jumping straight out of the flow
-      if ((h.screen || "ask") === "ask") { setDir(-1); setStep(h.step ?? 0); }
+      // the node rides in the history entry, so Back walks the graph rather
+      // than jumping straight out of the flow
+      if ((h.screen || "ask") === "ask") { setDir(-1); setNodeId(h.node && NODES[h.node] ? h.node : ENTRY); }
       window.scrollTo({ top: 0 });
     };
     window.addEventListener("popstate", onPop);
@@ -90,48 +90,48 @@ export default function App() {
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
 
-  /* The step index. `dir` drives the transition's mirror — Back runs the same
-     keyframes with the sign flipped rather than needing its own pair. */
-  const [step, setStep] = useState(0);
+  /* The current flow node. `dir` drives the transition's mirror — Back runs the
+     same keyframes with the sign flipped rather than needing its own pair. */
+  const [nodeId, setNodeId] = useState<string>(ENTRY);
   const [dir, setDir] = useState<1 | -1>(1);
-  const goStep = useCallback((next: number) => {
-    const want = Math.min(LAST, Math.max(0, next));
-    const way: 1 | -1 = want >= step ? 1 : -1;
-    /* Walk past any screen whose question an earlier answer already settled,
-       applying what it settled on the way. Asking an Apple buyer to pick
-       Android or iPhone, and then a chipset vendor Apple does not use, is a
-       screen that can only be answered wrong. */
-    const { i, patch: implied } = nextLive(form, want, way);
-    const to = Math.min(LAST, Math.max(0, i));
-    if (Object.keys(implied).length) patch(implied);
-    setDir(way);
-    setStep(to);
-    // forward moves push; backward ones arrive FROM history.back() and must not
-    if (to > step) pushNav("ask", to);
+
+  // the live counts the guards read. pool is the headline candidate count;
+  // officialPool and cheapestIphone are the two the elderly guards need, filled
+  // by the debounced effect below. A null count makes a guard pass through
+  // (spec §4.2), so the flow never blocks on the network.
+  const [officialPool, setOfficialPool] = useState<number | null>(null);
+  const [cheapestIphone, setCheapestIphone] = useState<number | null>(null);
+  const counts: Counts = { pool: matchCount, officialPool, cheapestIphone };
+
+  // forward move to an explicit node; Back always arrives via history (popstate)
+  const goTo = useCallback((target: string) => {
+    if (!NODES[target]) return;
+    setDir(1);
+    setNodeId(target);
+    pushNav("ask", target);
     window.scrollTo({ top: 0 });
-  }, [step, pushNav, form, patch]);
+  }, [pushNav]);
 
   // hydrate once from the URL, so a shared or reloaded brief comes back on the
-  // step it was shared from rather than at the start of a nine-screen walk
+  // node it was shared from rather than at the start of the walk
   useEffect(() => {
     const q = window.location.search.slice(1);
     if (!q) return;
-    const { step: s, ...f } = queryToForm(q);
+    const { node, ...f } = queryToForm(q);
     setForm((prev) => ({ ...prev, ...f }));
-    if (s) setStep(s);
+    if (node && NODES[node]) setNodeId(node);
   }, []);
 
   // mirror the form back into the URL. replaceState, NOT pushState: a keystroke
-  // in the budget field must not become a history entry the buyer has to press
-  // Back through forty times. The STEP does push — see goStep — because walking
-  // back through the steps is exactly what the browser button should do.
+  // in the budget field must not become a history entry. The NODE pushes (goTo)
+  // because walking back through the graph is what the browser button should do.
   useEffect(() => {
-    const q = formToQuery(form, step);
+    const q = formToQuery(form, nodeId);
     const next = q ? `${window.location.pathname}?${q}` : window.location.pathname;
     if (next !== window.location.pathname + window.location.search) {
       window.history.replaceState(window.history.state, "", next);
     }
-  }, [form, step]);
+  }, [form, nodeId]);
 
   // live candidate count for the "See results" badge (debounced). Hits the
   // lightweight /count endpoint — structured pre-filter only, no embed/LLM —
@@ -144,6 +144,16 @@ export default function App() {
       api.count(toParams(form))
         .then((r) => setMatchCount(r.candidates))
         .catch(() => setMatchCount(null));
+      // the two extra counts the elderly guards read. Only worth fetching on
+      // the elderly path — the main flow has no guard that needs them.
+      if (form.forElderly) {
+        api.count({ ...toParams(form), official_only: true })
+          .then((r) => setOfficialPool(r.candidates))
+          .catch(() => setOfficialPool(null));
+        api.cheapest("Apple", form.officialOnly)
+          .then((r) => setCheapestIphone(r.price))
+          .catch(() => setCheapestIphone(null));
+      }
     }, 350);
     return () => window.clearTimeout(debounceRef.current);
   }, [form]);
@@ -209,8 +219,9 @@ export default function App() {
   // the first filter step. Only the commit spends a ranking call.
   const onNarrow = useCallback(() => {
     setSheetOpen(false);
-    goStep(EXIT_FROM);
-  }, [goStep]);
+    // return the buyer to the walk at the first real filter screen
+    goTo("brands");
+  }, [goTo]);
 
   // RagProgress finished its completion beat -> reveal the results
   const onLoaderDone = useCallback(() => { setRecLoading(false); setRecReady(false); }, []);
@@ -340,9 +351,13 @@ export default function App() {
         )}
         {screen === "ask" && (
           <StepScreen
-            step={step} dir={dir} form={form} patch={patch}
+            nodeId={nodeId} dir={dir} form={form} counts={counts} patch={patch}
             matchCount={matchCount} metaStock={metaStock}
-            onNext={() => goStep(step + 1)}
+            onNext={() => {
+              const nxt = nextNode(form, counts, nodeId);
+              if (nxt === "END") { onSeeResults(); return; }
+              goTo(nxt);
+            }}
             onBack={goBack}
             onExit={onSeeResults}
             onCommit={onSeeResults}

@@ -8,6 +8,7 @@
    whole flow is asserted without booting the app, the property steps.test.ts
    already relied on. */
 import type { Form } from "./need";
+import { SCREENS, type Screen } from "./steps";
 
 export type NodeKind = "ask" | "guard" | "popup" | "end";
 
@@ -29,6 +30,10 @@ export interface FlowNode {
       its own id. */
   next: (f: Form, c: Counts) => string;
 }
+
+/** The screen an `ask` node renders, from steps.ts keyed by the node id. Guard
+    and end nodes have none; the `more` popup has one but renders as a dialog. */
+export const screenOf = (id: string): Screen | undefined => SCREENS[id];
 
 const onlyApple = (f: Form) =>
   f.includeBrands.length === 1 && f.includeBrands[0] === "Apple";

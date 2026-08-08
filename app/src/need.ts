@@ -174,18 +174,17 @@ export function toParams(f: Form, top = 5): RecParams {
 
    Only non-default fields are written, so a fresh visit has a clean URL. */
 
-/** The last screen's index.
+/** The entry node, as a string literal. Deliberately NOT imported from flow.ts:
+    flow imports steps imports filters imports need, so importing flow here would
+    close a real cycle. flow.ts's ENTRY is the source of truth; this mirror is
+    only the "don't write s= on the first screen" default, and App validates any
+    node id from the URL against NODES on hydrate. */
+const ENTRY_NODE = "channel";
 
-    Deliberately NOT imported from steps.ts: steps imports filters imports
-    need, and closing that loop would be a real cycle. steps.test.ts asserts
-    this against STEPS.length instead, so adding or merging a step fails a
-    test rather than silently clamping people onto the wrong screen. */
-const LAST_STEP = 8;
-
-export function formToQuery(f: Form, step = 0): string {
+export function formToQuery(f: Form, node: string = ENTRY_NODE): string {
   const p = new URLSearchParams();
-  // written only when it is not the first, so a fresh visit still looks clean
-  if (step > 0) p.set("s", String(Math.min(LAST_STEP, Math.floor(step))));
+  // the node id, written only when it is not the entry, so a fresh visit is clean
+  if (node && node !== ENTRY_NODE) p.set("s", node);
   if (f.budget !== DEFAULT_FORM.budget) p.set("b", String(f.budget));
   if (f.forElderly) p.set("eld", "1");
   if (f.includeCnRom) p.set("cnrom", "1");
@@ -210,7 +209,7 @@ export function formToQuery(f: Form, step = 0): string {
     shared link is exactly where hand-edited junk arrives. Every scalar is
     validated back to a legal value rather than cast: `?b=abc` would otherwise
     put NaN in the form and 422 every /count call with no visible cause. */
-export function queryToForm(s: string): Partial<Form> & { step: number } {
+export function queryToForm(s: string): Partial<Form> & { node: string } {
   const p = new URLSearchParams(s);
   const list = (k: string) => (p.get(k) ? p.get(k)!.split(",").filter(Boolean) : []);
   const nat = (k: string) => { const n = Number(p.get(k)); return Number.isFinite(n) && n > 0 ? n : 0; };
@@ -219,12 +218,9 @@ export function queryToForm(s: string): Partial<Form> & { step: number } {
     return v && ok.includes(v) ? v : dflt;
   };
   const hw = list("hw").filter((k) => k === "jack" || k === "ir" || k === "fm");
-  // clamped, not cast: "?s=99" must land on the last screen and "?s=abc" on
-  // the first, never on undefined
-  const stepRaw = Number(p.get("s"));
-  const step = Number.isFinite(stepRaw)
-    ? Math.min(LAST_STEP, Math.max(0, Math.floor(stepRaw)))
-    : 0;
+  // the node id, passed through as-is; App validates it against NODES before
+  // trusting it, so a junk ?s=telepathy lands on the entry rather than nowhere
+  const node = p.get("s") || ENTRY_NODE;
   const out: Partial<Form> = {
     budget: nat("b") || DEFAULT_FORM.budget,
     forElderly: p.get("eld") === "1",
@@ -250,5 +246,5 @@ export function queryToForm(s: string): Partial<Form> & { step: number } {
   };
   // deriveIntent already drops picks it does not recognise, so ?w=telepathy
   // costs a clause in the brief and nothing else
-  return { ...out, ...deriveIntent(out.q!), step };
+  return { ...out, ...deriveIntent(out.q!), node };
 }

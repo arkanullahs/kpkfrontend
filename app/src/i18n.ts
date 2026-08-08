@@ -488,7 +488,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   s_brands_why: { en: "Pick a favourite, or rule one out. Leaving this alone is fine.", bn: "পছন্দেরটা বেছে নিন, বা যেটা চান না বাদ দিন।" },
 
   s_type_t: { en: "Android or iPhone?", bn: "অ্যান্ডরয়েড না আইফোন?" },
-  s_type_why: { en: "Two different worlds, and you cannot move apps between them. Say Android and we will ask about the software next.", bn: "দুটো আলাদা জগৎ, অ্যাপ একটা থেকে আরকটায় নেওয়া যায় না। অ্যান্ডরয়েড বললে সফটওয়্যার নিয়ে পরে জিজ্ঞেস করব।" },
+  s_type_why: { en: "Two different worlds, and you cannot move apps between them. ", bn: "দুটো আলাদা জগৎ, অ্যাপ একটা থেকে আরকটায় নেওয়া যায় না। অ্যান্ডরয়েড বললে সফটওয়্যার নিয়ে পরে জিজ্ঞেস করব।" },
 
   s_power_t: { en: "Any chipset preference?", bn: "চিপসেট নিয়ে পছন্দ আছে?" },
   s_power_why: { en: "Most people have none, and that is the right answer. Skip it unless a game or an app you use needs one.", bn: "বেশিরভাগ মানুষের নেই, আর সেটাই সঠিক। কোনো গেম বা অ্যাপে দরকার না হলে বাদ দিন।" },
@@ -554,6 +554,31 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   s_memory_t: { en: "How much memory?", bn: "কতটুকু মেমরি?" },
   s_memory_why: { en: "A floor, not a target. More RAM and storage cost money you could spend on the camera instead.", bn: "এটা সর্বনিম্ন, লক্ষ্য নয়। বেশি র্‍যাম আর স্টোরেজের টাকা ক্যামেরায় যেতে পারত।" },
   s_skip_memory: { en: "Whatever fits the budget", bn: "বাজেটে যা হয়" },
+
+  // ---- flow-graph screens (spec 2026-08-08). elderly fork, rechannel divert,
+  // china-vs-global software, custom-rom support. owner: verify every bn string.
+  s_elderly_t: { en: "Is this phone for an elderly person?", bn: "এই ফোনটি কি কোনো বয়স্ক মানুষের জন্য?" },
+  s_elderly_why: { en: "We'll keep it simple — clear text, real service, no confusing extras.", bn: "আমরা সহজ রাখব — বড় পরিষ্কার লেখা, আসল সার্ভিস, কোনো ঝামেলা নয়।" },
+  s_elderly_yes: { en: "Yes, for an elder", bn: "হ্যাঁ, বয়স্কদের জন্য" },
+  s_elderly_yes_sub: { en: "We'll pick an easy, reliable phone", bn: "আমরা সহজ, নির্ভরযোগ্য ফোন বাছব" },
+  s_elderly_no: { en: "No, general use", bn: "না, সাধারণ ব্যবহারে" },
+  s_elderly_no_sub: { en: "A few quick questions instead", bn: "বদলে কয়েকটা দ্রুত প্রশ্ন" },
+
+  s_rechannel_t: { en: "Very few official phones at this budget", bn: "এই বাজেটে অফিশিয়াল ফোন খুব কম" },
+  s_rechannel_why: { en: "Unofficial sets cost less and there are far more of them. Include them?", bn: "আনঅফিশিয়াল সেট সস্তা আর অনেক বেশি। যোগ করব?" },
+  s_rechannel_widen: { en: "Yes, include unofficial", bn: "হ্যাঁ, আনঅফিশিয়াল যোগ করুন" },
+  s_rechannel_widen_sub: { en: "Many more phones to choose from", bn: "বাছার জন্য অনেক বেশি ফোন" },
+  s_rechannel_keep: { en: "No, official only", bn: "না, শুধু অফিশিয়াল" },
+  s_rechannel_keep_sub: { en: "Warranty support matters more", bn: "ওয়ারেন্টি সার্ভিস বেশি জরুরি" },
+
+  s_soft_t: { en: "Global software, or is a China ROM fine?", bn: "গ্লোবাল সফটওয়্যার, না চায়না রম চলবে?" },
+  s_soft_why: { en: "China-ROM phones cost less but need a software flash for Google apps and English.", bn: "চায়না-রম ফোন সস্তা, কিন্তু গুগল অ্যাপ আর ইংরেজির জন্য সফটওয়্যার ফ্ল্যাশ লাগে।" },
+  s_soft_global: { en: "Global software only", bn: "শুধু গ্লোবাল সফটওয়্যার" },
+  s_soft_global_sub: { en: "Works out of the box", bn: "খুলেই ব্যবহার করা যায়" },
+  s_soft_cn: { en: "A China ROM is fine", bn: "চায়না রম চলবে" },
+  s_soft_cn_sub: { en: "Cheaper, if you'll flash it", bn: "সস্তা, যদি ফ্ল্যাশ করেন" },
+
+  s_rom_support_t: { en: "Custom ROM support?", bn: "কাস্টম রম সাপোর্ট?" },
 
   s_sheet_done: { en: "Done", bn: "হয়েছে" },
 

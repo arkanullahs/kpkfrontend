@@ -1,6 +1,6 @@
 import { st } from "../theme";
 import { bnNum, t } from "../i18n";
-import { EXIT_FROM, LAST, stepAt, stepPosition } from "../steps";
+import { screenOf, nextNode, askPosition, type Counts } from "../flow";
 import { buildBrief } from "../filters";
 import { useCountUp } from "../useCounts";
 import { StepBody } from "./StepBody";
@@ -19,9 +19,10 @@ import type { Form } from "../need";
    step blur is `filter` on the leaving layer and lasts 260ms. */
 
 interface Props {
-  step: number;
+  nodeId: string;
   dir: 1 | -1;
   form: Form;
+  counts: Counts;
   patch: (d: Partial<Form>) => void;
   matchCount: number | null;
   metaStock: string;
@@ -31,14 +32,15 @@ interface Props {
   onCommit: () => void;
 }
 
-export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
+export function StepScreen({ nodeId, dir, form, counts, patch, matchCount, metaStock,
                              onNext, onBack, onExit, onCommit }: Props) {
-  const s = stepAt(step);
+  const s = screenOf(nodeId)!;
   const shown = useCountUp(matchCount);
-  // "4 of 8", not "4 of 9", when a screen dropped out because an earlier
-  // answer settled it. A total that counts screens the buyer will never see
-  // is a progress bar that lies.
-  const { at, of } = stepPosition(form, step);
+  // "4 of 8", counting only the ask screens on THIS buyer's live path. A total
+  // that includes screens they will never see is a progress bar that lies.
+  const { at, of } = askPosition(form, counts, nodeId);
+  const isFirst = at === 0;
+  const isLast = nextNode(form, counts, nodeId) === "END";
 
   return (
     /* overflow-x:clip on the WRAPPER, not on .k-step: the entry slide moves
@@ -54,7 +56,7 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
           because of the padding, but with nothing on screen saying where to
           press, which the owner read as "too small and inaccessible". */}
       <div style={st("display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; min-height:48px;")}>
-        {step > 0 ? (
+        {!isFirst ? (
           <button onClick={onBack} className="k-press"
             style={st("display:inline-flex; align-items:center; gap:8px; min-height:48px; padding:10px 18px 10px 14px; border-radius:var(--r); border:1.5px solid var(--rule); background:var(--card); cursor:pointer; font-size:15px; font-weight:600; color:var(--ink); font-family:var(--f-bn);")}>
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -68,10 +70,10 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
           {bnNum(String(at + 1))} {t("s_of")} {bnNum(String(of))}
         </span>
 
-        {/* No exit before step 4: budget and the leading need axis are what the
-            ranker actually consumes. Step 9's own button is its exit, so it
-            gets none either. Outlined, never amber -- amber is the commit. */}
-        {step >= EXIT_FROM && step < LAST ? (
+        {/* No exit on the first three asks: budget and the leading need axis
+            are what the ranker consumes. The last screen's own Commit button is
+            its exit, so it gets none either. Outlined, never amber. */}
+        {at >= 3 && !isLast ? (
           <button onClick={onExit} className="k-press"
             style={st("display:inline-flex; align-items:center; gap:7px; min-height:48px; padding:10px 16px; border-radius:var(--r); border:1.5px solid var(--tint2); background:var(--tint); cursor:pointer; font-size:15px; font-weight:700; color:var(--lnk); font-family:var(--f-bn); white-space:nowrap;")}>
             {t("s_see_n")} {shown != null ? bnNum(String(shown)) : "…"}
@@ -82,15 +84,15 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
         ) : <span />}
       </div>
 
-      <SoFar form={form} step={step} />
+      <SoFar form={form} isFirst={isFirst} />
 
-      {/* keyed on the step id, so React remounts and the entry animation runs
+      {/* keyed on the node id, so React remounts and the entry animation runs
           on every swap rather than only the first */}
-      <div key={s.id} className="k-step" style={{ ...st("margin-top:18px;"), ["--dir" as string]: String(dir) }}>
-        {/* The second need question kept reading as the first one again. It
+      <div key={nodeId} className="k-step" style={{ ...st("margin-top:18px;"), ["--dir" as string]: String(dir) }}>
+        {/* The add-more need question kept reading as the first one again. It
             says the first answer back now, so the screen is visibly a
             follow-up rather than the same list a second time. */}
-        {s.id === "need2" && form.q.picks[0] && (
+        {nodeId === "needN" && form.q.picks[0] && (
           <div style={st("display:flex; align-items:center; gap:9px; margin-bottom:14px; padding:11px 14px; border-radius:var(--r); background:var(--tint); border:1px solid var(--tint2);")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={st("flex-shrink:0;")}>
               <path d="M5 13l4 4L19 7" stroke="var(--lnk)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -108,7 +110,7 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
         </p>
         <div style={st("margin-top:22px;")}>
           <StepBody s={s} form={form} patch={patch} matchCount={matchCount}
-            metaStock={metaStock} onAnswered={onNext} onCommit={onCommit} />
+            metaStock={metaStock} isLast={isLast} onAnswered={onNext} onCommit={onCommit} />
         </div>
       </div>
     </div>
@@ -124,8 +126,8 @@ export function StepScreen({ step, dir, form, patch, matchCount, metaStock,
    for unanswered ones would fill this with "no preference yet" and say
    nothing. buildBrief is the same pure function step 9's restatement uses, so
    the two can never drift. */
-function SoFar({ form, step }: { form: Form; step: number }) {
-  if (step === 0) return null;
+function SoFar({ form, isFirst }: { form: Form; isFirst: boolean }) {
+  if (isFirst) return null;
   const said = buildBrief(form).filter((b) => b.set);
   if (!said.length) return null;
   return (

@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { fmt, st, taka } from "../theme";
 import { bnNum, bnToAscii, t } from "../i18n";
 import { buildBrief } from "../filters";
-import { LAST, STEPS, type Step, type StepLayout, type StepOption } from "../steps";
+import { type Screen, type StepLayout, type StepOption } from "../steps";
 import { useCounts } from "../useCounts";
 import type { Form } from "../need";
 
@@ -34,9 +34,9 @@ const BUDGET_MAX = 500000;
 const FEW_LEFT = 4;
 const DEEP_CUT = 0.2;
 
-export function StepBody({ s, form, patch, matchCount, metaStock, onAnswered, onCommit }: {
-  s: Step; form: Form; patch: (d: Partial<Form>) => void;
-  matchCount: number | null; metaStock: string;
+export function StepBody({ s, form, patch, matchCount, metaStock, isLast, onAnswered, onCommit }: {
+  s: Screen; form: Form; patch: (d: Partial<Form>) => void;
+  matchCount: number | null; metaStock: string; isLast: boolean;
   onAnswered: () => void; onCommit: () => void;
 }) {
   const [tapped, setTapped] = useState<string | null>(null);
@@ -98,7 +98,7 @@ export function StepBody({ s, form, patch, matchCount, metaStock, onAnswered, on
     </>
   );
 
-  const last = s.id === STEPS[LAST].id;
+  const last = isLast;
   /* A step needs an explicit Next whenever tapping one option cannot mean
      "done": multi steps, steps that reveal a follow-up, and steps with a
      sheet. The sheet case is not theoretical — the channel screen shipped
