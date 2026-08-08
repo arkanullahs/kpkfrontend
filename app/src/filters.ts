@@ -1,5 +1,6 @@
-import type { Form } from "./need";
+import { CHOICES, type Form } from "./need";
 import { t } from "./i18n";
+import { taka } from "./theme";
 
 /* The controls, grouped by the QUESTION they answer rather than by the param
    they set. Twelve loose toggles read as homework; six rows that state their
@@ -124,4 +125,27 @@ export function activeGroupCount(f: Form): number {
 /** The nudge fires only when this is false. */
 export function anyFilterSet(f: Form): boolean {
   return activeGroupCount(f) > 0;
+}
+
+/** The whole ask, restated in plain words, as the brief bar renders it.
+
+    Three clauses, always three, in the order the screen asks them -- a clause
+    that vanished when it was empty would make the bar jump as the buyer typed,
+    and worse, would hide the fact that a question is still unanswered. Each
+    `id` matches a `#brief-<id>` section, so tapping a clause scrolls to the
+    control it describes.
+
+    Kept pure and here rather than in the bar because this text is the buyer's
+    only proof of what we are about to ask the ranker; if it silently drifts
+    from the form, the bar lies with total confidence. */
+export interface BriefClause { id: string; text: string; set: boolean; }
+
+export function buildBrief(f: Form): BriefClause[] {
+  const picks = f.q.picks.filter((k) => CHOICES[k]).map((k) => t("qc_" + k));
+  const filters = GROUPS.map((g) => g.summary(f)).filter(Boolean) as string[];
+  return [
+    { id: "budget", text: taka(f.budget), set: true },
+    { id: "need", text: picks.length ? picks.join(", ") : t("brief_need_none"), set: picks.length > 0 },
+    { id: "filters", text: filters.length ? filters.join(", ") : t("brief_filters_none"), set: filters.length > 0 },
+  ];
 }

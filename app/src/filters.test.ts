@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { GROUPS, activeGroupCount, anyFilterSet, toggleBrand } from "./filters";
+import { GROUPS, activeGroupCount, anyFilterSet, buildBrief, toggleBrand } from "./filters";
 import { DEFAULT_FORM, type Form } from "./need";
 import { STRING_KEYS, hasBothLangs, t } from "./i18n";
+import { taka } from "./theme";
 
 const form = (over: Partial<Form> = {}): Form => ({ ...DEFAULT_FORM, ...over });
 
@@ -91,6 +92,47 @@ describe("a brand can never be in both lists", () => {
     const off = { ...on, ...toggleBrand(on, "vivo", "only") } as Form;
     expect(on.includeBrands).toEqual(["vivo"]);
     expect(off.includeBrands).toEqual([]);
+  });
+});
+
+describe("the brief restates the whole ask", () => {
+  it("always shows three clauses, even when nothing is answered", () => {
+    // a clause that vanished when empty would make the bar look complete
+    // while a question was still unanswered
+    const b = buildBrief(form());
+    expect(b.map((c) => c.id)).toEqual(["budget", "need", "filters"]);
+    expect(b.find((c) => c.id === "need")!.set).toBe(false);
+    expect(b.find((c) => c.id === "filters")!.set).toBe(false);
+    expect(b.find((c) => c.id === "need")!.text).toBe(t("brief_need_none"));
+  });
+
+  it("names every quiz pick and every set filter", () => {
+    const b = buildBrief(form({
+      budget: 40000,
+      q: { picks: ["camera", "battery"], hw: [] },
+      officialOnly: true, requireJack: true,
+    }));
+    expect(b[0].text).toBe(taka(40000));
+    expect(b[1].text).toBe(`${t("qc_camera")}, ${t("qc_battery")}`);
+    expect(b[2].text).toContain(t("fg_warranty_on"));
+    expect(b[2].text).toContain(t("fg_hw_jack"));
+    expect(b.every((c) => c.set)).toBe(true);
+  });
+
+  it("drops a quiz pick the CHOICES table does not know", () => {
+    // picks come back from the URL too, where anything can be typed
+    const b = buildBrief(form({ q: { picks: ["camera", "telepathy"], hw: [] } }));
+    expect(b[1].text).toBe(t("qc_camera"));
+  });
+
+  it("says the same thing the filter rows say", () => {
+    // the bar and the accordion must never describe one filter differently
+    const f = form({ avoidChinese: true, regions: ["IN"] });
+    const b = buildBrief(f);
+    for (const g of GROUPS) {
+      const s = g.summary(f);
+      if (s) expect(b[2].text).toContain(s);
+    }
   });
 });
 

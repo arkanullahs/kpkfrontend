@@ -453,6 +453,13 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   qq_hw_ir: { en: "TV/AC remote (IR)", bn: "টিভি/এসি রিমোট (IR)" },
   qq_hw_fm: { en: "FM radio", bn: "এফএম রেডিও" },
 
+  // ---- the brief bar. An unanswered clause says so in words rather than
+  // going blank, so the bar never looks complete when it is not.
+  // owner: verify every bn string in this block.
+  brief_need_none: { en: "no preference yet", bn: "এখনো কিছু বাছা হয়নি" },
+  brief_filters_none: { en: "no filters", bn: "কোনো শর্ত নেই" },
+  brief_change: { en: "tap to change", bn: "বদলাতে চাপ দিন" },
+
   // ---- filter groups (spec 2026-08-07 section 4.2). Labels name the OUTCOME,
   // not the feature: a buyer knows what "works as a TV remote" means and has
   // never heard of an IR blaster. Every help line is ALWAYS visible, never
