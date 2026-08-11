@@ -934,15 +934,20 @@ padding:10px 15px 11px;border-radius:var(--r)}
    device_pages' _CSS_EXTRA 2026-08-07 when the brand hubs became the crawl path
    into the catalogue -- /phone/page/2..14 are noindex, so every device past the
    first hub page hung off links Google stops following. ---- */
-.bnav{display:flex;flex-wrap:wrap;gap:6px 8px;margin:18px 0 0}
-/* no chip frame once these are marks rather than words: a box around a
-   logo that already has its own silhouette is two outlines fighting, and it
-   was stealing the width the mark needs to stay legible. */
-.bnav a{display:inline-flex;align-items:center;gap:7px;font-size:13px;
-  font-weight:700;color:var(--tx);padding:12px 18px;
-  transition:opacity .16s,color .16s}
-.bnav a:hover{text-decoration:none;color:var(--lnk);opacity:.62}
-.bnav a i{font-style:normal;font-size:11px;font-weight:700;color:var(--mut)}
+.bnav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+/* A hairline, not the old chip: at 15px the frame crowded the mark and the
+   two outlines fought, but with nothing at all 26 marks read as one glob of
+   logos instead of 26 links. Minimum that separates them. */
+.bnav a{display:inline-flex;align-items:center;gap:9px;font-size:13px;
+  font-weight:700;color:var(--tx);background:var(--card);
+  border:1px solid var(--rule);border-radius:var(--r);padding:11px 15px;
+  transition:border-color .16s,color .16s}
+.bnav a:hover{text-decoration:none;color:var(--lnk);border-color:var(--teal)}
+/* the count is a separate fact from the mark; unstyled it read as part of the
+   logo it sat against */
+.bnav a i{font-style:normal;font-size:11px;font-weight:700;color:var(--mut);
+  background:var(--tint);border-radius:999px;padding:2px 7px;line-height:1.5;
+  flex:none}
 /* one CSS height for every mark, because the files are already normalised to
    one optical weight (scripts/brand_logos_raster.py). max-width is the guard
    for a wordmark long enough to push a chip past a narrow screen. */
@@ -1029,7 +1034,7 @@ table.cmp.vs td{white-space:normal}
 }
 </style></head>
 <body><svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><filter id="lensglass" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.0055 0.011" numOctaves="2" seed="11" result="turb"/><feGaussianBlur in="turb" stdDeviation="2.4" result="soft"/><feDisplacementMap in="SourceGraphic" in2="soft" scale="11" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
-<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="Bhalo Phone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone">Phones</a><a href="/vs" class="on">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
+<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="Bhalo Phone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone">Phones</a><a href="/phone#brands">Brands</a><a href="/vs" class="on">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
 <main class="wrap">
 <h1>Phone comparisons, <em>head to head</em></h1>
 <p class="sub">Live shop data, updated 2026-08-11. Every comparison ends in a
