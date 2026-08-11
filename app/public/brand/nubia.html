@@ -158,12 +158,12 @@ line-height:1.2;white-space:nowrap;margin-top:1px}
 .btxt{font-family:var(--f-display);font-weight:700;font-size:20px;
 color:var(--ink);letter-spacing:-.4px;white-space:nowrap}
 header.site a:hover{text-decoration:none}
-/* nav pills centered in the space between brand and CTA on wide screens;
-   overflow-x:auto is the narrow-screen fallback if they ever don't fit */
-.hnav{display:flex;gap:6px;justify-content:center;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1;
-padding-right:18px;mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 22px),transparent);
--webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 22px),transparent)}
-.hnav::-webkit-scrollbar{display:none}
+/* nav pills centered in the space between brand and CTA, at every width.
+   This lane used to be an overflow-x scroller under a fade mask, which only
+   ever existed because a fourth pill would not fit a 360px bar. It doesn't
+   have a fourth pill; it has three, they fit, and a header that scrolls
+   sideways on a phone is a bug rather than a fallback. */
+.hnav{display:flex;gap:6px;justify-content:center;min-width:0;flex:1}
 .hnav a{font-size:12.5px;font-weight:700;color:var(--mut);background:var(--card);
 border:1px solid var(--rule);border-radius:var(--r);padding:7px 14px;white-space:nowrap;flex:none}
 .hnav a.on{color:var(--onp);background:var(--teal);
@@ -185,11 +185,10 @@ box-shadow:inset 0 1px 0 rgba(var(--rgb-white),.18)}
 .ctlong{display:none}
 header.site{gap:6px;padding:10px 9px;margin:10px auto 4px;border-radius:var(--r)}
 header.site .brand img{width:34px;height:34px}
-/* center-justified flex clips BOTH edges once pills overflow -- left-align
-   on mobile so the first pill is never cut; the right edge keeps the fade */
-.hnav{justify-content:flex-start;gap:4px;padding-right:10px;
-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 12px),transparent);
--webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 12px),transparent)}
+/* stays centred on mobile too: the left-align was only there because a
+   centre-justified flex clips both edges when its children overflow, and
+   with three pills they no longer do */
+.hnav{gap:4px}
 .hnav a{font-size:11.5px;padding:6px 10px;font-weight:600}
 .hcta{font-size:11.5px;padding:6px 11px}
 }
@@ -1506,7 +1505,7 @@ table.cmp td.ph .ic{color:var(--lnk);opacity:.75}
   padding:0 9px;font-size:13px}}
 </style></head>
 <body><svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><filter id="lensglass" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.0055 0.011" numOctaves="2" seed="11" result="turb"/><feGaussianBlur in="turb" stdDeviation="2.4" result="soft"/><feDisplacementMap in="SourceGraphic" in2="soft" scale="11" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
-<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="Bhalo Phone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/phone#brands">Brands</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
+<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="Bhalo Phone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone" class="on">Phones</a><a href="/vs">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
 <main class="wrap">
 <nav class="crumbs" aria-label="Breadcrumb"><a class="home" href="/" aria-label="Home"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 8.7 10 3.3l6.6 5.4v7.4a1 1 0 0 1-1 1h-3.3v-4.4H7.7V17H4.4a1 1 0 0 1-1-1V8.7Z" fill="currentColor"/></svg></a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><a href="/phone">Phones</a><span class="sep" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="m7.6 4.6 5.4 5.4-5.4 5.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="here" aria-current="page">Nubia</span></nav>
 <h1>Nubia phone price in Bangladesh</h1>
