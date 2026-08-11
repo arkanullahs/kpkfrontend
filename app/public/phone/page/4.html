@@ -224,6 +224,8 @@ box-shadow:var(--sh-lift)}
 flex:none;border-radius:var(--r);background:var(--bg)}
 .pick .top{flex:1;min-width:0}
 .brand{font-size:13px;color:var(--mut2);font-weight:500}
+.brand img{height:18px;width:auto;max-width:132px;object-fit:contain;
+  object-position:left;display:block}
 .hero h2{font-family:var(--f-display);margin:1px 0 0;font-size:clamp(21px,2.4vw,26px);
 font-weight:700;letter-spacing:-.4px;line-height:1.12}
 .badge{float:right;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:var(--r);
@@ -935,14 +937,20 @@ padding:10px 15px 11px;border-radius:var(--r)}
    device_pages' _CSS_EXTRA 2026-08-07 when the brand hubs became the crawl path
    into the catalogue -- /phone/page/2..14 are noindex, so every device past the
    first hub page hung off links Google stops following. ---- */
-.bnav{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 0}
-.bnav a{display:inline-flex;align-items:baseline;gap:6px;font-size:13px;
-  font-weight:700;color:var(--tx);background:var(--card);
-  border:1px solid var(--rule);border-radius:var(--r);padding:7px 13px;
-  transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s,color .16s}
-.bnav a:hover{text-decoration:none;color:var(--lnk);
-  box-shadow:inset 0 0 0 1px var(--teal)}
+.bnav{display:flex;flex-wrap:wrap;gap:6px 8px;margin:18px 0 0}
+/* no chip frame once these are marks rather than words: a box around a
+   logo that already has its own silhouette is two outlines fighting, and it
+   was stealing the width the mark needs to stay legible. */
+.bnav a{display:inline-flex;align-items:center;gap:7px;font-size:13px;
+  font-weight:700;color:var(--tx);padding:12px 18px;
+  transition:opacity .16s,color .16s}
+.bnav a:hover{text-decoration:none;color:var(--lnk);opacity:.62}
 .bnav a i{font-style:normal;font-size:11px;font-weight:700;color:var(--mut)}
+/* one CSS height for every mark, because the files are already normalised to
+   one optical weight (scripts/brand_logos_raster.py). max-width is the guard
+   for a wordmark long enough to push a chip past a narrow screen. */
+.bnav a img{height:28px;width:auto;max-width:168px;object-fit:contain;
+  display:block;flex:none}
 /* ---- the device card: one design for the homepage teaser, the /phone
    directory and every /brand hub. It lives HERE, not in device_pages'
    _CSS_EXTRA, because the homepage loads this sheet alone. ---- */
@@ -1505,7 +1513,7 @@ phone by name</label>
 <input id="q" type="search" autocomplete="off" placeholder="Search
 651 phones &mdash; try &ldquo;Redmi Note&rdquo; or &ldquo;iPhone 16&rdquo;">
 </div>
-<nav class="bnav" aria-label="Browse by brand"><a href="/brand/apple">Apple <i>16</i></a><a href="/brand/benco">Benco <i>3</i></a><a href="/brand/google">Google <i>16</i></a><a href="/brand/hmd">HMD <i>3</i></a><a href="/brand/helio">Helio <i>4</i></a><a href="/brand/honor">Honor <i>36</i></a><a href="/brand/huawei">Huawei <i>4</i></a><a href="/brand/infinix">Infinix <i>25</i></a><a href="/brand/motorola">Motorola <i>42</i></a><a href="/brand/nokia">Nokia <i>15</i></a><a href="/brand/nothing">Nothing <i>6</i></a><a href="/brand/nubia">Nubia <i>5</i></a><a href="/brand/oppo">OPPO <i>57</i></a><a href="/brand/oneplus">OnePlus <i>19</i></a><a href="/brand/poco">POCO <i>22</i></a><a href="/brand/realme">Realme <i>77</i></a><a href="/brand/redmi">Redmi <i>29</i></a><a href="/brand/samsung">Samsung <i>92</i></a><a href="/brand/symphony">Symphony <i>6</i></a><a href="/brand/tecno">Tecno <i>35</i></a><a href="/brand/vivo">Vivo <i>71</i></a><a href="/brand/walton">Walton <i>3</i></a><a href="/brand/xiaomi">Xiaomi <i>12</i></a><a href="/brand/zte">ZTE <i>15</i></a><a href="/brand/iqoo">iQOO <i>26</i></a><a href="/brand/itel">itel <i>7</i></a></nav>
+<nav class="bnav" aria-label="Browse by brand"><a href="/brand/apple"><img src="/bimg/Apple.png" alt="Apple" height="28" loading="lazy"> <i>16</i></a><a href="/brand/benco"><img src="/bimg/Benco.png" alt="Benco" height="28" loading="lazy"> <i>3</i></a><a href="/brand/google"><img src="/bimg/Google.png" alt="Google" height="28" loading="lazy"> <i>16</i></a><a href="/brand/hmd"><img src="/bimg/HMD.png" alt="HMD" height="28" loading="lazy"> <i>3</i></a><a href="/brand/helio"><img src="/bimg/Helio.png" alt="Helio" height="28" loading="lazy"> <i>4</i></a><a href="/brand/honor"><img src="/bimg/Honor.png" alt="Honor" height="28" loading="lazy"> <i>36</i></a><a href="/brand/huawei"><img src="/bimg/Huawei.png" alt="Huawei" height="28" loading="lazy"> <i>4</i></a><a href="/brand/infinix"><img src="/bimg/Infinix.png" alt="Infinix" height="28" loading="lazy"> <i>25</i></a><a href="/brand/motorola"><img src="/bimg/Motorola.png" alt="Motorola" height="28" loading="lazy"> <i>42</i></a><a href="/brand/nokia"><img src="/bimg/Nokia.png" alt="Nokia" height="28" loading="lazy"> <i>15</i></a><a href="/brand/nothing"><img src="/bimg/Nothing.png" alt="Nothing" height="28" loading="lazy"> <i>6</i></a><a href="/brand/nubia"><img src="/bimg/Nubia.png" alt="Nubia" height="28" loading="lazy"> <i>5</i></a><a href="/brand/oppo"><img src="/bimg/OPPO.png" alt="OPPO" height="28" loading="lazy"> <i>57</i></a><a href="/brand/oneplus"><img src="/bimg/OnePlus.png" alt="OnePlus" height="28" loading="lazy"> <i>19</i></a><a href="/brand/poco"><img src="/bimg/POCO.png" alt="POCO" height="28" loading="lazy"> <i>22</i></a><a href="/brand/realme"><img src="/bimg/Realme.png" alt="Realme" height="28" loading="lazy"> <i>77</i></a><a href="/brand/redmi"><img src="/bimg/Redmi.png" alt="Redmi" height="28" loading="lazy"> <i>29</i></a><a href="/brand/samsung"><img src="/bimg/Samsung.png" alt="Samsung" height="28" loading="lazy"> <i>92</i></a><a href="/brand/symphony"><img src="/bimg/Symphony.png" alt="Symphony" height="28" loading="lazy"> <i>6</i></a><a href="/brand/tecno"><img src="/bimg/Tecno.png" alt="Tecno" height="28" loading="lazy"> <i>35</i></a><a href="/brand/vivo"><img src="/bimg/Vivo.png" alt="Vivo" height="28" loading="lazy"> <i>71</i></a><a href="/brand/walton"><img src="/bimg/Walton.png" alt="Walton" height="28" loading="lazy"> <i>3</i></a><a href="/brand/xiaomi"><img src="/bimg/Xiaomi.png" alt="Xiaomi" height="28" loading="lazy"> <i>12</i></a><a href="/brand/zte"><img src="/bimg/ZTE.png" alt="ZTE" height="28" loading="lazy"> <i>15</i></a><a href="/brand/iqoo"><img src="/bimg/iQOO.png" alt="iQOO" height="28" loading="lazy"> <i>26</i></a><a href="/brand/itel"><img src="/bimg/itel.png" alt="itel" height="28" loading="lazy"> <i>7</i></a></nav>
 <p class="pmeta" id="pmeta" data-all="Showing 145&ndash;192 of 651 phones" role="status"
 aria-live="polite">Showing 145&ndash;192 of 651 phones</p>
 <div id="pres" hidden></div>
