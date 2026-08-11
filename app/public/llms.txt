@@ -112,7 +112,7 @@
 
 ## Individual phones
 
-- [All 651 phones we track](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with live BD price, which shops stock it, full specs and owner ratings.
+- [All 657 phones we track](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with live BD price, which shops stock it, full specs and owner ratings.
 
 
 ## Tools
