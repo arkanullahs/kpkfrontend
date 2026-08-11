@@ -272,15 +272,21 @@ function Tile({ o, form, count, total, tapped, compact, onPick }: {
   const dead = count === 0 && !on;
   const lit = on || tapped;
   const sub = o.subKey ? t(o.subKey) : null;
+  // a brand tile with a real logo prints no name: the mark IS the name, and
+  // "SAMSUNG" over "Samsung" said it twice (owner 2026-08-11). The name lives
+  // in the image's alt, which is also what names the button
+  const logoOnly = !!o.dot && !!brandLogo(o.id.split(":")[1] || "");
   return (
     <button onClick={onPick} disabled={dead} className="k-press" aria-pressed={on}
       style={st(`display:flex; flex-direction:column; align-items:flex-start; gap:${compact ? 10 : 12}px; min-height:${compact ? 96 : 130}px; padding:${compact ? "14px 13px" : "18px 17px"}; border-radius:var(--r-tile); cursor:${dead ? "not-allowed" : "pointer"}; text-align:left; transition:background .14s ease, box-shadow .14s ease, border-color .14s ease; opacity:${dead ? .5 : 1}; background:${lit ? "var(--teal)" : "var(--card)"}; border:1.5px solid ${lit ? "transparent" : "var(--rule)"}; box-shadow:${lit ? "0 10px 24px -14px rgba(var(--rgb-ink),.55)" : "none"};`)}>
       {o.icon && <TileIcon id={o.id} path={o.icon} lit={lit} />}
       {o.dot && <BrandMark brand={o.id.split(":")[1]} dot={o.dot} mark={o.mark} lit={lit} />}
 
-      <span style={st(`width:100%; font-size:${compact ? 15.5 : 18}px; font-weight:700; line-height:1.28; letter-spacing:-.2px; color:${lit ? "var(--onp)" : "var(--ink)"}; font-family:var(--f-bn); text-wrap:balance;`)}>
-        {t(o.labelKey)}
-      </span>
+      {!logoOnly && (
+        <span style={st(`width:100%; font-size:${compact ? 15.5 : 18}px; font-weight:700; line-height:1.28; letter-spacing:-.2px; color:${lit ? "var(--onp)" : "var(--ink)"}; font-family:var(--f-bn); text-wrap:balance;`)}>
+          {t(o.labelKey)}
+        </span>
+      )}
       {sub && (
         <span style={st(`width:100%; font-size:14px; font-weight:500; line-height:1.45; color:${lit ? "var(--onp2)" : "var(--tx)"}; font-family:var(--f-bn); text-wrap:pretty;`)}>
           {sub}
@@ -350,9 +356,9 @@ function BrandMark({ brand, dot, mark, lit }: {
      plate earns its place. */
   if (brandLogo(brand)) {
     return (
-      <span aria-hidden="true" style={st("display:flex; align-items:center; justify-content:center; width:100%; height:48px; padding:0 6px; border-radius:var(--r); box-sizing:border-box;"
+      <span style={st("display:flex; align-items:center; justify-content:center; width:100%; height:62px; border-radius:var(--r); box-sizing:border-box;"
         + (lit ? "background:#fff; box-shadow:0 0 0 1px rgba(var(--rgb-ink),.1);" : ""))}>
-        <BrandLogo brand={brand} h={34} max="100%" />
+        <BrandLogo brand={brand} h={44} max="100%" named />
       </span>
     );
   }

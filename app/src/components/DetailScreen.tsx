@@ -152,7 +152,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           <div style={st("min-width:0;")}>
             <div style={st("display:flex; align-items:center; gap:9px; flex-wrap:wrap;")}>
               <span style={st("display:flex; align-items:center; gap:7px; font-size:13px; color:var(--mut2); font-weight:500;")}>
-                <BrandLogo brand={brand} h={19} max="110px" named />
+                <BrandLogo brand={brand} h={28} max="150px" named />
                 {!brandLogo(brand) && brand}
               </span>
               {/* only a confident "Top pick" or an honest "Has trade-offs" — never a lukewarm "Worth a look" on a phone the buyer is already looking at */}

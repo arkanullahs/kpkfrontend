@@ -338,7 +338,7 @@ function HeroPick({ p, budget, pct, onClick }: {
             <div style={st("display:flex; align-items:flex-start; justify-content:space-between; gap:8px;")}>
               <div style={st("min-width:0;")}>
                 <div style={st("display:flex; align-items:center; gap:7px; font-size:13px; color:var(--mut2); font-weight:500;")}>
-                  <BrandLogo brand={p.brand} h={19} max="110px" named />
+                  <BrandLogo brand={p.brand} h={28} max="150px" named />
                   {!brandLogo(p.brand) && p.brand}
                 </div>
                 <div style={st("font-size:clamp(21px,2.4vw,26px); font-weight:700; color:var(--ink); line-height:1.12; letter-spacing:-.4px;")}>{p.model}</div>
