@@ -2,6 +2,7 @@ import { type ReactNode, useState } from "react";
 import { axisLabel, classifyCaveats, fitOf, headlinePhrase, shownRange, st, taka, takaRange, topPickBadge } from "../theme";
 import { t } from "../i18n";
 import { api } from "../api";
+import { BrandLogo, brandLogo } from "./BrandLogo";
 import { PhonePhoto } from "./PhonePhoto";
 import { SpecIcon } from "./Chrome";
 import { JustSoYouKnow } from "./Compare";
@@ -257,7 +258,18 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                 <span style={st("position:absolute; top:-8px; left:-8px; width:24px; height:24px; border-radius:var(--r); background:var(--card); color:var(--mut2); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(var(--rgb-ink),.12), inset 0 0 0 1px rgba(var(--rgb-ink),.07);")}>{i + 2}</span>
               </span>
               <div style={st("flex:1; min-width:0; display:flex; flex-direction:column;")}>
-                <span style={st("font-size:16px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{r.brand} {r.model}</span>
+                {/* the mark sits in a fixed column so every row's model name
+                    starts at the same x -- sized by its own aspect, OPPO's
+                    wordmark is three times the width of Xiaomi's and the
+                    names came out on a ragged left edge (owner 2026-08-11) */}
+                <span style={st("display:flex; align-items:center; gap:8px; font-size:16px; font-weight:600; color:var(--ink); min-width:0;")}>
+                  {brandLogo(r.brand) && (
+                    <span style={st("display:flex; align-items:center; width:58px; flex:none;")}>
+                      <BrandLogo brand={r.brand} h={15} max="58px" named />
+                    </span>
+                  )}
+                  <span style={st("white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{brandLogo(r.brand) ? r.model : `${r.brand} ${r.model}`}</span>
+                </span>
                 <div style={st("font-size:13.5px; color:var(--mut2); margin-top:2px;")}>{headlinePhrase(r.headline_axis)}{r.headline_axis && r.headline_value != null ? ` · ${axisLabel(r.headline_axis)} ${r.headline_value}` : ""}</div>
                 {/* price left, verdict right — the verdict used to be a third
                     fixed column and wrapped "৳13,510 under budget" over 3 lines */}
@@ -325,7 +337,10 @@ function HeroPick({ p, budget, pct, onClick }: {
           <div style={st("flex:1; min-width:0;")}>
             <div style={st("display:flex; align-items:flex-start; justify-content:space-between; gap:8px;")}>
               <div style={st("min-width:0;")}>
-                <div style={st("font-size:13px; color:var(--mut2); font-weight:500;")}>{p.brand}</div>
+                <div style={st("display:flex; align-items:center; gap:7px; font-size:13px; color:var(--mut2); font-weight:500;")}>
+                  <BrandLogo brand={p.brand} h={19} max="110px" named />
+                  {!brandLogo(p.brand) && p.brand}
+                </div>
                 <div style={st("font-size:clamp(21px,2.4vw,26px); font-weight:700; color:var(--ink); line-height:1.12; letter-spacing:-.4px;")}>{p.model}</div>
               </div>
               <span style={st(`font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:var(--r); white-space:nowrap; flex-shrink:0; color:${badge.c}; background:${badge.bg};`)}>{badge.label}</span>
@@ -413,7 +428,10 @@ function StretchCard({ s, budget, onClick }: { s: Stretch; budget: number; onCli
       </span>
       <div style={st("flex:1; min-width:200px;")}>
         <div style={st("font-size:11px; font-weight:700; color:var(--lnk); letter-spacing:1.2px; text-transform:uppercase;")}>{t("worth_stretch")}</div>
-        <div style={st("font-size:17px; font-weight:700; color:var(--ink); margin-top:3px;")}>{s.brand} {s.model}</div>
+        <div style={st("display:flex; align-items:center; gap:7px; font-size:17px; font-weight:700; color:var(--ink); margin-top:3px;")}>
+          <BrandLogo brand={s.brand} h={18} max="92px" named />
+          {brandLogo(s.brand) ? s.model : `${s.brand} ${s.model}`}
+        </div>
         <div style={st("font-size:14px; color:var(--mut); margin-top:3px; line-height:1.5;")}>{s.reason || `A clear step up for ${taka(over)} more.`}</div>
       </div>
       <div style={st("text-align:right; flex-shrink:0; margin-left:auto;")}>

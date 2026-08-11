@@ -5,6 +5,7 @@ import { bnNum, bnToAscii, t } from "../i18n";
 import { buildBrief } from "../filters";
 import { type Screen, type StepLayout, type StepOption } from "../steps";
 import { useCounts } from "../useCounts";
+import { BrandLogo, brandLogo } from "./BrandLogo";
 import { PriorityLadder } from "./PriorityLadder";
 import type { Form } from "../need";
 
@@ -275,7 +276,7 @@ function Tile({ o, form, count, total, tapped, compact, onPick }: {
     <button onClick={onPick} disabled={dead} className="k-press" aria-pressed={on}
       style={st(`display:flex; flex-direction:column; align-items:flex-start; gap:${compact ? 10 : 12}px; min-height:${compact ? 96 : 130}px; padding:${compact ? "14px 13px" : "18px 17px"}; border-radius:var(--r-tile); cursor:${dead ? "not-allowed" : "pointer"}; text-align:left; transition:background .14s ease, box-shadow .14s ease, border-color .14s ease; opacity:${dead ? .5 : 1}; background:${lit ? "var(--teal)" : "var(--card)"}; border:1.5px solid ${lit ? "transparent" : "var(--rule)"}; box-shadow:${lit ? "0 10px 24px -14px rgba(var(--rgb-ink),.55)" : "none"};`)}>
       {o.icon && <TileIcon id={o.id} path={o.icon} lit={lit} />}
-      {o.dot && <BrandMark brand={o.id.split(":")[1]} dot={o.dot} mark={o.mark} />}
+      {o.dot && <BrandMark brand={o.id.split(":")[1]} dot={o.dot} mark={o.mark} lit={lit} />}
 
       <span style={st(`width:100%; font-size:${compact ? 15.5 : 18}px; font-weight:700; line-height:1.28; letter-spacing:-.2px; color:${lit ? "var(--onp)" : "var(--ink)"}; font-family:var(--f-bn); text-wrap:balance;`)}>
         {t(o.labelKey)}
@@ -294,17 +295,18 @@ function Tile({ o, form, count, total, tapped, compact, onPick }: {
 
 /* Owner-supplied artwork, BUNDLED rather than fetched by path.
 
-   Drop an SVG into `src/assets/icon/<option-id>.svg` (or
-   `src/assets/brandlogo/<Brand>.svg`) and the tile uses it, no code change --
-   the same drop-in promise as before. What changed is the mechanism: these
-   used to be `/icon/<id>.svg` and `/brandlogo/<b>.svg` under public/, which
-   meant an <img> request per tile, per screen, that 404'd for every id
-   because the owner has not supplied files yet. Ten red console lines and ten
-   real round trips per screen, on a data plan, to discover nothing is there.
-   A glob knows at build time. Missing file -> no element at all. */
+   Drop an SVG into `src/assets/icon/<option-id>.svg` and the tile uses it, no
+   code change -- the same drop-in promise as before. What changed is the
+   mechanism: these used to be `/icon/<id>.svg` under public/, which meant an
+   <img> request per tile, per screen, that 404'd for every id because the
+   owner has not supplied files yet. Ten red console lines and ten real round
+   trips per screen, on a data plan, to discover nothing is there. A glob
+   knows at build time. Missing file -> no element at all.
+
+   Brand marks work the same way and live in components/BrandLogo, which owns
+   that glob for the whole app -- the results list and the detail hero show
+   them too. */
 const ICON_FILES = import.meta.glob("../assets/icon/*.svg", {
-  eager: true, query: "?url", import: "default" }) as Record<string, string>;
-const BRAND_FILES = import.meta.glob("../assets/brandlogo/*.svg", {
   eager: true, query: "?url", import: "default" }) as Record<string, string>;
 
 /* The option icon. An owner SVG carries its own colour -- that is where the
@@ -331,15 +333,26 @@ function TileIcon({ id, path, lit }: { id: string; path: string; lit: boolean })
    for wordmarks, because a hand-traced Samsung or realme wordmark is brand
    misuse AND an illegible squiggle at 40px. The brand name sits directly below
    every one of these either way, so nothing depends on the glyph. */
-function BrandMark({ brand, dot, mark }: { brand: string; dot: string; mark?: string }) {
+function BrandMark({ brand, dot, mark, lit }: {
+  brand: string; dot: string; mark?: string; lit?: boolean;
+}) {
   const box = "display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:var(--r); flex-shrink:0;";
-  const url = BRAND_FILES[`../assets/brandlogo/${brand}.svg`];
 
-  if (url) {
+  /* A wordmark needs the tile's whole width, not a 44px square of it -- these
+     are mostly logotypes, and squeezing "SAMSUNG" into a square plate drew it
+     8px tall.
+
+     The white plate appears only on a PICKED tile. On an unpicked one the
+     tile is already white, so a white plate inside it was a box drawn around
+     a box -- and several of these marks carry their own plate (realme's
+     yellow, Xiaomi's orange), which made it three (owner 2026-08-11). Picked
+     turns the tile teal, and half these marks are near-black, so there the
+     plate earns its place. */
+  if (brandLogo(brand)) {
     return (
-      <span aria-hidden="true" style={st(box + "background:#fff; box-shadow:0 0 0 1px rgba(var(--rgb-ink),.1);")}>
-        <img src={url} alt="" width={30} height={30}
-          style={st("width:30px; height:30px; object-fit:contain; display:block;")} />
+      <span aria-hidden="true" style={st("display:flex; align-items:center; justify-content:center; width:100%; height:48px; padding:0 6px; border-radius:var(--r); box-sizing:border-box;"
+        + (lit ? "background:#fff; box-shadow:0 0 0 1px rgba(var(--rgb-ink),.1);" : ""))}>
+        <BrandLogo brand={brand} h={34} max="100%" />
       </span>
     );
   }
@@ -356,13 +369,21 @@ function BrandMark({ brand, dot, mark }: { brand: string; dot: string; mark?: st
 }
 
 function Chip({ o, on, onPick }: { o: StepOption; on: boolean; onPick: () => void }) {
+  const logoChip = !!o.dot && !!brandLogo(o.id.split(":")[1] || "");
   return (
     <button onClick={onPick} className="k-press" aria-pressed={on}
       style={st(`display:inline-flex; align-items:center; gap:9px; min-height:52px; padding:13px 19px; border-radius:var(--r-tile); cursor:pointer; transition:background .14s ease; font-size:16.5px; font-weight:700; font-family:var(--f-bn); background:${on ? "var(--teal)" : "var(--card)"}; color:${on ? "var(--onp)" : "var(--ink)"}; border:1.5px solid ${on ? "transparent" : "var(--rule)"};`)}>
-      {o.dot && (
+      {/* The mark alone where we have one -- no plate, no name beside it. The
+          logo already says "SAMSUNG"; printing it again put the word twice in
+          one chip, and the white plate was a box inside a box (owner
+          2026-08-11). Where there is no logo the brand's colour dot and its
+          name carry the chip as before. */}
+      {o.dot && !logoChip && (
         <span aria-hidden="true" style={st(`display:block; width:18px; height:18px; border-radius:var(--r); flex-shrink:0; background:${o.dot}; box-shadow:0 0 0 1px rgba(var(--rgb-ink),.18);`)} />
       )}
-      {t(o.labelKey)}
+      {logoChip
+        ? <BrandLogo brand={o.id.split(":")[1]} h={22} max="88px" named />
+        : t(o.labelKey)}
     </button>
   );
 }

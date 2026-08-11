@@ -1,3 +1,7 @@
 node_modules/
 dist/
 *.log
+# vendor brand-logo drops, staged for scripts/brand_logos.py. Not tracked (the
+# pack is 3 MB of other companies' artwork) and NOT under public/, where it
+# would be a public download on the live domain.
+brand-logos-drop/

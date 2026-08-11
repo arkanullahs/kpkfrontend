@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, retentionCurve, st, taka, takaRange, verdictMeta } from "../theme";
 import { t } from "../i18n";
 import type { Connectivity, OpinionProfile, PhoneDetail, Pick } from "../api";
+import { BrandLogo, brandLogo } from "./BrandLogo";
 import { PhonePhoto } from "./PhonePhoto";
 import { JustSoYouKnow } from "./Compare";
 import { ChannelChips, DataCautionChip, MarketChips, PriceSource } from "./ResultsScreen";
@@ -150,7 +151,10 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           <PhonePhoto src={image} pid={pid} w="clamp(100px,11vw,124px)" h="clamp(134px,15vw,166px)" radius={18} />
           <div style={st("min-width:0;")}>
             <div style={st("display:flex; align-items:center; gap:9px; flex-wrap:wrap;")}>
-              <span style={st("font-size:13px; color:var(--mut2); font-weight:500;")}>{brand}</span>
+              <span style={st("display:flex; align-items:center; gap:7px; font-size:13px; color:var(--mut2); font-weight:500;")}>
+                <BrandLogo brand={brand} h={19} max="110px" named />
+                {!brandLogo(brand) && brand}
+              </span>
               {/* only a confident "Top pick" or an honest "Has trade-offs" — never a lukewarm "Worth a look" on a phone the buyer is already looking at */}
               {(rec === "buy" || rec === "avoid") && <span style={st(`font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:var(--r); color:${vm.c}; background:${vm.bg};`)}>{vm.label}</span>}
             </div>

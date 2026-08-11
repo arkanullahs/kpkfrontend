@@ -13,7 +13,16 @@ export default defineConfig({
   // pick/index.html so the build emits dist/pick/index.html (Vercel serves
   // it at /pick) while public/ keeps owning the root document. Asset URLs
   // stay absolute (/assets/*), so no `base` change is needed.
-  build: { rollupOptions: { input: resolve(__dirname, "pick/index.html") } },
+  // assetsInlineLimit 0: never base64 an asset into the JS. The 36 brand
+  // logos are 1.4-6 KB each, so the 4 KB default inlined about twenty of them
+  // and put +49 KB gzip into the main bundle -- paid by every visitor, on a
+  // market that is mostly mobile data, to ship 36 marks when a session shows
+  // six. As files they are fetched only by the screens that draw them. No
+  // other asset here is small enough to have been inlined anyway.
+  build: {
+    assetsInlineLimit: 0,
+    rollupOptions: { input: resolve(__dirname, "pick/index.html") },
+  },
   server: {
     port: 5173,
     proxy: {
