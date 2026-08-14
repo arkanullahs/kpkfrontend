@@ -4,7 +4,7 @@
 > guides for every budget, ranked from live Bangladesh shop data:
 > real in-stock status across 8+ BD shops, prices confirmed against
 > trusted sellers, rankings from review + spec evidence. Rebuilt
-> nightly; last data check 2026-08-12. Ranking is never for sale.
+> nightly; last data check 2026-08-14. Ranking is never for sale.
 
 ## Best-phone guides (updated August 2026)
 
@@ -84,7 +84,6 @@
 
 ## Phone comparisons (updated August 2026)
 
-- [Apple iPhone 16 Plus vs Samsung Galaxy S25 Ultra](https://bhalophone.com/vs/apple-iphone-16-plus-vs-samsung-galaxy-s25-ultra-5g): head-to-head AI verdict, live BD prices for both phones.
 - [Apple iPhone 16 Pro vs Apple iPhone 17](https://bhalophone.com/vs/apple-iphone-16-pro-vs-apple-iphone-17): head-to-head AI verdict, live BD prices for both phones.
 - [Apple iPhone 17 Pro Max vs OPPO Find X9 Pro](https://bhalophone.com/vs/apple-iphone-17-pro-max-vs-oppo-find-x9-pro): head-to-head AI verdict, live BD prices for both phones.
 - [Apple iPhone 17 Pro Max vs Samsung Galaxy S26 Ultra](https://bhalophone.com/vs/apple-iphone-17-pro-max-vs-samsung-galaxy-s26-ultra): head-to-head AI verdict, live BD prices for both phones.
@@ -112,7 +111,7 @@
 
 ## Individual phones
 
-- [All 658 phones we track](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with live BD price, which shops stock it, full specs and owner ratings.
+- [All 659 phones we track](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with live BD price, which shops stock it, full specs and owner ratings.
 
 
 ## Tools

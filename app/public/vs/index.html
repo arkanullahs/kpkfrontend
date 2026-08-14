@@ -56,7 +56,12 @@ Bangladesh: live prices, specs side by side and an AI verdict on which to buy.">
 /* ONE accent for the answer deck, so the colour means "this is the pick"
    rather than "this is card three" (owner 2026-08-03) */
 --bc:var(--teal);--bs:var(--teal);
---r:2px;                    /* the ONE radius; 14 different ones used to ship */
+/* THREE radii, and the token layer is still the only place one is spelled --
+   which was the point of the 2px rule, not the 2px itself. Owner 2026-08-14
+   moved the site off square edges; the discipline survives the change. Photos
+   and rules stay square via the reset below. A surface that wants a fourth
+   value wants one of these three. */
+--r:12px;--r-sm:8px;--r-pill:999px;
 
 /* --- layer 3: composite surfaces ---
    Depth is a hairline plus one tight shadow. The 0 14px 34px soft shadow under
@@ -114,25 +119,41 @@ img,figure,picture,svg,hr,table,thead,tbody,tr,td,th{border-radius:0}
    rim where light enters, a dimmer bounce on the far edge, dispersion that
    splits the rim into spectrum, and displacement of what sits behind it. All
    four are here and none of them is a colour blob. */
+/* AT REST THE BAR IS NOT GLASS (owner 2026-08-14). Glass is a material you
+   see something THROUGH, and at scroll-top there is nothing behind it -- the
+   blur was smearing the page background into itself and reading as dirt. So
+   the bar is opaque paper until content is actually underneath it, and the
+   whole glass stack switches on with html.scr. */
 header.site{position:sticky;top:0;z-index:60;display:flex;align-items:center;
 justify-content:space-between;gap:10px;margin:14px auto 4px;
 padding:11px 14px 11px 12px;border-radius:var(--r);
-background:var(--hdr-bg);
+background:var(--card);
+border:0;border-bottom:1px solid var(--rule);
+box-shadow:var(--sh-hair);
+transition:background .2s linear,box-shadow .2s linear,border-color .2s linear}
+html.scr header.site{background:var(--hdr-bg);
 backdrop-filter:blur(18px) saturate(1.8);-webkit-backdrop-filter:blur(18px) saturate(1.8);
-border:0;border-bottom:1px solid rgba(var(--rgb-teal),.22);
+border-bottom-color:rgba(var(--rgb-teal),.22);
 box-shadow:var(--hdr-sh)}
-/* dispersion, masked to the bottom edge, where the light actually leaves */
+/* dispersion, masked to the bottom edge, where the light actually leaves.
+   No light enters an opaque bar, so it fades in with the glass. */
 header.site::after{content:"";position:absolute;left:0;right:0;bottom:-1px;
-height:1px;pointer-events:none;z-index:3;background:var(--prism);opacity:.55}
+height:1px;pointer-events:none;z-index:3;background:var(--prism);opacity:0;
+transition:opacity .2s linear}
+html.scr header.site::after{opacity:.55}
 /* true refraction where the browser can do it. Behind @supports because a
    browser that ignores url() in backdrop-filter would drop the blur with it.
    The filter itself must render inside <body> -- see _GLASS. */
 @supports (backdrop-filter: url(#lensglass)){
-header.site{backdrop-filter:blur(13px) saturate(1.8) url(#lensglass);
+html.scr header.site{backdrop-filter:blur(13px) saturate(1.8) url(#lensglass);
 -webkit-backdrop-filter:blur(13px) saturate(1.8) url(#lensglass)}}
 @media (prefers-reduced-transparency: reduce){
-header.site{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--card)}
+html.scr header.site{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--card)}
 header.site::after{display:none}}
+/* no script, no scroll class, no glass -- the bar stays the opaque one, which
+   is a complete design rather than a broken one */
+@media (prefers-reduced-motion: reduce){
+header.site,header.site::after{transition:none}}
 /* owner 2026-07-14 round 3: keep brand+nav+cta on ONE row at every width --
    never wrap. The brand shrinks to just the icon on narrow screens (icon+text
    together once there's room) and the nav pills scroll sideways within their
@@ -157,14 +178,27 @@ header.site a:hover{text-decoration:none}
    ever existed because a fourth pill would not fit a 360px bar. It doesn't
    have a fourth pill; it has three, they fit, and a header that scrolls
    sideways on a phone is a bug rather than a fallback. */
-.hnav{display:flex;gap:6px;justify-content:center;min-width:0;flex:1}
-.hnav a{font-size:12.5px;font-weight:700;color:var(--mut);background:var(--card);
-border:1px solid var(--rule);border-radius:var(--r);padding:7px 14px;white-space:nowrap;flex:none}
-.hnav a.on{color:var(--onp);background:var(--teal);
-border-color:var(--teal);box-shadow:none}
+/* Text, not pills (owner 2026-08-14). Three bordered boxes plus a filled
+   fourth made the bar read as four competing buttons, and the CTA -- the one
+   thing we want pressed -- had to shout over them. Now the links are type and
+   the CTA is the only filled object in the header. */
+.hnav{display:flex;gap:2px;justify-content:center;min-width:0;flex:1}
+.hnav a{position:relative;font-size:14px;font-weight:600;color:var(--mut);
+background:none;border:0;padding:8px 12px;white-space:nowrap;flex:none}
+.hnav a:hover{color:var(--ink)}
+.hnav a.on{color:var(--ink);font-weight:700}
+.hnav a.on::after{content:"";position:absolute;left:12px;right:12px;bottom:1px;
+height:2px;border-radius:var(--r-pill);background:var(--teal)}
+/* the freshness claim, which is the whole product promise, said in the one
+   place every page carries. Reassurance ranks below the links and the CTA for
+   space, so it is the first thing to go when the bar narrows. */
+.hstat{flex:none;display:flex;align-items:center;gap:7px;font-size:12.5px;
+font-weight:600;color:var(--mut);white-space:nowrap}
+.hstat i{flex:none;width:7px;height:7px;border-radius:50%;background:var(--teal)}
+@media(max-width:900px){.hstat{display:none}}
 .hcta{flex:none;font-size:13px;font-weight:700;color:var(--onp);
-background:var(--teal);border-radius:var(--r);
-padding:8px 16px;white-space:nowrap;
+background:var(--teal);border-radius:var(--r-pill);
+padding:9px 18px;white-space:nowrap;
 box-shadow:inset 0 1px 0 rgba(var(--rgb-white),.18)}
 .hcta:hover{background:var(--tealD)}
 /* Phones: the bar has to hold brand + 3 links + CTA on a 360px screen, so
@@ -926,32 +960,104 @@ padding:10px 15px 11px;border-radius:var(--r)}
 .hansw .hans{opacity:.42;transform:rotate(var(--rot)) translateY(15px) scale(.9)}
 .hansw .hans:first-child{opacity:1;transform:none;z-index:5;pointer-events:auto}
 .hdots{display:none}
-.hbtn,.bandcard,.mcard,.mcchips a{transition:none}
+.hbtn,.bandcard,.mcard,.mcchips a,.bnav a,.bpop a{transition:none}
+.bnav a:hover,.bpop a:hover{transform:none}
 }
-/* ---- brand chips. Same reason as the device card below: they render on the
-   homepage and the /best hub now, and those load this sheet alone. Moved out of
-   device_pages' _CSS_EXTRA 2026-08-07 when the brand hubs became the crawl path
-   into the catalogue -- /phone/page/2..14 are noindex, so every device past the
-   first hub page hung off links Google stops following. ---- */
-.bnav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
-/* A hairline, not the old chip: at 15px the frame crowded the mark and the
-   two outlines fought, but with nothing at all 26 marks read as one glob of
-   logos instead of 26 links. Minimum that separates them. */
-.bnav a{display:inline-flex;align-items:center;gap:9px;font-size:13px;
-  font-weight:700;color:var(--tx);background:var(--card);
-  border:1px solid var(--rule);border-radius:var(--r);padding:11px 15px;
-  transition:border-color .16s,color .16s}
-.bnav a:hover{text-decoration:none;color:var(--lnk);border-color:var(--teal)}
+/* ---- the brand section. Same reason as the device card below: it renders on
+   the homepage and the /best hub now, and those load this sheet alone. Moved
+   out of device_pages' _CSS_EXTRA 2026-08-07 when the brand hubs became the
+   crawl path into the catalogue -- /phone/page/2..14 are noindex, so every
+   device past the first hub page hung off links Google stops following.
+
+   Rebuilt from a wrapping chip strip into a grid 2026-08-14 (owner mockup).
+   The strip sized every chip to its own logo, so a 6:1 wordmark got six times
+   the target of a square glyph and the row ragged differently at every width;
+   an even grid gives each mark the same frame, which is also what lets the
+   marks go back to the vendor's colour without reading as noise. ---- */
+.bsec{margin-top:54px}
+.bhead{display:flex;align-items:center;justify-content:space-between;
+  gap:14px 20px;flex-wrap:wrap}
+.bhead h2.grp{margin:0}
+/* a filter, not a search: 26 links is past the point where scanning beats
+   typing, and it costs no request -- every card is already in the page */
+.bfind{position:relative;flex:0 1 330px;display:flex;align-items:center;
+  color:var(--mut)}
+.bfind svg{position:absolute;left:15px;pointer-events:none}
+.bfind input{width:100%;font:inherit;font-size:14px;color:var(--ink);
+  background:var(--card);border:1px solid var(--rule);
+  border-radius:var(--r);padding:12px 14px 12px 43px;appearance:none}
+.bfind input::placeholder{color:var(--mut)}
+.bfind input:focus{outline:none;border-color:var(--teal);
+  box-shadow:0 0 0 3px var(--tint)}
+.blab{font-size:13px;font-weight:700;color:var(--mut2);margin:24px 0 10px}
+.bnav{display:grid;gap:10px;
+  grid-template-columns:repeat(auto-fill,minmax(196px,1fr))}
+/* auto-FIT, not auto-fill: five cards spread across the full width instead of
+   leaving a sixth empty track on a wide screen */
+.bpop{display:grid;gap:10px;
+  grid-template-columns:repeat(auto-fit,minmax(174px,1fr))}
+.bpop a,.bnav a{position:relative;display:flex;align-items:center;gap:10px;
+  min-width:0;font-size:13px;font-weight:700;color:var(--tx);
+  background:var(--card);border:1px solid var(--rule);
+  border-radius:var(--r);
+  transition:border-color .16s,box-shadow .16s,transform .16s}
+/* the five brands most people arrive already naming, given the size that says
+   so. Mark flush left and count flush right, the SAME axis as the grid below:
+   centring it read as neither centred nor aligned, because the marks are 24px
+   to 122px wide and a centred mark starts in a different place in every card
+   while its count stays pinned right. */
+.bpop a{padding:26px 20px;min-height:106px}
+/* min-height, because the marks are no longer one height: a grid row is as
+   tall as its tallest card, so without a floor the rows stepped 53px, 66px,
+   61px down the page against the same 10px gap */
+.bnav a{padding:14px 16px;min-height:64px}
+.bpop a:hover,.bnav a:hover{text-decoration:none;border-color:var(--teal);
+  transform:translateY(-2px);box-shadow:var(--sh-card)}
 /* the count is a separate fact from the mark; unstyled it read as part of the
    logo it sat against */
-.bnav a i{font-style:normal;font-size:11px;font-weight:700;color:var(--mut);
-  background:var(--tint);border-radius:999px;padding:2px 7px;line-height:1.5;
-  flex:none}
-/* one CSS height for every mark, because the files are already normalised to
-   one optical weight (scripts/brand_logos_raster.py). max-width is the guard
-   for a wordmark long enough to push a chip past a narrow screen. */
-.bnav a img{height:28px;width:auto;max-width:168px;object-fit:contain;
-  display:block;flex:none}
+.bpop a i,.bnav a i{font-style:normal;font-size:12px;font-weight:600;
+  color:var(--mut);flex:none;margin-left:auto;padding-left:8px}
+/* takes the leftover space so the count keeps its own; a mark wider than what
+   is left shrinks instead of running under it */
+.bmk{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 auto}
+.bmk b{font-size:14.5px;font-weight:600;color:var(--ink);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+/* NO height here: the height is per-file and comes from the img's own
+   attribute (pages._mark_px), because one flat height sized these marks by
+   the wrong dimension. max-width is the guard for a wordmark wide enough to
+   push a card past a narrow screen. */
+.bnav a img,.bpop a img{width:auto;max-width:100%;object-fit:contain;
+  display:block;flex:0 1 auto}
+/* a logo that ships its own near-black plate, flipped onto paper. Not scoped
+   to the cards: a plate that disappears into the page does so on every surface
+   the mark is drawn on. */
+img.inv{filter:invert(1)}
+/* the mark at the head of its own hub page. It sits to the RIGHT of the h1
+   and the lead, not above them: stacked, a logo that spells the brand and an
+   h1 that spells the brand read as the same line said twice. Off to one side
+   it is what it actually is -- whose page this is -- and the h1 keeps the top
+   of the page to itself. */
+.bhd{display:flex;align-items:center;justify-content:space-between;gap:26px}
+/* :first-child, because .blk is a div in here too and would take the grow */
+.bhd>div:first-child{flex:1 1 auto;min-width:0}
+.blk{flex:none;margin:0}
+.blk img{width:auto;max-width:190px;object-fit:contain;display:block}
+@media(max-width:640px){
+.bhd{gap:14px}
+/* stays on the row rather than wrapping under the h1, which would put it back
+   where it was */
+.blk img{max-width:96px}
+}
+.bnone{color:var(--mut);font-size:14.5px;margin:20px 0 0}
+/* [hidden] loses to display:flex/grid, and the filter sets exactly that */
+.bsec a[hidden],.bsec .bgrp[hidden]{display:none}
+@media(max-width:560px){
+.bnav{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}
+.bpop{grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px}
+.bpop a{padding:20px 14px;min-height:86px}
+.bnav a{padding:12px 13px}
+.bfind{flex:1 1 100%}
+}
 /* ---- the device card: one design for the homepage teaser, the /phone
    directory and every /brand hub. It lives HERE, not in device_pages'
    _CSS_EXTRA, because the homepage loads this sheet alone. ---- */
@@ -1031,14 +1137,28 @@ table.cmp.vs td{white-space:normal}
 @media(max-width:560px){
 .duel{grid-template-columns:1fr}
 }
+
+/* ====================== RADIUS ROLES ======================
+   --r is the card. These are the two surfaces it is wrong for, named in one
+   place instead of respelled at 40 call sites: things you press or read as a
+   token (pill), and things small enough that 12px would eat them (sm).
+   Anything absent from both lists is a card and takes --r. */
+.chip,.badge,.hbadge,.pout,.cta,.hbtn,nav.linkrow a,
+.mfchips a,.mcchips a,.dirnav a,
+.bar .tk,.bar .ceil,.bar .dot,.hbud i,.hbud i u,.hdots i
+{border-radius:var(--r-pill)}
+.card .num,.st .si,.mi,.mfh .mi,.hfit svg,nav.crumbs a,
+.hshot,.mcimg,.pick>img,.card>img,.stretch>img,.dcard img,
+.mfimg img,.pbrand img,.bigfoot .brand img
+{border-radius:var(--r-sm)}
 </style></head>
 <body><svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><filter id="lensglass" x="-14%" y="-14%" width="128%" height="128%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.0055 0.011" numOctaves="2" seed="11" result="turb"/><feGaussianBlur in="turb" stdDeviation="2.4" result="soft"/><feDisplacementMap in="SourceGraphic" in2="soft" scale="11" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
-<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="Bhalo Phone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone">Phones</a><a href="/vs" class="on">Compare</a></nav><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
+<header class="site"><a class="brand" href="/" aria-label="bhalophone home"><img src="/apple-touch-icon.png" width="42" height="42" alt="Bhalo Phone logo"><span class="btxt">bhalophone<em>AI-powered phone recommendations for Bangladesh</em></span></a><nav class="hnav" aria-label="Sections"><a href="/best">Guides</a><a href="/phone">Phones</a><a href="/vs" class="on">Compare</a></nav><span class="hstat"><i></i>Updated nightly</span><a class="hcta" href="/pick"><span class="ctlong">Get my </span>pick &rarr;</a></header>
 <main class="wrap">
 <h1>Phone comparisons, <em>head to head</em></h1>
-<p class="sub">Live shop data, updated 2026-08-12. Every comparison ends in a
+<p class="sub">Live shop data, updated 2026-08-14. Every comparison ends in a
 clear AI verdict:</p>
-<div class="trend"><a class="tcard" href="/vs/apple-iphone-16-plus-vs-samsung-galaxy-s25-ultra-5g"><img src="/img/344cec58de597b9f.webp" alt="Apple iPhone 16 Plus" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 16 Plus vs Samsung Galaxy S25 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-16-pro-vs-apple-iphone-17"><img src="/img/8824a4fabffe2e2e.webp" alt="Apple iPhone 16 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 16 Pro vs Apple iPhone 17</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-pro-max-vs-oppo-find-x9-pro"><img src="/img/9dc1042e2d957071.webp" alt="Apple iPhone 17 Pro Max" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 Pro Max vs OPPO Find X9 Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-pro-max-vs-samsung-galaxy-s26-ultra"><img src="/img/9dc1042e2d957071.webp" alt="Apple iPhone 17 Pro Max" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 Pro Max vs Samsung Galaxy S26 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-vs-apple-iphone-17-pro"><img src="/img/22bf91110893775d.webp" alt="Apple iPhone 17" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 vs Apple iPhone 17 Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-vs-oppo-find-x9-pro"><img src="/img/22bf91110893775d.webp" alt="Apple iPhone 17" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 vs OPPO Find X9 Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-vs-xiaomi-15t-pro"><img src="/img/22bf91110893775d.webp" alt="Apple iPhone 17" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 vs Xiaomi 15T Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17e-vs-samsung-galaxy-s25-edge"><img src="/img/18ff58e20ab84676.webp" alt="Apple iPhone 17e" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17e vs Samsung Galaxy S25 Edge</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/honor-600-lite-vs-oneplus-nord-6"><img src="/img/96acc22539369bfd.webp" alt="Honor 600 Lite" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Honor 600 Lite vs OnePlus Nord 6 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/honor-600-lite-vs-tecno-camon-50"><img src="/img/96acc22539369bfd.webp" alt="Honor 600 Lite" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Honor 600 Lite vs Tecno Camon 50</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/honor-x9d-5g-vs-samsung-galaxy-m56-5g"><img src="/img/28a433fe4c852566.webp" alt="Honor X9d" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Honor X9d vs Samsung Galaxy M56 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/itel-a200-plus-vs-redmi-a7"><img src="/img/ba66ede492782142.webp" alt="itel A200 Plus" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">itel A200 Plus vs Redmi A7</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/motorola-edge-60-pro-vs-nothing-phone-3a-lite"><img src="/img/efbd641bf9a4aef0.webp" alt="Motorola Edge 60 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Motorola Edge 60 Pro vs Nothing Phone 3a Lite</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/motorola-edge-60-pro-vs-vivo-v60-lite-4g"><img src="/img/efbd641bf9a4aef0.webp" alt="Motorola Edge 60 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Motorola Edge 60 Pro vs Vivo V60 Lite 4G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/motorola-signature-vs-samsung-galaxy-s25-edge"><img src="/img/d52973f2f3b12b56.webp" alt="Motorola Signature" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Motorola Signature vs Samsung Galaxy S25 Edge</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/nothing-phone-3a-lite-vs-samsung-galaxy-m36-5g"><img src="/img/93de371e3e3e02fa.webp" alt="Nothing Phone 3a Lite" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Nothing Phone 3a Lite vs Samsung Galaxy M36 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oneplus-13s-vs-xiaomi-15t-pro"><img src="/img/92e190b747a4f3d9.webp" alt="OnePlus 13s" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OnePlus 13s vs Xiaomi 15T Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oppo-find-x9-pro-vs-oppo-find-x9-ultra"><img src="/img/42927d18f1701a3d.webp" alt="OPPO Find X9 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OPPO Find X9 Pro vs OPPO Find X9 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oppo-find-x9-pro-vs-samsung-galaxy-s25-ultra-5g"><img src="/img/42927d18f1701a3d.webp" alt="OPPO Find X9 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OPPO Find X9 Pro vs Samsung Galaxy S25 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oppo-find-x9-ultra-vs-samsung-galaxy-s26-ultra"><img src="/img/31796ae8600f7177.webp" alt="OPPO Find X9 Ultra" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OPPO Find X9 Ultra vs Samsung Galaxy S26 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oppo-k14-vs-samsung-galaxy-m36-5g"><img src="/img/2cbb4a5726d9f118.webp" alt="OPPO K14" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OPPO K14 vs Samsung Galaxy M36 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/poco-f8-ultra-5g-vs-samsung-galaxy-s25-ultra-5g"><img src="/img/63bd41547254f5df.webp" alt="POCO F8 Ultra" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">POCO F8 Ultra vs Samsung Galaxy S25 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/redmi-a7-vs-samsung-galaxy-m06-5g"><img src="/img/8d2b4a89fc7fb445.webp" alt="Redmi A7" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Redmi A7 vs Samsung Galaxy M06 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/samsung-galaxy-f36-5g-vs-samsung-galaxy-m36-5g"><img src="/img/4b3054649d799b98.webp" alt="Samsung Galaxy F36 5G" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Samsung Galaxy F36 5G vs Samsung Galaxy M36 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/samsung-galaxy-m36-5g-vs-samsung-galaxy-m56-5g"><img src="/img/b7482823ed956973.webp" alt="Samsung Galaxy M36 5G" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Samsung Galaxy M36 5G vs Samsung Galaxy M56 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a></div>
+<div class="trend"><a class="tcard" href="/vs/apple-iphone-16-pro-vs-apple-iphone-17"><img src="/img/8824a4fabffe2e2e.webp" alt="Apple iPhone 16 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 16 Pro vs Apple iPhone 17</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-pro-max-vs-oppo-find-x9-pro"><img src="/img/9dc1042e2d957071.webp" alt="Apple iPhone 17 Pro Max" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 Pro Max vs OPPO Find X9 Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-pro-max-vs-samsung-galaxy-s26-ultra"><img src="/img/9dc1042e2d957071.webp" alt="Apple iPhone 17 Pro Max" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 Pro Max vs Samsung Galaxy S26 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-vs-apple-iphone-17-pro"><img src="/img/22bf91110893775d.webp" alt="Apple iPhone 17" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 vs Apple iPhone 17 Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-vs-oppo-find-x9-pro"><img src="/img/22bf91110893775d.webp" alt="Apple iPhone 17" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 vs OPPO Find X9 Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17-vs-xiaomi-15t-pro"><img src="/img/22bf91110893775d.webp" alt="Apple iPhone 17" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17 vs Xiaomi 15T Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/apple-iphone-17e-vs-samsung-galaxy-s25-edge"><img src="/img/18ff58e20ab84676.webp" alt="Apple iPhone 17e" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Apple iPhone 17e vs Samsung Galaxy S25 Edge</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/honor-600-lite-vs-oneplus-nord-6"><img src="/img/96acc22539369bfd.webp" alt="Honor 600 Lite" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Honor 600 Lite vs OnePlus Nord 6 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/honor-600-lite-vs-tecno-camon-50"><img src="/img/96acc22539369bfd.webp" alt="Honor 600 Lite" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Honor 600 Lite vs Tecno Camon 50</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/honor-x9d-5g-vs-samsung-galaxy-m56-5g"><img src="/img/28a433fe4c852566.webp" alt="Honor X9d" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Honor X9d vs Samsung Galaxy M56 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/itel-a200-plus-vs-redmi-a7"><img src="/img/ba66ede492782142.webp" alt="itel A200 Plus" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">itel A200 Plus vs Redmi A7</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/motorola-edge-60-pro-vs-nothing-phone-3a-lite"><img src="/img/efbd641bf9a4aef0.webp" alt="Motorola Edge 60 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Motorola Edge 60 Pro vs Nothing Phone 3a Lite</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/motorola-edge-60-pro-vs-vivo-v60-lite-4g"><img src="/img/efbd641bf9a4aef0.webp" alt="Motorola Edge 60 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Motorola Edge 60 Pro vs Vivo V60 Lite 4G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/motorola-signature-vs-samsung-galaxy-s25-edge"><img src="/img/d52973f2f3b12b56.webp" alt="Motorola Signature" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Motorola Signature vs Samsung Galaxy S25 Edge</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/nothing-phone-3a-lite-vs-samsung-galaxy-m36-5g"><img src="/img/93de371e3e3e02fa.webp" alt="Nothing Phone 3a Lite" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Nothing Phone 3a Lite vs Samsung Galaxy M36 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oneplus-13s-vs-xiaomi-15t-pro"><img src="/img/92e190b747a4f3d9.webp" alt="OnePlus 13s" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OnePlus 13s vs Xiaomi 15T Pro</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oppo-find-x9-pro-vs-oppo-find-x9-ultra"><img src="/img/42927d18f1701a3d.webp" alt="OPPO Find X9 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OPPO Find X9 Pro vs OPPO Find X9 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oppo-find-x9-pro-vs-samsung-galaxy-s25-ultra-5g"><img src="/img/42927d18f1701a3d.webp" alt="OPPO Find X9 Pro" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OPPO Find X9 Pro vs Samsung Galaxy S25 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oppo-find-x9-ultra-vs-samsung-galaxy-s26-ultra"><img src="/img/31796ae8600f7177.webp" alt="OPPO Find X9 Ultra" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OPPO Find X9 Ultra vs Samsung Galaxy S26 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/oppo-k14-vs-samsung-galaxy-m36-5g"><img src="/img/2cbb4a5726d9f118.webp" alt="OPPO K14" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">OPPO K14 vs Samsung Galaxy M36 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/poco-f8-ultra-5g-vs-samsung-galaxy-s25-ultra-5g"><img src="/img/63bd41547254f5df.webp" alt="POCO F8 Ultra" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">POCO F8 Ultra vs Samsung Galaxy S25 Ultra</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/redmi-a7-vs-samsung-galaxy-m06-5g"><img src="/img/8d2b4a89fc7fb445.webp" alt="Redmi A7" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Redmi A7 vs Samsung Galaxy M06 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/samsung-galaxy-f36-5g-vs-samsung-galaxy-m36-5g"><img src="/img/4b3054649d799b98.webp" alt="Samsung Galaxy F36 5G" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Samsung Galaxy F36 5G vs Samsung Galaxy M36 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a><a class="tcard" href="/vs/samsung-galaxy-m36-5g-vs-samsung-galaxy-m56-5g"><img src="/img/b7482823ed956973.webp" alt="Samsung Galaxy M36 5G" width="54" height="72" loading="lazy"><div><div class="tb">Head to head</div><div class="tn">Samsung Galaxy M36 5G vs Samsung Galaxy M56 5G</div><div class="tp"><span class="go">AI verdict &rarr;</span></div></div></a></div>
 <div class="pickcard"><div class="pcopy"><h2>Find <em>your</em> perfect phone</h2><p>Answer a few quick questions and our AI picks the best phone for how you actually use it, ranked from live Bangladesh prices.</p><a class="cta" href="/pick">Get my pick &rarr;</a></div><div class="pbrand" aria-hidden="true"><img src="/apple-touch-icon.png" width="84" height="84" alt="Bhalo Phone logo"><div class="pbtxt"><span class="pbn">bhalophone</span><span class="pbt">AI-powered phone recommendations for Bangladesh</span></div></div></div>
 </main>
 <div class="footwrap">
@@ -1062,5 +1182,5 @@ clear AI verdict:</p>
 </div>
 <div class="copy">&copy; 2026 Bhalo Phone. All rights reserved.
 <span class="tm">Shop logos, brand names and product names are the trademarks of their respective owners, shown only to identify who sells what. We are not affiliated with, endorsed by, or paid by any of them.</span></div>
-</footer></div>
+</footer></div><script>(function(){var d=document.documentElement,f=function(){d.classList.toggle("scr",(window.pageYOffset||d.scrollTop||0)>4)};f();addEventListener("scroll",f,{passive:true})})();</script>
 </body></html>
