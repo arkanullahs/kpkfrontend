@@ -892,7 +892,35 @@ export function setLang(l: Lang) {
   try { localStorage.setItem("kpk_lang", l); } catch { /* ignore */ }
 }
 
+/* Owner rewrites, laid over the compiled strings at runtime.
+   /ui-text.json is written by the admin panel and pushed by
+   kpk_backend.tools.push_ui_text -- same one-minute path a phone photo takes.
+   Every one of the 445 strings below is already translated; this exists so
+   changing a WORD is a save in the panel instead of an edit, a build and a
+   deploy, which is why wording never got fixed.
+
+   Fails silent by design: no file, a 404, bad JSON or an unknown key all leave
+   the shipped string exactly as it is. A wording overlay must never be able to
+   take the picker down. */
+type Override = Partial<Record<Lang, string>>;
+let _overrides: Record<string, Override> = {};
+
+export async function loadOverrides(): Promise<number> {
+  try {
+    const r = await fetch("/ui-text.json", { cache: "no-cache" });
+    if (!r.ok) return 0;
+    const j = await r.json();
+    if (j && typeof j === "object" && !Array.isArray(j)) _overrides = j;
+    return Object.keys(_overrides).length;
+  } catch {
+    return 0;
+  }
+}
+
 export function t(key: keyof typeof STRINGS | string): string {
+  const o = _overrides[key as string];
+  const own = o && o[_lang];
+  if (typeof own === "string" && own !== "") return own;
   const e = STRINGS[key];
   return e ? e[_lang] : String(key);
 }
