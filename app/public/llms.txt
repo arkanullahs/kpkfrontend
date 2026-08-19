@@ -4,7 +4,7 @@
 > guides for every budget, ranked from live Bangladesh shop data:
 > real in-stock status across 8+ BD shops, prices confirmed against
 > trusted sellers, rankings from review + spec evidence. Rebuilt
-> nightly; last data check 2026-08-18. Ranking is never for sale.
+> nightly; last data check 2026-08-19. Ranking is never for sale.
 
 ## Best-phone guides (updated August 2026)
 
@@ -18,16 +18,16 @@
 - [Best phones under ৳40,000](https://bhalophone.com/best/phone-under-40000): ranked list, live BD prices. Current #1: Motorola Edge 60 Pro.
 - [Best phones under ৳50,000](https://bhalophone.com/best/phone-under-50000): ranked list, live BD prices. Current #1: Honor 400.
 - [Best phones under ৳60,000](https://bhalophone.com/best/phone-under-60000): ranked list, live BD prices. Current #1: OnePlus Nord 6.
-- [Best phones under ৳80,000](https://bhalophone.com/best/phone-under-80000): ranked list, live BD prices. Current #1: Samsung Galaxy S26.
+- [Best phones under ৳80,000](https://bhalophone.com/best/phone-under-80000): ranked list, live BD prices. Current #1: Honor 600 Pro.
 - [Best phones under ৳1,00,000](https://bhalophone.com/best/phone-under-100000): ranked list, live BD prices. Current #1: Honor Magic 7 Pro.
-- [Best phones under ৳1,20,000](https://bhalophone.com/best/phone-under-120000): ranked list, live BD prices. Current #1: OPPO Find X9 Pro.
+- [Best phones under ৳1,20,000](https://bhalophone.com/best/phone-under-120000): ranked list, live BD prices. Current #1: Vivo X300 Pro.
 - [Best phones under ৳1,50,000](https://bhalophone.com/best/phone-under-150000): ranked list, live BD prices. Current #1: OPPO Find X9 Pro.
-- [Best phones under ৳2,00,000](https://bhalophone.com/best/phone-under-200000): ranked list, live BD prices. Current #1: Apple iPhone 17 Pro Max.
+- [Best phones under ৳2,00,000](https://bhalophone.com/best/phone-under-200000): ranked list, live BD prices. Current #1: OPPO Find X9 Ultra.
 - [Best camera phones under ৳10,000](https://bhalophone.com/best/camera-phone-under-10000): ranked list, live BD prices. Current #1: Nubia A35e.
 - [Best camera phones under ৳12,000](https://bhalophone.com/best/camera-phone-under-12000): ranked list, live BD prices. Current #1: Samsung Galaxy F07.
 - [Best camera phones under ৳15,000](https://bhalophone.com/best/camera-phone-under-15000): ranked list, live BD prices. Current #1: Samsung Galaxy F07.
 - [Best camera phones under ৳20,000](https://bhalophone.com/best/camera-phone-under-20000): ranked list, live BD prices. Current #1: Samsung Galaxy M06 5G.
-- [Best camera phones under ৳25,000](https://bhalophone.com/best/camera-phone-under-25000): ranked list, live BD prices. Current #1: Redmi Note 15 5G.
+- [Best camera phones under ৳25,000](https://bhalophone.com/best/camera-phone-under-25000): ranked list, live BD prices. Current #1: Redmi Note 15 4G.
 - [Best camera phones under ৳30,000](https://bhalophone.com/best/camera-phone-under-30000): ranked list, live BD prices. Current #1: Redmi Note 15 Pro 5G.
 - [Best camera phones under ৳35,000](https://bhalophone.com/best/camera-phone-under-35000): ranked list, live BD prices. Current #1: Vivo V60 Lite 4G.
 - [Best camera phones under ৳40,000](https://bhalophone.com/best/camera-phone-under-40000): ranked list, live BD prices. Current #1: Motorola Edge 60 Pro.
@@ -48,13 +48,13 @@
 - [Best gaming phones under ৳40,000](https://bhalophone.com/best/gaming-phone-under-40000): ranked list, live BD prices. Current #1: Redmi Turbo 4.
 - [Best gaming phones under ৳50,000](https://bhalophone.com/best/gaming-phone-under-50000): ranked list, live BD prices. Current #1: iQOO Z10 Turbo Plus.
 - [Best gaming phones under ৳60,000](https://bhalophone.com/best/gaming-phone-under-60000): ranked list, live BD prices. Current #1: iQOO Z11 Turbo.
-- [Best gaming phones under ৳80,000](https://bhalophone.com/best/gaming-phone-under-80000): ranked list, live BD prices. Current #1: Honor 600 Pro.
-- [Best gaming phones under ৳1,00,000](https://bhalophone.com/best/gaming-phone-under-100000): ranked list, live BD prices. Current #1: Apple iPhone 17.
+- [Best gaming phones under ৳80,000](https://bhalophone.com/best/gaming-phone-under-80000): ranked list, live BD prices. Current #1: OnePlus 15T.
+- [Best gaming phones under ৳1,00,000](https://bhalophone.com/best/gaming-phone-under-100000): ranked list, live BD prices. Current #1: OnePlus 15T.
 - [Best gaming phones under ৳1,20,000](https://bhalophone.com/best/gaming-phone-under-120000): ranked list, live BD prices. Current #1: Samsung Galaxy S26 Plus.
 - [Best gaming phones under ৳1,50,000](https://bhalophone.com/best/gaming-phone-under-150000): ranked list, live BD prices. Current #1: Vivo X300 Ultra.
 - [Best gaming phones under ৳2,00,000](https://bhalophone.com/best/gaming-phone-under-200000): ranked list, live BD prices. Current #1: Samsung Galaxy Z Fold 8.
 - [Best battery phones under ৳10,000](https://bhalophone.com/best/battery-phone-under-10000): ranked list, live BD prices. Current #1: Nubia A35e.
-- [Best battery phones under ৳12,000](https://bhalophone.com/best/battery-phone-under-12000): ranked list, live BD prices. Current #1: itel A200 Plus.
+- [Best battery phones under ৳12,000](https://bhalophone.com/best/battery-phone-under-12000): ranked list, live BD prices. Current #1: Nubia A35e.
 - [Best battery phones under ৳15,000](https://bhalophone.com/best/battery-phone-under-15000): ranked list, live BD prices. Current #1: Samsung Galaxy A07 4G.
 - [Best battery phones under ৳20,000](https://bhalophone.com/best/battery-phone-under-20000): ranked list, live BD prices. Current #1: OPPO A6k.
 - [Best battery phones under ৳25,000](https://bhalophone.com/best/battery-phone-under-25000): ranked list, live BD prices. Current #1: iQOO Z10x.
@@ -63,8 +63,8 @@
 - [Best battery phones under ৳40,000](https://bhalophone.com/best/battery-phone-under-40000): ranked list, live BD prices. Current #1: OPPO K13 Turbo.
 - [Best battery phones under ৳50,000](https://bhalophone.com/best/battery-phone-under-50000): ranked list, live BD prices. Current #1: iQOO Z10 Turbo Plus.
 - [Best battery phones under ৳60,000](https://bhalophone.com/best/battery-phone-under-60000): ranked list, live BD prices. Current #1: iQOO Z10 Turbo Plus.
-- [Best battery phones under ৳80,000](https://bhalophone.com/best/battery-phone-under-80000): ranked list, live BD prices. Current #1: Realme GT 7T.
-- [Best battery phones under ৳1,00,000](https://bhalophone.com/best/battery-phone-under-100000): ranked list, live BD prices. Current #1: Honor 600 Pro.
+- [Best battery phones under ৳80,000](https://bhalophone.com/best/battery-phone-under-80000): ranked list, live BD prices. Current #1: Honor 600 Pro.
+- [Best battery phones under ৳1,00,000](https://bhalophone.com/best/battery-phone-under-100000): ranked list, live BD prices. Current #1: Motorola Edge 70 Max.
 - [Best battery phones under ৳1,20,000](https://bhalophone.com/best/battery-phone-under-120000): ranked list, live BD prices. Current #1: Honor Magic 8 Pro.
 - [Best battery phones under ৳1,50,000](https://bhalophone.com/best/battery-phone-under-150000): ranked list, live BD prices. Current #1: OPPO Find X9 Pro.
 - [Best battery phones under ৳2,00,000](https://bhalophone.com/best/battery-phone-under-200000): ranked list, live BD prices. Current #1: OPPO Find X9 Ultra.
@@ -77,7 +77,7 @@
 - [Best 5G phones under ৳50,000](https://bhalophone.com/best/5g-phone-under-50000): ranked list, live BD prices. Current #1: Motorola Edge 70 Pro.
 - [Best 5G phones under ৳60,000](https://bhalophone.com/best/5g-phone-under-60000): ranked list, live BD prices. Current #1: OnePlus Nord 6.
 - [Best 5G phones under ৳80,000](https://bhalophone.com/best/5g-phone-under-80000): ranked list, live BD prices. Current #1: Samsung Galaxy S26.
-- [Best 5G phones under ৳1,00,000](https://bhalophone.com/best/5g-phone-under-100000): ranked list, live BD prices. Current #1: Honor Magic 7 Pro.
+- [Best 5G phones under ৳1,00,000](https://bhalophone.com/best/5g-phone-under-100000): ranked list, live BD prices. Current #1: Samsung Galaxy S25 Edge.
 - [Best 5G phones under ৳1,20,000](https://bhalophone.com/best/5g-phone-under-120000): ranked list, live BD prices. Current #1: Vivo X300 Pro.
 - [Best 5G phones under ৳1,50,000](https://bhalophone.com/best/5g-phone-under-150000): ranked list, live BD prices. Current #1: OPPO Find X9 Pro.
 - [Best 5G phones under ৳2,00,000](https://bhalophone.com/best/5g-phone-under-200000): ranked list, live BD prices. Current #1: OPPO Find X9 Ultra.
