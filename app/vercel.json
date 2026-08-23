@@ -104,6 +104,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/oneplus-nord-ce4-lite-5g",
+      "destination": "/brand/oneplus",
+      "permanent": true
+    },
+    {
       "source": "/phone/oneplus-nord-ce5",
       "destination": "/brand/oneplus",
       "permanent": true
@@ -309,11 +314,6 @@
       "permanent": true
     },
     {
-      "source": "/vs/honor-x6d-5g-vs-samsung-galaxy-a16-4g",
-      "destination": "/phone/samsung-galaxy-a16-4g",
-      "permanent": true
-    },
-    {
       "source": "/vs/honor-x9d-5g-vs-realme-narzo-90x",
       "destination": "/phone/realme-narzo-90x",
       "permanent": true
@@ -391,11 +391,6 @@
     {
       "source": "/vs/realme-p4x-vs-redmi-note-15",
       "destination": "/phone/realme-p4x",
-      "permanent": true
-    },
-    {
-      "source": "/vs/redmi-note-14-4g-vs-samsung-galaxy-a16-4g",
-      "destination": "/phone/redmi-note-14-4g",
       "permanent": true
     },
     {
