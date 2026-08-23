@@ -5,23 +5,393 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
       ]
     },
     {
       "source": "/img/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/best/battery-phone-under-8000",
+      "destination": "/best",
+      "permanent": true
+    },
+    {
+      "source": "/best/camera-phone-under-8000",
+      "destination": "/best",
+      "permanent": true
+    },
+    {
+      "source": "/best/gaming-phone-under-8000",
+      "destination": "/best",
+      "permanent": true
+    },
+    {
+      "source": "/phone/hmd-110",
+      "destination": "/brand/hmd",
+      "permanent": true
+    },
+    {
+      "source": "/phone/honor-magic5-pro",
+      "destination": "/brand/honor",
+      "permanent": true
+    },
+    {
+      "source": "/phone/honor-magic6",
+      "destination": "/brand/honor",
+      "permanent": true
+    },
+    {
+      "source": "/phone/honor-magic6-pro",
+      "destination": "/brand/honor",
+      "permanent": true
+    },
+    {
+      "source": "/phone/honor-magic8-pro-5g",
+      "destination": "/brand/honor",
+      "permanent": true
+    },
+    {
+      "source": "/phone/iqoo-neo10-pro-plus",
+      "destination": "/brand/iqoo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/iqoo-neo11",
+      "destination": "/brand/iqoo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/iqoo-z9-turbo-endurance-5g",
+      "destination": "/brand/iqoo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/motorola-g-stylus-5g-2026",
+      "destination": "/brand/motorola",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oneplus-nord-ce5",
+      "destination": "/brand/oneplus",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-a58",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-a6",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-f33-pro-5g",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-find-n5-5g",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-reno-16-5g",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-12x-5g",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-13-pro-plus-5g",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-14-pro-lite-5g",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-gt-neo-6-se-5g",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-gt7",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-gt7-pro-racing",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-neo-7-5g",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-neo-7x-5g",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-p3-pro-5g",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-p4-lite",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-v60-pro-5g",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-galaxy-a26-4g",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-galaxy-f16-5g",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-galaxy-s23-5g",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-galaxy-z-flip-6-5g",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-galaxy-z-flip-7fe",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-galaxy-z-fold4",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-z-flip6",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-z-fold5",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-z-fold6",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
+      "source": "/phone/tecno-spark-50",
+      "destination": "/brand/tecno",
+      "permanent": true
+    },
+    {
+      "source": "/phone/vivo-t3-pro-5g",
+      "destination": "/brand/vivo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/vivo-v40-pro-5g",
+      "destination": "/brand/vivo",
+      "permanent": true
+    },
+    {
+      "source": "/vs/apple-iphone-16-plus-vs-samsung-galaxy-s25-ultra-5g",
+      "destination": "/phone/apple-iphone-16-plus",
+      "permanent": true
+    },
+    {
+      "source": "/vs/apple-iphone-16-pro-vs-apple-iphone-17",
+      "destination": "/phone/apple-iphone-16-pro",
+      "permanent": true
+    },
+    {
+      "source": "/vs/apple-iphone-16-pro-vs-google-pixel-9-pro-xl",
+      "destination": "/phone/apple-iphone-16-pro",
+      "permanent": true
+    },
+    {
+      "source": "/vs/google-pixel-8-pro-vs-samsung-galaxy-s25-fe-5g",
+      "destination": "/phone/google-pixel-8-pro",
+      "permanent": true
+    },
+    {
+      "source": "/vs/google-pixel-9-pro-xl-vs-xiaomi-15t-pro",
+      "destination": "/phone/google-pixel-9-pro-xl",
+      "permanent": true
+    },
+    {
+      "source": "/vs/honor-400-lite-vs-realme-c85",
+      "destination": "/phone/honor-400-lite",
+      "permanent": true
+    },
+    {
+      "source": "/vs/honor-400-pro-5g-vs-motorola-edge-60-pro",
+      "destination": "/phone/motorola-edge-60-pro",
+      "permanent": true
+    },
+    {
+      "source": "/vs/honor-400-pro-5g-vs-oneplus-15r",
+      "destination": "/phone/oneplus-15r",
+      "permanent": true
+    },
+    {
+      "source": "/vs/honor-600-lite-vs-poco-x8-pro",
+      "destination": "/phone/honor-600-lite",
+      "permanent": true
+    },
+    {
+      "source": "/vs/honor-x6d-5g-vs-samsung-galaxy-a16-4g",
+      "destination": "/phone/samsung-galaxy-a16-4g",
+      "permanent": true
+    },
+    {
+      "source": "/vs/honor-x9d-5g-vs-realme-narzo-90x",
+      "destination": "/phone/realme-narzo-90x",
+      "permanent": true
+    },
+    {
+      "source": "/vs/infinix-gt-30-vs-realme-p4x",
+      "destination": "/phone/infinix-gt-30",
+      "permanent": true
+    },
+    {
+      "source": "/vs/infinix-gt-30-vs-redmi-note-15",
+      "destination": "/phone/infinix-gt-30",
+      "permanent": true
+    },
+    {
+      "source": "/vs/itel-a100c-vs-realme-note-60x",
+      "destination": "/phone/itel-a100c",
+      "permanent": true
+    },
+    {
+      "source": "/vs/itel-a100c-vs-redmi-a7",
+      "destination": "/phone/itel-a100c",
+      "permanent": true
+    },
+    {
+      "source": "/vs/itel-a100c-vs-symphony-atom-5",
+      "destination": "/phone/itel-a100c",
+      "permanent": true
+    },
+    {
+      "source": "/vs/motorola-edge-60-pro-vs-poco-x7-pro-5g",
+      "destination": "/phone/motorola-edge-60-pro",
+      "permanent": true
+    },
+    {
+      "source": "/vs/motorola-edge-60-pro-vs-poco-x8-pro",
+      "destination": "/phone/motorola-edge-60-pro",
+      "permanent": true
+    },
+    {
+      "source": "/vs/motorola-edge-60-stylus-vs-samsung-galaxy-m36-5g",
+      "destination": "/phone/motorola-edge-60-stylus",
+      "permanent": true
+    },
+    {
+      "source": "/vs/motorola-edge-70-vs-poco-x8-pro",
+      "destination": "/phone/motorola-edge-70",
+      "permanent": true
+    },
+    {
+      "source": "/vs/oneplus-nord-6-vs-poco-f7",
+      "destination": "/phone/oneplus-nord-6",
+      "permanent": true
+    },
+    {
+      "source": "/vs/oppo-k14-vs-samsung-galaxy-m36-5g",
+      "destination": "/phone/oppo-k14",
+      "permanent": true
+    },
+    {
+      "source": "/vs/oppo-reno-15c-5g-vs-vivo-v60-lite-5g",
+      "destination": "/phone/vivo-v60-lite-5g",
+      "permanent": true
+    },
+    {
+      "source": "/vs/poco-x8-pro-vs-samsung-galaxy-a57-5g",
+      "destination": "/phone/poco-x8-pro",
+      "permanent": true
+    },
+    {
+      "source": "/vs/realme-c85-vs-samsung-galaxy-m36-5g",
+      "destination": "/phone/realme-c85",
+      "permanent": true
+    },
+    {
+      "source": "/vs/realme-p4x-vs-redmi-note-15",
+      "destination": "/phone/realme-p4x",
+      "permanent": true
+    },
+    {
+      "source": "/vs/redmi-note-14-4g-vs-samsung-galaxy-a16-4g",
+      "destination": "/phone/redmi-note-14-4g",
+      "permanent": true
+    },
+    {
+      "source": "/vs/samsung-galaxy-a07-vs-samsung-galaxy-m06-5g",
+      "destination": "/phone/samsung-galaxy-m06-5g",
+      "permanent": true
+    },
+    {
+      "source": "/vs/samsung-galaxy-s25-ultra-5g-vs-xiaomi-15t-pro",
+      "destination": "/phone/xiaomi-15t-pro",
+      "permanent": true
     }
   ]
 }
