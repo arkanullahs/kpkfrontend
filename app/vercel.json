@@ -204,6 +204,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/samsung-galaxy-s26-dual",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
       "source": "/phone/samsung-galaxy-z-flip-6-5g",
       "destination": "/brand/samsung",
       "permanent": true
@@ -249,6 +254,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/vivo-yo4",
+      "destination": "/brand/vivo",
+      "permanent": true
+    },
+    {
       "source": "/vs/apple-iphone-16-plus-vs-samsung-galaxy-s25-ultra-5g",
       "destination": "/phone/apple-iphone-16-plus",
       "permanent": true
@@ -286,6 +296,11 @@
     {
       "source": "/vs/honor-400-pro-5g-vs-oneplus-15r",
       "destination": "/phone/oneplus-15r",
+      "permanent": true
+    },
+    {
+      "source": "/vs/honor-400-pro-5g-vs-oneplus-nord-6",
+      "destination": "/phone/oneplus-nord-6",
       "permanent": true
     },
     {
