@@ -299,11 +299,6 @@
       "permanent": true
     },
     {
-      "source": "/vs/honor-400-pro-5g-vs-oneplus-nord-6",
-      "destination": "/phone/oneplus-nord-6",
-      "permanent": true
-    },
-    {
       "source": "/vs/honor-600-lite-vs-poco-x8-pro",
       "destination": "/phone/honor-600-lite",
       "permanent": true
