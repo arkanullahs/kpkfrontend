@@ -289,11 +289,6 @@
       "permanent": true
     },
     {
-      "source": "/vs/honor-400-lite-vs-realme-c85",
-      "destination": "/phone/honor-400-lite",
-      "permanent": true
-    },
-    {
       "source": "/vs/honor-400-pro-5g-vs-motorola-edge-60-pro",
       "destination": "/phone/motorola-edge-60-pro",
       "permanent": true
@@ -344,6 +339,11 @@
       "permanent": true
     },
     {
+      "source": "/vs/motorola-edge-60-pro-vs-nothing-phone-3a-lite",
+      "destination": "/phone/motorola-edge-60-pro",
+      "permanent": true
+    },
+    {
       "source": "/vs/motorola-edge-60-pro-vs-poco-x7-pro-5g",
       "destination": "/phone/motorola-edge-60-pro",
       "permanent": true
@@ -364,6 +364,11 @@
       "permanent": true
     },
     {
+      "source": "/vs/nothing-phone-3a-lite-vs-samsung-galaxy-m36-5g",
+      "destination": "/phone/nothing-phone-3a-lite",
+      "permanent": true
+    },
+    {
       "source": "/vs/oneplus-nord-6-vs-poco-f7",
       "destination": "/phone/oneplus-nord-6",
       "permanent": true
@@ -381,11 +386,6 @@
     {
       "source": "/vs/poco-x8-pro-vs-samsung-galaxy-a57-5g",
       "destination": "/phone/poco-x8-pro",
-      "permanent": true
-    },
-    {
-      "source": "/vs/realme-c85-vs-samsung-galaxy-m36-5g",
-      "destination": "/phone/realme-c85",
       "permanent": true
     },
     {
