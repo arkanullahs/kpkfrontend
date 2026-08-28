@@ -4,7 +4,7 @@
 > guides for every budget, ranked from live Bangladesh shop data:
 > real in-stock status across 8+ BD shops, prices confirmed against
 > trusted sellers, rankings from review + spec evidence. Rebuilt
-> nightly; last data check 2026-08-27. Ranking is never for sale.
+> nightly; last data check 2026-08-28. Ranking is never for sale.
 
 ## Best-phone guides (updated August 2026)
 
@@ -91,7 +91,6 @@
 - [Apple iPhone 17 vs Xiaomi 15T Pro](https://bhalophone.com/vs/apple-iphone-17-vs-xiaomi-15t-pro): head-to-head AI verdict, live BD prices for both phones.
 - [Apple iPhone 17e vs Samsung Galaxy S25 Edge](https://bhalophone.com/vs/apple-iphone-17e-vs-samsung-galaxy-s25-edge): head-to-head AI verdict, live BD prices for both phones.
 - [Honor 400 Lite vs Realme C85](https://bhalophone.com/vs/honor-400-lite-vs-realme-c85): head-to-head AI verdict, live BD prices for both phones.
-- [Honor 400 Pro vs Motorola Edge 60 Pro](https://bhalophone.com/vs/honor-400-pro-5g-vs-motorola-edge-60-pro): head-to-head AI verdict, live BD prices for both phones.
 - [Honor 400 Pro vs OnePlus Nord 6](https://bhalophone.com/vs/honor-400-pro-5g-vs-oneplus-nord-6): head-to-head AI verdict, live BD prices for both phones.
 - [Honor 600 Lite vs OnePlus Nord 6](https://bhalophone.com/vs/honor-600-lite-vs-oneplus-nord-6): head-to-head AI verdict, live BD prices for both phones.
 - [Honor 600 Lite vs Tecno Camon 50](https://bhalophone.com/vs/honor-600-lite-vs-tecno-camon-50): head-to-head AI verdict, live BD prices for both phones.
@@ -114,7 +113,7 @@
 
 ## Individual phones
 
-- [All 703 phones we track](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with live BD price, which shops stock it, full specs and owner ratings.
+- [All 704 phones we track](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with live BD price, which shops stock it, full specs and owner ratings.
 
 
 ## Tools

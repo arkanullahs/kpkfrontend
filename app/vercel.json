@@ -289,6 +289,11 @@
       "permanent": true
     },
     {
+      "source": "/vs/honor-400-pro-5g-vs-motorola-edge-60-pro",
+      "destination": "/phone/motorola-edge-60-pro",
+      "permanent": true
+    },
+    {
       "source": "/vs/honor-400-pro-5g-vs-oneplus-15r",
       "destination": "/phone/oneplus-15r",
       "permanent": true
