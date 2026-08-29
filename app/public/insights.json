@@ -13,7 +13,8 @@
  "stories": [
   {
    "slug": "shops",
-   "headline": "==Salextra charges 9.7% more== than the cheapest shop for the exact same phone",
+   "kicker": "SHOP WATCH",
+   "headline": "The same phone costs ==9.7% more== at Salextra than at the cheapest shop",
    "standfirst": "150 head-to-head comparisons: same model, same storage, same channel, in stock at three or more shops on the same night.",
    "source": "bhalophone.com · nightly since 2026-06-11",
    "panel": {
@@ -147,7 +148,8 @@
   },
   {
    "slug": "depreciation",
-   "headline": "The OnePlus 13 has lost ==27% of its price== in 56 days",
+   "kicker": "THE COST OF BUYING EARLY",
+   "headline": "Waiting 56 days on the OnePlus 13 saved you ==৳27,900==",
    "standfirst": "৳103,899 when we first saw it, ৳75,999 today — official price, tracked every night since 2026-07-04.",
    "source": "bhalophone.com · 87 more phones falling this fast",
    "panel": {
@@ -224,7 +226,8 @@
   },
   {
    "slug": "warranty",
-   "headline": "The official Samsung Galaxy Z Fold 5 costs ==৳162,000 more== than the identical unofficial box",
+   "kicker": "WHAT THE WARRANTY COSTS",
+   "headline": "Samsung's warranty on the Galaxy Z Fold 5 costs ==৳162,000==",
    "standfirst": "Same 12GB/256GB variant, both in stock today. Official ৳285,999, unofficial ৳123,999.",
    "source": "bhalophone.com · 65 phones priced on both channels",
    "panel": {
@@ -296,7 +299,8 @@
   },
   {
    "slug": "drops",
-   "headline": "The Google Pixel 10 Pro Fold just dropped ==৳83,991== in Bangladesh",
+   "kicker": "PRICE DROP",
+   "headline": "The Google Pixel 10 Pro Fold lost ==৳83,991== in 30 nights",
    "standfirst": "৳229,990 to ৳145,999 in 30 days — unofficial price, in stock at 4 shops.",
    "source": "bhalophone.com · nightly since 2026-06-11",
    "panel": {
@@ -377,7 +381,8 @@
   },
   {
    "slug": "gap",
-   "headline": "Same Apple iPhone 17 Pro Max. Two shops. ==৳58,000 apart.==",
+   "kicker": "SHOP GAP",
+   "headline": "Same Apple iPhone 17 Pro Max, same storage, ==৳58,000== between two Dhaka shops",
    "standfirst": "512GB, official, both in stock today: ৳231,999 at Pickaboo, ৳289,999 at SumashTech.",
    "source": "bhalophone.com · 4 shops carry this exact box",
    "panel": {
@@ -465,7 +470,8 @@
   },
   {
    "slug": "new",
-   "headline": "==64 phones== got their first Bangladesh price this month",
+   "kicker": "NEW IN BANGLADESH",
+   "headline": "==26 phones== got their first Bangladesh price this month",
    "standfirst": "First seen, not first released — the night a shop here started quoting them.",
    "source": "bhalophone.com · nightly since 2026-06-11",
    "panel": {
@@ -482,13 +488,13 @@
       "note": "5 shops"
      },
      {
-      "label": "OPPO Reno 16",
-      "value": "৳61,999",
+      "label": "Redmi 17",
+      "value": "৳22,899",
       "note": "5 shops"
      },
      {
-      "label": "Redmi 17",
-      "value": "৳22,899",
+      "label": "Vivo Y05e",
+      "value": "৳16,599",
       "note": "5 shops"
      }
     ]
@@ -511,33 +517,33 @@
      "first_seen": "2026-08-07"
     },
     {
-     "id": "OPPO|reno 16",
-     "name": "OPPO Reno 16",
-     "brand": "OPPO",
-     "price": 61999,
-     "shops": 5,
-     "first_seen": "2026-08-01"
-    },
-    {
      "id": "Redmi|17 4g",
      "name": "Redmi 17",
      "brand": "Redmi",
      "price": 22899,
      "shops": 5,
      "first_seen": "2026-08-04"
+    },
+    {
+     "id": "Vivo|y05e",
+     "name": "Vivo Y05e",
+     "brand": "Vivo",
+     "price": 16599,
+     "shops": 5,
+     "first_seen": "2026-08-07"
     }
    ],
    "bullets": [
     "Realme C100x — from ৳21,899, 7 shops, first seen 2026-08-03",
     "Samsung Galaxy Z Fold8 Ultra — from ৳199,999, 5 shops, first seen 2026-08-07",
-    "OPPO Reno 16 — from ৳61,999, 5 shops, first seen 2026-08-01",
-    "Redmi 17 — from ৳22,899, 5 shops, first seen 2026-08-04"
+    "Redmi 17 — from ৳22,899, 5 shops, first seen 2026-08-04",
+    "Vivo Y05e — from ৳16,599, 5 shops, first seen 2026-08-07"
    ],
    "ids": [
     "Realme|c100x",
     "Samsung|fold 8 ultra",
-    "OPPO|reno 16",
-    "Redmi|17 4g"
+    "Redmi|17 4g",
+    "Vivo|y05e"
    ]
   }
  ]
