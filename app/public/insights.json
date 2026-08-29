@@ -1,7 +1,7 @@
 {
  "generated": "2026-08-29",
  "source": "https://bhalophone.com",
- "method": "Every figure is measured like-for-like from nightly price snapshots of Bangladesh phone shops: official against official, import against import, one storage variant against the same variant, and a shop price gap only across three or more distinct shops.",
+ "method": "Every figure is measured like-for-like from nightly price snapshots of Bangladesh phone shops: official against official, import against import, one storage variant against the same variant, and a shop price comparison only across three or more distinct shops.",
  "coverage": {
   "tracked": 2366,
   "snapshots": 48,
@@ -10,11 +10,304 @@
   "in_stock": 474,
   "listed": 502
  },
- "packs": [
+ "stories": [
+  {
+   "slug": "shops",
+   "headline": "==Salextra charges 9.7% more== than the cheapest shop for the exact same phone",
+   "standfirst": "150 head-to-head comparisons: same model, same storage, same channel, in stock at three or more shops on the same night.",
+   "source": "bhalophone.com · nightly since 2026-06-11",
+   "panel": {
+    "kind": "bars",
+    "unit": "% over the cheapest shop",
+    "bars": [
+     {
+      "label": "GaziElectronics",
+      "value": 0.6,
+      "note": "31 comparisons"
+     },
+     {
+      "label": "RioInternational",
+      "value": 1.8,
+      "note": "88 comparisons"
+     },
+     {
+      "label": "Dazzle",
+      "value": 2.1,
+      "note": "27 comparisons"
+     },
+     {
+      "label": "SMSGadget",
+      "value": 2.9,
+      "note": "81 comparisons"
+     },
+     {
+      "label": "AppleGadgets",
+      "value": 5.0,
+      "note": "72 comparisons"
+     },
+     {
+      "label": "SumashTech",
+      "value": 6.7,
+      "note": "127 comparisons"
+     },
+     {
+      "label": "GadgetAndGear",
+      "value": 8.2,
+      "note": "90 comparisons"
+     },
+     {
+      "label": "Pickaboo",
+      "value": 9.2,
+      "note": "83 comparisons"
+     },
+     {
+      "label": "Salextra",
+      "value": 9.7,
+      "note": "30 comparisons"
+     }
+    ]
+   },
+   "items": [
+    {
+     "shop": "GaziElectronics",
+     "seen": 31,
+     "premium": 0.6,
+     "cheapest_pct": 77,
+     "dearest_pct": 10
+    },
+    {
+     "shop": "RioInternational",
+     "seen": 88,
+     "premium": 1.8,
+     "cheapest_pct": 53,
+     "dearest_pct": 3
+    },
+    {
+     "shop": "Dazzle",
+     "seen": 27,
+     "premium": 2.1,
+     "cheapest_pct": 37,
+     "dearest_pct": 4
+    },
+    {
+     "shop": "SMSGadget",
+     "seen": 81,
+     "premium": 2.9,
+     "cheapest_pct": 38,
+     "dearest_pct": 16
+    },
+    {
+     "shop": "AppleGadgets",
+     "seen": 72,
+     "premium": 5.0,
+     "cheapest_pct": 17,
+     "dearest_pct": 7
+    },
+    {
+     "shop": "SumashTech",
+     "seen": 127,
+     "premium": 6.7,
+     "cheapest_pct": 9,
+     "dearest_pct": 67
+    },
+    {
+     "shop": "GadgetAndGear",
+     "seen": 90,
+     "premium": 8.2,
+     "cheapest_pct": 9,
+     "dearest_pct": 7
+    },
+    {
+     "shop": "Pickaboo",
+     "seen": 83,
+     "premium": 9.2,
+     "cheapest_pct": 7,
+     "dearest_pct": 33
+    },
+    {
+     "shop": "Salextra",
+     "seen": 30,
+     "premium": 9.7,
+     "cheapest_pct": 0,
+     "dearest_pct": 20
+    }
+   ],
+   "bullets": [
+    "GaziElectronics — +0.6% over the cheapest, across 31 comparisons",
+    "RioInternational — +1.8% over the cheapest, across 88 comparisons",
+    "Dazzle — +2.1% over the cheapest, across 27 comparisons",
+    "SMSGadget — +2.9% over the cheapest, across 81 comparisons",
+    "AppleGadgets — +5.0% over the cheapest, across 72 comparisons",
+    "SumashTech — +6.7% over the cheapest, across 127 comparisons",
+    "GadgetAndGear — +8.2% over the cheapest, across 90 comparisons",
+    "Pickaboo — +9.2% over the cheapest, across 83 comparisons",
+    "Salextra — +9.7% over the cheapest, across 30 comparisons"
+   ],
+   "ids": []
+  },
+  {
+   "slug": "depreciation",
+   "headline": "The OnePlus 13 has lost ==27% of its price== in 56 days",
+   "standfirst": "৳103,899 when we first saw it, ৳75,999 today — official price, tracked every night since 2026-07-04.",
+   "source": "bhalophone.com · 87 more phones falling this fast",
+   "panel": {
+    "kind": "beforeafter",
+    "was": 103899,
+    "now": 75999,
+    "was_label": "2026-07-04",
+    "now_label": "today",
+    "badge": "OFFICIAL",
+    "delta": "−27%"
+   },
+   "items": [
+    {
+     "id": "OnePlus|13",
+     "name": "OnePlus 13",
+     "brand": "OnePlus",
+     "channel": "official",
+     "was": 103899,
+     "now": 75999,
+     "delta": -27900,
+     "pct": 27,
+     "since": "2026-07-04",
+     "days": 56
+    },
+    {
+     "id": "Apple|iphone 16 plus",
+     "name": "Apple iPhone 16 Plus",
+     "brand": "Apple",
+     "channel": "official",
+     "was": 184999,
+     "now": 135000,
+     "delta": -49999,
+     "pct": 27,
+     "since": "2026-06-11",
+     "days": 79
+    },
+    {
+     "id": "Samsung|s23 ultra",
+     "name": "Samsung Galaxy S23 Ultra",
+     "brand": "Samsung",
+     "channel": "official",
+     "was": 245999,
+     "now": 179999,
+     "delta": -66000,
+     "pct": 27,
+     "since": "2026-07-04",
+     "days": 56
+    },
+    {
+     "id": "Xiaomi|17",
+     "name": "Xiaomi 17",
+     "brand": "Xiaomi",
+     "channel": "unofficial",
+     "was": 99999,
+     "now": 78000,
+     "delta": -21999,
+     "pct": 22,
+     "since": "2026-07-04",
+     "days": 56
+    }
+   ],
+   "bullets": [
+    "OnePlus 13 — ৳103,899 to ৳75,999, −27% in 56 days (official)",
+    "Apple iPhone 16 Plus — ৳184,999 to ৳135,000, −27% in 79 days (official)",
+    "Samsung Galaxy S23 Ultra — ৳245,999 to ৳179,999, −27% in 56 days (official)",
+    "Xiaomi 17 — ৳99,999 to ৳78,000, −22% in 56 days (unofficial)"
+   ],
+   "ids": [
+    "OnePlus|13",
+    "Apple|iphone 16 plus",
+    "Samsung|s23 ultra",
+    "Xiaomi|17"
+   ]
+  },
+  {
+   "slug": "warranty",
+   "headline": "The official Samsung Galaxy Z Fold 5 costs ==৳162,000 more== than the identical unofficial box",
+   "standfirst": "Same 12GB/256GB variant, both in stock today. Official ৳285,999, unofficial ৳123,999.",
+   "source": "bhalophone.com · 65 phones priced on both channels",
+   "panel": {
+    "kind": "versus",
+    "left": {
+     "label": "OFFICIAL",
+     "value": "৳285,999"
+    },
+    "right": {
+     "label": "UNOFFICIAL",
+     "value": "৳123,999"
+    },
+    "delta": "+৳162,000"
+   },
+   "items": [
+    {
+     "id": "Samsung|fold 5",
+     "name": "Samsung Galaxy Z Fold 5",
+     "brand": "Samsung",
+     "variant": "12GB/256GB",
+     "official": 285999,
+     "unofficial": 123999,
+     "delta": 162000,
+     "pct": 57
+    },
+    {
+     "id": "Samsung|s25 ultra",
+     "name": "Samsung Galaxy S25 Ultra",
+     "brand": "Samsung",
+     "variant": "12GB/256GB",
+     "official": 224999,
+     "unofficial": 94490,
+     "delta": 130509,
+     "pct": 58
+    },
+    {
+     "id": "Samsung|flip 6",
+     "name": "Samsung Galaxy Z Flip 6",
+     "brand": "Samsung",
+     "variant": "12GB/256GB",
+     "official": 197999,
+     "unofficial": 84999,
+     "delta": 113000,
+     "pct": 57
+    },
+    {
+     "id": "Apple|iphone 17 pro max",
+     "name": "Apple iPhone 17 Pro Max",
+     "brand": "Apple",
+     "variant": "2TB",
+     "official": 341999,
+     "unofficial": 239999,
+     "delta": 102000,
+     "pct": 30
+    }
+   ],
+   "bullets": [
+    "Samsung Galaxy Z Fold 5 12GB/256GB — official ৳285,999 vs unofficial ৳123,999, ৳162,000 apart",
+    "Samsung Galaxy S25 Ultra 12GB/256GB — official ৳224,999 vs unofficial ৳94,490, ৳130,509 apart",
+    "Samsung Galaxy Z Flip 6 12GB/256GB — official ৳197,999 vs unofficial ৳84,999, ৳113,000 apart",
+    "Apple iPhone 17 Pro Max 2TB — official ৳341,999 vs unofficial ৳239,999, ৳102,000 apart"
+   ],
+   "ids": [
+    "Samsung|fold 5",
+    "Samsung|s25 ultra",
+    "Samsung|flip 6",
+    "Apple|iphone 17 pro max"
+   ]
+  },
   {
    "slug": "drops",
-   "title": "Biggest price drops this month",
-   "sub": "Same channel, same listing — measured, not estimated",
+   "headline": "The Google Pixel 10 Pro Fold just dropped ==৳83,991== in Bangladesh",
+   "standfirst": "৳229,990 to ৳145,999 in 30 days — unofficial price, in stock at 4 shops.",
+   "source": "bhalophone.com · nightly since 2026-06-11",
+   "panel": {
+    "kind": "beforeafter",
+    "was": 229990,
+    "now": 145999,
+    "was_label": "2026-07-30",
+    "now_label": "today",
+    "badge": "UNOFFICIAL",
+    "delta": "-36%"
+   },
    "items": [
     {
      "id": "Google|pixel 10 pro fold",
@@ -69,76 +362,36 @@
      "until": "2026-08-29"
     }
    ],
-   "note": "bhalophone.com · 2,366 phones, 48 nightly price checks since 2026-06-11",
-   "caption": "Price drops we recorded in the last 30 days.\n\nEvery line compares like with like — the official price against the official price, the import price against the import price. When a cheap import listing sells out and the headline falls through to the official one, that is not a price cut, and it is not in this list.",
    "bullets": [
-    "Google Pixel 10 Pro Fold — ৳229,990 to ৳145,999 (-36%, import price)",
+    "Google Pixel 10 Pro Fold — ৳229,990 to ৳145,999 (-36%, unofficial price)",
     "Samsung Galaxy S23 Ultra — ৳245,999 to ৳179,999 (-27%, official price)",
     "Apple iPhone 16 Plus — ৳184,999 to ৳135,000 (-27%, official price)",
     "Apple iPhone 16 Pro — ৳209,999 to ৳166,500 (-21%, official price)"
    ],
-   "image": "/og/post-drops.jpg"
+   "ids": [
+    "Google|pixel 10 pro fold",
+    "Samsung|s23 ultra",
+    "Apple|iphone 16 plus",
+    "Apple|iphone 16 pro"
+   ]
   },
   {
-   "slug": "warranty",
-   "title": "What the warranty actually costs",
-   "sub": "Official vs import, identical storage variant",
-   "items": [
-    {
-     "id": "Samsung|fold 5",
-     "name": "Samsung Galaxy Z Fold 5",
-     "brand": "Samsung",
-     "variant": "12GB/256GB",
-     "official": 285999,
-     "unofficial": 123999,
-     "delta": 162000,
-     "pct": 57
+   "slug": "gap",
+   "headline": "Same Apple iPhone 17 Pro Max. Two shops. ==৳58,000 apart.==",
+   "standfirst": "512GB, official, both in stock today: ৳231,999 at Pickaboo, ৳289,999 at SumashTech.",
+   "source": "bhalophone.com · 4 shops carry this exact box",
+   "panel": {
+    "kind": "versus",
+    "left": {
+     "label": "PICKABOO",
+     "value": "৳231,999"
     },
-    {
-     "id": "Samsung|s25 ultra",
-     "name": "Samsung Galaxy S25 Ultra",
-     "brand": "Samsung",
-     "variant": "12GB/256GB",
-     "official": 224999,
-     "unofficial": 94490,
-     "delta": 130509,
-     "pct": 58
+    "right": {
+     "label": "SUMASHTECH",
+     "value": "৳289,999"
     },
-    {
-     "id": "Samsung|flip 6",
-     "name": "Samsung Galaxy Z Flip 6",
-     "brand": "Samsung",
-     "variant": "12GB/256GB",
-     "official": 197999,
-     "unofficial": 84999,
-     "delta": 113000,
-     "pct": 57
-    },
-    {
-     "id": "Apple|iphone 17 pro max",
-     "name": "Apple iPhone 17 Pro Max",
-     "brand": "Apple",
-     "variant": "2TB",
-     "official": 341999,
-     "unofficial": 239999,
-     "delta": 102000,
-     "pct": 30
-    }
-   ],
-   "note": "bhalophone.com · 2,366 phones, 48 nightly price checks since 2026-06-11",
-   "caption": "Official and import prices for the SAME storage variant, in stock today.\n\nThis is the number the usual comparison gets wrong: quoting the cheapest official against the cheapest import usually compares 512GB against 256GB and doubles the gap. Every row here is one variant priced on both channels.",
-   "bullets": [
-    "Samsung Galaxy Z Fold 5 12GB/256GB — official ৳285,999 vs import ৳123,999, a ৳162,000 difference (57%)",
-    "Samsung Galaxy S25 Ultra 12GB/256GB — official ৳224,999 vs import ৳94,490, a ৳130,509 difference (58%)",
-    "Samsung Galaxy Z Flip 6 12GB/256GB — official ৳197,999 vs import ৳84,999, a ৳113,000 difference (57%)",
-    "Apple iPhone 17 Pro Max 2TB — official ৳341,999 vs import ৳239,999, a ৳102,000 difference (30%)"
-   ],
-   "image": "/og/post-warranty.jpg"
-  },
-  {
-   "slug": "shops",
-   "title": "Same phone. Different shop. Different price.",
-   "sub": "Cheapest vs dearest shop, same box, in stock today",
+    "delta": "৳58,000 apart"
+   },
    "items": [
     {
      "id": "Apple|iphone 17 pro max",
@@ -197,20 +450,49 @@
      "shops": 5
     }
    ],
-   "note": "bhalophone.com · 2,366 phones, 48 nightly price checks since 2026-06-11",
-   "caption": "The same phone, the same storage, the same channel, in stock at three or more shops today — and this is the gap between the cheapest and the dearest.\n\nNobody is being accused of anything: shops price differently and some bundle more. But the number is worth knowing before you walk in.",
    "bullets": [
-    "Apple iPhone 17 Pro Max 512GB — ৳231,999 at Pickaboo, ৳289,999 at SumashTech (৳58,000 apart, 4 shops)",
-    "Apple iPhone 17 Pro 256GB — ৳185,999 at Pickaboo, ৳229,999 at SumashTech (৳44,000 apart, 4 shops)",
-    "Apple iPhone 17 256GB — ৳147,999 at ExecutiveMachines, ৳179,999 at SumashTech (৳32,000 apart, 3 shops)",
-    "Samsung Galaxy S26 Ultra 12GB/512GB — ৳199,999 at SumashTech, ৳228,999 at ExcelStore (৳29,000 apart, 5 shops)"
+    "Apple iPhone 17 Pro Max 512GB — ৳231,999 at Pickaboo, ৳289,999 at SumashTech (৳58,000 apart)",
+    "Apple iPhone 17 Pro 256GB — ৳185,999 at Pickaboo, ৳229,999 at SumashTech (৳44,000 apart)",
+    "Apple iPhone 17 256GB — ৳147,999 at ExecutiveMachines, ৳179,999 at SumashTech (৳32,000 apart)",
+    "Samsung Galaxy S26 Ultra 12GB/512GB — ৳199,999 at SumashTech, ৳228,999 at ExcelStore (৳29,000 apart)"
    ],
-   "image": "/og/post-shops.jpg"
+   "ids": [
+    "Apple|iphone 17 pro max",
+    "Apple|iphone 17 pro",
+    "Apple|iphone 17",
+    "Samsung|s26 ultra"
+   ]
   },
   {
    "slug": "new",
-   "title": "New in Bangladesh this month",
-   "sub": "First month we saw a shop quote a price at all",
+   "headline": "==64 phones== got their first Bangladesh price this month",
+   "standfirst": "First seen, not first released — the night a shop here started quoting them.",
+   "source": "bhalophone.com · nightly since 2026-06-11",
+   "panel": {
+    "kind": "list",
+    "items": [
+     {
+      "label": "Realme C100x",
+      "value": "৳21,899",
+      "note": "7 shops"
+     },
+     {
+      "label": "Samsung Galaxy Z Fold8 Ultra",
+      "value": "৳199,999",
+      "note": "5 shops"
+     },
+     {
+      "label": "OPPO Reno 16",
+      "value": "৳61,999",
+      "note": "5 shops"
+     },
+     {
+      "label": "Redmi 17",
+      "value": "৳22,899",
+      "note": "5 shops"
+     }
+    ]
+   },
    "items": [
     {
      "id": "Realme|c100x",
@@ -245,15 +527,18 @@
      "first_seen": "2026-08-04"
     }
    ],
-   "note": "bhalophone.com · 2,366 phones, 48 nightly price checks since 2026-06-11",
-   "caption": "Phones that got their first Bangladesh price in the last 30 days.\n\nFirst SEEN, not first released — this is the day the local market started quoting it, which is the date that matters if you are buying here.",
    "bullets": [
-    "Realme C100x — from ৳21,899, 7 shops (first seen 2026-08-03)",
-    "Samsung Galaxy Z Fold8 Ultra — from ৳199,999, 5 shops (first seen 2026-08-07)",
-    "OPPO Reno 16 — from ৳61,999, 5 shops (first seen 2026-08-01)",
-    "Redmi 17 — from ৳22,899, 5 shops (first seen 2026-08-04)"
+    "Realme C100x — from ৳21,899, 7 shops, first seen 2026-08-03",
+    "Samsung Galaxy Z Fold8 Ultra — from ৳199,999, 5 shops, first seen 2026-08-07",
+    "OPPO Reno 16 — from ৳61,999, 5 shops, first seen 2026-08-01",
+    "Redmi 17 — from ৳22,899, 5 shops, first seen 2026-08-04"
    ],
-   "image": "/og/post-new.jpg"
+   "ids": [
+    "Realme|c100x",
+    "Samsung|fold 8 ultra",
+    "OPPO|reno 16",
+    "Redmi|17 4g"
+   ]
   }
  ]
 }
