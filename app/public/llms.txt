@@ -91,6 +91,7 @@
 - [Apple iPhone 17 vs Xiaomi 15T Pro](https://bhalophone.com/vs/apple-iphone-17-vs-xiaomi-15t-pro): head-to-head AI verdict, live BD prices for both phones.
 - [Apple iPhone 17e vs Samsung Galaxy S25 Edge](https://bhalophone.com/vs/apple-iphone-17e-vs-samsung-galaxy-s25-edge): head-to-head AI verdict, live BD prices for both phones.
 - [Honor 400 Lite vs Realme C85](https://bhalophone.com/vs/honor-400-lite-vs-realme-c85): head-to-head AI verdict, live BD prices for both phones.
+- [Honor 400 Pro vs Motorola Edge 60 Pro](https://bhalophone.com/vs/honor-400-pro-5g-vs-motorola-edge-60-pro): head-to-head AI verdict, live BD prices for both phones.
 - [Honor 400 Pro vs OnePlus Nord 6](https://bhalophone.com/vs/honor-400-pro-5g-vs-oneplus-nord-6): head-to-head AI verdict, live BD prices for both phones.
 - [Honor 600 Lite vs OnePlus Nord 6](https://bhalophone.com/vs/honor-600-lite-vs-oneplus-nord-6): head-to-head AI verdict, live BD prices for both phones.
 - [Honor 600 Lite vs Tecno Camon 50](https://bhalophone.com/vs/honor-600-lite-vs-tecno-camon-50): head-to-head AI verdict, live BD prices for both phones.
@@ -115,6 +116,10 @@
 
 - [All 706 phones we track](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with live BD price, which shops stock it, full specs and owner ratings.
 
+
+## Market data
+
+- [Bangladesh phone market facts](https://bhalophone.com/insights.json): JSON, rebuilt nightly. Biggest 30-day price drops, the official-vs-import premium on the same storage variant, the price gap between the cheapest and dearest shop for the same handset, and phones newly priced in Bangladesh. Measured from nightly snapshots, like for like; the method is stated in the file.
 
 ## Tools
 

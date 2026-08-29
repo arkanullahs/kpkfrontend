@@ -1,0 +1,259 @@
+{
+ "generated": "2026-08-29",
+ "source": "https://bhalophone.com",
+ "method": "Every figure is measured like-for-like from nightly price snapshots of Bangladesh phone shops: official against official, import against import, one storage variant against the same variant, and a shop price gap only across three or more distinct shops.",
+ "coverage": {
+  "tracked": 2366,
+  "snapshots": 48,
+  "since": "2026-06-11",
+  "until": "2026-08-29",
+  "in_stock": 474,
+  "listed": 502
+ },
+ "packs": [
+  {
+   "slug": "drops",
+   "title": "Biggest price drops this month",
+   "sub": "Same channel, same listing — measured, not estimated",
+   "items": [
+    {
+     "id": "Google|pixel 10 pro fold",
+     "name": "Google Pixel 10 Pro Fold",
+     "brand": "Google",
+     "channel": "unofficial",
+     "was": 229990,
+     "now": 145999,
+     "delta": -83991,
+     "pct": -36.5,
+     "shops": 4,
+     "since": "2026-07-30",
+     "until": "2026-08-29"
+    },
+    {
+     "id": "Samsung|s23 ultra",
+     "name": "Samsung Galaxy S23 Ultra",
+     "brand": "Samsung",
+     "channel": "official",
+     "was": 245999,
+     "now": 179999,
+     "delta": -66000,
+     "pct": -26.8,
+     "shops": 1,
+     "since": "2026-07-30",
+     "until": "2026-08-29"
+    },
+    {
+     "id": "Apple|iphone 16 plus",
+     "name": "Apple iPhone 16 Plus",
+     "brand": "Apple",
+     "channel": "official",
+     "was": 184999,
+     "now": 135000,
+     "delta": -49999,
+     "pct": -27.0,
+     "shops": 3,
+     "since": "2026-07-30",
+     "until": "2026-08-29"
+    },
+    {
+     "id": "Apple|iphone 16 pro",
+     "name": "Apple iPhone 16 Pro",
+     "brand": "Apple",
+     "channel": "official",
+     "was": 209999,
+     "now": 166500,
+     "delta": -43499,
+     "pct": -20.7,
+     "shops": 3,
+     "since": "2026-07-30",
+     "until": "2026-08-29"
+    }
+   ],
+   "note": "bhalophone.com · 2,366 phones, 48 nightly price checks since 2026-06-11",
+   "caption": "Price drops we recorded in the last 30 days.\n\nEvery line compares like with like — the official price against the official price, the import price against the import price. When a cheap import listing sells out and the headline falls through to the official one, that is not a price cut, and it is not in this list.",
+   "bullets": [
+    "Google Pixel 10 Pro Fold — ৳229,990 to ৳145,999 (-36%, import price)",
+    "Samsung Galaxy S23 Ultra — ৳245,999 to ৳179,999 (-27%, official price)",
+    "Apple iPhone 16 Plus — ৳184,999 to ৳135,000 (-27%, official price)",
+    "Apple iPhone 16 Pro — ৳209,999 to ৳166,500 (-21%, official price)"
+   ],
+   "image": "/og/post-drops.jpg"
+  },
+  {
+   "slug": "warranty",
+   "title": "What the warranty actually costs",
+   "sub": "Official vs import, identical storage variant",
+   "items": [
+    {
+     "id": "Samsung|fold 5",
+     "name": "Samsung Galaxy Z Fold 5",
+     "brand": "Samsung",
+     "variant": "12GB/256GB",
+     "official": 285999,
+     "unofficial": 123999,
+     "delta": 162000,
+     "pct": 57
+    },
+    {
+     "id": "Samsung|s25 ultra",
+     "name": "Samsung Galaxy S25 Ultra",
+     "brand": "Samsung",
+     "variant": "12GB/256GB",
+     "official": 224999,
+     "unofficial": 94490,
+     "delta": 130509,
+     "pct": 58
+    },
+    {
+     "id": "Samsung|flip 6",
+     "name": "Samsung Galaxy Z Flip 6",
+     "brand": "Samsung",
+     "variant": "12GB/256GB",
+     "official": 197999,
+     "unofficial": 84999,
+     "delta": 113000,
+     "pct": 57
+    },
+    {
+     "id": "Apple|iphone 17 pro max",
+     "name": "Apple iPhone 17 Pro Max",
+     "brand": "Apple",
+     "variant": "2TB",
+     "official": 341999,
+     "unofficial": 239999,
+     "delta": 102000,
+     "pct": 30
+    }
+   ],
+   "note": "bhalophone.com · 2,366 phones, 48 nightly price checks since 2026-06-11",
+   "caption": "Official and import prices for the SAME storage variant, in stock today.\n\nThis is the number the usual comparison gets wrong: quoting the cheapest official against the cheapest import usually compares 512GB against 256GB and doubles the gap. Every row here is one variant priced on both channels.",
+   "bullets": [
+    "Samsung Galaxy Z Fold 5 12GB/256GB — official ৳285,999 vs import ৳123,999, a ৳162,000 difference (57%)",
+    "Samsung Galaxy S25 Ultra 12GB/256GB — official ৳224,999 vs import ৳94,490, a ৳130,509 difference (58%)",
+    "Samsung Galaxy Z Flip 6 12GB/256GB — official ৳197,999 vs import ৳84,999, a ৳113,000 difference (57%)",
+    "Apple iPhone 17 Pro Max 2TB — official ৳341,999 vs import ৳239,999, a ৳102,000 difference (30%)"
+   ],
+   "image": "/og/post-warranty.jpg"
+  },
+  {
+   "slug": "shops",
+   "title": "Same phone. Different shop. Different price.",
+   "sub": "Cheapest vs dearest shop, same box, in stock today",
+   "items": [
+    {
+     "id": "Apple|iphone 17 pro max",
+     "name": "Apple iPhone 17 Pro Max",
+     "brand": "Apple",
+     "variant": "512GB",
+     "channel": "official",
+     "low": 231999,
+     "high": 289999,
+     "delta": 58000,
+     "pct": 25,
+     "low_shop": "Pickaboo",
+     "high_shop": "SumashTech",
+     "shops": 4
+    },
+    {
+     "id": "Apple|iphone 17 pro",
+     "name": "Apple iPhone 17 Pro",
+     "brand": "Apple",
+     "variant": "256GB",
+     "channel": "official",
+     "low": 185999,
+     "high": 229999,
+     "delta": 44000,
+     "pct": 24,
+     "low_shop": "Pickaboo",
+     "high_shop": "SumashTech",
+     "shops": 4
+    },
+    {
+     "id": "Apple|iphone 17",
+     "name": "Apple iPhone 17",
+     "brand": "Apple",
+     "variant": "256GB",
+     "channel": "official",
+     "low": 147999,
+     "high": 179999,
+     "delta": 32000,
+     "pct": 22,
+     "low_shop": "ExecutiveMachines",
+     "high_shop": "SumashTech",
+     "shops": 3
+    },
+    {
+     "id": "Samsung|s26 ultra",
+     "name": "Samsung Galaxy S26 Ultra",
+     "brand": "Samsung",
+     "variant": "12GB/512GB",
+     "channel": "official",
+     "low": 199999,
+     "high": 228999,
+     "delta": 29000,
+     "pct": 15,
+     "low_shop": "SumashTech",
+     "high_shop": "ExcelStore",
+     "shops": 5
+    }
+   ],
+   "note": "bhalophone.com · 2,366 phones, 48 nightly price checks since 2026-06-11",
+   "caption": "The same phone, the same storage, the same channel, in stock at three or more shops today — and this is the gap between the cheapest and the dearest.\n\nNobody is being accused of anything: shops price differently and some bundle more. But the number is worth knowing before you walk in.",
+   "bullets": [
+    "Apple iPhone 17 Pro Max 512GB — ৳231,999 at Pickaboo, ৳289,999 at SumashTech (৳58,000 apart, 4 shops)",
+    "Apple iPhone 17 Pro 256GB — ৳185,999 at Pickaboo, ৳229,999 at SumashTech (৳44,000 apart, 4 shops)",
+    "Apple iPhone 17 256GB — ৳147,999 at ExecutiveMachines, ৳179,999 at SumashTech (৳32,000 apart, 3 shops)",
+    "Samsung Galaxy S26 Ultra 12GB/512GB — ৳199,999 at SumashTech, ৳228,999 at ExcelStore (৳29,000 apart, 5 shops)"
+   ],
+   "image": "/og/post-shops.jpg"
+  },
+  {
+   "slug": "new",
+   "title": "New in Bangladesh this month",
+   "sub": "First month we saw a shop quote a price at all",
+   "items": [
+    {
+     "id": "Realme|c100x",
+     "name": "Realme C100x",
+     "brand": "Realme",
+     "price": 21899,
+     "shops": 7,
+     "first_seen": "2026-08-03"
+    },
+    {
+     "id": "Samsung|fold 8 ultra",
+     "name": "Samsung Galaxy Z Fold8 Ultra",
+     "brand": "Samsung",
+     "price": 199999,
+     "shops": 5,
+     "first_seen": "2026-08-07"
+    },
+    {
+     "id": "OPPO|reno 16",
+     "name": "OPPO Reno 16",
+     "brand": "OPPO",
+     "price": 61999,
+     "shops": 5,
+     "first_seen": "2026-08-01"
+    },
+    {
+     "id": "Redmi|17 4g",
+     "name": "Redmi 17",
+     "brand": "Redmi",
+     "price": 22899,
+     "shops": 5,
+     "first_seen": "2026-08-04"
+    }
+   ],
+   "note": "bhalophone.com · 2,366 phones, 48 nightly price checks since 2026-06-11",
+   "caption": "Phones that got their first Bangladesh price in the last 30 days.\n\nFirst SEEN, not first released — this is the day the local market started quoting it, which is the date that matters if you are buying here.",
+   "bullets": [
+    "Realme C100x — from ৳21,899, 7 shops (first seen 2026-08-03)",
+    "Samsung Galaxy Z Fold8 Ultra — from ৳199,999, 5 shops (first seen 2026-08-07)",
+    "OPPO Reno 16 — from ৳61,999, 5 shops (first seen 2026-08-01)",
+    "Redmi 17 — from ৳22,899, 5 shops (first seen 2026-08-04)"
+   ],
+   "image": "/og/post-new.jpg"
+  }
+ ]
+}
