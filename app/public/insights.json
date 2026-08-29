@@ -12,10 +12,486 @@
  },
  "stories": [
   {
+   "slug": "risers",
+   "kicker": "GOING THE OTHER WAY",
+   "headline": "The Apple iPhone 17 Pro Max costs ==৳35,000 more== than it did a month ago",
+   "caption": "Everyone tells you to wait, that phones only get cheaper. Here is what waiting a month on the Apple iPhone 17 Pro Max did.\n\n৳164,999 on 30 July. ৳199,999 today. 34 phones we track cost more now than they did a month ago:\n\n• Apple iPhone 17 Pro Max: ৳164,999 to ৳199,999 (+21%, official price)\n• Apple iPhone 17 Pro: ৳159,999 to ৳185,999 (+16%, official price)\n• OnePlus 13: ৳74,490 to ৳90,999 (+22%, unofficial price)\n• OPPO Reno 14 5G: ৳39,990 to ৳48,990 (+22%, unofficial price)\n\nThat is the cheapest listed price on that channel, read every night and plotted above. Full chart:\nhttps://bhalophone.com/phone/apple-iphone-17-pro-max\n\nEver waited for a price to fall and watched it climb?",
+   "standfirst": "৳164,999 on 30 July, ৳199,999 today. Official price, at 9 shops. Unofficial fell ৳4,000 over the same weeks, ৳156,490 to ৳152,490.",
+   "source": "bhalophone.com · 34 phones dearer than last month",
+   "panel": {
+    "kind": "chart",
+    "series": {
+     "official": [
+      [
+       "2026-06-11",
+       209999
+      ],
+      [
+       "2026-06-12",
+       209999
+      ],
+      [
+       "2026-06-13",
+       209999
+      ],
+      [
+       "2026-06-15",
+       209999
+      ],
+      [
+       "2026-06-23",
+       216999
+      ],
+      [
+       "2026-07-04",
+       199999
+      ],
+      [
+       "2026-07-05",
+       199999
+      ],
+      [
+       "2026-07-10",
+       199999
+      ],
+      [
+       "2026-07-11",
+       199999
+      ],
+      [
+       "2026-07-12",
+       199999
+      ],
+      [
+       "2026-07-14",
+       199999
+      ],
+      [
+       "2026-07-15",
+       199999
+      ],
+      [
+       "2026-07-16",
+       199999
+      ],
+      [
+       "2026-07-17",
+       199999
+      ],
+      [
+       "2026-07-18",
+       199999
+      ],
+      [
+       "2026-07-19",
+       204999
+      ],
+      [
+       "2026-07-20",
+       204999
+      ],
+      [
+       "2026-07-21",
+       204999
+      ],
+      [
+       "2026-07-22",
+       204999
+      ],
+      [
+       "2026-07-24",
+       204999
+      ],
+      [
+       "2026-07-25",
+       202999
+      ],
+      [
+       "2026-07-26",
+       171999
+      ],
+      [
+       "2026-07-27",
+       171999
+      ],
+      [
+       "2026-07-28",
+       171999
+      ],
+      [
+       "2026-07-29",
+       171999
+      ],
+      [
+       "2026-07-30",
+       164999
+      ],
+      [
+       "2026-08-01",
+       216999
+      ],
+      [
+       "2026-08-02",
+       216999
+      ],
+      [
+       "2026-08-03",
+       204999
+      ],
+      [
+       "2026-08-04",
+       204999
+      ],
+      [
+       "2026-08-05",
+       204999
+      ],
+      [
+       "2026-08-07",
+       204999
+      ],
+      [
+       "2026-08-08",
+       204999
+      ],
+      [
+       "2026-08-09",
+       204999
+      ],
+      [
+       "2026-08-10",
+       204999
+      ],
+      [
+       "2026-08-11",
+       204999
+      ],
+      [
+       "2026-08-12",
+       204999
+      ],
+      [
+       "2026-08-14",
+       204999
+      ],
+      [
+       "2026-08-15",
+       204999
+      ],
+      [
+       "2026-08-16",
+       204999
+      ],
+      [
+       "2026-08-17",
+       204999
+      ],
+      [
+       "2026-08-21",
+       204999
+      ],
+      [
+       "2026-08-22",
+       204999
+      ],
+      [
+       "2026-08-23",
+       204999
+      ],
+      [
+       "2026-08-24",
+       204999
+      ],
+      [
+       "2026-08-27",
+       199999
+      ],
+      [
+       "2026-08-28",
+       199999
+      ],
+      [
+       "2026-08-29",
+       199999
+      ]
+     ],
+     "unofficial": [
+      [
+       "2026-06-11",
+       153499
+      ],
+      [
+       "2026-06-12",
+       153499
+      ],
+      [
+       "2026-06-13",
+       153499
+      ],
+      [
+       "2026-06-15",
+       153499
+      ],
+      [
+       "2026-06-23",
+       148490
+      ],
+      [
+       "2026-07-04",
+       148490
+      ],
+      [
+       "2026-07-05",
+       150490
+      ],
+      [
+       "2026-07-10",
+       144888
+      ],
+      [
+       "2026-07-11",
+       144888
+      ],
+      [
+       "2026-07-12",
+       144888
+      ],
+      [
+       "2026-07-14",
+       144888
+      ],
+      [
+       "2026-07-15",
+       147990
+      ],
+      [
+       "2026-07-16",
+       147990
+      ],
+      [
+       "2026-07-17",
+       147990
+      ],
+      [
+       "2026-07-18",
+       149990
+      ],
+      [
+       "2026-07-19",
+       153490
+      ],
+      [
+       "2026-07-20",
+       153490
+      ],
+      [
+       "2026-07-21",
+       153490
+      ],
+      [
+       "2026-07-22",
+       153490
+      ],
+      [
+       "2026-07-24",
+       153490
+      ],
+      [
+       "2026-07-25",
+       153490
+      ],
+      [
+       "2026-07-26",
+       153490
+      ],
+      [
+       "2026-07-27",
+       156490
+      ],
+      [
+       "2026-07-28",
+       156490
+      ],
+      [
+       "2026-07-29",
+       156490
+      ],
+      [
+       "2026-07-30",
+       156490
+      ],
+      [
+       "2026-08-01",
+       154490
+      ],
+      [
+       "2026-08-02",
+       154490
+      ],
+      [
+       "2026-08-03",
+       154490
+      ],
+      [
+       "2026-08-04",
+       153490
+      ],
+      [
+       "2026-08-05",
+       153490
+      ],
+      [
+       "2026-08-07",
+       149490
+      ],
+      [
+       "2026-08-08",
+       149490
+      ],
+      [
+       "2026-08-09",
+       154490
+      ],
+      [
+       "2026-08-10",
+       152490
+      ],
+      [
+       "2026-08-11",
+       152490
+      ],
+      [
+       "2026-08-12",
+       152490
+      ],
+      [
+       "2026-08-14",
+       152490
+      ],
+      [
+       "2026-08-15",
+       152490
+      ],
+      [
+       "2026-08-16",
+       151990
+      ],
+      [
+       "2026-08-17",
+       151990
+      ],
+      [
+       "2026-08-21",
+       151990
+      ],
+      [
+       "2026-08-22",
+       151990
+      ],
+      [
+       "2026-08-23",
+       151990
+      ],
+      [
+       "2026-08-24",
+       151990
+      ],
+      [
+       "2026-08-27",
+       152490
+      ],
+      [
+       "2026-08-28",
+       152490
+      ],
+      [
+       "2026-08-29",
+       152490
+      ]
+     ]
+    },
+    "axis": [
+     "11 June",
+     "29 August"
+    ],
+    "highlight": "official",
+    "labels": {
+     "official": "Official",
+     "unofficial": "Unofficial"
+    }
+   },
+   "items": [
+    {
+     "id": "Apple|iphone 17 pro max",
+     "name": "Apple iPhone 17 Pro Max",
+     "brand": "Apple",
+     "channel": "official",
+     "was": 164999,
+     "now": 199999,
+     "delta": 35000,
+     "pct": 21.2,
+     "shops": 9,
+     "since": "2026-07-30",
+     "until": "2026-08-29"
+    },
+    {
+     "id": "Apple|iphone 17 pro",
+     "name": "Apple iPhone 17 Pro",
+     "brand": "Apple",
+     "channel": "official",
+     "was": 159999,
+     "now": 185999,
+     "delta": 26000,
+     "pct": 16.3,
+     "shops": 9,
+     "since": "2026-07-30",
+     "until": "2026-08-29"
+    },
+    {
+     "id": "OnePlus|13",
+     "name": "OnePlus 13",
+     "brand": "OnePlus",
+     "channel": "unofficial",
+     "was": 74490,
+     "now": 90999,
+     "delta": 16509,
+     "pct": 22.2,
+     "shops": 1,
+     "since": "2026-07-30",
+     "until": "2026-08-29"
+    },
+    {
+     "id": "OPPO|reno 14",
+     "name": "OPPO Reno 14 5G",
+     "brand": "OPPO",
+     "channel": "unofficial",
+     "was": 39990,
+     "now": 48990,
+     "delta": 9000,
+     "pct": 22.5,
+     "shops": 4,
+     "since": "2026-07-30",
+     "until": "2026-08-29"
+    }
+   ],
+   "bullets": [
+    "Apple iPhone 17 Pro Max: ৳164,999 to ৳199,999 (+21%, official price)",
+    "Apple iPhone 17 Pro: ৳159,999 to ৳185,999 (+16%, official price)",
+    "OnePlus 13: ৳74,490 to ৳90,999 (+22%, unofficial price)",
+    "OPPO Reno 14 5G: ৳39,990 to ৳48,990 (+22%, unofficial price)"
+   ],
+   "ids": [
+    "Apple|iphone 17 pro max",
+    "Apple|iphone 17 pro",
+    "OnePlus|13",
+    "OPPO|reno 14"
+   ]
+  },
+  {
    "slug": "shops",
    "kicker": "SHOP WATCH",
    "headline": "The same phone costs ==9.7% more== at Salextra than at the cheapest shop",
-   "caption": "We took the same phone — same model, same storage, same channel — and checked what each shop wanted for it on the same night. 150 times.\n\nSalextra came out 9.7% above the cheapest shop on average. GaziElectronics came out 0.6%.\n\n• GaziElectronics — +0.6% (31 comparisons)\n• RioInternational — +1.8% (88 comparisons)\n• Dazzle — +2.1% (27 comparisons)\n• SMSGadget — +2.9% (81 comparisons)\n• AppleGadgets — +5.0% (72 comparisons)\n• SumashTech — +6.7% (127 comparisons)\n• GadgetAndGear — +8.2% (90 comparisons)\n• Pickaboo — +9.2% (83 comparisons)\n• Salextra — +9.7% (30 comparisons)\n\nNobody is being accused of anything: shops bundle differently and stock different things. But if you are about to spend six figures, the shop you walk into is worth knowing. Checked every night, every shop we track:\nhttps://bhalophone.com\n\nWhich shop do you actually buy from?",
+   "caption": "Same phone, same storage, same channel. What does each shop want for it on the same night? We ran that 150 times.\n\nSalextra came out 9.7% above the cheapest shop on average. GaziElectronics came out 0.6%.\n\n• GaziElectronics: +0.6% (31 comparisons)\n• RioInternational: +1.8% (88 comparisons)\n• Dazzle: +2.1% (27 comparisons)\n• SMSGadget: +2.9% (81 comparisons)\n• AppleGadgets: +5.0% (72 comparisons)\n• SumashTech: +6.7% (127 comparisons)\n• GadgetAndGear: +8.2% (90 comparisons)\n• Pickaboo: +9.2% (83 comparisons)\n• Salextra: +9.7% (30 comparisons)\n\nShops bundle differently and stock different things, so a premium is not proof of anything by itself. But if you are about to spend six figures, the shop you walk into is worth knowing. Checked every night, every shop we track:\nhttps://bhalophone.com\n\nWhich shop do you actually buy from?",
    "standfirst": "150 head-to-head comparisons: same model, same storage, same channel, in stock at three or more shops on the same night.",
    "source": "bhalophone.com · nightly since 2026-06-11",
    "panel": {
@@ -135,15 +611,15 @@
     }
    ],
    "bullets": [
-    "GaziElectronics — +0.6% over the cheapest, across 31 comparisons",
-    "RioInternational — +1.8% over the cheapest, across 88 comparisons",
-    "Dazzle — +2.1% over the cheapest, across 27 comparisons",
-    "SMSGadget — +2.9% over the cheapest, across 81 comparisons",
-    "AppleGadgets — +5.0% over the cheapest, across 72 comparisons",
-    "SumashTech — +6.7% over the cheapest, across 127 comparisons",
-    "GadgetAndGear — +8.2% over the cheapest, across 90 comparisons",
-    "Pickaboo — +9.2% over the cheapest, across 83 comparisons",
-    "Salextra — +9.7% over the cheapest, across 30 comparisons"
+    "GaziElectronics: +0.6% over the cheapest, across 31 comparisons",
+    "RioInternational: +1.8% over the cheapest, across 88 comparisons",
+    "Dazzle: +2.1% over the cheapest, across 27 comparisons",
+    "SMSGadget: +2.9% over the cheapest, across 81 comparisons",
+    "AppleGadgets: +5.0% over the cheapest, across 72 comparisons",
+    "SumashTech: +6.7% over the cheapest, across 127 comparisons",
+    "GadgetAndGear: +8.2% over the cheapest, across 90 comparisons",
+    "Pickaboo: +9.2% over the cheapest, across 83 comparisons",
+    "Salextra: +9.7% over the cheapest, across 30 comparisons"
    ],
    "ids": []
   },
@@ -151,14 +627,14 @@
    "slug": "depreciation",
    "kicker": "THE COST OF BUYING EARLY",
    "headline": "Waiting 56 days on the OnePlus 13 saved you ==৳27,900==",
-   "caption": "Somebody paid ৳103,899 for a OnePlus 13 back in 2026-07-04. It is ৳75,999 today.\n\n৳27,900, for waiting 56 days. The four phones we have watched fall hardest since the first night anyone here quoted a price:\n\n• OnePlus 13 — ৳103,899 to ৳75,999, −27% in 56 days (official price)\n• Apple iPhone 16 Plus — ৳184,999 to ৳135,000, −27% in 79 days (official price)\n• Samsung Galaxy S23 Ultra — ৳245,999 to ৳179,999, −27% in 56 days (official price)\n• Xiaomi 17 — ৳99,999 to ৳78,000, −22% in 56 days (unofficial price)\n\nEvery line is one channel against itself, so a sold-out listing never reads as a price cut. Night-by-night history:\nhttps://bhalophone.com/phone/oneplus-13\n\nAnything you are holding out on? Name it and we will watch it.",
-   "standfirst": "৳103,899 when we first saw it, ৳75,999 today — official price, tracked every night since 2026-07-04.",
+   "caption": "Somebody paid ৳103,899 for a OnePlus 13 back on 4 July. It is ৳75,999 today.\n\n৳27,900, for waiting 56 days. The four phones we have watched fall hardest since the first night anyone here quoted a price:\n\n• OnePlus 13: ৳103,899 to ৳75,999, −27% in 56 days (official price)\n• Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −27% in 79 days (official price)\n• Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −27% in 56 days (official price)\n• Xiaomi 17: ৳99,999 to ৳78,000, −22% in 56 days (unofficial price)\n\nEvery line is one channel against itself, so a sold-out listing never reads as a price cut. Night-by-night history:\nhttps://bhalophone.com/phone/oneplus-13\n\nAnything you are holding out on? Name it and we will watch it.",
+   "standfirst": "৳103,899 when we first saw it, ৳75,999 today. Official price, tracked every night since 4 July.",
    "source": "bhalophone.com · 87 more phones falling this fast",
    "panel": {
     "kind": "beforeafter",
     "was": 103899,
     "now": 75999,
-    "was_label": "2026-07-04",
+    "was_label": "4 JULY",
     "now_label": "today",
     "badge": "OFFICIAL",
     "delta": "−27%"
@@ -214,10 +690,10 @@
     }
    ],
    "bullets": [
-    "OnePlus 13 — ৳103,899 to ৳75,999, −27% in 56 days (official)",
-    "Apple iPhone 16 Plus — ৳184,999 to ৳135,000, −27% in 79 days (official)",
-    "Samsung Galaxy S23 Ultra — ৳245,999 to ৳179,999, −27% in 56 days (official)",
-    "Xiaomi 17 — ৳99,999 to ৳78,000, −22% in 56 days (unofficial)"
+    "OnePlus 13: ৳103,899 to ৳75,999, −27% in 56 days (official)",
+    "Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −27% in 79 days (official)",
+    "Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −27% in 56 days (official)",
+    "Xiaomi 17: ৳99,999 to ৳78,000, −22% in 56 days (unofficial)"
    ],
    "ids": [
     "OnePlus|13",
@@ -230,7 +706,7 @@
    "slug": "warranty",
    "kicker": "WHAT THE WARRANTY COSTS",
    "headline": "Samsung's warranty on the Galaxy Z Fold 5 costs ==৳162,000==",
-   "caption": "Official Samsung Galaxy Z Fold 5, 12GB/256GB: ৳285,999.\nThe identical unofficial box: ৳123,999.\n\n৳162,000 is what the warranty costs you on this phone. Both in stock today. The four widest gaps we can price on both channels right now:\n\n• Samsung Galaxy Z Fold 5 12GB/256GB — official ৳285,999 vs unofficial ৳123,999 (৳162,000 apart)\n• Samsung Galaxy S25 Ultra 12GB/256GB — official ৳224,999 vs unofficial ৳94,490 (৳130,509 apart)\n• Samsung Galaxy Z Flip 6 12GB/256GB — official ৳197,999 vs unofficial ৳84,999 (৳113,000 apart)\n• Apple iPhone 17 Pro Max 2TB — official ৳341,999 vs unofficial ৳239,999 (৳102,000 apart)\n\nSame storage on both sides, always. Quoting the cheapest official against the cheapest unofficial usually compares 512GB with 256GB and doubles the gap. Specs, shops and the full history:\nhttps://bhalophone.com/phone/samsung-galaxy-s25-ultra\n\nOfficial or unofficial — which way did you go, and would you do it again?",
+   "caption": "Official Samsung Galaxy Z Fold 5, 12GB/256GB: ৳285,999.\nThe identical unofficial box: ৳123,999.\n\n৳162,000 is what the warranty costs you on this phone. Both in stock today. The four widest gaps we can price on both channels right now:\n\n• Samsung Galaxy Z Fold 5 12GB/256GB: official ৳285,999 vs unofficial ৳123,999 (৳162,000 apart)\n• Samsung Galaxy S25 Ultra 12GB/256GB: official ৳224,999 vs unofficial ৳94,490 (৳130,509 apart)\n• Samsung Galaxy Z Flip 6 12GB/256GB: official ৳197,999 vs unofficial ৳84,999 (৳113,000 apart)\n• Apple iPhone 17 Pro Max 2TB: official ৳341,999 vs unofficial ৳239,999 (৳102,000 apart)\n\nSame storage on both sides, always. Quoting the cheapest official against the cheapest unofficial usually compares 512GB with 256GB and doubles the gap. Specs, shops and the full history:\nhttps://bhalophone.com/phone/samsung-galaxy-s25-ultra\n\nOfficial or unofficial: which way did you go, and would you do it again?",
    "standfirst": "Same 12GB/256GB variant, both in stock today. Official ৳285,999, unofficial ৳123,999.",
    "source": "bhalophone.com · 65 phones priced on both channels",
    "panel": {
@@ -288,10 +764,10 @@
     }
    ],
    "bullets": [
-    "Samsung Galaxy Z Fold 5 12GB/256GB — official ৳285,999 vs unofficial ৳123,999, ৳162,000 apart",
-    "Samsung Galaxy S25 Ultra 12GB/256GB — official ৳224,999 vs unofficial ৳94,490, ৳130,509 apart",
-    "Samsung Galaxy Z Flip 6 12GB/256GB — official ৳197,999 vs unofficial ৳84,999, ৳113,000 apart",
-    "Apple iPhone 17 Pro Max 2TB — official ৳341,999 vs unofficial ৳239,999, ৳102,000 apart"
+    "Samsung Galaxy Z Fold 5 12GB/256GB: official ৳285,999 vs unofficial ৳123,999, ৳162,000 apart",
+    "Samsung Galaxy S25 Ultra 12GB/256GB: official ৳224,999 vs unofficial ৳94,490, ৳130,509 apart",
+    "Samsung Galaxy Z Flip 6 12GB/256GB: official ৳197,999 vs unofficial ৳84,999, ৳113,000 apart",
+    "Apple iPhone 17 Pro Max 2TB: official ৳341,999 vs unofficial ৳239,999, ৳102,000 apart"
    ],
    "ids": [
     "Samsung|fold 5",
@@ -304,14 +780,14 @@
    "slug": "drops",
    "kicker": "PRICE DROP",
    "headline": "The Google Pixel 10 Pro Fold lost ==৳83,991== in 30 nights",
-   "caption": "The Google Pixel 10 Pro Fold was ৳229,990 a month ago. This morning it is ৳145,999, at 4 shops.\n\nSteepest 30-day fall in our table. The rest of the top four:\n\n• Google Pixel 10 Pro Fold — ৳229,990 to ৳145,999 (-36%, unofficial price)\n• Samsung Galaxy S23 Ultra — ৳245,999 to ৳179,999 (-27%, official price)\n• Apple iPhone 16 Plus — ৳184,999 to ৳135,000 (-27%, official price)\n• Apple iPhone 16 Pro — ৳209,999 to ৳166,500 (-21%, official price)\n\nOfficial against official, unofficial against unofficial. When a cheap listing sells out and the headline price jumps to the official one, that is not a rise and it is not in this list. Night-by-night history:\nhttps://bhalophone.com/phone/google-pixel-10-pro-fold\n\nBuying this month, or waiting it out?",
-   "standfirst": "৳229,990 to ৳145,999 in 30 days — unofficial price, in stock at 4 shops.",
+   "caption": "The Google Pixel 10 Pro Fold was ৳229,990 a month ago. This morning it is ৳145,999, at 4 shops.\n\nSteepest 30-day fall in our table. The rest of the top four:\n\n• Google Pixel 10 Pro Fold: ৳229,990 to ৳145,999 (-36%, unofficial price)\n• Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999 (-27%, official price)\n• Apple iPhone 16 Plus: ৳184,999 to ৳135,000 (-27%, official price)\n• Apple iPhone 16 Pro: ৳209,999 to ৳166,500 (-21%, official price)\n\nOfficial against official, unofficial against unofficial. When a cheap listing sells out and the headline price jumps to the official one, that is not a rise and it is not in this list. Night-by-night history:\nhttps://bhalophone.com/phone/google-pixel-10-pro-fold\n\nBuying this month, or waiting it out?",
+   "standfirst": "৳229,990 to ৳145,999 in 30 days. Unofficial price, in stock at 4 shops.",
    "source": "bhalophone.com · nightly since 2026-06-11",
    "panel": {
     "kind": "beforeafter",
     "was": 229990,
     "now": 145999,
-    "was_label": "2026-07-30",
+    "was_label": "30 JULY",
     "now_label": "today",
     "badge": "UNOFFICIAL",
     "delta": "-36%"
@@ -371,10 +847,10 @@
     }
    ],
    "bullets": [
-    "Google Pixel 10 Pro Fold — ৳229,990 to ৳145,999 (-36%, unofficial price)",
-    "Samsung Galaxy S23 Ultra — ৳245,999 to ৳179,999 (-27%, official price)",
-    "Apple iPhone 16 Plus — ৳184,999 to ৳135,000 (-27%, official price)",
-    "Apple iPhone 16 Pro — ৳209,999 to ৳166,500 (-21%, official price)"
+    "Google Pixel 10 Pro Fold: ৳229,990 to ৳145,999 (-36%, unofficial price)",
+    "Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999 (-27%, official price)",
+    "Apple iPhone 16 Plus: ৳184,999 to ৳135,000 (-27%, official price)",
+    "Apple iPhone 16 Pro: ৳209,999 to ৳166,500 (-21%, official price)"
    ],
    "ids": [
     "Google|pixel 10 pro fold",
@@ -387,7 +863,7 @@
    "slug": "gap",
    "kicker": "SHOP GAP",
    "headline": "Same Apple iPhone 17 Pro Max, same storage, ==৳58,000== between two Dhaka shops",
-   "caption": "One phone. One storage size. One night.\n\nApple iPhone 17 Pro Max 512GB, official: ৳231,999 at Pickaboo, ৳289,999 at SumashTech. That is ৳58,000 between two shops selling the same box. Three more from today:\n\n• Apple iPhone 17 Pro Max 512GB — ৳231,999 at Pickaboo vs ৳289,999 at SumashTech (৳58,000 apart)\n• Apple iPhone 17 Pro 256GB — ৳185,999 at Pickaboo vs ৳229,999 at SumashTech (৳44,000 apart)\n• Apple iPhone 17 256GB — ৳147,999 at ExecutiveMachines vs ৳179,999 at SumashTech (৳32,000 apart)\n• Samsung Galaxy S26 Ultra 12GB/512GB — ৳199,999 at SumashTech vs ৳228,999 at ExcelStore (৳29,000 apart)\n\nCheapest offer per shop, three shops minimum, all in stock the same night. Every shop and price we have for it:\nhttps://bhalophone.com/phone/apple-iphone-17-pro-max\n\nWorth the trip across town, or not?",
+   "caption": "One phone, one storage size, priced on the same night.\n\nApple iPhone 17 Pro Max 512GB, official: ৳231,999 at Pickaboo, ৳289,999 at SumashTech. That's ৳58,000 between two shops selling the same box. Three more from today:\n\n• Apple iPhone 17 Pro Max 512GB: ৳231,999 at Pickaboo vs ৳289,999 at SumashTech (৳58,000 apart)\n• Apple iPhone 17 Pro 256GB: ৳185,999 at Pickaboo vs ৳229,999 at SumashTech (৳44,000 apart)\n• Apple iPhone 17 256GB: ৳147,999 at ExecutiveMachines vs ৳179,999 at SumashTech (৳32,000 apart)\n• Samsung Galaxy S26 Ultra 12GB/512GB: ৳199,999 at SumashTech vs ৳228,999 at ExcelStore (৳29,000 apart)\n\nCheapest offer per shop, three shops minimum, all in stock the same night. Every shop and price we have for it:\nhttps://bhalophone.com/phone/apple-iphone-17-pro-max\n\nWorth the trip across town, or not?",
    "standfirst": "512GB, official, both in stock today: ৳231,999 at Pickaboo, ৳289,999 at SumashTech.",
    "source": "bhalophone.com · 4 shops carry this exact box",
    "panel": {
@@ -461,10 +937,10 @@
     }
    ],
    "bullets": [
-    "Apple iPhone 17 Pro Max 512GB — ৳231,999 at Pickaboo, ৳289,999 at SumashTech (৳58,000 apart)",
-    "Apple iPhone 17 Pro 256GB — ৳185,999 at Pickaboo, ৳229,999 at SumashTech (৳44,000 apart)",
-    "Apple iPhone 17 256GB — ৳147,999 at ExecutiveMachines, ৳179,999 at SumashTech (৳32,000 apart)",
-    "Samsung Galaxy S26 Ultra 12GB/512GB — ৳199,999 at SumashTech, ৳228,999 at ExcelStore (৳29,000 apart)"
+    "Apple iPhone 17 Pro Max 512GB: ৳231,999 at Pickaboo, ৳289,999 at SumashTech (৳58,000 apart)",
+    "Apple iPhone 17 Pro 256GB: ৳185,999 at Pickaboo, ৳229,999 at SumashTech (৳44,000 apart)",
+    "Apple iPhone 17 256GB: ৳147,999 at ExecutiveMachines, ৳179,999 at SumashTech (৳32,000 apart)",
+    "Samsung Galaxy S26 Ultra 12GB/512GB: ৳199,999 at SumashTech, ৳228,999 at ExcelStore (৳29,000 apart)"
    ],
    "ids": [
     "Apple|iphone 17 pro max",
@@ -477,8 +953,8 @@
    "slug": "new",
    "kicker": "NEW IN BANGLADESH",
    "headline": "==26 phones== got their first Bangladesh price this month",
-   "caption": "26 phones landed on a Bangladeshi shop's shelf for the first time this month. The four already carried in the most shops:\n\n• Realme C100x — from ৳21,899, 7 shops\n• Samsung Galaxy Z Fold8 Ultra — from ৳199,999, 5 shops\n• Redmi 17 — from ৳22,899, 5 shops\n• Vivo Y05e — from ৳16,599, 5 shops\n\nFirst seen here, not first announced — a launch abroad means nothing until somebody local quotes a price. Every phone we track:\nhttps://bhalophone.com/phone\n\nWhich one are you actually curious about?",
-   "standfirst": "First seen, not first released — the night a shop here started quoting them.",
+   "caption": "26 phones landed on a Bangladeshi shop's shelf for the first time this month. The four already carried in the most shops:\n\n• Realme C100x: from ৳21,899, 7 shops\n• Samsung Galaxy Z Fold8 Ultra: from ৳199,999, 5 shops\n• Redmi 17: from ৳22,899, 5 shops\n• Vivo Y05e: from ৳16,599, 5 shops\n\nFirst seen here, not first announced. A launch abroad means nothing until somebody local quotes a price. Every phone we track:\nhttps://bhalophone.com/phone\n\nWhich one are you actually curious about?",
+   "standfirst": "First seen, not first released. This is the night a shop here first quoted them.",
    "source": "bhalophone.com · nightly since 2026-06-11",
    "panel": {
     "kind": "list",
@@ -540,10 +1016,10 @@
     }
    ],
    "bullets": [
-    "Realme C100x — from ৳21,899, 7 shops, first seen 2026-08-03",
-    "Samsung Galaxy Z Fold8 Ultra — from ৳199,999, 5 shops, first seen 2026-08-07",
-    "Redmi 17 — from ৳22,899, 5 shops, first seen 2026-08-04",
-    "Vivo Y05e — from ৳16,599, 5 shops, first seen 2026-08-07"
+    "Realme C100x: from ৳21,899, 7 shops, first seen 2026-08-03",
+    "Samsung Galaxy Z Fold8 Ultra: from ৳199,999, 5 shops, first seen 2026-08-07",
+    "Redmi 17: from ৳22,899, 5 shops, first seen 2026-08-04",
+    "Vivo Y05e: from ৳16,599, 5 shops, first seen 2026-08-07"
    ],
    "ids": [
     "Realme|c100x",
