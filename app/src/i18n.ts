@@ -140,6 +140,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   data_caution_few: { en: "Few/old listings — verify at shop", bn: "লিস্টিং কম বা পুরনো — দোকানে যাচাই করুন" },
   data_caution_stale: { en: "Listings look outdated — confirm price at shop", bn: "লিস্টিং পুরনো হতে পারে — দোকানে দাম নিশ্চিত করুন" },
   conn_title: { en: "Connectivity", bn: "কানেক্টিভিটি" },
+  price_history: { en: "Price history", bn: "দামের ইতিহাস" },
   conn_jack: { en: "3.5mm jack", bn: "৩.৫ মিমি জ্যাক" },
   conn_ir: { en: "IR blaster", bn: "আইআর ব্লাস্টার" },
   conn_fm: { en: "FM radio", bn: "এফএম রেডিও" },

@@ -9,6 +9,7 @@ import { ChannelChips, DataCautionChip, MarketChips, PriceSource } from "./Resul
 import { ShopPrices } from "./ShopPrices";
 import { Fold, SpecIcon } from "./Chrome";
 import { YoutubeSection } from "./YoutubeSection";
+import { PriceHistory } from "./PriceHistory";
 
 interface Props {
   detail: PhoneDetail | null;
@@ -320,6 +321,23 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             </>
           )}
         </Card>
+
+        {/* Price history, in the column the specs card leaves empty.
+            Two things at once (owner 2026-08-30): the app typed
+            `price_history` and drew nothing -- "why price graphs missing from
+            the picker" -- and this masonry stood half empty beside a specs
+            card that never fills it, which is the "vertical layout free
+            space" the same message pointed at. One chart per channel, each on
+            its own scale, the sitewide rule the /phone/ pages moved to that
+            day. */}
+        {(d?.price_history?.length ?? 0) >= 3 && (
+          <Card>
+            <SectionLabel>{t("price_history")}</SectionLabel>
+            <div style={st("margin-top:14px;")}>
+              <PriceHistory history={d!.price_history!} />
+            </div>
+          </Card>
+        )}
       </div>
 
       {/* What reviewers said -- full width, and directly under the specs
