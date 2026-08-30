@@ -8,6 +8,7 @@ import { JustSoYouKnow } from "./Compare";
 import { ChannelChips, DataCautionChip, MarketChips, PriceSource } from "./ResultsScreen";
 import { ShopPrices } from "./ShopPrices";
 import { Fold, SpecIcon } from "./Chrome";
+import { YoutubeSection } from "./YoutubeSection";
 
 interface Props {
   detail: PhoneDetail | null;
@@ -319,7 +320,20 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             </>
           )}
         </Card>
+      </div>
 
+      {/* What reviewers said -- full width, and directly under the specs
+          (owner 2026-08-30: "priority is like very top, just right after
+          specs"). Out of the masonry columns on purpose: the review grid is
+          the widest thing on this screen and a 330px column turned every card
+          into a single stacked row. */}
+      {d?.youtube && (d.youtube.videos?.length || d.youtube.points?.length || d.youtube.verdict) && (
+        <div className="k-stagger" style={st("margin-top:14px;")}>
+          <Card><YoutubeSection yt={d.youtube} /></Card>
+        </div>
+      )}
+
+      <div className="k-stagger" style={st("columns:330px 2; column-gap:14px; margin-top:14px;")}>
         {/* value retention (estimated from brand resale reputation) */}
         {bs?.resale != null && (
           <Card><ValueRetention brand={brand} resale={bs.resale} updateRecord={bs.update_record ?? null} ageYears={d?.age_years ?? h?.age_years ?? null} price={price} /></Card>

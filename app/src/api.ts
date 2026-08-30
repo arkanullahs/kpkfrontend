@@ -244,6 +244,24 @@ export interface ListingView {
   shops: number;
 }
 
+/** The review block cards.py builds once at pipeline time. Same source, same
+    ordering and the same six-video cap the static /phone/ page renders, so the
+    two surfaces cannot list a different set of reviews for one phone. */
+export interface YoutubeVideo {
+  id: string; url: string; channel: string; title: string;
+  views: number; aired: string;
+  /** absolute URL of our OWN copy of the still, or null when we never got one */
+  thumb: string | null;
+}
+export interface YoutubePoint {
+  point: string; detail: string; stance: "praise" | "criticism";
+  channel: string; title: string; url: string;
+}
+export interface YoutubeBlock {
+  verdict: string; best_for: string;
+  points: YoutubePoint[]; videos: YoutubeVideo[];
+}
+
 export interface PhoneDetail {
   id: string; key?: string; brand: string; model: string; image?: string | null;
   best_price: number | null; best_price_shop?: string;
@@ -271,6 +289,8 @@ export interface PhoneDetail {
   score_reasons?: Record<string, string[]>;
   traits?: Record<string, any>;
   opinion_profile?: OpinionProfile | null;
+  /** what reviewers said, absent for a phone we hold no video or digest for */
+  youtube?: YoutubeBlock | null;
   caveats?: Caveat[] | null;
   ai_verdict?: AiVerdict | null;
   cost_of_ownership?: CostOfOwnership;

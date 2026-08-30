@@ -95,11 +95,15 @@
       --rule:var(--c-n-200); --tone:rgba(var(--rgb-ink),.045);
       --onp:var(--c-white); --onp2:rgba(var(--rgb-white),.66);
       --onp3:rgba(var(--rgb-white),.30); --onpfill:rgba(var(--rgb-white),.07);
-      --r:2px;
-      /* the one loosening for the picker (spec 2026-08-08 §10): option TILES
-         get a softer corner so a grid of choices reads friendly, while every
-         other surface keeps the severe --r:2px. Two radii, not the fourteen the
-         reskin killed. */
+      /* 12px, the same corner the static pages and the panel use (owner
+         2026-08-30: "picker app not following our slightly rounded design
+         yet"). It was 2px here and 12px everywhere else, so the one surface a
+         buyer reaches through an ad was the one that did not look like the
+         site. Still two radii, not the fourteen the reskin killed. */
+      --r:12px;
+      --r-sm:8px;
+      /* tiles kept their own name so the option grid can drift from the rest
+         later without touching 168 other surfaces */
       --r-tile:12px;
 
       --sh-hair:inset 0 0 0 1px var(--rule);
