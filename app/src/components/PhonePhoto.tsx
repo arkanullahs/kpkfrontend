@@ -10,8 +10,13 @@ const _resolved = new Map<string, string | null>();
     fails), and we know the phone id, we ask the API to outsource one — from the
     phone's GSMArena render or a live GadgetGear search — then show that. Final
     fallback is a soft phone-silhouette placeholder, not a stripey box. */
-export function PhonePhoto({ src, pid, w, h, radius = 14 }: {
+export function PhonePhoto({ src, pid, w, h, radius = 14, pad = 6 }: {
   src?: string | null; pid?: string | null; w: string; h: string; radius?: number;
+  /** inset around the render, in percent. 6 is right for a thumbnail in a row
+      of them; the results hero passes ~1, because there the photo IS the
+      subject and every percent of inset is the phone drawn smaller (owner
+      2026-08-30: "make hero image even fuller"). */
+  pad?: number;
 }) {
   const [failed, setFailed] = useState(false);
   const [resolved, setResolved] = useState<string | null>(() => (pid ? _resolved.get(pid) ?? null : null));
@@ -42,7 +47,7 @@ export function PhonePhoto({ src, pid, w, h, radius = 14 }: {
       <div style={st(box + " background:var(--card); display:flex; align-items:center; justify-content:center;")}>
         <img src={(failed ? resolved : goodSrc) || resolved || undefined} alt="" loading="lazy"
           onError={() => { if (!failed) setFailed(true); else setResolved(null); }}
-          style={st("width:100%; height:100%; object-fit:contain; padding:6%;")} />
+          style={st(`width:100%; height:100%; object-fit:contain; padding:${pad}%;`)} />
       </div>
     );
   }

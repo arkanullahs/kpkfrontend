@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { st } from "../theme";
 
 /* The phone maker's own mark, bundled -- never fetched by path.
@@ -45,11 +46,38 @@ export function brandLogo(brand: string): string | null {
    moves into the alt text there, so nothing is lost to a screen reader. On
    the picker tiles the name is still printed under the tile, so the image
    stays decorative and silent. */
+/* EQUAL INK, not equal boxes.
+
+   A max box gives every mark the largest size that fits, which sounds fair and
+   is not: what fits depends entirely on the shape. Measured on the results
+   hero at h=28/max=150, Samsung's 5.47:1 wordmark drew 150x27 = 4,109px of
+   ink and Apple's near-square glyph drew about 23x28 = 644. Six times the
+   presence for one maker over another, decided by nothing but aspect ratio
+   (owner 2026-08-30: "brand image sizing issue, specially apple. improper
+   sizes for all").
+
+   So the constant is AREA. For a mark of aspect r, height = sqrt(A/r) makes
+   r * height^2 -- the drawn area -- the same for every brand. A is (1.5h)^2,
+   which puts a square glyph at 1.5x the old height and a long wordmark at
+   about two thirds of it, and the clamps stop either extreme from running
+   away.
+
+   The aspect is only knowable once the file has loaded, so it is measured
+   there. Until then the mark draws in the old max box, which is the right
+   fallback: it is what every one of these looked like yesterday. */
+const AREA_K = 1.5;      // a square mark draws this many times `h` tall
+const MIN_K = 0.55;      // a very wide wordmark still has to be readable
+const MAX_K = 1.6;       // a very tall glyph must not tower over its row
+
 export function BrandLogo({ brand, h = 16, max = "72px", named = false }: {
   brand: string; h?: number; max?: string; named?: boolean;
 }) {
   const url = brandLogo(brand);
+  const [aspect, setAspect] = useState(0);
   if (!url) return null;
+  const drawn = aspect
+    ? Math.min(Math.max(Math.sqrt((AREA_K * h) ** 2 / aspect), h * MIN_K), h * MAX_K)
+    : h;
   /* NOT loading="lazy". Width is auto here, and an <img> that has not loaded
      has no intrinsic width, so its box is 0 wide -- which the lazy loader
      reads as zero-area and never off-screen, so it never fetches, so the
@@ -58,6 +86,10 @@ export function BrandLogo({ brand, h = 16, max = "72px", named = false }: {
      defer. */
   return (
     <img src={url} alt={named ? brand : ""} aria-hidden={named ? undefined : "true"}
-      style={st(`width:auto; height:auto; max-width:${max}; max-height:${h}px; display:block; flex-shrink:0;`)} />
+      onLoad={(e) => {
+        const i = e.currentTarget;
+        if (i.naturalWidth && i.naturalHeight) setAspect(i.naturalWidth / i.naturalHeight);
+      }}
+      style={st(`width:auto; height:auto; max-width:${max}; max-height:${drawn.toFixed(1)}px; display:block; flex-shrink:0;`)} />
   );
 }

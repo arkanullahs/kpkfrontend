@@ -333,7 +333,14 @@ function HeroPick({ p, budget, pct, onClick }: {
       {/* LEFT: identity, price, official pitch, strengths, owner note */}
       <div style={st("min-width:0;")}>
         <div style={st("display:flex; gap:16px;")}>
-          <PhonePhoto src={p.image} pid={p.id} w="clamp(92px,24vw,132px)" h="clamp(122px,32vw,176px)" />
+          {/* the pick's own picture, given the space the jargon vacated and a
+              tint to sit on so it reads as the subject of the card rather than
+              a thumbnail beside a wall of chips (owner: "highlight the hero
+              phone image in results") */}
+          <div style={st("position:relative; flex-shrink:0; padding:6px; border-radius:var(--r); background:linear-gradient(160deg, var(--tint), transparent 75%);")}>
+            <PhonePhoto src={p.image} pid={p.id} pad={1}
+              w="clamp(122px,30vw,190px)" h="clamp(162px,40vw,252px)" />
+          </div>
           <div style={st("flex:1; min-width:0;")}>
             <div style={st("display:flex; align-items:flex-start; justify-content:space-between; gap:8px;")}>
               <div style={st("min-width:0;")}>
@@ -352,21 +359,11 @@ function HeroPick({ p, budget, pct, onClick }: {
               <span style={st("font-size:clamp(23px,2.6vw,30px); font-weight:400; letter-spacing:-1px; color:var(--ink); line-height:1;")}>{takaRange(lo, hi)}</span>
               <span style={st("font-size:13px; color:var(--mut2); margin-bottom:2px;")}>at {p.in_stock_shops ?? 0} shops</span>
             </div>
+            {/* what each size costs stays WITH the price it qualifies, and it
+                is the block that keeps this column level with the other one */}
+            <VariantLine variants={p.variants} />
           </div>
         </div>
-
-        <div style={st("display:flex; align-items:center; gap:7px; margin-top:12px; flex-wrap:wrap;")}>
-          <ChannelChips p={p} />
-          <MarketChips regions={p.regions} />
-          <PriceSource primary={p.best_price_primary} />
-          {p.data_caution && p.data_caution.level !== "low" && <DataCautionChip dc={p.data_caution} small />}
-          {(p.strengths || []).map((s, i) => (
-            <span key={i} style={st("font-size:12.5px; color:var(--tx); background:rgba(var(--rgb-ink),.055); padding:5px 11px; border-radius:var(--r);")}>{axisLabel(s.axis)} {s.score}</span>
-          ))}
-        </div>
-
-        <SpecStrip tiles={p.spec_strip} />
-        <VariantLine variants={p.variants} />
 
         {note && (
           <div style={st("display:flex; gap:9px; margin-top:10px; padding:11px 13px; border-radius:var(--r); background:rgba(var(--rgb-amber),.09);")}>
@@ -395,6 +392,26 @@ function HeroPick({ p, budget, pct, onClick }: {
         {p.smart_verdict && (
           <p style={st("margin:2px 0 0; font-size:15px; color:var(--ink2); line-height:1.6; text-wrap:pretty;")}>{p.smart_verdict}</p>
         )}
+
+        {/* The chips and the spec strip live HERE, under the verdict, not
+            beside the photo (owner 2026-08-30: "move the jargon to the right
+            empty space"). Two reasons it is better and not just tidier: this
+            column used to end at the verdict and leave a third of the card
+            empty while the left ran on, and the chips are the detail a reader
+            reaches for AFTER the sentence that tells them what the phone is.
+            Name, price and photo stay on the left, which is the part someone
+            scanning a results page actually reads. */}
+        <div style={st("display:flex; align-items:center; gap:7px; margin-top:4px; flex-wrap:wrap;")}>
+          <ChannelChips p={p} />
+          <MarketChips regions={p.regions} />
+          <PriceSource primary={p.best_price_primary} />
+          {p.data_caution && p.data_caution.level !== "low" && <DataCautionChip dc={p.data_caution} small />}
+          {(p.strengths || []).map((s, i) => (
+            <span key={i} style={st("font-size:12.5px; color:var(--tx); background:rgba(var(--rgb-ink),.055); padding:5px 11px; border-radius:var(--r);")}>{axisLabel(s.axis)} {s.score}</span>
+          ))}
+        </div>
+
+        <SpecStrip tiles={p.spec_strip} />
         </div>
       </div>
 
