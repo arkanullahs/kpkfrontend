@@ -190,11 +190,17 @@
     .dprice { display: flex; flex-direction: column; justify-content: center; align-items: flex-end; text-align: right; }
     .dprice > div { justify-content: flex-end; }
     @media (max-width: 820px) {
-      .dhero { grid-template-columns: minmax(0,37%) minmax(0,1fr); gap: 16px; align-items: start; --ph-w: 100%; --ph-h: 100%; }
-      /* a 3:4 render is always shorter than the text beside it at this width,
-         so the stretched cell paints the panel and the photo floats in it --
-         otherwise the render sits in an empty white box the height of a card */
-      .dphoto { grid-row: 1 / span 2; align-self: stretch; background: linear-gradient(165deg, var(--tint), transparent 72%); }
+      .dhero { grid-template-columns: minmax(0,42%) minmax(0,1fr); gap: 16px; align-items: start; --ph-w: 100%; --ph-h: 100%; }
+      /* The photo fills the NAME row only, and the price runs the full width
+         underneath it. Spanning both rows drew a 165x700 panel with a small
+         render floating in the middle of it, because a 3:4 picture cannot be as
+         tall as four spec chips, three market chips and two warnings stacked in
+         a 170px column (owner 2026-08-30, on prod: "production looks weird like
+         this"); aspect-locking that panel instead just moved the hole under the
+         photo. Against ONE row the photo is 135x190-ish, and nothing is left
+         over on either side. */
+      .dphoto { grid-row: 1; align-self: stretch; background: linear-gradient(165deg, var(--tint), transparent 72%); }
+      .dprice { grid-column: 1 / -1; }
       .dprice { align-items: flex-start; text-align: left; justify-content: flex-start; margin-top: 4px; }
       .dprice > div { justify-content: flex-start; }
     }
