@@ -156,12 +156,12 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
     const official = listings.listings.filter((l) => l.channel === "official");
     const other = listings.listings.filter((l) => l.channel !== "official");
     if (!official.length || !other.length) {
-      return [{ key: "all", title: t("where_to_buy"), view: listings }];
+      return [{ key: "all", chan: null, title: t("where_to_buy"), view: listings }];
     }
     return [
-      { key: "official", title: `${t("where_to_buy")} · ${t("official")}`,
+      { key: "official", chan: "official", title: t("where_to_buy"),
         view: { ...listings, listings: official, axes } },
-      { key: "unofficial", title: `${t("where_to_buy")} · ${t("unofficial")}`,
+      { key: "unofficial", chan: "unofficial", title: t("where_to_buy"),
         view: { ...listings, listings: other, axes } },
     ];
   })();
@@ -434,9 +434,19 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             list by channel is a control that can only ever remove everything.
             A phone that sells on one channel only renders one card, under the
             plain heading, because "official" on its own is not a split. */}
-        {shopCards.map((c, i) => (
-          <Card key={c.key}>
-            <SectionLabel>{c.title}</SectionLabel>
+        {shopCards.map((c, i) => {
+          const ch = c.chan ? CHAN_CARD[c.chan] : null;
+          return (
+          <Card key={c.key} accent={ch?.ink}>
+            <div style={st("display:flex; align-items:center; gap:10px; flex-wrap:wrap;")}>
+              <SectionLabel>{c.title}</SectionLabel>
+              {ch && (
+                <span style={st(`display:inline-flex; align-items:center; font-size:12px; font-weight:700; padding:5px 12px; border-radius:var(--r); color:${ch.ink}; background:${ch.bg};`)}>{t(ch.pill)}</span>
+              )}
+            </div>
+            {ch && (
+              <p style={st("margin:8px 0 0; font-size:13px; line-height:1.55; color:var(--mut2);")}>{t(ch.note)}</p>
+            )}
             {i === 0 && (
               <>
                 <div style={st("display:flex; gap:9px; margin-top:12px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1);")}>
@@ -463,7 +473,8 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               </p>
             )}
           </Card>
-        ))}
+          );
+        })}
       </div>
       </>
       )}
@@ -662,9 +673,23 @@ function Wrap({ children }: { children: ReactNode; onBack?: () => void }) {
     </div>
   );
 }
-function Card({ children }: { children: ReactNode }) {
-  return <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); break-inside:avoid; margin-bottom:14px;")}>{children}</div>;
+function Card({ children, accent }: { children: ReactNode; accent?: string }) {
+  return <div style={st(`background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); break-inside:avoid; margin-bottom:14px;${accent ? ` border-top:3px solid ${accent};` : ""}`)}>{children}</div>;
 }
+
+/* The two shop cards carry the SAME shops, the same variant chips and prices
+   in the same order -- the only thing that differed was a "· Official" suffix
+   on a 12px grey label, so at a glance the buyer could not tell which market
+   they were reading (owner 2026-08-30: "the both price variant picking thing
+   looks almost identical"). Each card now states its channel in its own colour
+   and says what that channel means for the warranty. Strings are the ones the
+   quiz and the hero chips already use, so the wording matches everywhere. */
+const CHAN_CARD: Record<string, { pill: string; note: string; ink: string; bg: string }> = {
+  official: { pill: "official_bd", note: "s_warranty_why",
+    ink: "var(--tealD)", bg: "rgba(var(--rgb-teal),.12)" },
+  unofficial: { pill: "unofficial_import", note: "q_channel_s",
+    ink: "var(--acd)", bg: "rgba(var(--rgb-amber),.13)" },
+};
 function SectionLabel({ children }: { children: ReactNode }) {
   return <div style={st("font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--mut2);")}>{children}</div>;
 }
