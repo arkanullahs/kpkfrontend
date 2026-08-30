@@ -84,11 +84,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/iqoo-neo10-pro-plus",
-      "destination": "/brand/iqoo",
-      "permanent": true
-    },
-    {
       "source": "/phone/iqoo-neo11",
       "destination": "/brand/iqoo",
       "permanent": true
