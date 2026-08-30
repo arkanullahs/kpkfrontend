@@ -145,6 +145,27 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   // disagree about who is cheapest (core.specfmt.listing_view)
   const listings = d?.listings || null;
 
+  /* The shop list, split into one view per channel. `unstated` rides with
+     unofficial: it is a listing whose warranty nobody would call official, and
+     a third card for "we could not tell" would be a bucket, not a market.
+     One channel present = one card under the plain heading, because a split
+     with nothing on the other side is just a label. */
+  const shopCards = (() => {
+    if (!listings || !listings.listings.length) return [];
+    const axes = listings.axes.filter((a) => a.key !== "chan");
+    const official = listings.listings.filter((l) => l.channel === "official");
+    const other = listings.listings.filter((l) => l.channel !== "official");
+    if (!official.length || !other.length) {
+      return [{ key: "all", title: t("where_to_buy"), view: listings }];
+    }
+    return [
+      { key: "official", title: `${t("where_to_buy")} · ${t("official")}`,
+        view: { ...listings, listings: official, axes } },
+      { key: "unofficial", title: `${t("where_to_buy")} · ${t("unofficial")}`,
+        view: { ...listings, listings: other, axes } },
+    ];
+  })();
+
   return (
     <Wrap onBack={onBack}>
       {/* hero (renders instantly from the pick hint) */}
@@ -352,9 +373,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
         {d?.youtube && (d.youtube.videos?.length || d.youtube.points?.length || d.youtube.verdict) && (
           <Card><YoutubeSection yt={d.youtube} /></Card>
         )}
-      </div>
 
-      <div className="k-stagger" style={st("columns:330px 2; column-gap:14px; margin-top:14px;")}>
         {/* value retention (estimated from brand resale reputation) */}
         {bs?.resale != null && (
           <Card><ValueRetention brand={brand} resale={bs.resale} updateRecord={bs.update_record ?? null} ageYears={d?.age_years ?? h?.age_years ?? null} price={price} /></Card>
@@ -392,29 +411,52 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             "who is cheapest". Both render core.specfmt.listing_view now.
             Still no outbound links: naming a shop is disclosure, sending it
             traffic is a business model we do not have. */}
-        {listings && listings.listings.length > 0 && (
-          <Card>
-            <SectionLabel>{t("where_to_buy")}</SectionLabel>
-            <div style={st("display:flex; gap:9px; margin-top:12px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1);")}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              <span style={st("font-size:13.5px; color:var(--acd); line-height:1.55;")}>{t("price_warning")}</span>
-            </div>
-            {/* the warranty premium, subtracted for the reader and told once —
-                only on a configuration where BOTH channels are really on sale,
-                or it is two different phones being subtracted */}
-            {listings.premium && (
-              <p style={st("margin:14px 0 0; font-size:13.5px; line-height:1.55; color:var(--mut);")}>
-                {t("warranty_premium")
-                  .replace("{v}", listings.premium.variant)
-                  .replace("{p}", taka(listings.premium.diff))}
+        {/* ONE CARD PER CHANNEL (owner 2026-08-30: "split the shop list into
+            two cards, OFFICIAL AND UNOFFICIAL"). Same split the price charts,
+            the daily posts and the /phone/ pages all moved to: official and
+            unofficial are separate markets, and a single list interleaved them
+            so the cheapest row was whichever channel happened to undercut,
+            with the warranty question left to the reader.
+
+            It also un-wedges the layout. This card is by far the tallest thing
+            on the screen -- 700px taller than anything that could sit beside
+            it -- so as one block it left the other column empty to the footer.
+            Two cards can flow into two columns.
+
+            The `chan` axis is dropped inside each card: filtering a channel
+            list by channel is a control that can only ever remove everything.
+            A phone that sells on one channel only renders one card, under the
+            plain heading, because "official" on its own is not a split. */}
+        {shopCards.map((c, i) => (
+          <Card key={c.key}>
+            <SectionLabel>{c.title}</SectionLabel>
+            {i === 0 && (
+              <>
+                <div style={st("display:flex; gap:9px; margin-top:12px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1);")}>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  <span style={st("font-size:13.5px; color:var(--acd); line-height:1.55;")}>{t("price_warning")}</span>
+                </div>
+                {/* the warranty premium, subtracted for the reader and told
+                    once — only on a configuration where BOTH channels are
+                    really on sale, or it is two different phones being
+                    subtracted */}
+                {listings!.premium && (
+                  <p style={st("margin:14px 0 0; font-size:13.5px; line-height:1.55; color:var(--mut);")}>
+                    {t("warranty_premium")
+                      .replace("{v}", listings!.premium.variant)
+                      .replace("{p}", taka(listings!.premium.diff))}
+                  </p>
+                )}
+              </>
+            )}
+            <ShopPrices view={c.view} />
+            {i === shopCards.length - 1 && (
+              <p style={st("margin:18px 0 0; padding-top:14px; border-top:1px solid rgba(var(--rgb-ink),.06); font-size:12px; color:var(--faint); line-height:1.55; text-wrap:pretty;")}>
+                {t("shop_names_note")}
               </p>
             )}
-            <ShopPrices view={listings} />
-            <p style={st("margin:18px 0 0; padding-top:14px; border-top:1px solid rgba(var(--rgb-ink),.06); font-size:12px; color:var(--faint); line-height:1.55; text-wrap:pretty;")}>
-              {t("shop_names_note")}
-            </p>
           </Card>
-        )}
+        ))}
       </div>
       </>
       )}
