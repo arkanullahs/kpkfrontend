@@ -339,7 +339,7 @@ function HeroPick({ p, budget, pct, onClick }: {
               phone image in results") */}
           <div style={st("position:relative; flex-shrink:0; padding:6px; border-radius:var(--r); background:linear-gradient(160deg, var(--tint), transparent 75%);")}>
             <PhonePhoto src={p.image} pid={p.id} pad={1}
-              w="clamp(122px,30vw,190px)" h="clamp(162px,40vw,252px)" />
+              w="clamp(112px,32vw,190px)" h="clamp(150px,42vw,252px)" />
           </div>
           <div style={st("flex:1; min-width:0;")}>
             <div style={st("display:flex; align-items:flex-start; justify-content:space-between; gap:8px;")}>
@@ -359,11 +359,17 @@ function HeroPick({ p, budget, pct, onClick }: {
               <span style={st("font-size:clamp(23px,2.6vw,30px); font-weight:400; letter-spacing:-1px; color:var(--ink); line-height:1;")}>{takaRange(lo, hi)}</span>
               <span style={st("font-size:13px; color:var(--mut2); margin-bottom:2px;")}>at {p.in_stock_shops ?? 0} shops</span>
             </div>
-            {/* what each size costs stays WITH the price it qualifies, and it
-                is the block that keeps this column level with the other one */}
-            <VariantLine variants={p.variants} />
           </div>
         </div>
+
+        {/* what each size costs sits UNDER the photo row, not inside the text
+            column beside it. At 375px that column is about 200px wide and the
+            variants stacked one per line into a tall ragged block with dead
+            space beside the photo (owner 2026-08-30: "on phone view balance
+            too"). Out here it has the card's full width and wraps two or three
+            to a row; on desktop it is still in the left column, where it keeps
+            the two sides level. */}
+        <VariantLine variants={p.variants} />
 
         {note && (
           <div style={st("display:flex; gap:9px; margin-top:10px; padding:11px 13px; border-radius:var(--r); background:rgba(var(--rgb-amber),.09);")}>

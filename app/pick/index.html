@@ -167,6 +167,38 @@
     /* stock badge overflows into the logo on very narrow phones */
     @media (max-width: 420px) { .khstock { display: none !important; } }
 
+    /* DETAIL HERO. Two things inline styles cannot do, because st() emits a
+       style attribute and a style attribute has no media queries:
+
+       1. The price block hugs the RIGHT edge on desktop. As a 1fr/1fr grid its
+          column was half the card and its content sat at the left of that half,
+          so the card ended in ~200px of dead space (owner 2026-08-30: "could
+          right align the prices and details not leaving too much dead space").
+          `auto` sizes that column to its content instead.
+       2. The photo grows on PHONES and stays put on desktop -- the opposite of
+          what a clamp() can express, since clamp only ever grows with the
+          viewport. The size rides on custom properties the media query
+          rewrites, which the inline width:var(--ph-w) then picks up.
+
+       Under 820px the grid is one column, so right-alignment would leave the
+       price ragged against a left-aligned name: it flips back. */
+    .dhero { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: clamp(20px,3vw,32px); --ph-w: 124px; --ph-h: 166px; }
+    .dprice { display: flex; flex-direction: column; justify-content: center; align-items: flex-end; text-align: right; }
+    .dtr-desk { display: flex; }
+    .dprice > div { justify-content: flex-end; }
+    .dtr-phone { display: none; }
+    @media (max-width: 820px) {
+      .dhero { grid-template-columns: 1fr; --ph-w: 164px; --ph-h: 218px; }
+      .dprice { align-items: stretch; text-align: left; flex-direction: row; gap: 14px; }
+      .dprice > div { justify-content: flex-start; }
+      .dpmain { flex: 1 1 auto; min-width: 0; }
+      /* the spec words become a right rail beside the price, one per line */
+      .dtr-phone { display: flex; flex: 0 0 auto; flex-direction: column; align-items: flex-end; max-width: 42%; margin-top: 4px; }
+      .dtr-desk { display: none; }
+    }
+    /* the narrowest phones cannot spare 164px beside the model name */
+    @media (max-width: 400px) { .dhero { --ph-w: 132px; --ph-h: 176px; } }
+
     /* interaction layer — the inline styles set the look, these add the feel.
        Pressable elements lift on hover, depress on click, and brighten if they
        carry a gradient. Keeps the whole app feeling alive without per-component

@@ -166,12 +166,23 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
     ];
   })();
 
+  const traitChips = (cls: string) =>
+    traits.length > 0 ? (
+      <div className={cls} style={st("flex-wrap:wrap; gap:6px; margin-top:13px;")}>
+        {traits.map((tx, i) => (
+          <span key={i} style={st("font-size:11.5px; font-weight:600; color:var(--mut); background:rgba(var(--rgb-ink),.05); padding:5px 11px; border-radius:var(--r);")}>{tx}</span>
+        ))}
+      </div>
+    ) : null;
+
   return (
     <Wrap onBack={onBack}>
       {/* hero (renders instantly from the pick hint) */}
-      <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,32px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 16px 40px rgba(var(--rgb-ink),.09); margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:clamp(20px,3vw,32px);")}>
-        <div style={st("display:flex; gap:18px;")}>
-          <PhonePhoto src={image} pid={pid} w="clamp(100px,11vw,124px)" h="clamp(134px,15vw,166px)" radius={18} />
+      {/* .dhero owns the COLUMNS and the photo size (pick/index.html): both
+          need media queries, which an inline style attribute cannot carry */}
+      <div className="dhero" style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,32px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 16px 40px rgba(var(--rgb-ink),.09); margin-top:16px;")}>
+        <div style={st("display:flex; gap:18px; align-items:center;")}>
+          <PhonePhoto src={image} pid={pid} w="var(--ph-w)" h="var(--ph-h)" radius={18} pad={2} />
           <div style={st("min-width:0;")}>
             <div style={st("display:flex; align-items:center; gap:9px; flex-wrap:wrap;")}>
               <span style={st("display:flex; align-items:center; gap:7px; font-size:13px; color:var(--mut2); font-weight:500;")}>
@@ -183,16 +194,11 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             </div>
             <h1 style={st("margin:4px 0 0; font-size:clamp(26px,3.6vw,38px); font-weight:700; letter-spacing:-1.2px; line-height:1.1;")}>{model}</h1>
             <div style={st("margin-top:8px; font-size:14px; color:var(--mut);")}>{headlinePhrase(dom)}{scores[dom] != null && <> · {axisLabel(dom)} <span style={st("color:var(--lnk); font-weight:700;")}>{scores[dom]}</span></>}</div>
-            {traits.length > 0 && (
-              <div style={st("display:flex; flex-wrap:wrap; gap:6px; margin-top:13px;")}>
-                {traits.map((tx, i) => (
-                  <span key={i} style={st("font-size:11.5px; font-weight:600; color:var(--mut); background:rgba(var(--rgb-ink),.05); padding:5px 11px; border-radius:var(--r);")}>{tx}</span>
-                ))}
-              </div>
-            )}
+            {traitChips("dtr-desk")}
           </div>
         </div>
-        <div style={st("display:flex; flex-direction:column; justify-content:center;")}>
+        <div className="dprice">
+          <div className="dpmain">
           <div style={st("display:flex; align-items:flex-end; gap:11px; flex-wrap:wrap;")}>
             <span style={st("font-size:clamp(28px,3.4vw,38px); font-weight:300; letter-spacing:-1.4px; line-height:1;")}>{takaRange(priceLo, priceHi)}</span>
           </div>
@@ -216,6 +222,13 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               </span></>
             )}
           </div>
+          </div>
+          {/* the SAME chips, second copy: on a phone the identity column is
+              ~150px wide and the spec words wrapped three deep there while the
+              space to the right of the price sat empty (owner 2026-08-30:
+              "this jargon could go right and hero image fill that up"). One of
+              the two copies is display:none at every width. */}
+          {traitChips("dtr-phone")}
         </div>
       </div>
 
