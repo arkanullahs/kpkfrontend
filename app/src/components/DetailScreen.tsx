@@ -338,18 +338,21 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             </div>
           </Card>
         )}
-      </div>
 
-      {/* What reviewers said -- full width, and directly under the specs
-          (owner 2026-08-30: "priority is like very top, just right after
-          specs"). Out of the masonry columns on purpose: the review grid is
-          the widest thing on this screen and a 330px column turned every card
-          into a single stacked row. */}
-      {d?.youtube && (d.youtube.videos?.length || d.youtube.points?.length || d.youtube.verdict) && (
-        <div className="k-stagger" style={st("margin-top:14px;")}>
+        {/* What reviewers said, IN the masonry (owner 2026-08-30: "couldnt u
+            move the yt reviews in the blank space ... so no invisible space").
+            This block used to sit full width in a row of its own, on the
+            argument that a 330px column turns every review into a single
+            stacked row. It does -- and a stacked row with the still on the
+            left is the same shape the /phone/ page uses on a narrow screen,
+            which reads fine. What does not read fine is the hole: the specs
+            card is tall, the price charts are short, and the column beside
+            them ended in a third of a screen of nothing. Filling that beats
+            three-across. */}
+        {d?.youtube && (d.youtube.videos?.length || d.youtube.points?.length || d.youtube.verdict) && (
           <Card><YoutubeSection yt={d.youtube} /></Card>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="k-stagger" style={st("columns:330px 2; column-gap:14px; margin-top:14px;")}>
         {/* value retention (estimated from brand resale reputation) */}

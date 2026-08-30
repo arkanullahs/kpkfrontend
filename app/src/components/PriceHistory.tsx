@@ -104,7 +104,10 @@ function Chart({ chan, pts }: { chan: string; pts: Pt[] }) {
                 <stop offset="1" stopColor={ink} stopOpacity="0" />
               </linearGradient>
             </defs>
-            <polygon fill={`url(#${gid})`} points={area} />
+            {/* no fill under a FLAT line: the area runs from mid-height to the
+                baseline and reads as a solid slab, which looks like a value
+                rather than a price that simply never moved */}
+            {!flat && <polygon fill={`url(#${gid})`} points={area} />}
             {refs.map((v) => (
               <line key={v} x1="0" y1={y(v)} x2={W} y2={y(v)}
                 stroke="rgba(var(--rgb-ink),.09)" strokeWidth="1"
