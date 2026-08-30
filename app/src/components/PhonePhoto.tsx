@@ -10,8 +10,12 @@ const _resolved = new Map<string, string | null>();
     fails), and we know the phone id, we ask the API to outsource one — from the
     phone's GSMArena render or a live GadgetGear search — then show that. Final
     fallback is a soft phone-silhouette placeholder, not a stripey box. */
-export function PhonePhoto({ src, pid, w, h, radius = 14, pad = 6 }: {
+export function PhonePhoto({ src, pid, w, h, radius = 14, pad = 6, bg }: {
   src?: string | null; pid?: string | null; w: string; h: string; radius?: number;
+  /** paint behind the render. The detail hero passes "transparent" because
+      there the tile is stretched to the full height of the text beside it and
+      the panel tint is painted by the grid cell instead. */
+  bg?: string;
   /** inset around the render, in percent. 6 is right for a thumbnail in a row
       of them; the results hero passes ~1, because there the photo IS the
       subject and every percent of inset is the phone drawn smaller (owner
@@ -44,7 +48,7 @@ export function PhonePhoto({ src, pid, w, h, radius = 14, pad = 6 }: {
 
   if (show) {
     return (
-      <div style={st(box + " background:var(--card); display:flex; align-items:center; justify-content:center;")}>
+      <div style={st(box + ` background:${bg || "var(--card)"}; display:flex; align-items:center; justify-content:center;`)}>
         <img src={(failed ? resolved : goodSrc) || resolved || undefined} alt="" loading="lazy"
           onError={() => { if (!failed) setFailed(true); else setResolved(null); }}
           style={st(`width:100%; height:100%; object-fit:contain; padding:${pad}%;`)} />
@@ -52,7 +56,7 @@ export function PhonePhoto({ src, pid, w, h, radius = 14, pad = 6 }: {
     );
   }
   return (
-    <div style={st(box + " background:linear-gradient(160deg,var(--bg),var(--bg)); display:flex; align-items:center; justify-content:center;")}>
+    <div style={st(box + ` background:${bg || "var(--bg)"}; display:flex; align-items:center; justify-content:center;`)}>
       <svg width="42%" height="42%" viewBox="0 0 24 24" fill="none">
         <rect x="6.5" y="2.5" width="11" height="19" rx="2.5" stroke="var(--faint)" strokeWidth="1.4" />
         <line x1="10.5" y1="18.6" x2="13.5" y2="18.6" stroke="var(--faint)" strokeWidth="1.4" strokeLinecap="round" />

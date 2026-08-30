@@ -168,9 +168,9 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
 
   const traitChips = (cls: string) =>
     traits.length > 0 ? (
-      <div className={cls} style={st("flex-wrap:wrap; gap:6px; margin-top:13px;")}>
+      <div className={cls} style={st("display:flex; flex-wrap:wrap; gap:6px; margin-top:13px;")}>
         {traits.map((tx, i) => (
-          <span key={i} style={st("font-size:11.5px; font-weight:600; color:var(--mut); background:rgba(var(--rgb-ink),.05); padding:5px 11px; border-radius:var(--r);")}>{tx}</span>
+          <span key={i} style={st("font-size:11.5px; font-weight:600; white-space:nowrap; color:var(--mut); background:rgba(var(--rgb-ink),.05); padding:5px 11px; border-radius:var(--r);")}>{tx}</span>
         ))}
       </div>
     ) : null;
@@ -181,9 +181,10 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
       {/* .dhero owns the COLUMNS and the photo size (pick/index.html): both
           need media queries, which an inline style attribute cannot carry */}
       <div className="dhero" style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,32px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 16px 40px rgba(var(--rgb-ink),.09); margin-top:16px;")}>
-        <div style={st("display:flex; gap:18px; align-items:center;")}>
-          <PhonePhoto src={image} pid={pid} w="var(--ph-w)" h="var(--ph-h)" radius={18} pad={2} />
-          <div style={st("min-width:0;")}>
+        <div className="dphoto">
+          <PhonePhoto src={image} pid={pid} w="var(--ph-w)" h="var(--ph-h)" radius={18} pad={2} bg="transparent" />
+        </div>
+        <div className="dident" style={st("min-width:0;")}>
             <div style={st("display:flex; align-items:center; gap:9px; flex-wrap:wrap;")}>
               <span style={st("display:flex; align-items:center; gap:7px; font-size:13px; color:var(--mut2); font-weight:500;")}>
                 <BrandLogo brand={brand} h={28} max="150px" named />
@@ -194,8 +195,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             </div>
             <h1 style={st("margin:4px 0 0; font-size:clamp(26px,3.6vw,38px); font-weight:700; letter-spacing:-1.2px; line-height:1.1;")}>{model}</h1>
             <div style={st("margin-top:8px; font-size:14px; color:var(--mut);")}>{headlinePhrase(dom)}{scores[dom] != null && <> · {axisLabel(dom)} <span style={st("color:var(--lnk); font-weight:700;")}>{scores[dom]}</span></>}</div>
-            {traitChips("dtr-desk")}
-          </div>
+            {traitChips("dtraits")}
         </div>
         <div className="dprice">
           <div className="dpmain">
@@ -223,12 +223,6 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
             )}
           </div>
           </div>
-          {/* the SAME chips, second copy: on a phone the identity column is
-              ~150px wide and the spec words wrapped three deep there while the
-              space to the right of the price sat empty (owner 2026-08-30:
-              "this jargon could go right and hero image fill that up"). One of
-              the two copies is display:none at every width. */}
-          {traitChips("dtr-phone")}
         </div>
       </div>
 
