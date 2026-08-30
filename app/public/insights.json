@@ -13,10 +13,10 @@
  "stories": [
   {
    "slug": "risers",
-   "kicker": "GOING THE OTHER WAY",
-   "headline": "The Apple iPhone 17 Pro Max costs ==৳35,000 more== than it did a month ago",
-   "caption": "Everyone tells you to wait, that phones only get cheaper. Here is what waiting a month on the Apple iPhone 17 Pro Max did.\n\n৳164,999 on 30 July. ৳199,999 today. 34 phones we track cost more now than they did a month ago:\n\n• Apple iPhone 17 Pro Max: ৳164,999 to ৳199,999 (+21%, official price)\n• Apple iPhone 17 Pro: ৳159,999 to ৳185,999 (+16%, official price)\n• OnePlus 13: ৳74,490 to ৳90,999 (+22%, unofficial price)\n• OPPO Reno 14 5G: ৳39,990 to ৳48,990 (+22%, unofficial price)\n\nThat is the cheapest listed price on that channel, read every night and plotted above. Full chart:\nhttps://bhalophone.com/phone/apple-iphone-17-pro-max\n\nEver waited for a price to fall and watched it climb?",
-   "standfirst": "৳164,999 on 30 July, ৳199,999 today. Official price, at 9 shops. Unofficial fell ৳4,000 over the same weeks, ৳156,490 to ৳152,490.",
+   "kicker": "OFFICIAL PRICE",
+   "headline": "The Apple iPhone 17 Pro Max official price is ==৳35,000 more== than it was a month ago",
+   "caption": "Everyone tells you to wait, that phones only get cheaper. Here is what waiting a month did to the Apple iPhone 17 Pro Max's official price.\n\n৳164,999 on 30 July. ৳199,999 today. 34 phones we track cost more now than they did a month ago:\n\n• Apple iPhone 17 Pro Max: ৳164,999 to ৳199,999 (+21%, official price)\n• Apple iPhone 17 Pro: ৳159,999 to ৳185,999 (+16%, official price)\n• OnePlus 13: ৳74,490 to ৳90,999 (+22%, unofficial price)\n• OPPO Reno 14 5G: ৳39,990 to ৳48,990 (+22%, unofficial price)\n\nThat is the cheapest listed price on that channel, read every night and plotted above. Full chart:\nhttps://bhalophone.com/phone/apple-iphone-17-pro-max\n\nEver waited for a price to fall and watched it climb?",
+   "standfirst": "৳164,999 on 30 July, ৳199,999 today, at 9 shops.",
    "source": "bhalophone.com · 34 phones dearer than last month",
    "panel": {
     "kind": "chart",
@@ -218,7 +218,95 @@
        "2026-08-30",
        199999
       ]
-     ],
+     ]
+    },
+    "axis": [
+     "11 June",
+     "30 August",
+     "29 July"
+    ],
+    "highlight": "official",
+    "labels": {
+     "official": "Official"
+    }
+   },
+   "items": [
+    {
+     "id": "Apple|iphone 17 pro max",
+     "name": "Apple iPhone 17 Pro Max",
+     "brand": "Apple",
+     "channel": "official",
+     "was": 164999,
+     "now": 199999,
+     "delta": 35000,
+     "pct": 21.2,
+     "shops": 9,
+     "since": "2026-07-30",
+     "until": "2026-08-30"
+    },
+    {
+     "id": "Apple|iphone 17 pro",
+     "name": "Apple iPhone 17 Pro",
+     "brand": "Apple",
+     "channel": "official",
+     "was": 159999,
+     "now": 185999,
+     "delta": 26000,
+     "pct": 16.3,
+     "shops": 9,
+     "since": "2026-07-30",
+     "until": "2026-08-30"
+    },
+    {
+     "id": "OnePlus|13",
+     "name": "OnePlus 13",
+     "brand": "OnePlus",
+     "channel": "unofficial",
+     "was": 74490,
+     "now": 90999,
+     "delta": 16509,
+     "pct": 22.2,
+     "shops": 1,
+     "since": "2026-07-30",
+     "until": "2026-08-30"
+    },
+    {
+     "id": "OPPO|reno 14",
+     "name": "OPPO Reno 14 5G",
+     "brand": "OPPO",
+     "channel": "unofficial",
+     "was": 39990,
+     "now": 48990,
+     "delta": 9000,
+     "pct": 22.5,
+     "shops": 5,
+     "since": "2026-07-30",
+     "until": "2026-08-30"
+    }
+   ],
+   "bullets": [
+    "Apple iPhone 17 Pro Max: ৳164,999 to ৳199,999 (+21%, official price)",
+    "Apple iPhone 17 Pro: ৳159,999 to ৳185,999 (+16%, official price)",
+    "OnePlus 13: ৳74,490 to ৳90,999 (+22%, unofficial price)",
+    "OPPO Reno 14 5G: ৳39,990 to ৳48,990 (+22%, unofficial price)"
+   ],
+   "ids": [
+    "Apple|iphone 17 pro max",
+    "Apple|iphone 17 pro",
+    "OnePlus|13",
+    "OPPO|reno 14"
+   ]
+  },
+  {
+   "slug": "risers_other",
+   "kicker": "UNOFFICIAL PRICE",
+   "headline": "The Apple iPhone 17 Pro Max unofficial price fell ==৳4,000== over the same weeks",
+   "caption": "The other price of the same phone.\n\nWe read the Apple iPhone 17 Pro Max twice every night: once with a brand warranty, once without. Its unofficial price went ৳156,490 to ৳152,490 while its official price went ৳164,999 to ৳199,999. So what the warranty costs:\n\n• On 30 July: ৳8,509\n• Today: ৳47,509\n\nOfficial against official, unofficial against unofficial, every night. Both lines:\nhttps://bhalophone.com/phone/apple-iphone-17-pro-max\n\nIs the warranty worth that to you?",
+   "standfirst": "৳156,490 on 30 July, ৳152,490 today. Its official price went the other way, so the two went from ৳8,509 apart to ৳47,509.",
+   "source": "bhalophone.com · both prices read nightly since 2026-06-11",
+   "panel": {
+    "kind": "chart",
+    "series": {
      "unofficial": [
       [
        "2026-06-11",
@@ -420,11 +508,11 @@
     },
     "axis": [
      "11 June",
-     "30 August"
+     "30 August",
+     "29 July"
     ],
-    "highlight": "official",
+    "highlight": "unofficial",
     "labels": {
-     "official": "Official",
      "unofficial": "Unofficial"
     }
    },
@@ -441,58 +529,16 @@
      "shops": 9,
      "since": "2026-07-30",
      "until": "2026-08-30"
-    },
-    {
-     "id": "Apple|iphone 17 pro",
-     "name": "Apple iPhone 17 Pro",
-     "brand": "Apple",
-     "channel": "official",
-     "was": 159999,
-     "now": 185999,
-     "delta": 26000,
-     "pct": 16.3,
-     "shops": 9,
-     "since": "2026-07-30",
-     "until": "2026-08-30"
-    },
-    {
-     "id": "OnePlus|13",
-     "name": "OnePlus 13",
-     "brand": "OnePlus",
-     "channel": "unofficial",
-     "was": 74490,
-     "now": 90999,
-     "delta": 16509,
-     "pct": 22.2,
-     "shops": 1,
-     "since": "2026-07-30",
-     "until": "2026-08-30"
-    },
-    {
-     "id": "OPPO|reno 14",
-     "name": "OPPO Reno 14 5G",
-     "brand": "OPPO",
-     "channel": "unofficial",
-     "was": 39990,
-     "now": 48990,
-     "delta": 9000,
-     "pct": 22.5,
-     "shops": 5,
-     "since": "2026-07-30",
-     "until": "2026-08-30"
     }
    ],
    "bullets": [
-    "Apple iPhone 17 Pro Max: ৳164,999 to ৳199,999 (+21%, official price)",
-    "Apple iPhone 17 Pro: ৳159,999 to ৳185,999 (+16%, official price)",
-    "OnePlus 13: ৳74,490 to ৳90,999 (+22%, unofficial price)",
-    "OPPO Reno 14 5G: ৳39,990 to ৳48,990 (+22%, unofficial price)"
+    "Official: ৳164,999 to ৳199,999",
+    "Unofficial: ৳156,490 to ৳152,490",
+    "Gap on 30 July: ৳8,509",
+    "Gap today: ৳47,509"
    ],
    "ids": [
-    "Apple|iphone 17 pro max",
-    "Apple|iphone 17 pro",
-    "OnePlus|13",
-    "OPPO|reno 14"
+    "Apple|iphone 17 pro max"
    ]
   },
   {
