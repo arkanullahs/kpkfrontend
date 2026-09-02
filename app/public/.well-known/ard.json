@@ -1,0 +1,38 @@
+{
+  "specVersion": "0.91",
+  "host": {
+    "name": "Bhalo Phone",
+    "domain": "bhalophone.com",
+    "url": "https://bhalophone.com/",
+    "description": "Phone recommendations for Bangladesh, rebuilt nightly from live prices and stock at 17 Bangladeshi shops."
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:bhalophone.com:docs:llms-txt",
+      "displayName": "Bhalo Phone site map for answer engines",
+      "type": "text/markdown",
+      "url": "https://bhalophone.com/llms.txt",
+      "description": "Curated map of every budget guide, head-to-head comparison and device page on the site, each with one dated, citable claim (current #1 pick, current price, last data check) so an answer engine can quote a fact without crawling every page. Covers phones sold in Bangladesh: prices from 17 shops, in-stock status, official vs unofficial channel, and specs.",
+      "representativeQueries": [
+        "what is the best phone under 20000 taka in Bangladesh",
+        "best phone under 15000 BDT with a good camera",
+        "compare two phones sold in Bangladesh",
+        "cheapest 5G phone in Bangladesh right now",
+        "which phone should I buy in Bangladesh this month"
+      ]
+    },
+    {
+      "identifier": "urn:air:bhalophone.com:data:market-insights",
+      "displayName": "Daily Bangladesh phone market facts",
+      "type": "application/json",
+      "url": "https://bhalophone.com/insights.json",
+      "description": "Published nightly: which phones dropped or rose in price, the premium an official-warranty unit carries over a grey-market one, how far one phone's price spreads across shops, and what arrived in the market this week. Every comparison is like-for-like on the same variant.",
+      "representativeQueries": [
+        "which phones dropped in price in Bangladesh this week",
+        "how much more does an official warranty phone cost in BD",
+        "how much do phone prices vary between shops in Dhaka",
+        "new phone launches in Bangladesh this month"
+      ]
+    }
+  ]
+}

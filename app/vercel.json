@@ -1,10 +1,20 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/.well-known/ai-catalog.json",
+      "destination": "/.well-known/ard.json"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
+        {
+          "key": "Link",
+          "value": "</.well-known/ard.json>; rel=\"ard\", </llms.txt>; rel=\"describedby\"; type=\"text/markdown\""
+        },
         {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
@@ -29,6 +39,24 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/ard.json",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/ai-catalog.json",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
         }
       ]
     },
