@@ -374,16 +374,6 @@
       "permanent": true
     },
     {
-      "source": "/vs/realme-p4x-vs-redmi-note-15",
-      "destination": "/phone/realme-p4x",
-      "permanent": true
-    },
-    {
-      "source": "/vs/samsung-galaxy-a07-vs-samsung-galaxy-m06-5g",
-      "destination": "/phone/samsung-galaxy-m06-5g",
-      "permanent": true
-    },
-    {
       "source": "/vs/samsung-galaxy-s25-ultra-5g-vs-xiaomi-15t-pro",
       "destination": "/phone/xiaomi-15t-pro",
       "permanent": true
