@@ -21,7 +21,19 @@ export default defineConfig({
   // other asset here is small enough to have been inlined anyway.
   build: {
     assetsInlineLimit: 0,
-    rollupOptions: { input: resolve(__dirname, "pick/index.html") },
+    rollupOptions: {
+      input: resolve(__dirname, "pick/index.html"),
+      // React and our app changed at completely different rates and shipped in
+      // one 111 KB-gzip file, so every deploy — a copy tweak included — made
+      // every returning visitor re-download React over BD mobile data. Split
+      // out, the ~45 KB vendor chunk keeps its hash across app deploys and is
+      // served from cache.
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-dom/client"],
+        },
+      },
+    },
   },
   server: {
     port: 5173,

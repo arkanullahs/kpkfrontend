@@ -22,6 +22,17 @@ import { DEFAULT_FORM, formToQuery, queryToForm, toParams, type Form } from "./n
 
 export type Screen = "ask" | "results" | "detail" | "method";
 
+/* crypto.randomUUID exists only on a SECURE context, and only from Safari
+   15.4. On http, or on an older iPhone, calling it throws — and it was the
+   first statement in runRecommend, so the whole results screen died before a
+   request was ever made, with no message. The id only has to be unique enough
+   to tell one in-flight ranking from another. */
+function newRequestId(): string {
+  const c: Crypto | undefined = globalThis.crypto;
+  if (typeof c?.randomUUID === "function") return c.randomUUID();
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 export type { Form, QuizIntent } from "./need";
 export { DEFAULT_FORM, weightAt, CHOICES, deriveIntent, toParams, formToQuery, queryToForm } from "./need";
 
@@ -237,7 +248,7 @@ export default function App() {
   const requestIdRef = useRef<string>("");
 
   const runRecommend = useCallback(async () => {
-    const requestId = crypto.randomUUID();
+    const requestId = newRequestId();
     requestIdRef.current = requestId;
     track("see_results", { budget: form.budget, quiz: !!(form.useCase || form.priorities.length) });
     const params: RecParams = { ...toParams(form, 5), request_id: requestId };
@@ -254,9 +265,18 @@ export default function App() {
       const r = await api.recommend(params);
       const wait = MIN_LOADER_MS - (Date.now() - t0);
       if (wait > 0) await new Promise((res) => setTimeout(res, wait));
+      /* A ranking call runs 5-60s and the buyer can start another one over the
+         top of it (edit the query, See results again). Nothing checked which
+         one was still wanted, so whichever ANSWERED LAST won -- and the slower
+         one is usually the abandoned one, because a cached ranking returns
+         instantly. The result on screen then belonged to a query the buyer had
+         already replaced. The id we sent is the one the ref holds only while
+         this run is still the current one. */
+      if (requestIdRef.current !== requestId) return;
       setResult(r);
       setRecReady(true);          // loader plays its finish, then calls onLoaderDone
     } catch (e: any) {
+      if (requestIdRef.current !== requestId) return;
       setRecError(e?.message || "Could not load recommendations");
       setRecLoading(false);       // errors skip the finish beat
     }

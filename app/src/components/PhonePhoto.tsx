@@ -1,16 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { st } from "../theme";
-import { api } from "../api";
 
-// pids we've already asked the server to resolve, so a list of cards doesn't
-// fire the same lookup many times (and a miss isn't retried every render)
-const _resolved = new Map<string, string | null>();
+/** Product photo, or a soft phone-silhouette placeholder — never a broken img.
 
-/** Product photo from scraped shop data. When there's no image (or the URL
-    fails), and we know the phone id, we ask the API to outsource one — from the
-    phone's GSMArena render or a live GadgetGear search — then show that. Final
-    fallback is a soft phone-silhouette placeholder, not a stripey box. */
-export function PhonePhoto({ src, pid, w, h, radius = 14, pad = 6, bg }: {
+    There used to be a resolver step here: no image (or a failed one) meant
+    asking /phone-image/{pid} to outsource one from GSMArena or a live
+    GadgetGear search. That endpoint stopped doing any of that when every photo
+    became a self-hosted /pimg WebP — its own docstring now says "No live
+    hotlink resolution" — and it resolves the pid through exactly the function
+    that filled the `image` field we were handed.
+
+    So the lookup could only ever return what the caller already had. Missing
+    meant one round trip to be told null; BROKEN was worse — it answered with
+    the very URL that had just failed to load, which we then set as the src and
+    watched fail a second time before finally drawing the placeholder. Two
+    wasted requests per broken card, on every result set and every browse page,
+    to arrive where we started. `pid` is kept in the signature because callers
+    pass it and it costs nothing to ignore. */
+export function PhonePhoto({ src, w, h, radius = 14, pad = 6, bg }: {
   src?: string | null; pid?: string | null; w: string; h: string; radius?: number;
   /** paint behind the render. The detail hero passes "transparent" because
       there the tile is stretched to the full height of the text beside it and
@@ -23,34 +30,18 @@ export function PhonePhoto({ src, pid, w, h, radius = 14, pad = 6, bg }: {
   pad?: number;
 }) {
   const [failed, setFailed] = useState(false);
-  const [resolved, setResolved] = useState<string | null>(() => (pid ? _resolved.get(pid) ?? null : null));
 
   // GadgetGear's image host 404s for everything — treat those URLs as no image
-  // so we go straight to the GSMArena resolver instead of flashing a broken img
+  // so we draw the placeholder instead of flashing a broken img
   const goodSrc = src && !src.includes("gadgetandgear.com") ? src : null;
 
-  // no usable image and we have an id → ask the backend to find one (GSMArena)
-  useEffect(() => {
-    const needsLookup = (!goodSrc || failed) && pid && !_resolved.has(pid);
-    if (!needsLookup) {
-      if (pid && _resolved.has(pid)) setResolved(_resolved.get(pid) ?? null);
-      return;
-    }
-    let alive = true;
-    api.phoneImage(pid!)
-      .then((r) => { _resolved.set(pid!, r.url); if (alive) setResolved(r.url); })
-      .catch(() => { _resolved.set(pid!, null); });
-    return () => { alive = false; };
-  }, [goodSrc, pid, failed]);
-
-  const show = (!failed && goodSrc) || resolved;
   const box = `width:${w}; height:${h}; border-radius:${radius}px; flex-shrink:0; box-shadow:inset 0 0 0 1px rgba(var(--rgb-ink),.06); overflow:hidden;`;
 
-  if (show) {
+  if (goodSrc && !failed) {
     return (
       <div style={st(box + ` background:${bg || "var(--card)"}; display:flex; align-items:center; justify-content:center;`)}>
-        <img src={(failed ? resolved : goodSrc) || resolved || undefined} alt="" loading="lazy"
-          onError={() => { if (!failed) setFailed(true); else setResolved(null); }}
+        <img src={goodSrc} alt="" loading="lazy"
+          onError={() => setFailed(true)}
           style={st(`width:100%; height:100%; object-fit:contain; padding:${pad}%;`)} />
       </div>
     );
