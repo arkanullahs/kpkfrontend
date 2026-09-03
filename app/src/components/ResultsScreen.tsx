@@ -19,6 +19,7 @@ interface Props {
   ready: boolean;
   onLoaderDone: () => void;
   onEdit: () => void;
+  onNewSearch: () => void;
   onPick: (id: string) => void;
   onRetry: () => void;
   onHowItWorks: () => void;
@@ -153,7 +154,7 @@ export function ChannelChips({ p, small }: {
   );
 }
 
-export function ResultsScreen({ result, loading, error, form, matchCount, ready, onLoaderDone, onEdit, onPick, onRetry, onHowItWorks, requestId }: Props) {
+export function ResultsScreen({ result, loading, error, form, matchCount, ready, onLoaderDone, onEdit, onNewSearch, onPick, onRetry, onHowItWorks, requestId }: Props) {
   // the server is the budget authority: a budget typed in the Bangla trait
   // text ("১৫ হাজারে") overrides the slider, and meta.budget reflects it
   const b = result?.meta.budget ?? form.budget;
@@ -187,7 +188,18 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
             {querySummary.map((q, i) => (
               <span key={i} style={st("font-size:13.5px; font-weight:600; color:var(--mut); background:var(--card); border:.5px solid rgba(var(--rgb-ink),.07); padding:6px 13px; border-radius:var(--r);")}>{q}</span>
             ))}
+            {/* Both ways to change this search, together, in the header that
+                states it. "New search" used to be a fixed pill at the bottom
+                of the viewport, where at 390x844 it covered the first result
+                card -- its photo AND its price range (audit PICK-05). A
+                floating duplicate cannot be made to clear a screen that is
+                cards from edge to edge, so it moved to where the thing it
+                undoes already lives. */}
             <button onClick={onEdit} className="k-press" style={st("font-size:13.5px; font-weight:700; color:var(--lnk); background:var(--tint); border:none; padding:6px 14px; border-radius:var(--r); cursor:pointer;")}>{t("edit")}</button>
+            <button onClick={onNewSearch} className="k-press" style={st("display:inline-flex; align-items:center; gap:7px; font-size:13.5px; font-weight:700; color:var(--lnk); background:var(--card); border:.5px solid rgba(var(--rgb-ink),.07); padding:6px 14px; border-radius:var(--r); cursor:pointer;")}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5a6.5 6.5 0 110 13 6.5 6.5 0 010-13zM15.8 15.8L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              {t("new_search")}
+            </button>
           </div>
         </div>
       </div>
