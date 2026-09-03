@@ -220,6 +220,34 @@ describe("flow-graph control fields in the URL", () => {
     expect(back.includeCnRom).toBe(true);
   });
 
+  /* PICK-03. forElderly was a boolean defaulting to false, so "No, general
+     use" was the answer to a question nobody had asked: the step opened with
+     that card aria-pressed and painted. Three-valued, exactly like rechannel
+     next to it, and for the same reason. */
+  it("an unanswered elderly question is neither yes nor no", () => {
+    expect(DEFAULT_FORM.forElderly).toBe(null);
+    expect(formToQuery(DEFAULT_FORM)).not.toContain("eld");
+    expect(queryToForm("").forElderly).toBe(null);
+  });
+
+  it("answering NO survives a reload as no, not as unasked", () => {
+    const q = formToQuery({ ...DEFAULT_FORM, forElderly: false });
+    expect(q).toContain("eld=0");
+    expect(queryToForm(q).forElderly).toBe(false);
+  });
+
+  it("junk in the eld param is unasked, never a branch", () => {
+    expect(queryToForm("eld=maybe").forElderly).toBe(null);
+    expect(queryToForm("eld=").forElderly).toBe(null);
+  });
+
+  it("unasked still means the elderly preset is off at the API boundary", () => {
+    expect(toParams(DEFAULT_FORM).bd_service_floor).toBe(undefined);
+    expect(toParams({ ...DEFAULT_FORM, forElderly: false }).bd_service_floor)
+      .toBe(undefined);
+    expect(toParams({ ...DEFAULT_FORM, forElderly: true }).bd_service_floor).toBe(6);
+  });
+
   it("the popup's answer is transient and never serialises", () => {
     expect(formToQuery({ ...DEFAULT_FORM, wantMore: true })).not.toContain("more");
   });

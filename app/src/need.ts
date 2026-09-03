@@ -48,7 +48,14 @@ export interface Form {
   // from "never asked", so the guard re-armed on the way back from budget and
   // the buyer was offered the same question forever. wantMore is transient
   // (the popup's answer) and is never serialised.
-  forElderly: boolean;
+  //
+  // forElderly has the same disease and it showed the same way: as a boolean
+  // defaulting to false, "No, general use" answered its own question, and the
+  // step opened with that card already aria-pressed and painted teal before
+  // the buyer touched anything (audit PICK-03). null is "not asked yet", and
+  // it stays falsy everywhere downstream that only cares whether the elderly
+  // preset is ON.
+  forElderly: boolean | null;
   rechannel: "" | "widen" | "keep";
   wantMore: boolean;
   includeCnRom: boolean;         // "a China ROM is fine" — actively re-admits
@@ -64,7 +71,7 @@ export const DEFAULT_FORM: Form = {
   minRam: 0, minStorage: 0,
   q: { picks: [], hw: [] },
   useCase: "", priorities: [], weights: {},
-  forElderly: false, rechannel: "", wantMore: false, includeCnRom: false,
+  forElderly: null, rechannel: "", wantMore: false, includeCnRom: false,
 };
 
 /** The forced-choice quiz → the buyer's need.
@@ -192,7 +199,9 @@ export function formToQuery(f: Form, node: string = ENTRY_NODE): string {
   // the node id, written only when it is not the entry, so a fresh visit is clean
   if (node && node !== ENTRY_NODE) p.set("s", node);
   if (f.budget !== DEFAULT_FORM.budget) p.set("b", String(f.budget));
-  if (f.forElderly) p.set("eld", "1");
+  // all THREE states, or a reload after answering "no" would come back as
+  // "not asked" and re-arm the pre-pressed card this fixed
+  if (f.forElderly !== null) p.set("eld", f.forElderly ? "1" : "0");
   // serialised so a reload mid-divert does not re-arm the guard and ask again
   if (f.rechannel) p.set("rech", f.rechannel);
   if (f.includeCnRom) p.set("cnrom", "1");
@@ -231,7 +240,8 @@ export function queryToForm(s: string): Partial<Form> & { node: string } {
   const node = p.get("s") || ENTRY_NODE;
   const out: Partial<Form> = {
     budget: nat("b") || DEFAULT_FORM.budget,
-    forElderly: p.get("eld") === "1",
+    forElderly: p.get("eld") === "1" ? true
+      : p.get("eld") === "0" ? false : null,
     rechannel: oneOf("rech", ["", "widen", "keep"] as const, ""),
     includeCnRom: p.get("cnrom") === "1",
     q: { picks: list("w"), hw },

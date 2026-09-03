@@ -1,5 +1,5 @@
 import { type ReactNode, useState } from "react";
-import { axisLabel, classifyCaveats, fitOf, headlinePhrase, shownRange, st, taka, takaRange, topPickBadge } from "../theme";
+import { axisLabel, classifyCaveats, fitOf, headlinePhrase, shownRange, st, taka, takaRange, topPickBadge, variantRows } from "../theme";
 import { t } from "../i18n";
 import { api } from "../api";
 import { BrandLogo, brandLogo } from "./BrandLogo";
@@ -19,6 +19,7 @@ interface Props {
   ready: boolean;
   onLoaderDone: () => void;
   onEdit: () => void;
+  onNewSearch: () => void;
   onPick: (id: string) => void;
   onRetry: () => void;
   onHowItWorks: () => void;
@@ -106,9 +107,25 @@ export function MarketChips({ regions, small }: { regions?: RegionOffer[] | null
 
 /** Every RAM/storage config the shops price, cheapest first — the guides gained
     this line on 2026-07-26 because one price beside one RAM figure described
-    two different products. Shop-anonymous: configs and money, never sellers. */
-export function VariantLine({ variants, small }: { variants?: VariantPrice[] | null; small?: boolean }) {
-  if (!variants || variants.length < 2) return null;
+    two different products. Shop-anonymous: configs and money, never sellers.
+
+    `channel` is the one the CARD is quoting, and every price here is read from
+    it. It used to print `v.price`, the config's cheapest across ALL channels,
+    under a card whose chip said "Official (BD warranty)" and whose headline was
+    the official price. On the Samsung Galaxy M06 5G that rendered
+    "4GB/128GB TK14,990 · 6GB/128GB TK17,490" beneath a TK19,499 official
+    headline, because 14,990 is an unstated-channel offer and 17,490 an
+    unofficial one -- so an official-only search quoted a buyer two prices no
+    official seller will honour (audit PICK-07). A config with no offer in the
+    quoted channel is dropped rather than relabelled: there is nothing to show
+    for it on this side of the counter. */
+export function VariantLine({ variants, channel, small }: {
+  variants?: VariantPrice[] | null;
+  channel?: "official" | "unofficial" | null;
+  small?: boolean;
+}) {
+  const rows = variantRows(variants, channel);
+  if (rows.length < 2) return null;
   // same icon-led rhythm as the spec strip above it, so the configs read as
   // part of the same block instead of a stray grey sentence
   return (
@@ -116,7 +133,7 @@ export function VariantLine({ variants, small }: { variants?: VariantPrice[] | n
       <span style={st("display:inline-flex; align-items:center; gap:6px; font-weight:700; color:var(--mut); letter-spacing:.2px;")}>
         <SpecIcon name="memory" size={small ? 13 : 14} />{t("variants")}
       </span>
-      {variants.map((v) => (
+      {rows.map((v) => (
         <span key={v.variant} style={st("display:inline-flex; align-items:center; gap:5px; color:var(--mut);")}>
           {v.variant}<b style={st("color:var(--ink2); font-weight:700;")}>{taka(v.price)}</b>
         </span>
@@ -153,7 +170,7 @@ export function ChannelChips({ p, small }: {
   );
 }
 
-export function ResultsScreen({ result, loading, error, form, matchCount, ready, onLoaderDone, onEdit, onPick, onRetry, onHowItWorks, requestId }: Props) {
+export function ResultsScreen({ result, loading, error, form, matchCount, ready, onLoaderDone, onEdit, onNewSearch, onPick, onRetry, onHowItWorks, requestId }: Props) {
   // the server is the budget authority: a budget typed in the Bangla trait
   // text ("১৫ হাজারে") overrides the slider, and meta.budget reflects it
   const b = result?.meta.budget ?? form.budget;
@@ -187,7 +204,18 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
             {querySummary.map((q, i) => (
               <span key={i} style={st("font-size:13.5px; font-weight:600; color:var(--mut); background:var(--card); border:.5px solid rgba(var(--rgb-ink),.07); padding:6px 13px; border-radius:var(--r);")}>{q}</span>
             ))}
+            {/* Both ways to change this search, together, in the header that
+                states it. "New search" used to be a fixed pill at the bottom
+                of the viewport, where at 390x844 it covered the first result
+                card -- its photo AND its price range (audit PICK-05). A
+                floating duplicate cannot be made to clear a screen that is
+                cards from edge to edge, so it moved to where the thing it
+                undoes already lives. */}
             <button onClick={onEdit} className="k-press" style={st("font-size:13.5px; font-weight:700; color:var(--lnk); background:var(--tint); border:none; padding:6px 14px; border-radius:var(--r); cursor:pointer;")}>{t("edit")}</button>
+            <button onClick={onNewSearch} className="k-press" style={st("display:inline-flex; align-items:center; gap:7px; font-size:13.5px; font-weight:700; color:var(--lnk); background:var(--card); border:.5px solid rgba(var(--rgb-ink),.07); padding:6px 14px; border-radius:var(--r); cursor:pointer;")}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5a6.5 6.5 0 110 13 6.5 6.5 0 010-13zM15.8 15.8L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              {t("new_search")}
+            </button>
           </div>
         </div>
       </div>
@@ -369,7 +397,8 @@ function HeroPick({ p, budget, pct, onClick }: {
             too"). Out here it has the card's full width and wraps two or three
             to a row; on desktop it is still in the left column, where it keeps
             the two sides level. */}
-        <VariantLine variants={p.variants} />
+        <VariantLine variants={p.variants}
+          channel={p.best_price_official ? "official" : "unofficial"} />
 
         {note && (
           <div style={st("display:flex; gap:9px; margin-top:10px; padding:11px 13px; border-radius:var(--r); background:rgba(var(--rgb-amber),.09);")}>

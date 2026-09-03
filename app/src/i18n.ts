@@ -289,6 +289,25 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
     en: "Good answers take a few seconds. Thanks for waiting.",
     bn: "ভালো উত্তরে কয়েক সেকেন্ড লাগে। অপেক্ষার জন্য ধন্যবাদ।"
   },
+  // The loader's own strings. They lived as English literals inside
+  // RagProgress while these translated stage keys sat unused right here, so
+  // the whole 30-60s wait was English even on BN (audit I18N-01). The counter
+  // tiles and queue chips are here for the same reason.
+  rag_est: { en: "usually under a minute", bn: "সাধারণত এক মিনিটের কম" },
+  // What a buyer is told when a provider rate-limits or trips its breaker.
+  // The provider's NAME is diagnostics and never appears here (audit PICK-04).
+  rag_slow: {
+    en: "Taking longer than usual — trying a backup AI",
+    bn: "স্বাভাবিকের চেয়ে বেশি সময় লাগছে — বিকল্প এআই চেষ্টা করা হচ্ছে"
+  },
+  rag_c_fit: { en: "phones fit your budget", bn: "ফোন বাজেটে মিলেছে" },
+  rag_c_read: { en: "reviews read so far", bn: "রিভিউ পড়া হয়েছে" },
+  rag_c_writing: { en: "writing verdicts", bn: "রায় লেখা হচ্ছে" },
+  rag_c_written: { en: "verdicts written", bn: "রায় লেখা হয়েছে" },
+  rag_q_served: { en: "being served", bn: "চলছে" },
+  rag_q_waiting: { en: "waiting", bn: "অপেক্ষায়" },
+  rag_q_inline: { en: "in line", bn: "লাইনে" },
+
   // queue / busy indicator
   queue_busy: { en: "High demand right now —", bn: "এখন অনেক চাপ —" },
   queue_one_ahead: {

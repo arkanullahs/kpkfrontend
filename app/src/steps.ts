@@ -286,12 +286,12 @@ export const SCREENS: Record<string, Screen> = {
           const q = { ...f.q, picks: ["simple"] };
           return { forElderly: true, q, ...deriveIntent(q) };
         },
-        isOn: (f) => f.forElderly },
+        isOn: (f) => f.forElderly === true },
       { id: "eld_no", labelKey: "s_elderly_no", subKey: "s_elderly_no_sub", icon: ICON.any,
         patch: () => ({ forElderly: false }),
-        isOn: (f) => !f.forElderly },
+        isOn: (f) => f.forElderly === false },
     ],
-    clear: () => ({ forElderly: false }),
+    clear: () => ({ forElderly: null }),   // clearing UNASKS it
     skipStyle: "none", skipKey: "s_skip",
   },
 
@@ -492,7 +492,7 @@ export const SCREENS: Record<string, Screen> = {
         probe: () => ({ requireFm: true }) },
     ],
     groups: [{
-      when: (f) => !f.forElderly,
+      when: (f) => f.forElderly !== true,
       titleKey: "s_rom_support_t", layout: "grid2",
       options: () => [
         { id: "lineage", labelKey: "fg_rom_on", icon: ICON.lineage,

@@ -30,18 +30,15 @@ const STAGES: Stage[] = [
 
 const REASSURE = ["rag_reassure1", "rag_reassure2", "rag_reassure3"];
 
-// Human-readable label for provider names
-const PROVIDER_LABEL: Record<string, string> = {
-  groq: "Groq",
-  gemini: "Gemini",
-  "ollama cloud": "Ollama",
-  g4f: "G4F",
-  cohere: "Cohere",
-  mistral: "Mistral",
-  openrouter: "OpenRouter",
-  "local qwen": "Local AI",
-};
-const providerName = (p: string) => PROVIDER_LABEL[p] ?? p;
+/* No provider names in here. There used to be a lookup table turning the
+   ranker's chain keys into "Groq", "Gemini", "Ollama" -- and anything the
+   table had never heard of, sambanova among them, printed raw and lowercase.
+   A buyer cannot act on which vendor wrote their verdict, the name changes
+   whenever the chain does, and a failover that the UI narrates by naming a
+   company reads as something going wrong (audit PICK-04). What a buyer CAN
+   act on is whether it is moving, how many people are ahead, and whether this
+   one is slower than usual -- so those are the three things this shows, and
+   the provider trail stays in /status for diagnostics. */
 
 export function RagProgress({ budget, candidates, ready = false, onDone, requestId }:
   { budget: number; candidates: number | null; ready?: boolean; onDone?: () => void; requestId?: string }) {
@@ -96,22 +93,17 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
   const totalQueue = processing + waiting;
   const rateLimited = status?.rate_limited ?? [];
   const currentAttempt = status?.current_attempt;
-  const activeProviders = status?.active ?? [];
-  const breakerProviders = Object.keys(status?.breaker ?? {});
+  // slower than usual = the chain is rate-limited, resting, or has already
+  // failed over on this very request
+  const degraded = rateLimited.length > 0
+    || Object.keys(status?.breaker ?? {}).length > 0
+    || (!!currentAttempt && rateLimited.includes(currentAttempt));
 
-  // Stage copy
-  const SUB: Record<string, string> = {
-    rag1: n ? `Sifting every live BD listing down to the ${bnNum(String(n))} that fit your budget and filters.`
-            : "Checking every live listing in Bangladesh against your budget and filters.",
-    rag2: "Turning your answers into a search and ranking phones by how well they actually match.",
-    rag3: n ? `Reading owner complaints, spec sheets, warranty notes and BD prices — ${bnNum(String(read))} of ${bnNum(String(n))} so far.`
-            : "Reading owner complaints, spec sheets, warranty notes and BD prices for each phone.",
-    rag4: "An AI weighs every trade-off and writes a plain, no-marketing verdict — best first.",
-  };
-  const TITLE: Record<string, string> = {
-    rag1: "Filtering to your budget", rag2: "Matching what you need",
-    rag3: "Reading the real reviews", rag4: "Writing honest verdicts",
-  };
+  /* Stage copy comes from i18n, where rag1_t..rag4_s have been translated all
+     along -- this component held its own English literals instead, so the
+     whole 30-60s wait stayed English on BN (audit I18N-01). The counts the
+     old literals carried are not lost: they are the two live Counter tiles
+     directly above the checklist, which now read in Bangla too. */
 
   return (
     <div style={st("max-width:680px; margin:0 auto; animation:kfade .4s cubic-bezier(.2,.7,.2,1) both;")}>
@@ -129,6 +121,9 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
         <h1 style={st("font-family:var(--f-display); margin:10px 0 0; font-size:clamp(26px,4vw,38px); font-weight:600; letter-spacing:-1px; line-height:1.12;")}>
           {t("rag_heading")} <span style={st("font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; color:var(--lnk);")}> · {secs}s</span>
         </h1>
+        {/* a running counter with nothing to measure itself against is just a
+            number going up; the audit asked for "usually takes under X" */}
+        <div style={st("margin-top:7px; font-size:12.5px; color:var(--mut2);")}>{t("rag_est")}</div>
       </div>
 
       {/* ── Queue / server status bar (always visible when polled) ─────────── */}
@@ -138,45 +133,30 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
           {totalQueue > 0 && (
             <span style={st("display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--lnk); background:var(--tint); border:.5px solid var(--tint2); padding:6px 13px; border-radius:var(--r);")}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              {processing > 0 && <>{bnNum(String(processing))} being served</>}
+              {processing > 0 && <>{bnNum(String(processing))} {t("rag_q_served")}</>}
               {processing > 0 && waiting > 0 && " · "}
-              {waiting > 0 && <>{bnNum(String(waiting))} waiting</>}
+              {waiting > 0 && <>{bnNum(String(waiting))} {t("rag_q_waiting")}</>}
             </span>
           )}
           {/* Queue position (only when you're actually waiting) */}
           {waiting > 0 && (
             <span style={st("display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:800; color:var(--onp); background:var(--teal); padding:6px 13px; border-radius:var(--r); box-shadow:0 2px 8px rgba(var(--rgb-ink),.14);")}>
               <span style={st("width:6px; height:6px; border-radius:var(--r); background:var(--card); animation:kpulse 1.2s ease-in-out infinite;")} />
-              #{waiting + 1} in line
+              #{bnNum(String(waiting + 1))} {t("rag_q_inline")}
             </span>
           )}
-          {/* Per-request active provider (from request_id trail) — shows the
-              specific provider handling THIS request, not other users' requests.
-              Falls back to system-wide active providers for backward compat. */}
-          {currentAttempt && !rateLimited.includes(currentAttempt) ? (
-            <span key={"current-attempt"} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:var(--tealD); background:rgba(var(--rgb-teal),.09); border:.5px solid rgba(var(--rgb-teal),.2); padding:5px 11px; border-radius:var(--r);")}>
-              <span style={st("width:7px; height:7px; border-radius:var(--r); background:var(--teal); animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
-              Using {providerName(currentAttempt)}
+          {/* ONE chip for every degraded state the chain can be in. Rate
+              limited, circuit-broken, or an attempt that has already been
+              rate-limited: from where the buyer sits these are the same fact
+              -- this run is slower than the usual minute and something else
+              is picking it up. Which provider, and its cooldown, are in
+              /status for us. */}
+          {degraded && (
+            <span style={st("display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--acd); background:rgba(var(--rgb-amber),.1); border:.5px solid rgba(var(--rgb-amber),.22); padding:5px 11px; border-radius:var(--r);")}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              {t("rag_slow")}
             </span>
-          ) : activeProviders.map(p => (
-            <span key={"active-" + p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:var(--tealD); background:rgba(var(--rgb-teal),.09); border:.5px solid rgba(var(--rgb-teal),.2); padding:5px 11px; border-radius:var(--r);")}>
-              <span style={st("width:7px; height:7px; border-radius:var(--r); background:var(--teal); animation:kpulse 1.8s ease-in-out infinite; flex-shrink:0;")} />
-              Using {providerName(p)}
-            </span>
-          ))}
-          {/* Rate-limited providers */}
-          {rateLimited.map(p => (
-            <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; color:var(--acd); background:rgba(var(--rgb-amber),.1); border:.5px solid rgba(var(--rgb-amber),.22); padding:5px 11px; border-radius:var(--r);")}>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16v.5M12 3l9 16H3L12 3z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              {providerName(p)} busy
-            </span>
-          ))}
-          {/* Circuit-broken providers */}
-          {breakerProviders.filter(p => !rateLimited.includes(p)).map(p => (
-            <span key={p} style={st("display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600; color:var(--mut2); background:rgba(var(--rgb-ink),.06); padding:5px 10px; border-radius:var(--r);")}>
-              {providerName(p)} resting ({status!.breaker![p].cooldown_s}s)
-            </span>
-          ))}
+          )}
         </div>
       )}
 
@@ -188,9 +168,9 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
 
       {/* live counters */}
       <div style={st("display:flex; gap:10px; margin-top:18px;")}>
-        <Counter big={bnNum(String(n || "—"))} small="phones fit your budget" lit={active >= 0} />
-        <Counter big={active >= 2 ? bnNum(String(read)) : "…"} small="reviews read so far" lit={active >= 2} />
-        <Counter big={ready ? "✓" : "AI"} small={ready ? "verdicts written" : "writing verdicts"} lit={active >= 3} />
+        <Counter big={bnNum(String(n || "—"))} small={t("rag_c_fit")} lit={active >= 0} />
+        <Counter big={active >= 2 ? bnNum(String(read)) : "…"} small={t("rag_c_read")} lit={active >= 2} />
+        <Counter big={ready ? "✓" : "AI"} small={t(ready ? "rag_c_written" : "rag_c_writing")} lit={active >= 3} />
       </div>
 
       {/* stage checklist */}
@@ -207,9 +187,9 @@ export function RagProgress({ budget, candidates, ready = false, onDone, request
                   : <span style={now ? st("animation:kfloat 1.6s ease-in-out infinite;") : undefined}>{s.icon}</span>}
               </span>
               <div style={st("min-width:0; flex:1;")}>
-                <div style={st(`font-size:14.5px; font-weight:600; color:${pending ? "var(--mut2)" : "var(--ink2)"};`)}>{TITLE[s.tKey]}</div>
+                <div style={st(`font-size:14.5px; font-weight:600; color:${pending ? "var(--mut2)" : "var(--ink2)"};`)}>{t(s.tKey + "_t")}</div>
                 <div style={st("font-size:12.5px; color:var(--mut2); line-height:1.45; margin-top:2px; text-wrap:pretty;")}>
-                  {now && onLast ? t(reassure) : SUB[s.tKey]}
+                  {now && onLast ? t(reassure) : t(s.tKey + "_s")}
                 </div>
               </div>
             </div>

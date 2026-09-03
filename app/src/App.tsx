@@ -433,7 +433,17 @@ export default function App() {
         </div>
       </div>
 
-      <div style={st("position:relative; z-index:1; padding:18px clamp(16px,4vw,40px) 130px;")}>
+      {/* PICK-02: on step 1 at 390x844 the last answer card ended at 523px and
+          the full marketing footer started at 679 -- 156px of nothing, then
+          514px of footer, all inside the first screen, on a flow that has
+          seven more questions to go. The canvas now holds the fold so the
+          footer starts below it. svh, not vh: dvh reflows every time the URL
+          bar hides, and a browser too old for either simply gets what it got
+          before. The 120px is the sticky header (83) plus the footer's own top
+          margin (36), measured -- it is what puts the footer's first pixel AT
+          the fold rather than 165px above it. */}
+      <div style={st("position:relative; z-index:1; padding:18px clamp(16px,4vw,40px) 130px;"
+        + (screen === "ask" ? " min-height:calc(100svh - 120px);" : ""))}>
         {/* one breadcrumb system with the static pages: Home > Personal pick >
             where you are (owner 2026-07-26). The ask screen is the root, so it
             carries none — same rule /best and /phone follow. */}
@@ -469,7 +479,8 @@ export default function App() {
           <ResultsScreen
             result={result} loading={recLoading} error={recError}
             form={form} matchCount={matchCount} ready={recReady} onLoaderDone={onLoaderDone}
-            onEdit={goAsk} onPick={openDetail} onRetry={runRecommend} onHowItWorks={goMethod}
+            onEdit={goAsk} onNewSearch={goAsk} onPick={openDetail}
+            onRetry={runRecommend} onHowItWorks={goMethod}
             requestId={requestIdRef.current}
           />
         )}
@@ -485,7 +496,7 @@ export default function App() {
 
       <Dock
         screen={screen} loading={recLoading} detailReady={!!result}
-        onHome={goAsk} onBackResults={goResults}
+        onBackResults={goResults}
       />
       {sheetOpen && (
         <NarrowSheet matchCount={matchCount}
@@ -497,8 +508,17 @@ export default function App() {
       {showPriceAlert && screen === "detail" && <PriceAlert onClose={dismissPriceAlert} />}
       {booting && <BootNotice seconds={bootSecs} />}
 
-      {/* persistent site footer — dark, matches the static site (no picker card) */}
-      <footer style={st("position:relative; z-index:1; margin-top:36px; background:var(--panel); border-radius:var(--r); padding:44px clamp(20px,5vw,52px) 0; text-align:left;")}>
+      {/* persistent site footer — dark, matches the static site (no picker card).
+
+          The four-column block is skipped while a question is on screen: a
+          full marketing footer between questions is an exit sitting under an
+          unfinished flow, and it is what made step 1 read as a finished page
+          (audit PICK-02/PICK-01). The legal strip below stays on every screen,
+          with the support link folded into it so the flow still has its small
+          support/legal row. */}
+      <footer style={st("position:relative; z-index:1; margin-top:36px; background:var(--panel); border-radius:var(--r); padding:"
+        + (screen === "ask" ? "10px" : "44px") + " clamp(20px,5vw,52px) 0; text-align:left;")}>
+        {screen !== "ask" && (
         <div style={st("max-width:940px; margin:0 auto; display:flex; flex-wrap:wrap; gap:30px 40px; padding-bottom:32px;")}>
           <div style={st("flex:2 1 260px; min-width:220px;")}>
             <div style={st("display:flex; align-items:center; gap:11px; color:var(--onp); font-family:var(--f-display); font-size:22px; font-weight:800; letter-spacing:-.4px;")}>
@@ -528,10 +548,15 @@ export default function App() {
             </div>
           </div>
         </div>
+        )}
         {/* the 96px well under the copyright was dock clearance, and it read as
             a dead black slab on every screen the dock is hidden on (owner
-            2026-07-26). Clearance only when the dock is actually there. */}
-        <div style={st(`border-top:1px solid rgba(var(--rgb-white),.08); max-width:940px; margin:0 auto; padding:20px 0 ${screen === "results" || screen === "detail" ? 116 : 26}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>
+            2026-07-26). Clearance only when the dock is actually there -- which
+            since PICK-05 is the detail screen alone. */}
+        <div style={st(`border-top:${screen === "ask" ? "0" : "1px solid rgba(var(--rgb-white),.08)"}; max-width:940px; margin:0 auto; padding:20px 0 ${screen === "detail" ? 116 : 26}px; text-align:center; font-size:12.5px; color:var(--mut);`)}>
+          {screen === "ask" && (
+            <a href="/support" style={st("color:var(--mut2); font-size:12.5px; text-decoration:none; margin-right:14px;")}>{t("footer_support")}</a>
+          )}
           © {new Date().getFullYear()} bhalophone. All rights reserved.
           {/* the trademark notice, quieter than the copyright above it and on
               its own line so it reads as a disclaimer rather than a byline.

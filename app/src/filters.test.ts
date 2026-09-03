@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { GROUPS, activeGroupCount, anyFilterSet, buildBrief, clearClause, toggleBrand, toggleHardware } from "./filters";
 import { CHOICES, DEFAULT_FORM, type Form } from "./need";
 import { STRING_KEYS, hasBothLangs, t } from "./i18n";
-import { taka } from "./theme";
+import { taka, variantRows } from "./theme";
 
 const form = (over: Partial<Form> = {}): Form => ({ ...DEFAULT_FORM, ...over });
 
@@ -302,5 +302,51 @@ describe("a brief clause can be taken back", () => {
                            ["s_budget_none_use", "{price}"]] as const) {
       expect(t(k)).toContain(ph);
     }
+  });
+});
+
+
+/* PICK-07, with the real Samsung Galaxy M06 5G numbers off /phones. The card
+   quotes ONE channel; its config list has to quote the same one. */
+describe("a config list quotes the channel its card quotes", () => {
+  const m06 = [
+    { variant: "4GB/128GB", price: 14990, channels: [{ channel: "unstated", price: 14990 }] },
+    { variant: "6GB/128GB", price: 17490,
+      channels: [{ channel: "official", price: 26499 }, { channel: "unofficial", price: 17490 }] },
+    { variant: "4GB/64GB", price: 19499, channels: [{ channel: "official", price: 19499 }] },
+  ];
+
+  it("an official card never prints an unofficial or unstated price", () => {
+    const rows = variantRows(m06, "official");
+    expect(rows).toEqual([
+      { variant: "6GB/128GB", price: 26499 },
+      { variant: "4GB/64GB", price: 19499 },
+    ]);
+    // the two numbers the audit caught under an "Official (BD warranty)" chip
+    expect(rows.map((r) => r.price)).not.toContain(14990);
+    expect(rows.map((r) => r.price)).not.toContain(17490);
+  });
+
+  it("a config with no offer in that channel is dropped, not relabelled", () => {
+    expect(variantRows(m06, "official").map((r) => r.variant)).not.toContain("4GB/128GB");
+  });
+
+  it("the unofficial side reads its own prices", () => {
+    expect(variantRows(m06, "unofficial")).toEqual([{ variant: "6GB/128GB", price: 17490 }]);
+  });
+
+  it("with no channel asked for, every config prints as before", () => {
+    expect(variantRows(m06).map((r) => r.price)).toEqual([14990, 17490, 19499]);
+  });
+
+  it("unattributed data makes no channel claim, so it is left alone", () => {
+    const plain = [{ variant: "4/64", price: 11990 }, { variant: "6/128", price: 13990 }];
+    expect(variantRows(plain, "official")).toEqual(plain);
+  });
+
+  it("a null price is never rendered as a price", () => {
+    expect(variantRows([{ variant: "x", price: null }], null)).toEqual([]);
+    expect(variantRows(null, "official")).toEqual([]);
+    expect(variantRows(undefined)).toEqual([]);
   });
 });
