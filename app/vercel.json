@@ -217,6 +217,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/redmi-17c-4g",
+      "destination": "/brand/redmi",
+      "permanent": true
+    },
+    {
       "source": "/phone/samsung-galaxy-a26-4g",
       "destination": "/brand/samsung",
       "permanent": true

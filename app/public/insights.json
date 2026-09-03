@@ -1,233 +1,161 @@
 {
- "generated": "2026-09-02",
+ "generated": "2026-09-03",
  "source": "https://bhalophone.com",
  "method": "Every figure is measured like-for-like from nightly price snapshots of Bangladesh phone shops: official against official, import against import, one storage variant against the same variant, and a shop price comparison only across three or more distinct shops.",
  "coverage": {
-  "tracked": 2370,
-  "snapshots": 50,
+  "tracked": 2375,
+  "snapshots": 51,
   "since": "2026-06-11",
-  "until": "2026-09-02",
-  "in_stock": 477,
-  "listed": 506
+  "until": "2026-09-03",
+  "in_stock": 478,
+  "listed": 507
  },
  "stories": [
   {
    "slug": "risers",
    "kicker": "UNOFFICIAL PRICE",
-   "headline": "The iQOO Z11 Turbo unofficial price is ==৳7,491 more== than it was a month ago",
-   "caption": "Everyone tells you to wait, that phones only get cheaper. Here is what waiting a month did to the iQOO Z11 Turbo's unofficial price.\n\n৳50,499 on 3 August. ৳57,990 today. 34 phones we track cost more now than they did a month ago:\n\n• iQOO Z11 Turbo: ৳50,499 to ৳57,990 (+15%, unofficial price)\n• Vivo V70 FE 5G: ৳35,490 to ৳42,499 (+20%, unofficial price)\n• Apple iPhone 16 Plus: ৳93,490 to ৳98,490 (+5%, unofficial price)\n• OPPO Find X9: ৳73,499 to ৳78,000 (+6%, unofficial price)\n\nThat is the cheapest listed price on that channel, read every night and plotted above. Full chart:\nhttps://bhalophone.com/phone/iqoo-z11-turbo\n\nEver waited for a price to fall and watched it climb?",
-   "standfirst": "৳50,499 on 3 August, ৳57,990 today, at 6 shops.",
-   "source": "bhalophone.com · 34 phones dearer than last month",
+   "headline": "The Vivo V70 FE 5G unofficial price is ==৳7,009 more== than it was a month ago",
+   "caption": "Everyone tells you to wait, that phones only get cheaper. Here is what waiting a month did to the Vivo V70 FE 5G's unofficial price.\n\n৳35,490 on 4 August. ৳42,499 today. 37 phones we track cost more now than they did a month ago:\n\n• Vivo V70 FE 5G: ৳35,490 to ৳42,499 (+20%, unofficial price)\n• iQOO Z11 Turbo: ৳50,499 to ৳57,499 (+14%, unofficial price)\n• Apple iPhone 15: ৳68,990 to ৳74,999 (+9%, unofficial price)\n• Redmi Turbo 4: ৳32,499 to ৳37,490 (+15%, unofficial price)\n\nThat is the cheapest listed price on that channel, read every night and plotted above. Full chart:\nhttps://bhalophone.com/phone/vivo-v70-fe-5g\n\nEver waited for a price to fall and watched it climb?",
+   "standfirst": "৳35,490 on 4 August, ৳42,499 today, at 9 shops.",
+   "source": "bhalophone.com · 37 phones dearer than last month",
    "panel": {
     "kind": "chart",
     "series": {
      "unofficial": [
       [
-       "2026-06-11",
-       47990
-      ],
-      [
-       "2026-06-12",
-       47990
-      ],
-      [
-       "2026-06-13",
-       47990
-      ],
-      [
-       "2026-06-15",
-       47990
-      ],
-      [
-       "2026-06-23",
-       47990
-      ],
-      [
-       "2026-07-04",
-       47990
-      ],
-      [
-       "2026-07-05",
-       50499
-      ],
-      [
-       "2026-07-10",
-       50499
-      ],
-      [
-       "2026-07-11",
-       50499
-      ],
-      [
-       "2026-07-12",
-       50499
-      ],
-      [
-       "2026-07-14",
-       50499
-      ],
-      [
-       "2026-07-15",
-       50499
-      ],
-      [
-       "2026-07-16",
-       50499
-      ],
-      [
-       "2026-07-17",
-       50499
-      ],
-      [
-       "2026-07-18",
-       50499
-      ],
-      [
-       "2026-07-19",
-       50499
-      ],
-      [
        "2026-07-20",
-       50499
-      ],
-      [
-       "2026-07-21",
-       50499
-      ],
-      [
-       "2026-07-22",
-       50499
-      ],
-      [
-       "2026-07-24",
-       50499
+       35490
       ],
       [
        "2026-07-25",
-       50499
+       35490
       ],
       [
        "2026-07-26",
-       50499
+       35490
       ],
       [
        "2026-07-27",
-       50499
+       35490
       ],
       [
        "2026-07-28",
-       50499
+       35490
       ],
       [
        "2026-07-29",
-       50499
+       35490
       ],
       [
        "2026-07-30",
-       50499
+       35490
       ],
       [
        "2026-08-01",
-       50499
+       35490
       ],
       [
        "2026-08-02",
-       50499
+       35490
       ],
       [
        "2026-08-03",
-       50499
+       35490
       ],
       [
        "2026-08-04",
-       50499
+       35490
       ],
       [
        "2026-08-05",
-       50499
+       35490
       ],
       [
        "2026-08-07",
-       50499
+       35490
       ],
       [
        "2026-08-08",
-       50499
+       35490
       ],
       [
        "2026-08-09",
-       50499
+       40999
       ],
       [
        "2026-08-10",
-       56490
+       42499
       ],
       [
        "2026-08-11",
-       56490
+       42499
       ],
       [
        "2026-08-12",
-       56490
+       42499
       ],
       [
        "2026-08-14",
-       56999
+       42490
       ],
       [
        "2026-08-15",
-       57490
+       41990
       ],
       [
        "2026-08-16",
-       56490
+       41990
       ],
       [
        "2026-08-17",
-       56490
+       41990
       ],
       [
        "2026-08-21",
-       56490
+       41990
       ],
       [
        "2026-08-22",
-       50499
+       41990
       ],
       [
        "2026-08-23",
-       57990
+       42499
       ],
       [
        "2026-08-24",
-       50499
+       41990
       ],
       [
        "2026-08-27",
-       57990
+       42499
       ],
       [
        "2026-08-28",
-       57990
+       42499
       ],
       [
        "2026-08-29",
-       57990
+       42499
       ],
       [
        "2026-08-30",
-       57990
+       42499
       ],
       [
        "2026-09-02",
-       57990
+       42499
+      ],
+      [
+       "2026-09-03",
+       42499
       ]
      ]
     },
     "axis": [
-     "11 June",
-     "2 September",
-     "30 July"
+     "20 July",
+     "3 September",
+     "11 August"
     ],
     "highlight": "unofficial",
     "labels": {
@@ -235,19 +163,6 @@
     }
    },
    "items": [
-    {
-     "id": "iQOO|z11 turbo",
-     "name": "iQOO Z11 Turbo",
-     "brand": "iQOO",
-     "channel": "unofficial",
-     "was": 50499,
-     "now": 57990,
-     "delta": 7491,
-     "pct": 14.8,
-     "shops": 6,
-     "since": "2026-08-03",
-     "until": "2026-09-02"
-    },
     {
      "id": "Vivo|v70 fe",
      "name": "Vivo V70 FE 5G",
@@ -258,69 +173,258 @@
      "delta": 7009,
      "pct": 19.7,
      "shops": 9,
-     "since": "2026-08-03",
-     "until": "2026-09-02"
+     "since": "2026-08-04",
+     "until": "2026-09-03"
     },
     {
-     "id": "Apple|iphone 16 plus",
-     "name": "Apple iPhone 16 Plus",
+     "id": "iQOO|z11 turbo",
+     "name": "iQOO Z11 Turbo",
+     "brand": "iQOO",
+     "channel": "unofficial",
+     "was": 50499,
+     "now": 57499,
+     "delta": 7000,
+     "pct": 13.9,
+     "shops": 6,
+     "since": "2026-08-04",
+     "until": "2026-09-03"
+    },
+    {
+     "id": "Apple|iphone 15",
+     "name": "Apple iPhone 15",
      "brand": "Apple",
      "channel": "unofficial",
-     "was": 93490,
-     "now": 98490,
-     "delta": 5000,
-     "pct": 5.3,
-     "shops": 3,
-     "since": "2026-08-03",
-     "until": "2026-09-02"
+     "was": 68990,
+     "now": 74999,
+     "delta": 6009,
+     "pct": 8.7,
+     "shops": 5,
+     "since": "2026-08-04",
+     "until": "2026-09-03"
     },
     {
-     "id": "OPPO|find x9",
-     "name": "OPPO Find X9",
-     "brand": "OPPO",
+     "id": "Redmi|turbo 4",
+     "name": "Redmi Turbo 4",
+     "brand": "Redmi",
      "channel": "unofficial",
-     "was": 73499,
-     "now": 78000,
-     "delta": 4501,
-     "pct": 6.1,
-     "shops": 4,
-     "since": "2026-08-03",
-     "until": "2026-09-02"
+     "was": 32499,
+     "now": 37490,
+     "delta": 4991,
+     "pct": 15.4,
+     "shops": 5,
+     "since": "2026-08-04",
+     "until": "2026-09-03"
     }
    ],
    "bullets": [
-    "iQOO Z11 Turbo: ৳50,499 to ৳57,990 (+15%, unofficial price)",
     "Vivo V70 FE 5G: ৳35,490 to ৳42,499 (+20%, unofficial price)",
-    "Apple iPhone 16 Plus: ৳93,490 to ৳98,490 (+5%, unofficial price)",
-    "OPPO Find X9: ৳73,499 to ৳78,000 (+6%, unofficial price)"
+    "iQOO Z11 Turbo: ৳50,499 to ৳57,499 (+14%, unofficial price)",
+    "Apple iPhone 15: ৳68,990 to ৳74,999 (+9%, unofficial price)",
+    "Redmi Turbo 4: ৳32,499 to ৳37,490 (+15%, unofficial price)"
    ],
    "ids": [
-    "iQOO|z11 turbo",
     "Vivo|v70 fe",
-    "Apple|iphone 16 plus",
-    "OPPO|find x9"
+    "iQOO|z11 turbo",
+    "Apple|iphone 15",
+    "Redmi|turbo 4"
+   ]
+  },
+  {
+   "slug": "risers_other",
+   "kicker": "OFFICIAL PRICE",
+   "headline": "The Vivo V70 FE 5G official price fell ==৳600== over the same weeks",
+   "caption": "The other price of the same phone.\n\nWe read the Vivo V70 FE 5G twice every night: once with a brand warranty, once without. Its official price went ৳54,599 to ৳53,999 while its unofficial price went ৳35,490 to ৳42,499. So what the warranty costs:\n\n• On 4 August: ৳19,109\n• Today: ৳11,500\n\nOfficial against official, unofficial against unofficial, every night. Both lines:\nhttps://bhalophone.com/phone/vivo-v70-fe-5g\n\nIs the warranty worth that to you?",
+   "standfirst": "৳54,599 on 4 August, ৳53,999 today. Its unofficial price went the other way, so the two went from ৳19,109 apart to ৳11,500.",
+   "source": "bhalophone.com · both prices read nightly since 2026-06-11",
+   "panel": {
+    "kind": "chart",
+    "series": {
+     "official": [
+      [
+       "2026-07-20",
+       54999
+      ],
+      [
+       "2026-07-25",
+       54999
+      ],
+      [
+       "2026-07-26",
+       54999
+      ],
+      [
+       "2026-07-27",
+       54999
+      ],
+      [
+       "2026-07-28",
+       54999
+      ],
+      [
+       "2026-07-29",
+       54999
+      ],
+      [
+       "2026-07-30",
+       54999
+      ],
+      [
+       "2026-08-01",
+       54599
+      ],
+      [
+       "2026-08-02",
+       54599
+      ],
+      [
+       "2026-08-03",
+       54599
+      ],
+      [
+       "2026-08-04",
+       54599
+      ],
+      [
+       "2026-08-05",
+       54599
+      ],
+      [
+       "2026-08-07",
+       53999
+      ],
+      [
+       "2026-08-08",
+       53999
+      ],
+      [
+       "2026-08-09",
+       53999
+      ],
+      [
+       "2026-08-10",
+       53999
+      ],
+      [
+       "2026-08-11",
+       53999
+      ],
+      [
+       "2026-08-12",
+       53999
+      ],
+      [
+       "2026-08-14",
+       53999
+      ],
+      [
+       "2026-08-15",
+       53999
+      ],
+      [
+       "2026-08-16",
+       53999
+      ],
+      [
+       "2026-08-17",
+       53999
+      ],
+      [
+       "2026-08-21",
+       53999
+      ],
+      [
+       "2026-08-22",
+       53999
+      ],
+      [
+       "2026-08-23",
+       53999
+      ],
+      [
+       "2026-08-24",
+       53999
+      ],
+      [
+       "2026-08-27",
+       53999
+      ],
+      [
+       "2026-08-28",
+       53999
+      ],
+      [
+       "2026-08-29",
+       53999
+      ],
+      [
+       "2026-08-30",
+       53999
+      ],
+      [
+       "2026-09-02",
+       53999
+      ],
+      [
+       "2026-09-03",
+       53999
+      ]
+     ]
+    },
+    "axis": [
+     "20 July",
+     "3 September",
+     "11 August"
+    ],
+    "highlight": "official",
+    "labels": {
+     "official": "Official"
+    }
+   },
+   "items": [
+    {
+     "id": "Vivo|v70 fe",
+     "name": "Vivo V70 FE 5G",
+     "brand": "Vivo",
+     "channel": "unofficial",
+     "was": 35490,
+     "now": 42499,
+     "delta": 7009,
+     "pct": 19.7,
+     "shops": 9,
+     "since": "2026-08-04",
+     "until": "2026-09-03"
+    }
+   ],
+   "bullets": [
+    "Unofficial: ৳35,490 to ৳42,499",
+    "Official: ৳54,599 to ৳53,999",
+    "Gap on 4 August: ৳19,109",
+    "Gap today: ৳11,500"
+   ],
+   "ids": [
+    "Vivo|v70 fe"
    ]
   },
   {
    "slug": "shops",
    "kicker": "SHOP WATCH",
-   "headline": "The same phone costs ==9.6% more== at Salextra than at the cheapest shop",
-   "caption": "Same phone, same storage, same channel. What does each shop want for it on the same night? We ran that 151 times.\n\nSalextra came out 9.6% above the cheapest shop on average. GaziElectronics came out 0.7%.\n\n• GaziElectronics: +0.7% (31 comparisons)\n• RioInternational: +1.7% (88 comparisons)\n• Dazzle: +2.7% (27 comparisons)\n• SMSGadget: +3.0% (81 comparisons)\n• AppleGadgets: +4.9% (72 comparisons)\n• SumashTech: +6.7% (128 comparisons)\n• GadgetAndGear: +8.1% (91 comparisons)\n• Pickaboo: +9.0% (85 comparisons)\n• Salextra: +9.6% (30 comparisons)\n\nShops bundle differently and stock different things, so a premium is not proof of anything by itself. But if you are about to spend six figures, the shop you walk into is worth knowing. Checked every night, every shop we track:\nhttps://bhalophone.com\n\nWhich shop do you actually buy from?",
-   "standfirst": "151 head-to-head comparisons: same model, same storage, same channel, in stock at three or more shops on the same night.",
+   "headline": "The same phone costs ==11.6% more== at Salextra than at the cheapest shop",
+   "caption": "Same phone, same storage, same channel. What does each shop want for it on the same night? We ran that 152 times.\n\nSalextra came out 11.6% above the cheapest shop on average. RioInternational came out 1.7%.\n\n• RioInternational: +1.7% (86 comparisons)\n• GaziElectronics: +1.7% (34 comparisons)\n• Dazzle: +2.7% (27 comparisons)\n• SMSGadget: +3.0% (82 comparisons)\n• AppleGadgets: +5.3% (72 comparisons)\n• SumashTech: +7.1% (131 comparisons)\n• Pickaboo: +8.8% (81 comparisons)\n• GadgetAndGear: +9.0% (87 comparisons)\n• Salextra: +11.6% (27 comparisons)\n\nShops bundle differently and stock different things, so a premium is not proof of anything by itself. But if you are about to spend six figures, the shop you walk into is worth knowing. Checked every night, every shop we track:\nhttps://bhalophone.com\n\nWhich shop do you actually buy from?",
+   "standfirst": "152 head-to-head comparisons: same model, same storage, same channel, in stock at three or more shops on the same night.",
    "source": "bhalophone.com · nightly since 2026-06-11",
    "panel": {
     "kind": "bars",
     "unit": "% over the cheapest shop",
     "bars": [
      {
-      "label": "GaziElectronics",
-      "value": 0.7,
-      "note": "31 comparisons"
-     },
-     {
       "label": "RioInternational",
       "value": 1.7,
-      "note": "88 comparisons"
+      "note": "86 comparisons"
+     },
+     {
+      "label": "GaziElectronics",
+      "value": 1.7,
+      "note": "34 comparisons"
      },
      {
       "label": "Dazzle",
@@ -330,49 +434,49 @@
      {
       "label": "SMSGadget",
       "value": 3.0,
-      "note": "81 comparisons"
+      "note": "82 comparisons"
      },
      {
       "label": "AppleGadgets",
-      "value": 4.9,
+      "value": 5.3,
       "note": "72 comparisons"
      },
      {
       "label": "SumashTech",
-      "value": 6.7,
-      "note": "128 comparisons"
-     },
-     {
-      "label": "GadgetAndGear",
-      "value": 8.1,
-      "note": "91 comparisons"
+      "value": 7.1,
+      "note": "131 comparisons"
      },
      {
       "label": "Pickaboo",
+      "value": 8.8,
+      "note": "81 comparisons"
+     },
+     {
+      "label": "GadgetAndGear",
       "value": 9.0,
-      "note": "85 comparisons"
+      "note": "87 comparisons"
      },
      {
       "label": "Salextra",
-      "value": 9.6,
-      "note": "30 comparisons"
+      "value": 11.6,
+      "note": "27 comparisons"
      }
     ]
    },
    "items": [
     {
-     "shop": "GaziElectronics",
-     "seen": 31,
-     "premium": 0.7,
-     "cheapest_pct": 71,
-     "dearest_pct": 10
-    },
-    {
      "shop": "RioInternational",
-     "seen": 88,
+     "seen": 86,
      "premium": 1.7,
      "cheapest_pct": 55,
-     "dearest_pct": 3
+     "dearest_pct": 6
+    },
+    {
+     "shop": "GaziElectronics",
+     "seen": 34,
+     "premium": 1.7,
+     "cheapest_pct": 74,
+     "dearest_pct": 15
     },
     {
      "shop": "Dazzle",
@@ -383,67 +487,67 @@
     },
     {
      "shop": "SMSGadget",
-     "seen": 81,
+     "seen": 82,
      "premium": 3.0,
-     "cheapest_pct": 41,
-     "dearest_pct": 14
+     "cheapest_pct": 40,
+     "dearest_pct": 13
     },
     {
      "shop": "AppleGadgets",
      "seen": 72,
-     "premium": 4.9,
-     "cheapest_pct": 17,
+     "premium": 5.3,
+     "cheapest_pct": 15,
      "dearest_pct": 6
     },
     {
      "shop": "SumashTech",
-     "seen": 128,
-     "premium": 6.7,
-     "cheapest_pct": 9,
-     "dearest_pct": 68
-    },
-    {
-     "shop": "GadgetAndGear",
-     "seen": 91,
-     "premium": 8.1,
-     "cheapest_pct": 10,
-     "dearest_pct": 7
+     "seen": 131,
+     "premium": 7.1,
+     "cheapest_pct": 8,
+     "dearest_pct": 65
     },
     {
      "shop": "Pickaboo",
-     "seen": 85,
-     "premium": 9.0,
+     "seen": 81,
+     "premium": 8.8,
      "cheapest_pct": 7,
-     "dearest_pct": 34
+     "dearest_pct": 30
+    },
+    {
+     "shop": "GadgetAndGear",
+     "seen": 87,
+     "premium": 9.0,
+     "cheapest_pct": 13,
+     "dearest_pct": 6
     },
     {
      "shop": "Salextra",
-     "seen": 30,
-     "premium": 9.6,
+     "seen": 27,
+     "premium": 11.6,
      "cheapest_pct": 0,
-     "dearest_pct": 20
+     "dearest_pct": 30
     }
    ],
    "bullets": [
-    "GaziElectronics: +0.7% over the cheapest, across 31 comparisons",
-    "RioInternational: +1.7% over the cheapest, across 88 comparisons",
+    "RioInternational: +1.7% over the cheapest, across 86 comparisons",
+    "GaziElectronics: +1.7% over the cheapest, across 34 comparisons",
     "Dazzle: +2.7% over the cheapest, across 27 comparisons",
-    "SMSGadget: +3.0% over the cheapest, across 81 comparisons",
-    "AppleGadgets: +4.9% over the cheapest, across 72 comparisons",
-    "SumashTech: +6.7% over the cheapest, across 128 comparisons",
-    "GadgetAndGear: +8.1% over the cheapest, across 91 comparisons",
-    "Pickaboo: +9.0% over the cheapest, across 85 comparisons",
-    "Salextra: +9.6% over the cheapest, across 30 comparisons"
+    "SMSGadget: +3.0% over the cheapest, across 82 comparisons",
+    "AppleGadgets: +5.3% over the cheapest, across 72 comparisons",
+    "SumashTech: +7.1% over the cheapest, across 131 comparisons",
+    "Pickaboo: +8.8% over the cheapest, across 81 comparisons",
+    "GadgetAndGear: +9.0% over the cheapest, across 87 comparisons",
+    "Salextra: +11.6% over the cheapest, across 27 comparisons"
    ],
    "ids": []
   },
   {
    "slug": "depreciation",
    "kicker": "THE COST OF BUYING EARLY",
-   "headline": "Waiting 60 days on the OnePlus 13 saved you ==৳27,900==",
-   "caption": "Somebody paid ৳103,899 for a OnePlus 13 back on 4 July. It is ৳75,999 today.\n\n৳27,900, for waiting 60 days. The four phones we have watched fall hardest since the first night anyone here quoted a price:\n\n• OnePlus 13: ৳103,899 to ৳75,999, −27% in 60 days (official price)\n• Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −27% in 83 days (official price)\n• Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −27% in 60 days (official price)\n• Xiaomi 17: ৳99,999 to ৳78,000, −22% in 60 days (unofficial price)\n\nEvery line is one channel against itself, so a sold-out listing never reads as a price cut. Night-by-night history:\nhttps://bhalophone.com/phone/oneplus-13\n\nAnything you are holding out on? Name it and we will watch it.",
+   "headline": "Waiting 61 days on the OnePlus 13 saved you ==৳27,900==",
+   "caption": "Somebody paid ৳103,899 for a OnePlus 13 back on 4 July. It is ৳75,999 today.\n\n৳27,900, for waiting 61 days. The four phones we have watched fall hardest since the first night anyone here quoted a price:\n\n• OnePlus 13: ৳103,899 to ৳75,999, −27% in 61 days (official price)\n• Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −27% in 84 days (official price)\n• Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −27% in 61 days (official price)\n• Xiaomi 17: ৳99,999 to ৳78,000, −22% in 61 days (unofficial price)\n\nEvery line is one channel against itself, so a sold-out listing never reads as a price cut. Night-by-night history:\nhttps://bhalophone.com/phone/oneplus-13\n\nAnything you are holding out on? Name it and we will watch it.",
    "standfirst": "৳103,899 when we first saw it, ৳75,999 today. Official price, tracked every night since 4 July.",
-   "source": "bhalophone.com · 89 more phones falling this fast",
+   "source": "bhalophone.com · 82 more phones falling this fast",
    "panel": {
     "kind": "beforeafter",
     "was": 103899,
@@ -464,7 +568,7 @@
      "delta": -27900,
      "pct": 27,
      "since": "2026-07-04",
-     "days": 60
+     "days": 61
     },
     {
      "id": "Apple|iphone 16 plus",
@@ -476,7 +580,7 @@
      "delta": -49999,
      "pct": 27,
      "since": "2026-06-11",
-     "days": 83
+     "days": 84
     },
     {
      "id": "Samsung|s23 ultra",
@@ -488,7 +592,7 @@
      "delta": -66000,
      "pct": 27,
      "since": "2026-07-04",
-     "days": 60
+     "days": 61
     },
     {
      "id": "Xiaomi|17",
@@ -500,14 +604,14 @@
      "delta": -21999,
      "pct": 22,
      "since": "2026-07-04",
-     "days": 60
+     "days": 61
     }
    ],
    "bullets": [
-    "OnePlus 13: ৳103,899 to ৳75,999, −27% in 60 days (official)",
-    "Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −27% in 83 days (official)",
-    "Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −27% in 60 days (official)",
-    "Xiaomi 17: ৳99,999 to ৳78,000, −22% in 60 days (unofficial)"
+    "OnePlus 13: ৳103,899 to ৳75,999, −27% in 61 days (official)",
+    "Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −27% in 84 days (official)",
+    "Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −27% in 61 days (official)",
+    "Xiaomi 17: ৳99,999 to ৳78,000, −22% in 61 days (unofficial)"
    ],
    "ids": [
     "OnePlus|13",
@@ -520,9 +624,9 @@
    "slug": "warranty",
    "kicker": "WHAT THE WARRANTY COSTS",
    "headline": "Samsung's warranty on the Galaxy Z Fold 5 costs ==৳162,000==",
-   "caption": "Official Samsung Galaxy Z Fold 5, 12GB/256GB: ৳285,999.\nThe identical unofficial box: ৳123,999.\n\n৳162,000 is what the warranty costs you on this phone. Both in stock today. The four widest gaps we can price on both channels right now:\n\n• Samsung Galaxy Z Fold 5 12GB/256GB: official ৳285,999 vs unofficial ৳123,999 (৳162,000 apart)\n• Samsung Galaxy S25 Ultra 12GB/256GB: official ৳224,999 vs unofficial ৳94,499 (৳130,500 apart)\n• Samsung Galaxy Z Flip 6 12GB/256GB: official ৳197,999 vs unofficial ৳84,999 (৳113,000 apart)\n• Apple iPhone 17 Pro Max 2TB: official ৳341,999 vs unofficial ৳239,999 (৳102,000 apart)\n\nSame storage on both sides, always. Quoting the cheapest official against the cheapest unofficial usually compares 512GB with 256GB and doubles the gap. Specs, shops and the full history:\nhttps://bhalophone.com/phone/samsung-galaxy-s25-ultra\n\nOfficial or unofficial: which way did you go, and would you do it again?",
+   "caption": "Official Samsung Galaxy Z Fold 5, 12GB/256GB: ৳285,999.\nThe identical unofficial box: ৳123,999.\n\n৳162,000 is what the warranty costs you on this phone. Both in stock today. The four widest gaps we can price on both channels right now:\n\n• Samsung Galaxy Z Fold 5 12GB/256GB: official ৳285,999 vs unofficial ৳123,999 (৳162,000 apart)\n• Samsung Galaxy S25 Ultra 12GB/256GB: official ৳224,999 vs unofficial ৳94,990 (৳130,009 apart)\n• Samsung Galaxy Z Flip 6 12GB/256GB: official ৳197,999 vs unofficial ৳84,999 (৳113,000 apart)\n• Apple iPhone 17 Pro Max 2TB: official ৳341,999 vs unofficial ৳239,999 (৳102,000 apart)\n\nSame storage on both sides, always. Quoting the cheapest official against the cheapest unofficial usually compares 512GB with 256GB and doubles the gap. Specs, shops and the full history:\nhttps://bhalophone.com/phone/samsung-galaxy-s25-ultra\n\nOfficial or unofficial: which way did you go, and would you do it again?",
    "standfirst": "Same 12GB/256GB variant, both in stock today. Official ৳285,999, unofficial ৳123,999.",
-   "source": "bhalophone.com · 65 phones priced on both channels",
+   "source": "bhalophone.com · 66 phones priced on both channels",
    "panel": {
     "kind": "versus",
     "left": {
@@ -552,8 +656,8 @@
      "brand": "Samsung",
      "variant": "12GB/256GB",
      "official": 224999,
-     "unofficial": 94499,
-     "delta": 130500,
+     "unofficial": 94990,
+     "delta": 130009,
      "pct": 58
     },
     {
@@ -579,7 +683,7 @@
    ],
    "bullets": [
     "Samsung Galaxy Z Fold 5 12GB/256GB: official ৳285,999 vs unofficial ৳123,999, ৳162,000 apart",
-    "Samsung Galaxy S25 Ultra 12GB/256GB: official ৳224,999 vs unofficial ৳94,499, ৳130,500 apart",
+    "Samsung Galaxy S25 Ultra 12GB/256GB: official ৳224,999 vs unofficial ৳94,990, ৳130,009 apart",
     "Samsung Galaxy Z Flip 6 12GB/256GB: official ৳197,999 vs unofficial ৳84,999, ৳113,000 apart",
     "Apple iPhone 17 Pro Max 2TB: official ৳341,999 vs unofficial ৳239,999, ৳102,000 apart"
    ],
@@ -594,14 +698,14 @@
    "slug": "drops",
    "kicker": "PRICE DROP",
    "headline": "The Samsung Galaxy Z Fold 7 lost ==৳10,500== in 30 nights",
-   "caption": "The Samsung Galaxy Z Fold 7 was ৳155,999 a month ago. This morning it is ৳145,499, at 6 shops.\n\nSteepest 30-day fall in our table. The rest of the top four:\n\n• Samsung Galaxy Z Fold 7: ৳155,999 to ৳145,499 (-7%, unofficial price)\n• Huawei Nova 15 Max: ৳57,999 to ৳47,999 (-17%, official price)\n• Huawei Mate X7: ৳249,999 to ৳239,999 (-4%, official price)\n• Google Pixel 10 Pro XL: ৳111,990 to ৳105,999 (-5%, unofficial price)\n\nOfficial against official, unofficial against unofficial. When a cheap listing sells out and the headline price jumps to the official one, that is not a rise and it is not in this list. Night-by-night history:\nhttps://bhalophone.com/phone/samsung-galaxy-fold-7\n\nBuying this month, or waiting it out?",
+   "caption": "The Samsung Galaxy Z Fold 7 was ৳155,999 a month ago. This morning it is ৳145,499, at 6 shops.\n\nSteepest 30-day fall in our table. The rest of the top four:\n\n• Samsung Galaxy Z Fold 7: ৳155,999 to ৳145,499 (-7%, unofficial price)\n• Huawei Nova 15 Max: ৳57,999 to ৳47,999 (-17%, official price)\n• Google Pixel 10 Pro: ৳94,500 to ৳85,999 (-9%, unofficial price)\n• Realme GT8: ৳61,499 to ৳55,981 (-9%, unofficial price)\n\nOfficial against official, unofficial against unofficial. When a cheap listing sells out and the headline price jumps to the official one, that is not a rise and it is not in this list. Night-by-night history:\nhttps://bhalophone.com/phone/samsung-galaxy-fold-7\n\nBuying this month, or waiting it out?",
    "standfirst": "৳155,999 to ৳145,499 in 30 days. Unofficial price, in stock at 6 shops.",
    "source": "bhalophone.com · nightly since 2026-06-11",
    "panel": {
     "kind": "beforeafter",
     "was": 155999,
     "now": 145499,
-    "was_label": "3 AUGUST",
+    "was_label": "4 AUGUST",
     "now_label": "today",
     "badge": "UNOFFICIAL",
     "delta": "-7%"
@@ -617,8 +721,8 @@
      "delta": -10500,
      "pct": -6.7,
      "shops": 6,
-     "since": "2026-08-03",
-     "until": "2026-09-02"
+     "since": "2026-08-04",
+     "until": "2026-09-03"
     },
     {
      "id": "Huawei|nova 15 max",
@@ -630,47 +734,47 @@
      "delta": -10000,
      "pct": -17.2,
      "shops": 5,
-     "since": "2026-08-03",
-     "until": "2026-09-02"
+     "since": "2026-08-04",
+     "until": "2026-09-03"
     },
     {
-     "id": "Huawei|mate x7",
-     "name": "Huawei Mate X7",
-     "brand": "Huawei",
-     "channel": "official",
-     "was": 249999,
-     "now": 239999,
-     "delta": -10000,
-     "pct": -4.0,
-     "shops": 5,
-     "since": "2026-08-03",
-     "until": "2026-09-02"
-    },
-    {
-     "id": "Google|pixel 10 pro xl",
-     "name": "Google Pixel 10 Pro XL",
+     "id": "Google|pixel 10 pro",
+     "name": "Google Pixel 10 Pro",
      "brand": "Google",
      "channel": "unofficial",
-     "was": 111990,
-     "now": 105999,
-     "delta": -5991,
-     "pct": -5.3,
-     "shops": 6,
-     "since": "2026-08-03",
-     "until": "2026-09-02"
+     "was": 94500,
+     "now": 85999,
+     "delta": -8501,
+     "pct": -9.0,
+     "shops": 7,
+     "since": "2026-08-04",
+     "until": "2026-09-03"
+    },
+    {
+     "id": "Realme|gt 8",
+     "name": "Realme GT8",
+     "brand": "Realme",
+     "channel": "unofficial",
+     "was": 61499,
+     "now": 55981,
+     "delta": -5518,
+     "pct": -9.0,
+     "shops": 1,
+     "since": "2026-08-04",
+     "until": "2026-09-03"
     }
    ],
    "bullets": [
     "Samsung Galaxy Z Fold 7: ৳155,999 to ৳145,499 (-7%, unofficial price)",
     "Huawei Nova 15 Max: ৳57,999 to ৳47,999 (-17%, official price)",
-    "Huawei Mate X7: ৳249,999 to ৳239,999 (-4%, official price)",
-    "Google Pixel 10 Pro XL: ৳111,990 to ৳105,999 (-5%, unofficial price)"
+    "Google Pixel 10 Pro: ৳94,500 to ৳85,999 (-9%, unofficial price)",
+    "Realme GT8: ৳61,499 to ৳55,981 (-9%, unofficial price)"
    ],
    "ids": [
     "Samsung|fold 7",
     "Huawei|nova 15 max",
-    "Huawei|mate x7",
-    "Google|pixel 10 pro xl"
+    "Google|pixel 10 pro",
+    "Realme|gt 8"
    ]
   },
   {
@@ -766,49 +870,41 @@
   {
    "slug": "new",
    "kicker": "NEW IN BANGLADESH",
-   "headline": "==28 phones== got their first Bangladesh price this month",
-   "caption": "28 phones landed on a Bangladeshi shop's shelf for the first time this month. The four already carried in the most shops:\n\n• Realme C100x: from ৳21,899, 7 shops\n• Samsung Galaxy Z Fold8 Ultra: from ৳199,999, 5 shops\n• Redmi 17: from ৳22,899, 5 shops\n• Vivo Y05e: from ৳16,599, 5 shops\n\nFirst seen here, not first announced. A launch abroad means nothing until somebody local quotes a price. Every phone we track:\nhttps://bhalophone.com/phone\n\nWhich one are you actually curious about?",
+   "headline": "==31 phones== got their first Bangladesh price this month",
+   "caption": "31 phones landed on a Bangladeshi shop's shelf for the first time this month. The four already carried in the most shops:\n\n• Samsung Galaxy Z Fold8 Ultra: from ৳194,999, 5 shops\n• Redmi 17: from ৳22,400, 5 shops\n• Vivo Y05e: from ৳16,599, 5 shops\n• Samsung Galaxy Z Fold 8: from ৳179,999, 4 shops\n\nFirst seen here, not first announced. A launch abroad means nothing until somebody local quotes a price. Every phone we track:\nhttps://bhalophone.com/phone\n\nWhich one are you actually curious about?",
    "standfirst": "First seen, not first released. This is the night a shop here first quoted them.",
    "source": "bhalophone.com · nightly since 2026-06-11",
    "panel": {
     "kind": "list",
     "items": [
      {
-      "label": "Realme C100x",
-      "value": "৳21,899",
-      "note": "7 shops"
-     },
-     {
       "label": "Samsung Galaxy Z Fold8 Ultra",
-      "value": "৳199,999",
+      "value": "৳194,999",
       "note": "5 shops"
      },
      {
       "label": "Redmi 17",
-      "value": "৳22,899",
+      "value": "৳22,400",
       "note": "5 shops"
      },
      {
       "label": "Vivo Y05e",
       "value": "৳16,599",
       "note": "5 shops"
+     },
+     {
+      "label": "Samsung Galaxy Z Fold 8",
+      "value": "৳179,999",
+      "note": "4 shops"
      }
     ]
    },
    "items": [
     {
-     "id": "Realme|c100x",
-     "name": "Realme C100x",
-     "brand": "Realme",
-     "price": 21899,
-     "shops": 7,
-     "first_seen": "2026-08-03"
-    },
-    {
      "id": "Samsung|fold 8 ultra",
      "name": "Samsung Galaxy Z Fold8 Ultra",
      "brand": "Samsung",
-     "price": 199999,
+     "price": 194999,
      "shops": 5,
      "first_seen": "2026-08-07"
     },
@@ -816,7 +912,7 @@
      "id": "Redmi|17 4g",
      "name": "Redmi 17",
      "brand": "Redmi",
-     "price": 22899,
+     "price": 22400,
      "shops": 5,
      "first_seen": "2026-08-04"
     },
@@ -827,19 +923,27 @@
      "price": 16599,
      "shops": 5,
      "first_seen": "2026-08-07"
+    },
+    {
+     "id": "Samsung|fold 8",
+     "name": "Samsung Galaxy Z Fold 8",
+     "brand": "Samsung",
+     "price": 179999,
+     "shops": 4,
+     "first_seen": "2026-08-07"
     }
    ],
    "bullets": [
-    "Realme C100x: from ৳21,899, 7 shops, first seen 2026-08-03",
-    "Samsung Galaxy Z Fold8 Ultra: from ৳199,999, 5 shops, first seen 2026-08-07",
-    "Redmi 17: from ৳22,899, 5 shops, first seen 2026-08-04",
-    "Vivo Y05e: from ৳16,599, 5 shops, first seen 2026-08-07"
+    "Samsung Galaxy Z Fold8 Ultra: from ৳194,999, 5 shops, first seen 2026-08-07",
+    "Redmi 17: from ৳22,400, 5 shops, first seen 2026-08-04",
+    "Vivo Y05e: from ৳16,599, 5 shops, first seen 2026-08-07",
+    "Samsung Galaxy Z Fold 8: from ৳179,999, 4 shops, first seen 2026-08-07"
    ],
    "ids": [
-    "Realme|c100x",
     "Samsung|fold 8 ultra",
     "Redmi|17 4g",
-    "Vivo|y05e"
+    "Vivo|y05e",
+    "Samsung|fold 8"
    ]
   }
  ]

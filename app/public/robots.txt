@@ -1,4 +1,5 @@
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 
 User-agent: GPTBot
@@ -34,4 +35,5 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
+Agentmap: https://bhalophone.com/.well-known/ard.json
 Sitemap: https://bhalophone.com/sitemap.xml
