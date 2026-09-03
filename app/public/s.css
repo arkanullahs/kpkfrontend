@@ -790,7 +790,7 @@ font-weight:700;letter-spacing:-.5px;color:var(--ink)}
 .dirsub{margin:6px 0 0;font-size:13.5px;color:var(--mut)}
 .dirgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,228px),1fr));
 gap:11px;margin-top:14px}
-.dircard{display:flex;align-items:center;gap:13px;padding:12px 14px;
+.dircard{display:flex;flex-wrap:wrap;align-items:center;gap:13px;padding:12px 14px;
 border-radius:var(--r);background:var(--card);
 box-shadow:var(--sh-card);
 transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s}
@@ -799,6 +799,8 @@ box-shadow:0 10px 24px rgba(var(--rgb-ink),.11),inset 0 0 0 1px var(--tint2)}
 .dircard img{width:42px;height:56px;object-fit:contain;flex:none;
 mix-blend-mode:multiply}
 .dircard .db{min-width:0;flex:1}
+/* the marker wraps to its own full-width row under the photo+text pair */
+.dircard .stx{flex-basis:100%;margin-top:0}
 .dircard .dl{display:block;font-size:9.5px;font-weight:700;letter-spacing:1px;
 text-transform:uppercase;color:var(--mut)}
 .dircard .dv{display:block;font-size:17px;font-weight:700;letter-spacing:-.6px;
@@ -1226,8 +1228,39 @@ margin-top:9px}
 letter-spacing:.5px;text-transform:uppercase;color:var(--lnk);
 background:var(--amsoft);border-radius:var(--r);padding:2px 7px;
 vertical-align:1px}
+/* The stretch marker, on every discovery card that names a guide's #1 beside
+   the ceiling that pick misses (audit GUIDE-02). Same amber-mark language as
+   .pout above, because it is the same kind of thing: a state the reader has
+   to see BEFORE clicking, not a decoration. It wraps rather than nowraps --
+   a 2-column .dirgrid card at 320px leaves this about 80px, and a nowrap pill
+   there is a horizontal overflow, which is the bug the last audit closed. */
+.stx{display:block;width:fit-content;align-self:flex-start;margin-top:6px;
+font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+color:var(--lnk);background:var(--amsoft);border-radius:var(--r-sm);
+padding:3px 7px;line-height:1.4}
+.stx b,.stx u{font-weight:700;text-decoration:none}
+.stx i{font-style:normal;opacity:.5;margin:0 3px}
+@media(max-width:560px){
+/* label over amount instead of a four-line rag: see _stretch_tag */
+.stx b,.stx u{display:block}
+.stx i{display:none}}
 @media(max-width:560px){
 .pgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}
+/* The other half of LAYOUT-01. Capping and centring the sparse grid fixed the
+   desktop, but two columns still left the third card of a three-phone brand
+   sitting alone in the left one, which reads as a fourth card that failed to
+   load rather than as a brand with three phones. The orphan takes the whole
+   row and centres in it, at EXACTLY one column's width -- the audit asked for
+   a deliberate sparse layout, not for cards that change size when a brand is
+   small. Scoped to .sparse: a trailing odd card on a paginated 15-card
+   catalog page is the end of a list, and belongs where lists end.
+   The desktop cap goes too: --n * 178px is a rule about how many cards fit a
+   1100px shell, and at this width it squeezed the one-phone Asus page into a
+   178px grid whose single card came out 85px wide -- half a card, on the page
+   whose whole problem was looking unfinished. */
+.pgrid.sparse{max-width:none}
+.pgrid.sparse>:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;
+width:calc(50% - 4.5px)}
 .pshot{height:124px}.pshot img{max-height:108px}
 .pbod{padding:9px 10px 11px}
 .pmd{font-size:13px}.ppr{font-size:14px;margin-top:7px}}
@@ -1489,8 +1522,13 @@ box-shadow:0 8px 22px -8px rgba(var(--rgb-ink),.55),
   inset 0 1px 0 rgba(var(--rgb-white),.2);
 opacity:0;pointer-events:none;
 transform:translate(-50%,140%) scale(.94);
+/* This is the transition TO the hidden state, so it is the one that runs when
+   the pill gets out of the way of something (RWD-07) -- fast, because until
+   it finishes it is still on top of the thing it is yielding to. Arriving is
+   the leisurely one; that transition lives on .on. */
+transition:transform .14s ease-in,opacity .12s ease-in}
+.mcta.on{opacity:1;pointer-events:auto;transform:translate(-50%,0) scale(1);
 transition:transform .34s cubic-bezier(.22,1,.36,1),opacity .22s ease}
-.mcta.on{opacity:1;pointer-events:auto;transform:translate(-50%,0) scale(1)}
 .mcta i{font-style:normal;transition:transform .16s}
 .mcta:active i{transform:translateX(3px)}
 .mcta:hover{text-decoration:none;background:var(--tealD)}
