@@ -61,6 +61,33 @@ export function shownRange(p: {
   return { lo: side?.lo ?? p.price_low ?? p.best_price, hi: side?.hi ?? p.price_high ?? null };
 }
 
+/** The RAM/storage rows a card may print, read from the ONE channel that card
+    is quoting — see shownRange above, which picks that channel for the
+    headline. Both must agree or the card contradicts itself, which is exactly
+    what audit PICK-07 caught: an "Official (BD warranty)" card headlining
+    TK19,499 while its config list printed TK14,990 and TK17,490, an
+    unstated-channel offer and an unofficial one.
+
+    A config with no offer in the quoted channel is dropped, not relabelled:
+    there is nothing to show for it on this side of the counter.
+
+    The exception is data with no channel attribution at all — an older cached
+    pick, or shops that never said. There the prices make no channel claim to
+    contradict, so they are printed as they were. */
+export function variantRows(
+  variants: { variant: string; price: number | null;
+              channels?: { channel: string; price: number | null }[] }[] | null | undefined,
+  channel?: "official" | "unofficial" | null,
+): { variant: string; price: number }[] {
+  const vs = variants ?? [];
+  const attributed = !!channel && vs.some((v) => v.channels?.length);
+  return vs
+    .map((v) => attributed
+      ? { variant: v.variant, price: v.channels?.find((c) => c.channel === channel)?.price ?? null }
+      : { variant: v.variant, price: v.price })
+    .filter((r): r is { variant: string; price: number } => r.price != null);
+}
+
 /* ---------- domain label / style maps (from the DC logic) ---------- */
 
 export type AxisKey = "camera" | "battery" | "gaming" | "performance" | "ease_of_use";
