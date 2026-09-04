@@ -46,11 +46,11 @@
 - [Best gaming phones under ৳20,000](https://bhalophone.com/best/gaming-phone-under-20000): ranked list, live BD prices. Current #1: Infinix Hot 70. Stretch pick: ৳999 over ৳20,000.
 - [Best gaming phones under ৳25,000](https://bhalophone.com/best/gaming-phone-under-25000): ranked list, live BD prices. Current #1: iQOO Z10x.
 - [Best gaming phones under ৳30,000](https://bhalophone.com/best/gaming-phone-under-30000): ranked list, live BD prices. Current #1: iQOO Z11x 5G. Stretch pick: ৳999 over ৳30,000.
-- [Best gaming phones under ৳35,000](https://bhalophone.com/best/gaming-phone-under-35000): ranked list, live BD prices. Current #1: Redmi Note 15 Pro 5G.
+- [Best gaming phones under ৳35,000](https://bhalophone.com/best/gaming-phone-under-35000): ranked list, live BD prices. Current #1: Realme P4x.
 - [Best gaming phones under ৳40,000](https://bhalophone.com/best/gaming-phone-under-40000): ranked list, live BD prices. Current #1: Redmi Turbo 4.
 - [Best gaming phones under ৳50,000](https://bhalophone.com/best/gaming-phone-under-50000): ranked list, live BD prices. Current #1: iQOO Z10 Turbo Plus.
 - [Best gaming phones under ৳60,000](https://bhalophone.com/best/gaming-phone-under-60000): ranked list, live BD prices. Current #1: iQOO Z11 Turbo.
-- [Best gaming phones under ৳80,000](https://bhalophone.com/best/gaming-phone-under-80000): ranked list, live BD prices. Current #1: iQOO Z10 Turbo Plus.
+- [Best gaming phones under ৳80,000](https://bhalophone.com/best/gaming-phone-under-80000): ranked list, live BD prices. Current #1: OnePlus 15T.
 - [Best gaming phones under ৳1,00,000](https://bhalophone.com/best/gaming-phone-under-100000): ranked list, live BD prices. Current #1: OnePlus 15T.
 - [Best gaming phones under ৳1,20,000](https://bhalophone.com/best/gaming-phone-under-120000): ranked list, live BD prices. Current #1: iQOO 15.
 - [Best gaming phones under ৳1,50,000](https://bhalophone.com/best/gaming-phone-under-150000): ranked list, live BD prices. Current #1: Apple iPhone 17.
@@ -59,7 +59,7 @@
 - [Best battery phones under ৳12,000](https://bhalophone.com/best/battery-phone-under-12000): ranked list, live BD prices. Current #1: Nubia A35e.
 - [Best battery phones under ৳15,000](https://bhalophone.com/best/battery-phone-under-15000): ranked list, live BD prices. Current #1: Samsung Galaxy F07.
 - [Best battery phones under ৳20,000](https://bhalophone.com/best/battery-phone-under-20000): ranked list, live BD prices. Current #1: Motorola G06 Power.
-- [Best battery phones under ৳25,000](https://bhalophone.com/best/battery-phone-under-25000): ranked list, live BD prices. Current #1: iQOO Z10x.
+- [Best battery phones under ৳25,000](https://bhalophone.com/best/battery-phone-under-25000): ranked list, live BD prices. Current #1: Motorola G06 Power.
 - [Best battery phones under ৳30,000](https://bhalophone.com/best/battery-phone-under-30000): ranked list, live BD prices. Current #1: Redmi Note 15 5G.
 - [Best battery phones under ৳35,000](https://bhalophone.com/best/battery-phone-under-35000): ranked list, live BD prices. Current #1: Realme P4.
 - [Best battery phones under ৳40,000](https://bhalophone.com/best/battery-phone-under-40000): ranked list, live BD prices. Current #1: Honor 600s.
@@ -86,6 +86,7 @@
 
 ## Phone comparisons (updated September 2026)
 
+- [Compare any two phones](https://bhalophone.com/compare): side-by-side tool over every phone we publish. Deep-links as https://bhalophone.com/compare?a=<slug>&b=<slug>, where each slug is the phone's own /phone/<slug> page.
 - [Apple iPhone 17 Pro Max vs OPPO Find X9 Pro](https://bhalophone.com/vs/apple-iphone-17-pro-max-vs-oppo-find-x9-pro): head-to-head AI verdict, live BD prices for both phones.
 - [Apple iPhone 17 Pro Max vs Samsung Galaxy S26 Ultra](https://bhalophone.com/vs/apple-iphone-17-pro-max-vs-samsung-galaxy-s26-ultra): head-to-head AI verdict, live BD prices for both phones.
 - [Apple iPhone 17 vs Apple iPhone 17 Pro](https://bhalophone.com/vs/apple-iphone-17-vs-apple-iphone-17-pro): head-to-head AI verdict, live BD prices for both phones.
@@ -115,7 +116,7 @@
 
 ## Individual phones
 
-- [719 phone pages](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with its latest BD price and whether any shop has it in stock today, which shops those are, full specs and owner ratings. A page stays up when a phone sells out, and says so. The hub lists every one; they are not enumerated in this file.
+- [720 phone pages](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with its latest BD price and whether any shop has it in stock today, which shops those are, full specs and owner ratings. A page stays up when a phone sells out, and says so. The hub lists every one; they are not enumerated in this file.
 
 
 ## Market data

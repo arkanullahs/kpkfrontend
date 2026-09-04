@@ -1269,41 +1269,95 @@ width:calc(50% - 4.5px)}
    half a desktop screen across */
 .trend{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,232px),1fr));
 gap:11px;margin-top:14px}
-.tcard{display:flex;gap:13px;align-items:center;padding:15px 16px;border-radius:var(--r);
-background:var(--card);box-shadow:var(--sh-card)}
-.tcard:hover{text-decoration:none;box-shadow:0 4px 14px rgba(var(--rgb-ink),.1),inset 0 0 0 1px var(--tint2)}
-.tcard img{width:54px;height:72px;object-fit:contain;flex:none;
-mix-blend-mode:multiply}
-.tcard .tb{font-size:11.5px;font-weight:700;color:var(--lnk);letter-spacing:.6px;text-transform:uppercase}
-.tcard .tn{font-size:15px;font-weight:600;color:var(--ink);line-height:1.3;margin-top:2px}
-.tcard .tp{font-size:13.5px;color:var(--tx);font-weight:600;margin-top:3px}
-.tcard .tp .go{color:var(--lnk);font-weight:700}
+.tcard{display:flex;flex-direction:column;gap:12px;padding:14px 15px 15px;
+border-radius:var(--r);background:var(--card);box-shadow:var(--sh-card);
+transition:box-shadow .16s,transform .16s}
+.tcard:hover{text-decoration:none;transform:translateY(-2px);
+box-shadow:0 6px 18px rgba(var(--rgb-ink),.11),inset 0 0 0 1px var(--tint2)}
+/* the two faces, and the fight between them. The photos sit on the tinted
+   field so a phone shot on white does not float, and the loser is held back
+   at 88% opacity rather than at a smaller size -- both phones are the same
+   size in the world. */
+.tcard .tvs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+gap:8px;padding:10px 6px;border-radius:var(--r-sm);background:var(--bg)}
+.tcard img{width:52px;height:70px;object-fit:contain;mix-blend-mode:multiply;
+justify-self:center;opacity:.88;transition:opacity .16s}
+.tcard img.tw{opacity:1}
+.tcard:hover img{opacity:1}
+.tcard .tno{display:block;width:52px;height:70px;justify-self:center;
+border-radius:var(--r-sm);background:var(--tint)}
+.tcard .tsep{font-family:var(--f-display);font-size:12px;font-weight:700;
+color:var(--ac);letter-spacing:.2px}
+.tcard .tbod{display:flex;flex-direction:column;flex:1}
+.tcard .tn{display:block;font-size:14.5px;font-weight:600;color:var(--ink);
+line-height:1.32;text-wrap:balance}
+.tcard .tvx{color:var(--mut2);font-weight:500}
+/* the winner is named twice on purpose: underlined in the pair, spelled out
+   in the line below. The card has to answer "which one" before the click. */
+.tcard .tn1.tw{box-shadow:inset 0 -2px 0 var(--amline)}
+/* pinned to the bottom of the card, so "AI verdict" lands on the same line
+   across a row whether the pair's names took one line or three */
+.tcard .tp{display:flex;align-items:baseline;gap:9px;
+font-size:12.5px;margin-top:auto;padding-top:8px}
+/* one line, always: the full name is spelled out above this, so clipping the
+   long ones here costs nothing and keeps "AI verdict" on the same baseline
+   across the whole grid */
+.tcard .twin{font-weight:700;color:var(--ac);min-width:0;overflow:hidden;
+text-overflow:ellipsis;white-space:nowrap}
+.tcard .tp .go{color:var(--lnk);font-weight:700;margin-left:auto;flex:none}
+.tcard:hover .tp .go{text-decoration:underline}
 @media(max-width:560px){
 .trend{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}
-.tcard{flex-direction:column;align-items:flex-start;gap:9px;padding:13px 14px}
-.tcard img{width:64px;height:84px}
+.tcard{padding:11px 12px 13px;gap:10px}
+.tcard img,.tcard .tno{width:44px;height:60px}
+.tcard .tn{font-size:13.5px}
+/* two columns leave no room for the winner's name and the CTA on one line,
+   and clipping "Apple iPhone 17e" to "Apple iP..." is the one thing this card
+   exists to say. Stack them instead. */
+.tcard .tp{flex-direction:column;align-items:flex-start;gap:3px}
+.tcard .twin{white-space:normal;overflow:visible;text-overflow:clip}
+.tcard .tp .go{margin-left:0}
 }
 
 .duel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:11px;margin-top:16px}
 .dcard{position:relative;padding:17px 18px;border-radius:var(--r);
 background:var(--card);
 box-shadow:var(--sh-card)}
-.dcard.win{background:var(--card);box-shadow:var(--sh-lift)}
+/* the pick, marked the way the winning table cell and the pick's panel are:
+   a shadow alone put the two cards a hair apart and left the reader checking
+   the badge to see which one we chose */
+.dcard.win{background:var(--card);box-shadow:var(--sh-lift),inset 0 0 0 1px var(--amline)}
 .dcard .dtop{display:flex;gap:13px;align-items:flex-start}
 /* the PHONE photo, not every img in the card: unscoped, this rule was also
    catching the maker's mark in the byline beside it and drawing an Apple glyph
    as a 76x100 plate the size of the phone (owner 2026-08-15) */
-.dcard .dtop>img{width:76px;height:100px;object-fit:contain;border-radius:var(--r);background:var(--bg);flex:none}
+.dcard .dtop>img{width:78px;height:102px;object-fit:contain;flex:none;
+mix-blend-mode:multiply}
 /* the badge row is reserved on BOTH cards (empty span on the loser) so the
    two columns' images/prices stay on the same baseline */
 .dcard .badge{float:none;display:block;width:fit-content;margin:0 0 8px;height:24px;line-height:14px}
 .dcard .badge:empty{background:none;padding-left:0}
+.dcard .brand{font-size:11px;font-weight:700;letter-spacing:.9px;
+text-transform:uppercase;color:var(--mut);margin-bottom:3px}
 .dcard .nm{font-family:var(--f-display);font-size:18px;font-weight:700;
 letter-spacing:-.3px;line-height:1.15}
 .dcard .amt{font-size:23px;font-weight:400;letter-spacing:-.8px;margin-top:9px}
 .dcard .chips{margin-top:11px}
 table.cmp.vs{min-width:420px}
 table.cmp.vs td{white-space:normal}
+/* the mark only lands on rows where one number decides it (see _ROW_BEST):
+   a tinted cell, ink instead of body grey, and a check drawn in the accent.
+   Not a coloured background band -- the row is data, and only half of it won. */
+table.cmp.vs td.w{background:var(--amsoft);color:var(--ink);font-weight:600;
+box-shadow:inset 0 0 0 1px var(--amline)}
+table.cmp.vs td.w::after{content:"✓";margin-left:7px;color:var(--ac);
+font-weight:700}
+.dcard .badge.alt{background:var(--tint);color:var(--mut);
+box-shadow:inset 0 0 0 1px var(--rule)}
+/* two identical panels make the reader re-read both to find the recommended
+   one; the pick's panel carries the accent rule the rest of the page uses */
+.decide.win{box-shadow:var(--sh-lift),inset 0 0 0 1px var(--amline)}
+.decide.win h2{color:var(--ink)}
 .vslink{margin:12px 0 0;font-size:14px;font-weight:600}
 .decide p{margin:8px 0 6px;font-size:14.5px;color:var(--ink2);line-height:1.6;max-width:76ch}
 @media(max-width:560px){
@@ -2696,3 +2750,190 @@ height:38px;margin:0 0 12px;border-radius:var(--r);background:var(--tealL);color
 letter-spacing:-.2px}
 .ccard p{margin:6px 0 0;font-size:14px;line-height:1.55;color:var(--mut)}
 .ccard a{font-weight:600}
+
+/* /compare. Shape borrowed from Apple's own compare page (owner reference,
+   2026-09-04): a picker at the head of every column, the photo as the column's
+   subject, colour swatches under it, and one long airy run of specs broken
+   into titled sections instead of a boxed table. What is NOT borrowed is the
+   chrome -- this page uses the site's header, cards, chips, buttons and
+   winning-cell mark exactly as the /vs page draws them. */
+.cmpdeck{display:flex;flex-wrap:wrap;align-items:stretch;gap:12px;margin:22px 0 0}
+.cslot{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:10px}
+/* --- the picker, at the head of the column whether or not it is filled --- */
+.cpick{position:relative;display:flex;align-items:center}
+.cpick input{width:100%;box-sizing:border-box;font:inherit;font-size:14px;
+font-weight:600;color:var(--ink);padding:12px 38px 12px 15px;
+border-radius:var(--r-pill);border:1px solid var(--rule);background:var(--card);
+text-overflow:ellipsis}
+.cpick input::placeholder{color:var(--mut2);font-weight:500}
+.cpick input:hover{border-color:var(--faint)}
+.cpick input:focus-visible{outline:2px solid var(--ac);outline-offset:1px;
+border-color:transparent}
+/* one 34px control in the same slot: a chevron while the field is empty, a
+   clear once it holds a phone */
+.cpick .cend{position:absolute;right:4px;display:grid;place-items:center;
+width:34px;height:34px;border:0;background:none;color:var(--mut);
+pointer-events:none}
+.cpick button.cend{cursor:pointer;border-radius:var(--r-pill);
+pointer-events:auto;font-size:18px;line-height:1;font-family:inherit}
+.cpick button.cend:hover{background:var(--tone);color:var(--ink)}
+.cpick button.cend:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+/* --- the filled column: the photo is the subject, not a thumbnail --- */
+.cslot .dcard{display:flex;flex-direction:column;flex:1;padding:16px 15px 16px;
+text-align:center}
+.cshot{display:grid;place-items:center;margin:8px 0 12px;padding:12px 10px;
+border-radius:var(--r);background:var(--bg)}
+/* height, not width: every photo is the same 600x800 crop (cache/phone_img),
+   so a fixed height puts every handset at the scale a shelf would */
+.cshot img{width:auto;max-width:100%;height:196px;object-fit:contain;
+mix-blend-mode:multiply}
+.cshot.noimg{min-height:220px;color:rgba(var(--rgb-ink),.16)}
+.cshot.noimg svg{width:84px;height:112px}
+/* _SCROLL_JS strips a broken img and adds .noimg, leaving the panel empty */
+.cshot.noimg:empty::after{content:"No photo yet";font-size:10px;font-weight:700;
+letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
+/* the paint the shops actually named, as the device page's own dots */
+.cswat{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:0 0 11px}
+.cswat .swx{font-size:11px;font-weight:700;color:var(--mut2);line-height:15px}
+.cslot .brand{margin-bottom:2px}
+.cslot .nm{font-size:18px}
+.cslot .amt{margin-top:9px}
+.cslot .chips{justify-content:center;margin-top:11px}
+.cslot .kf{margin-top:10px}
+/* actions on the card's floor, so a row of columns lines them up whatever the
+   names and chips did above */
+.cslot .dact{margin-top:auto;padding-top:14px}
+.cslot .dbtn{width:100%;justify-content:center}
+/* --- an empty column: a quiet plate, so the row keeps its rhythm --- */
+.cempty{flex:1;display:flex;flex-direction:column;align-items:center;
+justify-content:center;gap:9px;min-height:300px;padding:22px 16px;
+border-radius:var(--r);background:var(--card);
+box-shadow:inset 0 0 0 1px var(--rule);color:var(--mut2);font-size:13px;
+line-height:1.5;text-align:center}
+.cempty .plus{display:grid;place-items:center;width:44px;height:44px;
+border-radius:var(--r-pill);background:var(--tint);color:var(--teal);
+font-size:24px;line-height:1}
+.addc{flex:1 1 190px;min-width:0;display:flex;flex-direction:column;
+align-items:center;justify-content:center;gap:9px;
+font:inherit;font-size:13.5px;font-weight:700;color:var(--lnk);cursor:pointer;
+background:var(--card);border:1px dashed var(--rule);border-radius:var(--r)}
+.addc:hover{border-style:solid;border-color:var(--tint2);color:var(--ac)}
+.addc:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.addc .plus{display:grid;place-items:center;width:44px;height:44px;
+border-radius:var(--r-pill);background:var(--tint);color:var(--teal);
+font-size:24px;font-weight:400;line-height:1}
+.addc small{font-weight:500;color:var(--mut2);font-size:11.5px}
+/* the toolbar over the spec run */
+.cmptools{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+gap:12px;margin:24px 0 -4px}
+.cswitch{display:inline-flex;align-items:center;gap:8px;font-size:13px;
+font-weight:600;color:var(--mut);cursor:pointer;padding:6px 2px}
+.cswitch input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;margin:0}
+.cswitch:hover{color:var(--ink)}
+/* --- the spec run. Hairlines on the page ground, not a boxed table: at 17
+       rows over six sections the box is a wall and the sections are what a
+       reader navigates by. --- */
+.cmpspecs{margin-top:14px}
+.tblwrap.plain{background:none;box-shadow:none;border-radius:0;margin-top:0}
+table.cmp.cx{min-width:520px;background:none}
+table.cmp.cx td{white-space:normal;padding:18px 14px;font-size:16px;
+line-height:1.45;text-align:center;color:var(--ink2)}
+table.cmp.cx thead th{background:var(--bg);padding:13px 14px;text-align:center;
+font-size:12.5px}
+table.cmp.cx thead th:first-child{text-align:left}
+table.cmp.cx tbody tr:hover{background:none}
+/* the row label: quiet, with the icon over it, so the two figures are what the
+   eye lands on */
+table.cmp.cx td.ph{text-align:left;font-size:12.5px;font-weight:700;
+letter-spacing:.4px;text-transform:uppercase;color:var(--mut);white-space:normal}
+table.cmp.cx td.ph span{display:inline-flex;align-items:center;gap:10px}
+table.cmp.cx td.ph .ic{color:var(--mut2);flex:none;vertical-align:-7px}
+table.cmp.cx td.na{color:var(--mut2)}
+/* a section title, spanning the row */
+table.cmp.cx tr.sec td{padding:30px 14px 8px;text-align:left;border-bottom:none;
+font-family:var(--f-display);font-size:18px;font-weight:700;color:var(--ink);
+letter-spacing:-.3px;text-transform:none}
+table.cmp.cx tr.sec:first-child td{padding-top:8px}
+/* the read-out. Not an "AI verdict": /compare has no verdict behind it, only
+   measured numbers, and the card says exactly that much. */
+.cmpsum{margin:24px 0 0;padding:18px 20px;border-radius:var(--r);
+background:var(--card);box-shadow:var(--sh-card)}
+.cmpsum h2{display:flex;align-items:center;gap:9px;margin:0 0 10px;
+font-family:var(--f-display);font-size:17px;font-weight:600;
+letter-spacing:-.3px;color:var(--ink)}
+.cmpsum h2 .ic{color:var(--ac)}
+.cmpsum p{margin:0 0 7px;font-size:14.5px;color:var(--ink2);line-height:1.6;
+max-width:76ch}
+.cmpsum b{color:var(--ac)}
+.cmpsum .fine{font-size:12.5px;color:var(--mut);margin:10px 0 0}
+.cmpsum .dbtn{margin-top:13px}
+.cmpwarn{display:flex;gap:9px;margin:12px 0 0;padding:11px 13px;
+border-radius:var(--r);background:var(--amsoft);
+box-shadow:inset 0 0 0 1px var(--amline);font-size:13px;color:var(--ink2);
+line-height:1.5}
+.cmpempty{margin:20px 0 0;padding:26px;border-radius:var(--r);
+background:var(--card);box-shadow:var(--sh-card);color:var(--mut);
+font-size:14.5px;line-height:1.6;text-align:center}
+.cmppop{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.cmppop a{font-size:13px;font-weight:600;color:var(--lnk);background:var(--card);
+border-radius:var(--r);padding:9px 13px;box-shadow:var(--sh-hair)}
+.cmppop a:hover{text-decoration:none;background:var(--teal);color:var(--onp)}
+
+/* ---------------------------------------------------------------- phones ---
+   Two things change, and they are the two Apple's own page changes at this
+   width. The columns stay SIDE BY SIDE -- stacked, you scroll past one phone
+   to reach the other, which is the one thing a comparison must not make you
+   do. And the spec run stops being a table you drag sideways: the label moves
+   between the two figures. Three phones keep the scrolling table; three
+   columns and a centre label do not fit 375px, and pretending they do is how
+   you get a 9px font. */
+@media(max-width:640px){
+.cmpdeck{gap:8px}
+/* two columns plus the gap, and nothing else on the row */
+.cslot{flex:1 1 calc(50% - 6px);gap:8px}
+.cpick input{font-size:12.5px;padding:10px 30px 10px 12px}
+.cpick .cend{width:28px;height:28px;right:3px}
+.cslot .dcard{padding:12px 10px 14px}
+.cshot{margin:4px 0 10px;padding:8px 4px}
+.cshot img{height:148px}
+.cshot.noimg{min-height:166px}
+.cshot.noimg svg{width:60px;height:80px}
+.cslot .nm{font-size:15px}
+.cslot .amt{font-size:19px}
+.cslot .chips{gap:5px;margin-top:9px}
+.cslot .chip{font-size:11px;padding:4px 9px}
+/* the strip repeats the spec run three rows down; on a phone that is a screenful */
+.cslot .kf{display:none}
+.cslot .dbtn{font-size:12px;padding:9px 8px}
+.cempty{min-height:230px;padding:16px 12px;font-size:12px}
+.addc{flex:1 1 100%;min-height:104px;flex-direction:row;gap:12px}
+.addc .plus{width:34px;height:34px;font-size:20px}
+.cmptools{justify-content:flex-start;margin-top:18px}
+/* two phones: the label sits between the figures and nothing scrolls */
+table.cmp.cx.c2{min-width:0;width:100%;display:block}
+table.cmp.cx.c2 thead,table.cmp.cx.c2 tbody,
+table.cmp.cx.c2 tr,table.cmp.cx.c2 th,table.cmp.cx.c2 td{display:block}
+table.cmp.cx.c2 tr{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+align-items:center;border-bottom:1px solid var(--rule)}
+table.cmp.cx.c2 tr:last-child{border-bottom:none}
+table.cmp.cx.c2 td,table.cmp.cx.c2 th{border-bottom:none;padding:14px 6px}
+/* DOM order is label, left, right; the grid puts the label in the middle */
+table.cmp.cx.c2 td.ph,table.cmp.cx.c2 th:first-child{grid-column:2;
+max-width:104px;text-align:center;font-size:11.5px;line-height:1.25;
+letter-spacing:.3px}
+table.cmp.cx.c2 td.ph span{display:inline-flex;flex-direction:column;gap:5px;
+align-items:center}
+table.cmp.cx.c2 td.ph .ic{color:var(--teal);vertical-align:0}
+table.cmp.cx.c2 td:nth-child(2),table.cmp.cx.c2 th:nth-child(2){grid-column:1}
+table.cmp.cx.c2 td:nth-child(3),table.cmp.cx.c2 th:nth-child(3){grid-column:3}
+table.cmp.cx.c2 td{font-size:14.5px}
+/* a section title spans the three columns again */
+table.cmp.cx.c2 tr.sec{display:block;border-bottom:none}
+table.cmp.cx.c2 tr.sec td{padding:26px 2px 6px;text-align:left;font-size:17px}
+/* which phone is which, kept on screen while the specs scroll past */
+table.cmp.cx.c2 thead{position:sticky;top:0;z-index:2;background:var(--bg);
+box-shadow:0 1px 0 var(--rule)}
+table.cmp.cx.c2 thead th{position:static;font-size:12.5px;padding:12px 6px;
+white-space:normal;background:none}
+.tblwrap:has(table.cmp.cx.c2){overflow-x:visible}
+}
