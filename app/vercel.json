@@ -162,6 +162,16 @@
       "permanent": true
     },
     {
+      "source": "/phone/oppo-reno15-f",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-reno15-f-5g",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
       "source": "/phone/realme-12x-5g",
       "destination": "/brand/realme",
       "permanent": true
@@ -252,6 +262,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/samsung-galaxy-z-fold-8",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
       "source": "/phone/samsung-galaxy-z-fold4",
       "destination": "/brand/samsung",
       "permanent": true
@@ -287,6 +302,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/vivo-v70fe",
+      "destination": "/brand/vivo",
+      "permanent": true
+    },
+    {
       "source": "/phone/vivo-yo4",
       "destination": "/brand/vivo",
       "permanent": true
@@ -317,8 +337,18 @@
       "permanent": true
     },
     {
+      "source": "/vs/honor-400-pro-5g-vs-motorola-edge-60-pro",
+      "destination": "/phone/motorola-edge-60-pro",
+      "permanent": true
+    },
+    {
       "source": "/vs/honor-400-pro-5g-vs-oneplus-15r",
       "destination": "/phone/oneplus-15r",
+      "permanent": true
+    },
+    {
+      "source": "/vs/honor-400-pro-5g-vs-oneplus-nord-6",
+      "destination": "/phone/oneplus-nord-6",
       "permanent": true
     },
     {
@@ -404,6 +434,11 @@
     {
       "source": "/vs/poco-x8-pro-vs-samsung-galaxy-a57-5g",
       "destination": "/phone/poco-x8-pro",
+      "permanent": true
+    },
+    {
+      "source": "/vs/redmi-note-14-4g-vs-samsung-galaxy-a16-4g",
+      "destination": "/phone/redmi-note-14-4g",
       "permanent": true
     },
     {
