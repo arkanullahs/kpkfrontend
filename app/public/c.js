@@ -143,8 +143,11 @@
     if (!slug) return;
     card.dataset.cmpw = "1";
     var nm = card.querySelector(".nm"), im = card.querySelector("img");
+    /* the price panel, not the card corner: the card's own top right corner
+       is the score ring, and at 390px the button sat on top of it */
     button({ s: slug, n: nm ? nm.textContent.trim() : nameOf(a),
-             i: im ? im.getAttribute("src") : "" }, card);
+             i: im ? im.getAttribute("src") : "" },
+           card.querySelector(".cbuy") || card);
   }
 
   /* The device page ships its own button, server-rendered inside the buy
