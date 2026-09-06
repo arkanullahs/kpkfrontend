@@ -2806,26 +2806,35 @@ letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
 .cslot .dbtn{width:100%;justify-content:center}
 /* --- an empty column: a quiet plate, so the row keeps its rhythm --- */
 .cempty{flex:1;display:flex;flex-direction:column;align-items:center;
-justify-content:center;gap:9px;min-height:300px;padding:22px 16px;
+justify-content:center;gap:9px;min-height:212px;padding:22px 16px;
 border-radius:var(--r);background:var(--card);
 box-shadow:inset 0 0 0 1px var(--rule);color:var(--mut2);font-size:13px;
 line-height:1.5;text-align:center}
 .cempty .plus{display:grid;place-items:center;width:44px;height:44px;
 border-radius:var(--r-pill);background:var(--tint);color:var(--teal);
 font-size:24px;line-height:1}
-.addc{flex:1 1 190px;min-width:0;display:flex;flex-direction:column;
-align-items:center;justify-content:center;gap:9px;
-font:inherit;font-size:13.5px;font-weight:700;color:var(--lnk);cursor:pointer;
-background:var(--card);border:1px dashed var(--rule);border-radius:var(--r)}
-.addc:hover{border-style:solid;border-color:var(--tint2);color:var(--ac)}
-.addc:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
-.addc .plus{display:grid;place-items:center;width:44px;height:44px;
-border-radius:var(--r-pill);background:var(--tint);color:var(--teal);
-font-size:24px;font-weight:400;line-height:1}
-.addc small{font-weight:500;color:var(--mut2);font-size:11.5px}
+/* A third phone is an OFFER, not a reserved column. The dashed add-card held
+   a full column of width from the first paint, next to two columns that were
+   themselves still empty -- so the page opened as three empty boxes (owner
+   2026-09-06). One line under the deck, shown only once there is something to
+   add a third phone TO. */
+.cmpadd3{display:flex;margin:12px 0 0}
+.addc3{flex:1;display:flex;align-items:center;gap:12px;font:inherit;
+cursor:pointer;text-align:left;color:var(--lnk);background:var(--card);
+border:1.5px dashed var(--tint2);border-radius:var(--r);padding:13px 16px}
+.addc3:hover{border-style:solid;border-color:var(--teal);background:var(--tint)}
+.addc3:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.addc3 .plus{flex:none;display:grid;place-items:center;width:34px;height:34px;
+border-radius:var(--r-pill);background:var(--teal);color:var(--onp);
+font-size:20px;font-weight:400;line-height:1}
+.addc3 .t{font-size:14.5px;font-weight:700}
+.addc3 small{margin-left:auto;font-size:12px;font-weight:500;color:var(--mut2)}
 /* the toolbar over the spec run */
 .cmptools{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;
 gap:12px;margin:24px 0 -4px}
+/* a display: rule outranks the hidden ATTRIBUTE, so this toolbar was visible
+   over an empty page for as long as it has existed */
+.cmptools[hidden]{display:none}
 .cswitch{display:inline-flex;align-items:center;gap:8px;font-size:13px;
 font-weight:600;color:var(--mut);cursor:pointer;padding:6px 2px}
 .cswitch input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;margin:0}
@@ -2856,15 +2865,33 @@ letter-spacing:-.3px;text-transform:none}
 table.cmp.cx tr.sec:first-child td{padding-top:8px}
 /* the read-out. Not an "AI verdict": /compare has no verdict behind it, only
    measured numbers, and the card says exactly that much. */
-.cmpsum{margin:24px 0 0;padding:18px 20px;border-radius:var(--r);
+.cmpsum{margin:26px 0 0;padding:22px 20px 18px;border-radius:var(--r);
 background:var(--card);box-shadow:var(--sh-card)}
-.cmpsum h2{display:flex;align-items:center;gap:9px;margin:0 0 10px;
-font-family:var(--f-display);font-size:17px;font-weight:600;
+.cmpsum h2{display:flex;align-items:center;gap:9px;margin:0 0 12px;
+font-family:var(--f-display);font-size:19px;font-weight:700;
 letter-spacing:-.3px;color:var(--ink)}
 .cmpsum h2 .ic{color:var(--ac)}
-.cmpsum p{margin:0 0 7px;font-size:14.5px;color:var(--ink2);line-height:1.6;
+.cmpsum p{margin:0 0 9px;font-size:15px;color:var(--ink2);line-height:1.65;
 max-width:76ch}
 .cmpsum b{color:var(--ac)}
+/* the capabilities a phone wins, as marks rather than as a list to parse.
+   Teal for a win, so it reads as the same "this one" the scorecard chips and
+   the winning table cells already use; grey where nothing separates them. */
+/* no side margin: the punctuation that follows a chip is a text node, so a
+   margin reads as a space before the semicolon */
+.cmpsum .wmet{display:inline-flex;align-items:center;gap:5px;
+vertical-align:-4px;padding:2px 10px;margin:0;border-radius:var(--r-pill);
+background:var(--tint);color:var(--tealD);font-size:13.5px;font-weight:700;
+line-height:1.5;white-space:nowrap}
+.cmpsum .wmet svg{width:13px;height:13px;flex:none}
+.cmpsum .wmet.lvl{background:var(--tone);color:var(--mut);font-weight:600}
+/* the two overall scores in the headline sentence, marked the way the
+   scorecard marks a winning score, so the same fact reads the same way in
+   the prose and in the bars */
+.cmpsum .wnum{display:inline-block;padding:2px 10px;border-radius:var(--r-sm);
+background:var(--teal);color:var(--onp);font-weight:700;
+font-variant-numeric:tabular-nums}
+.cmpsum .wnum.lo{background:var(--tone);color:var(--mut)}
 .cmpsum .fine{font-size:12.5px;color:var(--mut);margin:10px 0 0}
 .cmpsum .dbtn{margin-top:13px}
 .cmpwarn{display:flex;gap:9px;margin:12px 0 0;padding:11px 13px;
@@ -2905,10 +2932,36 @@ border-radius:var(--r);padding:9px 13px;box-shadow:var(--sh-hair)}
 /* the strip repeats the spec run three rows down; on a phone that is a screenful */
 .cslot .kf{display:none}
 .cslot .dbtn{font-size:12px;padding:9px 8px}
-.cempty{min-height:230px;padding:16px 12px;font-size:12px}
-.addc{flex:1 1 100%;min-height:104px;flex-direction:row;gap:12px}
-.addc .plus{width:34px;height:34px;font-size:20px}
+.cempty{min-height:170px;padding:16px 12px;font-size:12px}
 .cmptools{justify-content:flex-start;margin-top:18px}
+/* THREE phones: the label takes its own line and the three figures share the
+   width, the same move the scorecard makes above it. A 440px table dragged
+   sideways inside a 390px screen showed two columns and half a third, which
+   is not a three-way comparison (owner 2026-09-06: "why 3 compare dont fit
+   still on mobile"). */
+table.cmp.cx.c3{min-width:0;width:100%;display:block}
+table.cmp.cx.c3 thead,table.cmp.cx.c3 tbody,
+table.cmp.cx.c3 tr,table.cmp.cx.c3 th,table.cmp.cx.c3 td{display:block}
+table.cmp.cx.c3 tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+gap:0 8px;border-bottom:1px solid var(--rule)}
+table.cmp.cx.c3 tr:last-child{border-bottom:none}
+table.cmp.cx.c3 td,table.cmp.cx.c3 th{border-bottom:none;padding:8px 4px}
+/* the row label spans all three, above the figures it labels */
+table.cmp.cx.c3 td.ph{grid-column:1/-1;padding:12px 2px 4px;text-align:center;
+font-size:11px;letter-spacing:.3px}
+table.cmp.cx.c3 td.ph span{justify-content:center}
+table.cmp.cx.c3 td.ph .ic{color:var(--teal)}
+table.cmp.cx.c3 td{font-size:13px;padding-bottom:12px}
+table.cmp.cx.c3 tr.sec{display:block;border-bottom:none}
+table.cmp.cx.c3 tr.sec td{padding:24px 2px 4px;text-align:left;font-size:17px}
+/* which column is which phone, kept on screen while the specs scroll past */
+table.cmp.cx.c3 thead{position:sticky;top:0;z-index:2;background:var(--bg);
+box-shadow:0 1px 0 var(--rule)}
+table.cmp.cx.c3 thead th{position:static;font-size:11px;line-height:1.25;
+padding:10px 4px;white-space:normal;background:none;text-align:center}
+table.cmp.cx.c3 thead th:first-child{display:none}
+table.cmp.cx.c3 thead tr{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tblwrap:has(table.cmp.cx.c3){overflow-x:visible}
 /* two phones: the label sits between the figures and nothing scrolls */
 table.cmp.cx.c2{min-width:0;width:100%;display:block}
 table.cmp.cx.c2 thead,table.cmp.cx.c2 tbody,
@@ -2937,3 +2990,384 @@ table.cmp.cx.c2 thead th{position:static;font-size:12.5px;padding:12px 6px;
 white-space:normal;background:none}
 .tblwrap:has(table.cmp.cx.c2){overflow-x:visible}
 }
+
+/* -------------------------------------------------- the phone type-ahead ---
+   A <datalist> of 473 names is a list you scroll past, not one you search
+   (owner 2026-09-06). Type into the field and the closest models appear
+   under it WITH their photos, prices and score -- the shape GSMArena's
+   compare box uses, and the thing a datalist can never do, because a phone is
+   a picture and a price before it is a string.
+
+   One panel, two placements: anchored under the field on a desktop, a bottom
+   sheet on a phone, where a dropdown hanging off a 170px half-column would be
+   a 170px dropdown. Same DOM either way -- the placement is CSS. */
+.cpick{position:relative}
+/* the field keeps the chosen phone as its PLACEHOLDER, not its value: the
+   value is what you are typing, and a field you must clear before you can
+   search is a field that fights you */
+.cpi.has::placeholder{color:var(--ink);font-weight:600;opacity:1}
+.cmpop{position:absolute;z-index:40;top:calc(100% + 6px);left:0;
+width:max(100%,min(420px,88vw));display:flex;flex-direction:column;
+max-height:min(58vh,470px);background:var(--card);border-radius:var(--r);
+box-shadow:0 18px 44px rgba(var(--rgb-ink),.22),inset 0 0 0 1px var(--rule);
+overflow:hidden}
+/* the third column's panel would hang off the right edge of the page */
+.cslot:last-child .cmpop{left:auto;right:0}
+.cmbd{position:fixed;inset:0;z-index:59;background:rgba(var(--rgb-ink),.44)}
+/* the mobile sheet header, which only the sheet has */
+.cmsh{display:none}
+/* the brand rail. Horizontal and scrollable: 26 makers stacked would push the
+   phones themselves off the panel */
+.cmbrands{display:flex;flex-wrap:wrap;gap:6px;padding:9px 10px;
+max-height:117px;overflow-y:auto;overscroll-behavior:contain;
+border-bottom:1px solid var(--rule);flex:none}
+.cmbrands[hidden]{display:none}
+.cmbrands button{flex:none;display:inline-flex;align-items:center;gap:6px;
+font:inherit;font-size:12.5px;font-weight:700;color:var(--ink2);cursor:pointer;
+padding:6px 11px;border-radius:var(--r-pill);border:1px solid var(--rule);
+background:var(--card);white-space:nowrap}
+.cmbrands button img{height:13px;width:auto;max-width:52px;object-fit:contain}
+.cmbrands button i{font-style:normal;font-weight:600;color:var(--mut2);
+font-size:11px}
+.cmbrands button:hover{border-color:var(--tint2)}
+.cmbrands button[aria-pressed=true]{background:var(--teal);
+border-color:var(--teal);color:var(--onp)}
+.cmbrands button[aria-pressed=true] i{color:var(--onp2)}
+.cmbrands button[aria-pressed=true] img{filter:brightness(0) invert(1)}
+/* the results */
+.cmlist{flex:1;overflow-y:auto;padding:5px 5px 10px;overscroll-behavior:contain}
+.cmgrp{position:sticky;top:0;z-index:1;background:var(--card);
+padding:10px 11px 5px;font-family:var(--f-display);font-size:11.5px;
+font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mut)}
+.cmrow{display:flex;align-items:center;gap:12px;width:100%;font:inherit;
+text-align:left;padding:8px 9px;border:0;background:none;cursor:pointer;
+border-radius:var(--r-sm);color:var(--ink)}
+.cmrow:hover,.cmrow.on{background:var(--tint)}
+.cmrow:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+.cmrow .cmi{flex:none;width:42px;height:54px;display:grid;place-items:center;
+background:var(--bg);border-radius:var(--r-sm);overflow:hidden}
+.cmrow .cmi img{max-width:100%;max-height:50px;width:auto;
+mix-blend-mode:multiply}
+.cmrow .cmn{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.cmrow .cmn b{font-size:13.5px;font-weight:600;overflow:hidden;
+text-overflow:ellipsis;white-space:nowrap}
+.cmrow .cmn small{font-size:11px;color:var(--mut2);overflow:hidden;
+text-overflow:ellipsis;white-space:nowrap}
+.cmrow .cmp{flex:none;font-size:12.5px;font-weight:700;color:var(--ac)}
+.cmrow[disabled]{opacity:.45;cursor:default}
+.cmrow[disabled]:hover{background:none}
+/* the score pill, the one number that lets a reader shortlist from the list */
+.spill{flex:none;display:grid;place-items:center;min-width:31px;height:25px;
+padding:0 7px;border-radius:var(--r-sm);font-size:12.5px;font-weight:700;
+background:var(--tone);color:var(--mut)}
+.spill.l1{background:rgba(var(--rgb-teal),.10);color:var(--lnk)}
+.spill.l2{background:rgba(var(--rgb-teal),.16);color:var(--tealD)}
+.spill.l3{background:var(--teal);color:var(--onp)}
+.cmnone{padding:30px 18px;text-align:center;color:var(--mut);font-size:13.5px;
+line-height:1.6}
+.cmnone b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+.rsub{margin:0 0 8px;font-size:11.5px;font-weight:700;letter-spacing:.5px;
+text-transform:uppercase;color:var(--mut2)}
+/* the chosen phone's own score, on its card in the deck */
+.cscore{display:flex;align-items:center;justify-content:center;gap:7px;
+margin:9px 0 0;font-size:12px;font-weight:600;color:var(--mut)}
+/* the same scorecard on a DEVICE page, where there is one phone and so no
+   opposed layout: the ring, then five ranks, above the mined aspect bars the
+   section already carried. Same components, one column. */
+.dscore{display:flex;align-items:center;gap:16px;margin:2px 0 14px;
+padding-bottom:14px;border-bottom:1px solid var(--rule)}
+.dscore .ring circle{stroke-width:6}
+.dscore .dsb{flex:1;min-width:0}
+.dscore .srow{grid-template-columns:104px minmax(0,1fr) 34px;gap:6px 12px;
+padding:4px 0;border-top:0}
+.dscore .srow .sl{font-size:11px;letter-spacing:.3px}
+.dscore .scell{display:contents}
+.dscore .dsn{margin:9px 0 0;font-size:11.5px;color:var(--mut2);line-height:1.5}
+@media(max-width:640px){
+.dscore{flex-direction:column;align-items:flex-start;gap:12px}
+.dscore .dsb{width:100%}
+.dscore .srow{grid-template-columns:88px minmax(0,1fr) 30px}
+}
+html.nosc,html.nosc body{overflow:hidden}
+@media(max-width:640px){
+.cmpop.sheet{position:fixed;z-index:60;left:0;right:0;bottom:0;top:auto;
+width:auto;max-height:78vh;border-radius:var(--r) var(--r) 0 0;
+padding-bottom:env(safe-area-inset-bottom)}
+.cmsh{display:flex;flex-direction:column;gap:8px;
+padding:10px 12px 12px;border-bottom:1px solid var(--rule);flex:none}
+.cmst{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cmsh b{font-family:var(--f-display);font-size:15px;color:var(--ink)}
+.cmsh .cmq{flex:1;min-width:0;font:inherit;font-size:16px;color:var(--ink);
+box-sizing:border-box;padding:11px 14px;border-radius:var(--r-pill);
+border:1px solid var(--rule);background:var(--bg)}
+.cmsh .cmq:focus-visible{outline:2px solid var(--ac);outline-offset:1px;
+border-color:transparent}
+.cmx{width:36px;height:36px;display:grid;place-items:center;font:inherit;
+font-size:22px;line-height:1;color:var(--mut);cursor:pointer;border:0;
+background:none;border-radius:var(--r-pill)}
+.cmrow{padding:9px}
+.cmrow .cmi{width:42px;height:54px}
+.cmrow .cmn b{font-size:14px;white-space:normal;overflow-wrap:anywhere}
+.cmrow .cmp{font-size:12px}
+}
+
+/* ------------------------------------------------------- the scorecard ------
+   The measured half of the comparison, and the reason this page can answer
+   "which is better" at all.
+
+   It leads with RINGS, not with bars (owner 2026-09-06: "should be much more
+   emphasised like rings and stuff ... noticeable everything differences"). A
+   row of thin bars states the numbers correctly and shows you nothing; the
+   ring is the shape every comparison site uses for a verdict because it reads
+   as one at arm's length. Under it, two phones get OPPOSED bars growing away
+   from a centre label, which is the only layout where a gap is a visible
+   distance rather than two lengths you must mentally subtract. Three phones
+   fall back to the column grid -- opposed only works with two sides.
+   The ring and the bar both reuse the site's four rating levels, so a strong
+   phone is the same teal here, on a device page and in the picker. */
+.scard{margin:26px 0 0;padding:22px 20px 16px;border-radius:var(--r);
+background:var(--card);box-shadow:var(--sh-card)}
+.schead{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin:0}
+.schead h2{display:flex;align-items:center;gap:9px;margin:0;
+font-family:var(--f-display);font-size:19px;font-weight:700;
+letter-spacing:-.3px;color:var(--ink)}
+.schead h2 .ic{color:var(--ac)}
+.schead p{margin:0;font-size:12.5px;color:var(--mut)}
+/* --- the rings --- */
+.sring{display:flex;align-items:flex-start;justify-content:center;
+gap:clamp(10px,3vw,30px);margin:18px 0 6px;flex-wrap:wrap}
+.sring .sp{flex:0 1 190px;display:flex;flex-direction:column;align-items:center;
+gap:8px;text-align:center;min-width:0}
+.sring .ring circle{stroke-width:6}
+.sring .sp em{font-style:normal;font-size:13.5px;font-weight:700;
+color:var(--ink);line-height:1.3;overflow-wrap:anywhere}
+.sring .sp i{font-style:normal;font-size:11px;font-weight:700;
+letter-spacing:.5px;text-transform:uppercase;color:var(--mut2)}
+/* the leader is stated, not left to be read off two arcs */
+.sring .sp.top i{color:var(--teal)}
+.sring .lead{display:inline-flex;align-items:center;gap:5px;max-width:100%;
+padding:3px 10px;border-radius:var(--r-pill);background:var(--teal);
+color:var(--onp);font-size:10.5px;font-weight:700;letter-spacing:.5px;
+text-transform:uppercase;white-space:nowrap}
+.sring .ringna{display:grid;place-items:center;width:86px;height:86px;
+border-radius:var(--r-pill);box-shadow:inset 0 0 0 6px rgba(var(--rgb-ink),.07);
+color:var(--mut2);font-size:20px}
+.sring .svs{align-self:center;margin-top:34px;font-family:var(--f-display);
+font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+color:var(--faint)}
+.sgrid{margin-top:12px}
+/* --- two phones: opposed bars --- */
+.srow.duo{display:grid;
+grid-template-columns:minmax(0,1fr) minmax(108px,132px) minmax(0,1fr);
+gap:14px;align-items:center;padding:11px 0;border-top:1px solid var(--rule)}
+.srow.duo:first-of-type{border-top:0}
+.sbar{display:flex;align-items:center;gap:9px;min-width:0}
+.sbar.L{flex-direction:row-reverse}
+/* the TRACK is capped, not the row. Capping the row made it a grid item with
+   an auto margin, which stops stretching and shrink-wraps to its content --
+   the flex:1 track then measured zero and the bars disappeared entirely.
+   Capping the track leaves the leftover space at the flex container's
+   main-START, which row-reverse puts on the outside, so both bars grow from
+   the centre label outward with the slack pushed to the page edges. */
+.sbar .tr{flex:1;min-width:0;max-width:330px;height:11px;
+border-radius:var(--r);background:rgba(var(--rgb-ink),.05);display:flex;
+overflow:hidden}
+.sbar.L .tr{justify-content:flex-end}
+.sbar .tr i{display:block;height:100%;border-radius:var(--r);
+background:linear-gradient(90deg,var(--aquaL),var(--aqua))}
+.sbar b{flex:none;min-width:26px;font-size:15px;font-weight:700;
+font-variant-numeric:tabular-nums;color:var(--mut);text-align:center}
+/* the winner is the only side that gets ink */
+.sbar.win .tr i{background:linear-gradient(90deg,var(--teal),var(--tealD))}
+
+.sbar.na .tr{background:repeating-linear-gradient(90deg,
+rgba(var(--rgb-ink),.07) 0 5px,transparent 5px 10px)}
+.srow.duo .sl{display:flex;flex-direction:column;align-items:center;gap:3px;
+font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+color:var(--mut);text-align:center;line-height:1.25}
+.srow.duo .sl .ic{color:var(--mut2)}
+/* the gap, named, pointing at whoever won it. This is the number the whole
+   layout exists to show. The arrow is a CSS triangle, not a character: an
+   arrow glyph renders as a dash in the display face and the first build
+   shipped rows reading "— +9". */
+.sdl{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;
+border-radius:var(--r-pill);background:var(--tint);color:var(--tealD);
+font-size:10.5px;font-weight:700;letter-spacing:.3px;text-transform:none}
+.sdl::before,.sdl::after{content:"";width:0;height:0;
+border-top:3.5px solid transparent;border-bottom:3.5px solid transparent}
+.sdl.L::before{border-right:5px solid currentColor}
+.sdl.R::after{border-left:5px solid currentColor}
+.sdl.tie{background:var(--tone);color:var(--mut2)}
+/* --- three phones: one column each --- */
+.srow{display:grid;grid-template-columns:118px repeat(var(--cn,2),minmax(0,1fr));
+gap:10px 16px;align-items:center;padding:9px 0;border-top:1px solid var(--rule)}
+.srow:first-child{border-top:0}
+.srow.shd{border-top:0;padding:0 0 6px}
+.srow.shd b{font-size:12.5px;font-weight:700;color:var(--ink2);
+overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* the rings name the two sides on a desktop, so the header row is dead
+   chrome there. It earns its place only in the stacked phone layout. */
+@media(min-width:641px){.sgrid.duo .shd{display:none}}
+.srow .sl{display:flex;align-items:center;gap:8px;font-size:12.5px;
+font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)}
+.srow .sl .ic{color:var(--mut2);flex:none}
+.scell{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;
+align-items:center;padding:0;font-size:13.5px}
+.scell .rbar{height:9px}
+.scell b{min-width:34px;font-weight:700;text-align:right;white-space:nowrap;
+font-variant-numeric:tabular-nums}
+/* The winner is the number in a filled chip, not a tick beside it (owner
+   2026-09-06). A tick lived inside a right-aligned fixed-width number and
+   wrapped under it on every row it marked; a chip cannot wrap, reads at a
+   glance, and puts the emphasis on the figure that won rather than on a
+   glyph next to it. */
+.scell.win b,.sbar.win b{padding:3px 9px;border-radius:var(--r-sm);
+background:var(--teal);color:var(--onp);text-align:center}
+/* ahead, but by less than the margin this site treats as noise. Marked --
+   every lead is -- but drawn as an outline, so "ahead" and "ahead enough to
+   matter" do not read as the same claim. */
+.scell.win.near b,.sbar.win.near b{background:none;color:var(--tealD);
+box-shadow:inset 0 0 0 1.5px var(--tint2)}
+.sdl.near{background:var(--tone);color:var(--mut)}
+.scell.na{color:var(--mut2);font-size:12.5px;grid-template-columns:1fr}
+.srow.tot{border-top:1.5px solid var(--rule);margin-top:4px;padding-top:13px}
+.srow.tot .sl{color:var(--ink);font-size:13px}
+.srow.tot .scell b{font-size:17px}
+@media(max-width:640px){
+.scard{padding:16px 13px 14px}
+.sring{gap:8px;margin:14px 0 2px}
+.sring .sp{flex:1 1 0;min-width:0}
+.sring .ringna{width:66px;height:66px;box-shadow:inset 0 0 0 5px rgba(var(--rgb-ink),.07)}
+.sring .sp em{font-size:12px}
+.sring .svs{display:none}
+.srow.duo{grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+grid-template-areas:"lab lab" "lft rgt";gap:7px 12px;padding:12px 0}
+.srow.duo .sl{grid-area:lab;flex-direction:row;justify-content:center;
+gap:7px;font-size:11px}
+.srow.duo .sl .ic{display:inline-flex}
+.sbar.L{grid-area:lft;flex-direction:row}
+.sbar.L .tr{justify-content:flex-start}
+.sbar:not(.L){grid-area:rgt}
+.sbar .tr{max-width:none}
+
+.srow.duo .sl{font-size:9.5px;letter-spacing:.2px}
+.srow.duo .sl .ic{display:none}
+.sbar{gap:6px}
+.sbar b{min-width:22px;font-size:13.5px}
+.scell.win b,.sbar.win b{padding:2px 7px}
+.sdl{font-size:9.5px;padding:2px 6px}
+.sgrid.duo .srow.shd{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+gap:12px;padding:0 0 8px}
+.sgrid.duo .srow.shd .sl{display:none}
+.sgrid:not(.duo) .srow{grid-template-columns:repeat(var(--cn,3),minmax(0,1fr));
+gap:5px 9px;padding:11px 0}
+.sgrid:not(.duo) .srow .sl{grid-column:1/-1;justify-content:center;
+font-size:10.5px;letter-spacing:.3px;gap:5px}
+.sgrid:not(.duo) .srow.shd{padding-bottom:9px}
+.sgrid:not(.duo) .srow.shd .sl{display:none}
+.sgrid:not(.duo) .srow.shd b{white-space:normal;font-size:11px;
+line-height:1.25;overflow:visible}
+.srow .sl .ic{display:none}
+.scell{grid-template-columns:minmax(0,1fr) auto;gap:6px;font-size:12.5px}
+.scell b{min-width:26px}
+.srow.tot .scell b{font-size:15px}
+/* the spec sheet under it: three columns of taka figures need every pixel,
+   so the table sheds its padding before it sheds its readability */
+table.cmp.cx:not(.c2):not(.c3) td,
+table.cmp.cx:not(.c2):not(.c3) thead th{padding:12px 7px;font-size:13.5px}
+table.cmp.cx:not(.c2):not(.c3){min-width:440px}
+}
+
+/* -------------------------------------------------- the compare tray --------
+   Every phone card on the site can now be shortlisted, from anywhere -- a
+   guide, a brand hub, a device page (owner 2026-09-06: "whenever they are
+   browsing any page of any phones ... there should be floating add to compare
+   thing"). The picks live in localStorage, so the tray survives the walk from
+   a guide to a phone page to another guide, which is the walk this is for. */
+.pcw{position:relative;display:flex}
+.pcw>a{flex:1;min-width:0}
+.cmpadd{position:absolute;top:8px;right:8px;z-index:2;display:grid;
+place-items:center;width:30px;height:30px;padding:0;border-radius:var(--r-pill);
+border:1px solid var(--rule);background:rgba(var(--rgb-white),.92);
+color:var(--mut);cursor:pointer;font:inherit;line-height:0;
+box-shadow:0 1px 3px rgba(var(--rgb-ink),.10)}
+.cmpadd:hover{border-color:var(--teal);color:var(--teal);background:var(--card)}
+.cmpadd:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.cmpadd.on{background:var(--teal);border-color:var(--teal);color:var(--onp)}
+/* the device page's own button: a real control in the buy panel, not an
+   overlay on a card */
+.cmpbig{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+width:100%;box-sizing:border-box;font:inherit;font-size:14px;font-weight:700;
+color:var(--lnk);background:var(--card);cursor:pointer;padding:12px 14px;
+border-radius:var(--r-pill);border:1px solid var(--rule)}
+.cmpbig:hover{border-color:var(--tint2);background:var(--tint)}
+.cmpbig:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
+.cmpbig.on{background:var(--teal);border-color:var(--teal);color:var(--onp)}
+/* the tray itself */
+/* --tealD, not --panel: the footer IS --panel, so a tray parked over it
+   vanished into it and the chips read as loose text on the footer. */
+.cmptray{position:fixed;left:50%;transform:translate(-50%,140%);
+bottom:16px;z-index:55;width:min(760px,calc(100% - 24px));
+display:flex;align-items:center;gap:12px;padding:10px 12px;
+border-radius:var(--r);background:var(--tealD);color:var(--onp);
+box-shadow:0 18px 44px rgba(var(--rgb-ink),.42),
+inset 0 0 0 1px rgba(var(--rgb-white),.14);
+transition:transform .22s ease}
+.cmptray.up{transform:translate(-50%,0)}
+/* the tray is fixed over the page, so the page has to end above it -- without
+   this the last card on a guide sits underneath it and cannot be reached */
+body.tray-up{padding-bottom:96px}
+.cmptray .tsl{display:flex;align-items:center;gap:8px;flex:1 1 240px;
+min-width:0;overflow-x:auto;scrollbar-width:none}
+.cmptray .tsl::-webkit-scrollbar{display:none}
+.tchip{flex:none;display:inline-flex;align-items:center;gap:7px;
+padding:6px 8px 6px 6px;border-radius:var(--r-pill);color:var(--onp);
+background:rgba(var(--rgb-white),.13);font-size:12.5px;font-weight:600;
+max-width:210px}
+.tchip img{width:22px;height:29px;object-fit:contain;border-radius:3px;
+background:rgba(var(--rgb-white),.9)}
+.tchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+color:var(--onp)}
+.tchip button{flex:none;width:20px;height:20px;display:grid;place-items:center;
+border:0;background:none;color:var(--onp2);cursor:pointer;font:inherit;
+font-size:15px;line-height:1;border-radius:var(--r-pill)}
+.tchip button:hover{background:rgba(var(--rgb-white),.16);color:var(--onp)}
+.cmptray .thint{font-size:12.5px;color:var(--onp3);white-space:nowrap}
+.cmptray .tgo{flex:none;display:inline-flex;align-items:center;gap:7px;
+font:inherit;font-size:13.5px;font-weight:700;text-decoration:none;
+padding:10px 16px;border-radius:var(--r-pill);background:var(--onp);
+color:var(--c-teal-900);border:0;cursor:pointer}
+.cmptray .tgo[aria-disabled=true]{opacity:.45;pointer-events:none}
+.cmptray .tgo:hover{text-decoration:none;background:var(--aquaL)}
+.cmptray .tcl{flex:none;width:30px;height:30px;display:grid;place-items:center;
+border:0;background:none;color:var(--onp2);cursor:pointer;font:inherit;
+font-size:19px;line-height:1;border-radius:var(--r-pill)}
+.cmptray .tcl:hover{background:rgba(var(--rgb-white),.14);color:var(--onp)}
+@media(max-width:640px){
+/* the mobile "Get my pick" pill already owns the bottom edge; the tray sits
+   above it rather than under it */
+.cmptray{bottom:calc(10px + env(safe-area-inset-bottom));
+width:calc(100% - 16px);flex-wrap:wrap;gap:8px;padding:9px}
+/* the shortlist takes the first row whole, the actions the second: five
+   controls crushed into one 375px row is what "looks broken" looked like */
+.cmptray .tsl{flex:1 1 100%;order:1}
+.cmptray .thint{order:2;display:block;flex:1}
+.cmptray .tgo{order:3;justify-content:center;padding:10px 14px;font-size:13px}
+.cmptray .tcl{order:4}
+.tchip{max-width:180px;font-size:12px}
+.tchip img{width:20px;height:26px}
+body.tray-up{padding-bottom:140px}
+body.tray-up .mcta{bottom:104px}
+}
+
+/* ------------------------------------------------ the pair FAQ, rebuilt -----
+   The four generic answers stay in the markup (and in the FAQ JSON-LD) for a
+   page nobody has picked anything on. The moment two phones ARE picked they
+   are the wrong four questions, so this replaces them with the questions
+   about THOSE phones -- answered from the same numbers the table just drew. */
+.faqswap{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 14px}
+.faqswap button{font:inherit;font-size:12.5px;font-weight:700;color:var(--lnk);
+background:var(--card);border:1px solid var(--rule);border-radius:var(--r-pill);
+padding:8px 14px;cursor:pointer}
+.faqswap button:hover{border-color:var(--tint2);background:var(--tint)}
+.faqswap button:focus-visible{outline:2px solid var(--ac);outline-offset:1px}
