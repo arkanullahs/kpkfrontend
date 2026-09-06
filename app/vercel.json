@@ -262,11 +262,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/samsung-galaxy-z-fold-8",
-      "destination": "/brand/samsung",
-      "permanent": true
-    },
-    {
       "source": "/phone/samsung-galaxy-z-fold4",
       "destination": "/brand/samsung",
       "permanent": true
