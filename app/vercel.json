@@ -437,6 +437,11 @@
       "permanent": true
     },
     {
+      "source": "/vs/realme-p4x-vs-redmi-note-15",
+      "destination": "/phone/realme-p4x",
+      "permanent": true
+    },
+    {
       "source": "/vs/redmi-note-14-4g-vs-samsung-galaxy-a16-4g",
       "destination": "/phone/redmi-note-14-4g",
       "permanent": true
