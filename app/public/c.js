@@ -56,6 +56,11 @@
         vn = a.querySelector(".vsn");
     if (br && md) return (br.textContent + " " + md.textContent).trim();
     if (vn) return vn.textContent.trim();
+    /* the stretch pick and the guide cards name the phone in .nm, and their
+       card text starts with a label ("Worth stretching") rather than the
+       phone, so the fallback below reads as nonsense on them */
+    var nm = a.querySelector(".nm");
+    if (nm) return nm.textContent.trim();
     /* the card's own accessible name is "<Brand> <Model>, <price>, ..." */
     var lab = a.getAttribute("aria-label") || a.textContent || "";
     return lab.split(",")[0].trim();
@@ -105,15 +110,41 @@
     var w = el("div", "pcw");
     a.parentNode.insertBefore(w, a);
     w.appendChild(a);
+    button(p, w);
+  }
+
+  /* .cmpadd is absolutely positioned, so the host has to be a positioned box.
+     A card the site never needed to position gets it here rather than in the
+     stylesheet, which every page on the site pays for. */
+  function button(p, host) {
+    if (getComputedStyle(host).position === "static") {
+      host.style.position = "relative";
+    }
     var b = el("button", "cmpadd");
     b.type = "button";
-    b.dataset.s = slug;
+    b.dataset.s = p.s;
     b.dataset.n = p.n;
-    mark(b, has(slug), p.n);
+    mark(b, has(p.s), p.n);
     b.addEventListener("click", function (e) {
       e.preventDefault(); e.stopPropagation(); toggle(p, b);
     });
-    w.appendChild(b);
+    host.appendChild(b);
+    return b;
+  }
+
+  /* A guide's runner-up picks are not cards-that-are-links: the card is an
+     <article> and the /phone/ link inside it is the "All prices & specs"
+     button. Looking only for a.pcard found nothing on a guide, so every
+     guide shipped one compare button -- the hero's, server-rendered. */
+  function wireCard(a) {
+    var card = a.closest && a.closest("article");
+    if (!card || card.dataset.cmpw) return;
+    var slug = slugOf(a);
+    if (!slug) return;
+    card.dataset.cmpw = "1";
+    var nm = card.querySelector(".nm"), im = card.querySelector("img");
+    button({ s: slug, n: nm ? nm.textContent.trim() : nameOf(a),
+             i: im ? im.getAttribute("src") : "" }, card);
   }
 
   /* The device page ships its own button, server-rendered inside the buy
@@ -207,7 +238,10 @@
   function scan() {
     [].forEach.call(
       document.querySelectorAll('a.pcard[href^="/phone/"],'
-        + 'a.vscard[href^="/phone/"]'), wire);
+        + 'a.vscard[href^="/phone/"],a.stretchcard[href^="/phone/"]'), wire);
+    [].forEach.call(
+      document.querySelectorAll('article.card a.dbtn[href^="/phone/"]'),
+      wireCard);
   }
 
   PICKS = read();
