@@ -78,6 +78,11 @@
   }
 
   function mark(btn, on, name) {
+    /* A no-op when nothing changed. This is not an optimisation: paint()
+       runs over every button on the page, and rewriting innerHTML inside a
+       watched subtree is what fed the observer below its own mutations. */
+    if (btn._on === on) return;
+    btn._on = on;
     btn.classList.toggle("on", on);
     btn.innerHTML = on ? TICK : PLUS;
     btn.setAttribute("aria-pressed", on ? "true" : "false");
@@ -103,6 +108,7 @@
     var b = el("button", "cmpadd");
     b.type = "button";
     b.dataset.s = slug;
+    b.dataset.n = p.n;
     mark(b, has(slug), p.n);
     b.addEventListener("click", function (e) {
       e.preventDefault(); e.stopPropagation(); toggle(p, b);
@@ -157,8 +163,7 @@
     /* every button on the page, not just the one that was pressed: the same
        phone can appear on a guide twice (a pick card and a rail card) */
     [].forEach.call(document.querySelectorAll(".cmpadd"), function (b) {
-      var a = b.parentNode.querySelector("a");
-      mark(b, has(b.dataset.s), a ? nameOf(a) : "this phone");
+      mark(b, has(b.dataset.s), b.dataset.n || "this phone");
     });
     var self = document.getElementById("cmpself");
     if (self && self._draw) self._draw();
@@ -209,12 +214,38 @@
   scan();
   wireSelf();
   paint();
-  /* the /phone list rebuilds its grid from a client-side search index, so the
-     cards this wired can be replaced wholesale after load */
-  var grid = document.getElementById("pgrid") || document.getElementById("pres");
-  if (grid && window.MutationObserver)
-    new MutationObserver(function () { scan(); paint(); })
-      .observe(grid.parentNode || grid, { childList: true, subtree: true });
+
+  /* The /phone list rebuilds its grid from a client-side search index, so the
+     cards wired above can be replaced wholesale after load and the new ones
+     need buttons.
+     
+     THE TRAP, and it froze the live site: watching that grid with
+     subtree:true and then mutating inside it -- wire() wraps each card,
+     paint() rewrites each button -- feeds the observer its own work. Every
+     paint scheduled another paint and the tab locked up the moment anyone
+     pressed a button. Three guards, because one is a bug away from the same
+     freeze: the observer watches the grid's OWN children only, it is
+     disconnected across our mutations, and mark() above no-ops when nothing
+     changed. */
+  var OBS = null, QUEUED = false;
+  function rewire() {
+    if (OBS) OBS.disconnect();
+    try { scan(); paint(); } finally { if (OBS) watch(); }
+  }
+  function watch() {
+    [].forEach.call(document.querySelectorAll("#pgrid,#pres"), function (g) {
+      OBS.observe(g, { childList: true });
+    });
+  }
+  if (window.MutationObserver
+      && document.querySelector("#pgrid,#pres")) {
+    OBS = new MutationObserver(function () {
+      if (QUEUED) return;
+      QUEUED = true;
+      requestAnimationFrame(function () { QUEUED = false; rewire(); });
+    });
+    watch();
+  }
   /* a second tab shortlisting a phone is the same shortlist */
   addEventListener("storage", function (e) {
     if (e.key === KEY) { PICKS = read(); paint(); }
