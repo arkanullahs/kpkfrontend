@@ -410,11 +410,6 @@
       "source": "/vs/redmi-note-14-4g-vs-samsung-galaxy-a16-4g",
       "destination": "/phone/redmi-note-14-4g",
       "permanent": true
-    },
-    {
-      "source": "/vs/samsung-galaxy-s25-ultra-5g-vs-xiaomi-15t-pro",
-      "destination": "/phone/xiaomi-15t-pro",
-      "permanent": true
     }
   ]
 }
