@@ -72,18 +72,13 @@
   ],
   "redirects": [
     {
-      "source": "/best/battery-phone-under-8000",
-      "destination": "/best",
+      "source": "/phone/helio-47-smart-phone",
+      "destination": "/brand/helio",
       "permanent": true
     },
     {
-      "source": "/best/camera-phone-under-8000",
-      "destination": "/best",
-      "permanent": true
-    },
-    {
-      "source": "/best/gaming-phone-under-8000",
-      "destination": "/best",
+      "source": "/phone/helio-62-smart-phone",
+      "destination": "/brand/helio",
       "permanent": true
     },
     {
@@ -112,6 +107,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/infinix-hot-70-pro",
+      "destination": "/brand/infinix",
+      "permanent": true
+    },
+    {
       "source": "/phone/iqoo-neo11",
       "destination": "/brand/iqoo",
       "permanent": true
@@ -122,7 +122,7 @@
       "permanent": true
     },
     {
-      "source": "/phone/motorola-g-stylus-5g-2026",
+      "source": "/phone/motorola-a100",
       "destination": "/brand/motorola",
       "permanent": true
     },
@@ -147,27 +147,12 @@
       "permanent": true
     },
     {
-      "source": "/phone/oppo-f33-pro-5g",
-      "destination": "/brand/oppo",
-      "permanent": true
-    },
-    {
-      "source": "/phone/oppo-find-n5-5g",
+      "source": "/phone/oppo-find-n5",
       "destination": "/brand/oppo",
       "permanent": true
     },
     {
       "source": "/phone/oppo-reno-16-5g",
-      "destination": "/brand/oppo",
-      "permanent": true
-    },
-    {
-      "source": "/phone/oppo-reno15-f",
-      "destination": "/brand/oppo",
-      "permanent": true
-    },
-    {
-      "source": "/phone/oppo-reno15-f-5g",
       "destination": "/brand/oppo",
       "permanent": true
     },
@@ -192,6 +177,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/realme-gt5-pro",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
       "source": "/phone/realme-gt7",
       "destination": "/brand/realme",
       "permanent": true
@@ -207,22 +197,12 @@
       "permanent": true
     },
     {
-      "source": "/phone/realme-neo-7x-5g",
-      "destination": "/brand/realme",
-      "permanent": true
-    },
-    {
       "source": "/phone/realme-p3-pro-5g",
       "destination": "/brand/realme",
       "permanent": true
     },
     {
       "source": "/phone/realme-p4-lite",
-      "destination": "/brand/realme",
-      "permanent": true
-    },
-    {
-      "source": "/phone/realme-v60-pro-5g",
       "destination": "/brand/realme",
       "permanent": true
     },
@@ -332,18 +312,8 @@
       "permanent": true
     },
     {
-      "source": "/vs/honor-400-pro-5g-vs-motorola-edge-60-pro",
-      "destination": "/phone/motorola-edge-60-pro",
-      "permanent": true
-    },
-    {
       "source": "/vs/honor-400-pro-5g-vs-oneplus-15r",
       "destination": "/phone/oneplus-15r",
-      "permanent": true
-    },
-    {
-      "source": "/vs/honor-400-pro-5g-vs-oneplus-nord-6",
-      "destination": "/phone/oneplus-nord-6",
       "permanent": true
     },
     {
