@@ -613,6 +613,38 @@ table.cmp tbody tr{transition:background .12s}
 table.cmp tbody tr:hover{background:var(--tint)}
 table.cmp tr:last-child td{border-bottom:none}
 table.cmp td.ph{font-weight:600;color:var(--ink);font-variant-numeric:normal}
+/* A caption is the table's accessible NAME, so it is where the scope of every
+   row belongs -- the brand hub's configuration table dates all of its prices
+   here rather than repeating one date down a seventh column. */
+table.cmp caption{caption-side:top;text-align:left;padding:13px 16px 0;
+font-size:12.5px;line-height:1.5;color:var(--mut)}
+/* A caption is as wide as the TABLE, and these tables are wider than a phone.
+   Sticky pins it to the left edge of the scroll box so the sentence naming
+   what the rows are stays whole and on screen while the columns slide. */
+table.cmp caption{position:sticky;left:0;max-width:min(100%,88vw);
+white-space:normal}
+/* the count that says how much of a brand a caveat covers */
+.decide .n{color:var(--mut);font-weight:400}
+/* the price column of a multi-row table: it is the number being compared */
+table.cmp td.pr{font-weight:600;color:var(--ink)}
+/* Model and spec text wrap; prices, configs and warranties stay on one line.
+   A chipset name is 30-odd characters and nowrap turned the four-column
+   difference table into a 1,400px scroll. */
+table.cmp.bdiff td,table.cmp.bcfg td.cfg{white-space:normal}
+table.cmp.bdiff{min-width:660px}
+/* The capability-evidence table: axes down the side, phones across the top,
+   and cells that hold sentences rather than figures -- so everything wraps and
+   sits to the top of its row, and the provenance line under a value is quiet
+   enough to read as a footnote instead of a second value. */
+table.cmp.ev{min-width:600px}
+table.cmp.ev td{white-space:normal;vertical-align:top;font-size:13px;
+line-height:1.55}
+table.cmp.ev td.ph{width:150px;font-size:11px;font-weight:700;
+text-transform:uppercase;letter-spacing:.5px;color:var(--mut)}
+table.cmp.ev .src{display:block;margin-top:3px;font-size:10.5px;font-weight:400;
+letter-spacing:0;text-transform:none;color:var(--mut2)}
+table.cmp.ev .src a{color:inherit}
+table.cmp.ev .na{color:var(--mut2)}
 .decide{margin:22px 0 0;padding:18px 20px 12px;border-radius:var(--r);background:var(--card);
 box-shadow:var(--sh-card)}
 .decide h2{font-family:var(--f-display);font-size:17px;font-weight:600;letter-spacing:-.3px;margin:0}
@@ -1394,8 +1426,16 @@ transition:top .12s ease}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
 white-space:nowrap}
 .metach{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
-.metach span{font-size:12px;font-weight:600;color:var(--mut);background:var(--card);
-border:1px solid var(--rule);border-radius:var(--r-pill);padding:5px 12px}
+.metach span,.metach a{font-size:12px;font-weight:600;color:var(--mut);
+background:var(--card);border:1px solid var(--rule);border-radius:var(--r-pill);
+padding:5px 12px}
+/* One of these chips is a claim a reader can check, so it is a link and has
+   to look like one (audit 2026-09-10, F10/F15: the ranking rules were
+   nowhere on the site). Underline on hover only -- a permanently underlined
+   pill in a row of three reads as broken, not as interactive. */
+.metach a{color:var(--lnk);text-decoration:none;transition:border-color .14s}
+.metach a:hover,.metach a:focus-visible{border-color:var(--teal);
+text-decoration:underline}
 
 /* --- the overall score ring ---
    One arc, no script: the dash length is score/10 of the circumference. Same
