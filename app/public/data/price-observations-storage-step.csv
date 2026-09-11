@@ -1,0 +1,475 @@
+﻿from_gb,to_gb,difference_taka,phone,shop
+64,128,-500,Tecno Spark Go 3,Shop 06
+64,128,-500,Tecno Spark Go 3,Shop 14
+64,128,-100,Samsung Galaxy A06 4G,Shop 02
+64,128,500,Realme Note 60,Shop 02
+64,128,500,Realme Note 60,Shop 14
+64,128,800,Realme C33,Shop 02
+64,128,959,OPPO A6x,Shop 02
+64,128,1000,Realme Note 60,Shop 02
+64,128,1000,Vivo Y05,Shop 11
+64,128,1000,Infinix Smart 20,Shop 06
+64,128,1000,Infinix Smart 20,Shop 14
+64,128,1000,Vivo Y04,Shop 02
+64,128,1000,Vivo Y04,Shop 06
+64,128,1000,Vivo Y04,Shop 14
+64,128,1000,Nubia A57,Shop 09
+64,128,1000,OPPO A6x,Shop 06
+64,128,1000,Samsung Galaxy A04s,Shop 02
+64,128,1000,OPPO K14x,Shop 07
+64,128,1100,Samsung Galaxy A06 4G,Shop 14
+64,128,1400,Samsung Galaxy A06 4G,Shop 02
+64,128,1500,Vivo Y19s,Shop 02
+64,128,1800,Realme Note 70,Shop 11
+64,128,1900,Samsung Galaxy A06 4G,Shop 06
+64,128,1900,Samsung Galaxy A06 4G,Shop 03
+64,128,1900,Realme C100i,Shop 09
+64,128,1900,Realme C100i,Shop 11
+64,128,2000,Realme Note 60x,Shop 02
+64,128,2000,Vivo Y05,Shop 06
+64,128,2000,Vivo Y05,Shop 09
+64,128,2000,Vivo Y05,Shop 13
+64,128,2000,Vivo Y05,Shop 14
+64,128,2000,Vivo Y04,Shop 02
+64,128,2000,Realme Note 70,Shop 01
+64,128,2000,Realme Note 70,Shop 02
+64,128,2000,Realme Note 70,Shop 06
+64,128,2000,Realme Note 70,Shop 13
+64,128,2000,Realme Note 70,Shop 10
+64,128,2000,Realme Note 70,Shop 14
+64,128,2000,Realme C100i,Shop 01
+64,128,2000,OPPO A6x,Shop 01
+64,128,2000,OPPO A6x,Shop 11
+64,128,2000,OPPO A6x,Shop 08
+64,128,2000,OPPO A6x,Shop 14
+64,128,2000,OPPO A6c,Shop 06
+64,128,2000,OPPO A6c,Shop 09
+64,128,2000,OPPO A6c,Shop 08
+64,128,2000,OPPO A6c,Shop 14
+64,128,2400,Infinix Smart 20,Shop 09
+64,128,2491,Samsung Galaxy A07 4G,Shop 07
+64,128,2500,Honor X5c,Shop 07
+64,128,2841,Realme C100i,Shop 02
+64,128,3000,Realme C100i,Shop 06
+64,128,3000,Realme C100i,Shop 13
+64,128,3000,Realme C100i,Shop 10
+64,128,3000,Realme C100i,Shop 14
+64,128,8000,Samsung Galaxy A07 4G,Shop 01
+64,128,8000,Samsung Galaxy A07 4G,Shop 11
+64,128,8200,Samsung Galaxy A07 4G,Shop 06
+64,128,8200,Samsung Galaxy A07 4G,Shop 03
+64,128,8200,Samsung Galaxy A07 4G,Shop 14
+128,256,-3500,iQOO Z11x,Shop 11
+128,256,-3000,Vivo T5x,Shop 11
+128,256,-2700,Samsung Galaxy A17 5G,Shop 06
+128,256,-2700,Samsung Galaxy A17 5G,Shop 03
+128,256,-2700,Samsung Galaxy A17 5G,Shop 14
+128,256,-2300,Redmi Note 14 4G,Shop 01
+128,256,-1500,Samsung Galaxy S21 FE 5G,Shop 14
+128,256,-1500,Google Pixel 8,Shop 14
+128,256,-1000,iQOO Z10x,Shop 14
+128,256,-1000,Realme P4x,Shop 11
+128,256,0,Samsung Galaxy A53 5G,Shop 02
+128,256,500,Redmi Note 14 4G,Shop 07
+128,256,500,Motorola G96,Shop 02
+128,256,500,Samsung Galaxy A36 5G,Shop 14
+128,256,500,Samsung Galaxy A37 5G,Shop 11
+128,256,800,Samsung Galaxy A16 4G,Shop 02
+128,256,800,Samsung Galaxy A17 4G,Shop 02
+128,256,1000,Honor X6c,Shop 01
+128,256,1000,Honor X6c,Shop 06
+128,256,1000,Honor X6c,Shop 14
+128,256,1000,OPPO A5 Pro,Shop 06
+128,256,1000,Samsung Galaxy A53 5G,Shop 02
+128,256,1000,Samsung Galaxy A36 5G,Shop 11
+128,256,1000,Motorola Edge 60 Fusion,Shop 07
+128,256,1000,Motorola Edge 60 Fusion,Shop 11
+128,256,1000,Motorola Edge 60 Fusion,Shop 01
+128,256,1000,Samsung Galaxy A37 5G,Shop 14
+128,256,1000,Samsung Galaxy A37 5G,Shop 02
+128,256,1000,Samsung Galaxy A27 5G,Shop 14
+128,256,1000,OnePlus Nord CE6,Shop 14
+128,256,1200,Motorola Edge 70 Fusion,Shop 02
+128,256,1500,Vivo Y04,Shop 06
+128,256,1500,Vivo Y04,Shop 14
+128,256,1500,Redmi Note 14 4G,Shop 11
+128,256,1500,Vivo T5x,Shop 01
+128,256,1500,Redmi Note 17,Shop 01
+128,256,1500,Redmi Note 15 Pro 5G,Shop 11
+128,256,1500,Samsung Galaxy A27 5G,Shop 11
+128,256,1500,Tecno Camon 40,Shop 02
+128,256,1500,Tecno Camon 40,Shop 06
+128,256,1500,Vivo V70 FE 5G,Shop 01
+128,256,1500,Samsung Galaxy A34 5G,Shop 14
+128,256,1700,Honor X7d,Shop 11
+128,256,1800,Samsung Galaxy A36 5G,Shop 02
+128,256,1900,Honor X7d,Shop 01
+128,256,2000,Honor X6c,Shop 07
+128,256,2000,Honor X7d,Shop 06
+128,256,2000,Honor X7d,Shop 14
+128,256,2000,Vivo Y31d,Shop 06
+128,256,2000,Vivo Y31d,Shop 13
+128,256,2000,Vivo Y31d,Shop 14
+128,256,2000,Realme 15x,Shop 07
+128,256,2000,Vivo Y29 4G,Shop 06
+128,256,2000,Vivo Y29 4G,Shop 02
+128,256,2000,Realme C85 Pro,Shop 01
+128,256,2000,Realme C85 Pro,Shop 02
+128,256,2000,Realme C85 Pro,Shop 06
+128,256,2000,Realme C85 Pro,Shop 11
+128,256,2000,Realme C85 Pro,Shop 10
+128,256,2000,Realme C85 Pro,Shop 14
+128,256,2000,iQOO Z10x,Shop 02
+128,256,2000,Samsung Galaxy A17 5G,Shop 07
+128,256,2000,Vivo V50 Lite,Shop 02
+128,256,2000,Redmi Note 15 Pro 5G,Shop 07
+128,256,2000,OnePlus Nord CE6 Lite,Shop 01
+128,256,2000,OnePlus Nord CE6 Lite,Shop 07
+128,256,2000,Realme 13 Pro 5G,Shop 02
+128,256,2000,Samsung Galaxy A36 5G,Shop 07
+128,256,2000,Samsung Galaxy M56 5G,Shop 02
+128,256,2000,Samsung Galaxy M56 5G,Shop 07
+128,256,2000,Samsung Galaxy M56 5G,Shop 11
+128,256,2000,Samsung Galaxy A34 5G,Shop 02
+128,256,2000,Samsung Galaxy A35 5G,Shop 14
+128,256,2000,Samsung Galaxy A35 5G,Shop 02
+128,256,2200,Samsung Galaxy A17 5G,Shop 01
+128,256,2200,Samsung Galaxy A27 5G,Shop 01
+128,256,2500,Honor X7d,Shop 07
+128,256,2500,Realme 15x,Shop 11
+128,256,2500,Redmi Note 14 Pro 5G,Shop 14
+128,256,2500,Redmi Note 17,Shop 11
+128,256,2500,Redmi Note 15 Pro 4G,Shop 07
+128,256,2500,OnePlus Nord CE6 Lite,Shop 11
+128,256,2500,iQOO Z10R,Shop 02
+128,256,2500,Samsung Galaxy A36 5G,Shop 11
+128,256,2500,Samsung Galaxy A36 5G,Shop 14
+128,256,2500,Samsung Galaxy A36 5G,Shop 01
+128,256,2500,Samsung Galaxy A36 5G,Shop 06
+128,256,2500,Samsung Galaxy A36 5G,Shop 03
+128,256,2500,Realme Narzo power,Shop 11
+128,256,2500,Samsung Galaxy A56 5G,Shop 14
+128,256,2500,Samsung Galaxy A56 5G,Shop 02
+128,256,2501,POCO M8,Shop 07
+128,256,2509,Redmi Note 15 5G,Shop 07
+128,256,2700,Realme C65,Shop 02
+128,256,2900,Tecno POVA Curve 2 5G,Shop 15
+128,256,2991,POCO X7,Shop 02
+128,256,3000,Realme C65,Shop 02
+128,256,3000,Realme C65,Shop 14
+128,256,3000,Honor X6c,Shop 11
+128,256,3000,Redmi Note 15 5G,Shop 11
+128,256,3000,OPPO A6 4G,Shop 11
+128,256,3000,Vivo V40 Lite,Shop 02
+128,256,3000,Vivo V40 Lite,Shop 06
+128,256,3000,Vivo T5x,Shop 07
+128,256,3000,Samsung Galaxy A17 5G,Shop 11
+128,256,3000,Vivo V50 Lite,Shop 02
+128,256,3000,Vivo V50 Lite,Shop 06
+128,256,3000,Realme 14T 5G,Shop 02
+128,256,3000,Nothing Phone 3a Lite,Shop 07
+128,256,3000,POCO X7,Shop 07
+128,256,3000,Samsung Galaxy A53 5G,Shop 02
+128,256,3000,Realme 16T,Shop 07
+128,256,3000,Redmi Note 14 Pro Plus 5G,Shop 01
+128,256,3000,OPPO F31 Pro,Shop 02
+128,256,3000,Motorola Edge 60 Fusion,Shop 02
+128,256,3000,Realme 15 5G,Shop 07
+128,256,3000,Samsung Galaxy A37 5G,Shop 01
+128,256,3000,Tecno POVA Curve 2 5G,Shop 14
+128,256,3000,Tecno POVA Curve 2 5G,Shop 09
+128,256,3000,Realme P4,Shop 02
+128,256,3000,Motorola Edge 70 Fusion,Shop 14
+128,256,3000,Realme P4 Power,Shop 14
+128,256,3000,Vivo V70 FE 5G,Shop 11
+128,256,3000,Google Pixel 9a,Shop 14
+128,256,3000,Samsung Galaxy A54 5G,Shop 02
+128,256,3009,OPPO A6 4G,Shop 13
+128,256,3009,Samsung Galaxy A17 4G,Shop 07
+128,256,3200,Honor X7d,Shop 09
+128,256,3300,Samsung Galaxy A55 5G,Shop 02
+128,256,3400,Samsung Galaxy A17 5G,Shop 02
+128,256,3491,Redmi Note 15 5G,Shop 07
+128,256,3491,Vivo V70 FE 5G,Shop 07
+128,256,3499,Samsung Galaxy A17 4G,Shop 01
+128,256,3500,Redmi Note 15 5G,Shop 14
+128,256,3500,Samsung Galaxy A15 5G,Shop 02
+128,256,3500,Samsung Galaxy A17 5G,Shop 14
+128,256,3500,POCO X7,Shop 14
+128,256,3500,Motorola G96,Shop 14
+128,256,3500,Samsung Galaxy F56,Shop 07
+128,256,3500,Nothing Phone 4b,Shop 14
+128,256,3500,Samsung Galaxy A57 5G,Shop 14
+128,256,3500,Nothing Phone 4a Pro,Shop 14
+128,256,3809,Redmi Note 15 5G,Shop 07
+128,256,3850,Tecno Camon 50,Shop 15
+128,256,4000,Realme Narzo 60,Shop 14
+128,256,4000,Realme Narzo 60,Shop 02
+128,256,4000,iQOO Z10x,Shop 02
+128,256,4000,OPPO A6 4G,Shop 01
+128,256,4000,OPPO A6 4G,Shop 06
+128,256,4000,OPPO A6 4G,Shop 09
+128,256,4000,OPPO A6 4G,Shop 08
+128,256,4000,OPPO A6 4G,Shop 14
+128,256,4000,Samsung Galaxy A17 4G,Shop 14
+128,256,4000,Infinix Note Edge,Shop 14
+128,256,4000,Infinix Note Edge,Shop 06
+128,256,4000,Samsung Galaxy A17 5G,Shop 02
+128,256,4000,Redmi Note 14 Pro 5G,Shop 14
+128,256,4000,Tecno Camon 50,Shop 14
+128,256,4000,Tecno Camon 50,Shop 09
+128,256,4000,Samsung Galaxy A37 5G,Shop 14
+128,256,4000,Samsung Galaxy A37 5G,Shop 01
+128,256,4000,Samsung Galaxy A37 5G,Shop 06
+128,256,4000,Samsung Galaxy A37 5G,Shop 07
+128,256,4000,Samsung Galaxy A37 5G,Shop 09
+128,256,4000,Samsung Galaxy A37 5G,Shop 03
+128,256,4000,Realme P4,Shop 07
+128,256,4000,Nothing Phone 4b,Shop 01
+128,256,4000,Nothing Phone 4b,Shop 07
+128,256,4000,Nothing Phone 4b,Shop 11
+128,256,4000,Vivo S2,Shop 11
+128,256,4000,Google Pixel 9a,Shop 07
+128,256,4000,Google Pixel 9a,Shop 11
+128,256,4000,Nothing Phone 4a Pro,Shop 07
+128,256,4000,Realme 16 Pro Plus,Shop 07
+128,256,4000,Realme 16 Pro Plus,Shop 14
+128,256,4000,Samsung Galaxy A54 5G,Shop 02
+128,256,4000,Samsung Galaxy A54 5G,Shop 14
+128,256,4000,Samsung Galaxy S25,Shop 01
+128,256,4499,Nothing Phone 4a,Shop 01
+128,256,4500,Samsung Galaxy A17 5G,Shop 11
+128,256,4500,Samsung Galaxy A37 5G,Shop 11
+128,256,4500,Realme P4,Shop 11
+128,256,4500,Realme P4 Power,Shop 07
+128,256,4500,OnePlus Nord CE6,Shop 11
+128,256,4500,OPPO Reno 13 5G,Shop 02
+128,256,4500,Nothing Phone 4a,Shop 11
+128,256,4500,Nothing Phone 4a,Shop 14
+128,256,4500,Google Pixel 9,Shop 14
+128,256,4500,Samsung Galaxy S24 FE,Shop 14
+128,256,4501,Samsung Galaxy A17 5G,Shop 01
+128,256,4509,Motorola Edge 70,Shop 07
+128,256,4991,Samsung Galaxy A56 5G,Shop 07
+128,256,5000,Samsung Galaxy A15 5G,Shop 02
+128,256,5000,OPPO A6 Pro,Shop 06
+128,256,5000,Samsung Galaxy A36 5G,Shop 02
+128,256,5000,Tecno Camon 50,Shop 06
+128,256,5000,Motorola Edge 70 Fusion,Shop 07
+128,256,5000,Motorola Edge 70 Fusion,Shop 11
+128,256,5000,OnePlus Nord CE6,Shop 07
+128,256,5000,Tecno Camon Air,Shop 06
+128,256,5000,Tecno Camon Air,Shop 09
+128,256,5000,Tecno Camon Air,Shop 14
+128,256,5000,Nothing Phone 4a,Shop 07
+128,256,5000,Nothing Phone 4a Pro,Shop 11
+128,256,5000,Samsung Galaxy S21 FE 5G,Shop 02
+128,256,5000,Google Pixel 9,Shop 07
+128,256,5000,Samsung Galaxy S25,Shop 14
+128,256,5000,Samsung Galaxy A55 5G,Shop 14
+128,256,5000,Samsung Galaxy S24 FE,Shop 07
+128,256,5499,Motorola Edge 70 Fusion,Shop 01
+128,256,5500,Samsung Galaxy A56 5G,Shop 11
+128,256,5501,Google Pixel 7 Pro,Shop 01
+128,256,5700,Vivo Y31d,Shop 11
+128,256,6000,Google Pixel 10a,Shop 11
+128,256,6000,Samsung Galaxy S25,Shop 11
+128,256,6100,Nothing Phone 4a Pro,Shop 01
+128,256,6500,Google Pixel 9a,Shop 14
+128,256,6650,Vivo Y500,Shop 02
+128,256,6700,Infinix Note Edge,Shop 09
+128,256,6899,Redmi Note 15 5G,Shop 01
+128,256,7000,OPPO A6 Pro,Shop 14
+128,256,7000,Vivo Y500,Shop 06
+128,256,7000,Vivo Y500,Shop 09
+128,256,7000,Vivo Y500,Shop 11
+128,256,7000,Vivo Y500,Shop 14
+128,256,7000,Samsung Galaxy A57 5G,Shop 01
+128,256,7000,Samsung Galaxy S25 FE,Shop 14
+128,256,7499,Samsung Galaxy S25 FE,Shop 01
+128,256,7500,iQOO Z10R,Shop 14
+128,256,7500,Google Pixel 9 Pro XL,Shop 14
+128,256,7509,Samsung Galaxy S26,Shop 07
+128,256,8000,Samsung Galaxy S25 FE,Shop 02
+128,256,8000,Samsung Galaxy S25 FE,Shop 07
+128,256,8000,Samsung Galaxy S24 FE,Shop 02
+128,256,8509,Samsung Galaxy A57 5G,Shop 07
+128,256,8700,Samsung Galaxy A57 5G,Shop 02
+128,256,9000,Samsung Galaxy S25 FE,Shop 11
+128,256,9000,Samsung Galaxy S25,Shop 02
+128,256,9500,Samsung Galaxy A57 5G,Shop 11
+128,256,9500,Google Pixel 10a,Shop 01
+128,256,10000,Vivo V80 Lite 5G,Shop 06
+128,256,10000,Vivo V80 Lite 5G,Shop 09
+128,256,10000,Vivo V80 Lite 5G,Shop 14
+128,256,10000,Samsung Galaxy S25,Shop 07
+128,256,10000,Google Pixel 9 Pro,Shop 07
+128,256,10000,Google Pixel 9 Pro XL,Shop 07
+128,256,10000,Google Pixel 10,Shop 07
+128,256,10000,Google Pixel 10,Shop 11
+128,256,10000,Google Pixel 10 Pro,Shop 07
+128,256,10000,Google Pixel 10 Pro,Shop 14
+128,256,10009,Realme 16 Pro,Shop 07
+128,256,10500,Realme 16 Pro Plus,Shop 11
+128,256,10501,Google Pixel 10,Shop 01
+128,256,11001,Samsung Galaxy S21 FE 5G,Shop 14
+128,256,11500,Google Pixel 8 Pro,Shop 14
+128,256,15500,Google Pixel 10,Shop 14
+128,256,17000,Google Pixel 10 Pro,Shop 11
+128,256,19500,Google Pixel 7,Shop 14
+128,256,19500,Google Pixel 10 Pro,Shop 01
+128,256,20000,Google Pixel 10 Pro,Shop 06
+128,256,21001,Google Pixel 9,Shop 01
+128,256,38000,Google Pixel 9 Pro,Shop 14
+256,512,-4000,Vivo V70 5G,Shop 01
+256,512,-2000,Samsung Galaxy S26 Plus,Shop 07
+256,512,-1799,Honor X9d,Shop 01
+256,512,-1500,Vivo V70 5G,Shop 07
+256,512,0,Honor X9d,Shop 06
+256,512,0,Xiaomi 15T Pro,Shop 11
+256,512,0,Samsung Galaxy S26 Ultra,Shop 14
+256,512,500,Samsung Galaxy S23 Ultra,Shop 14
+256,512,1000,Honor 200,Shop 07
+256,512,1000,Honor 400,Shop 14
+256,512,1000,Vivo V70 Elite,Shop 11
+256,512,1500,OnePlus Nord 6,Shop 01
+256,512,1501,Redmi Note 15 Pro 4G,Shop 01
+256,512,1991,OnePlus 13s,Shop 07
+256,512,2000,Samsung Galaxy A57 5G,Shop 01
+256,512,2000,POCO F7 Pro,Shop 11
+256,512,2000,Xiaomi 17T,Shop 07
+256,512,2000,Xiaomi 17T,Shop 11
+256,512,2000,Xiaomi 17T,Shop 14
+256,512,2000,Xiaomi 17T,Shop 01
+256,512,2000,Google Pixel 9 Pro,Shop 14
+256,512,2300,Samsung Galaxy A57 5G,Shop 02
+256,512,2491,Redmi K90,Shop 07
+256,512,2500,Xiaomi 13,Shop 07
+256,512,2999,Redmi Turbo 4 Pro,Shop 01
+256,512,3000,Motorola Edge 70 Fusion,Shop 07
+256,512,3000,Honor 200,Shop 06
+256,512,3000,Honor 600,Shop 07
+256,512,3000,Vivo V70 5G,Shop 11
+256,512,3000,Samsung Galaxy Z Flip 6,Shop 14
+256,512,3009,POCO F7 Pro,Shop 07
+256,512,3500,Samsung Galaxy A57 5G,Shop 11
+256,512,3500,Honor 600,Shop 11
+256,512,3500,Honor 600,Shop 01
+256,512,3501,Motorola Edge 60 Pro,Shop 14
+256,512,4000,Honor X9c,Shop 14
+256,512,4000,Samsung Galaxy A57 5G,Shop 07
+256,512,4000,Xiaomi 15T,Shop 07
+256,512,4000,Xiaomi 14T,Shop 07
+256,512,4000,OPPO Reno15 Pro Mini,Shop 07
+256,512,4000,Vivo X300 Ultra,Shop 11
+256,512,4009,Vivo S30 Pro Mini,Shop 07
+256,512,4499,Google Pixel 7 Pro,Shop 01
+256,512,4500,Vivo V70 Elite,Shop 07
+256,512,4991,OPPO Reno15 5G,Shop 07
+256,512,5000,Honor 600,Shop 14
+256,512,5000,POCO F7 Pro,Shop 07
+256,512,5000,Vivo V70 5G,Shop 07
+256,512,5000,Vivo V70 Elite,Shop 01
+256,512,5000,Samsung Galaxy S25 Plus,Shop 02
+256,512,5000,OPPO Find X9,Shop 02
+256,512,5000,Vivo X300 Ultra,Shop 14
+256,512,5500,Redmi Turbo 4 Pro,Shop 01
+256,512,5860,OPPO Reno14 5G,Shop 02
+256,512,6000,OPPO Reno15 Pro Mini,Shop 11
+256,512,6000,OnePlus 15R,Shop 14
+256,512,6000,POCO F7 Ultra,Shop 07
+256,512,6501,POCO F8 Pro 5G,Shop 01
+256,512,7000,OPPO Reno 15 Pro,Shop 07
+256,512,7000,Vivo X300 FE,Shop 07
+256,512,7000,Xiaomi 17,Shop 11
+256,512,7000,Vivo X300 Ultra,Shop 07
+256,512,7000,Samsung Galaxy Z Flip 5,Shop 02
+256,512,7000,Samsung Galaxy Z Fold8 Ultra,Shop 11
+256,512,7991,Samsung Galaxy S25 Ultra,Shop 07
+256,512,8000,Vivo X300,Shop 11
+256,512,8000,Samsung Galaxy Z Flip 7,Shop 02
+256,512,8000,Xiaomi 17 Pro,Shop 07
+256,512,8000,Samsung Galaxy Z Fold 6 5G,Shop 14
+256,512,8500,POCO F8 Pro 5G,Shop 07
+256,512,8500,Samsung Galaxy S25 Ultra,Shop 02
+256,512,9000,Vivo X200 FE,Shop 07
+256,512,9000,Samsung Galaxy Z Fold 8,Shop 11
+256,512,9300,OPPO Reno15 5G,Shop 01
+256,512,9500,OnePlus 15,Shop 14
+256,512,9500,Samsung Galaxy Z Flip 7,Shop 14
+256,512,9999,Vivo X300,Shop 07
+256,512,10000,OPPO Reno15 5G,Shop 11
+256,512,10000,Samsung Galaxy S25 Edge,Shop 07
+256,512,10000,Samsung Galaxy S25 Edge,Shop 01
+256,512,10000,iQOO 15,Shop 07
+256,512,10000,Samsung Galaxy S24 Ultra,Shop 02
+256,512,10000,Samsung Galaxy Z Fold 7,Shop 07
+256,512,10500,Xiaomi 17T Pro 5G,Shop 01
+256,512,11001,Samsung Galaxy Z Flip 7,Shop 01
+256,512,12000,OnePlus 13s,Shop 14
+256,512,12000,Honor 600 Pro,Shop 11
+256,512,12000,Samsung Galaxy Z Fold8 Ultra,Shop 01
+256,512,12500,Samsung Galaxy S25 Ultra,Shop 14
+256,512,13000,Samsung Galaxy Z Fold 8,Shop 02
+256,512,13000,Samsung Galaxy Z Fold 8,Shop 14
+256,512,13000,Samsung Galaxy Z Fold8 Ultra,Shop 14
+256,512,13091,Vivo X200 FE,Shop 02
+256,512,13500,Google Pixel 10 Pro,Shop 01
+256,512,13500,Samsung Galaxy S25 Ultra,Shop 01
+256,512,14000,Samsung Galaxy S25 Ultra,Shop 02
+256,512,14500,Honor 600 Pro,Shop 01
+256,512,14999,Samsung Galaxy Z Fold 7,Shop 01
+256,512,15000,OnePlus 15,Shop 07
+256,512,15000,Vivo X300 Pro,Shop 14
+256,512,15000,Samsung Galaxy Z Fold 7,Shop 02
+256,512,15000,Samsung Galaxy Z Fold 7,Shop 02
+256,512,16000,Samsung Galaxy S25 Ultra,Shop 01
+256,512,17000,Honor 600 Pro,Shop 14
+256,512,17000,Google Pixel 10 Pro Fold,Shop 14
+256,512,17000,Samsung Galaxy Z Fold8 Ultra,Shop 02
+256,512,17509,Vivo S30 Pro Mini,Shop 02
+256,512,18000,Samsung Galaxy Z Fold 7,Shop 11
+256,512,18600,Google Pixel 10 Pro Fold,Shop 01
+256,512,19000,Samsung Galaxy Z Fold 6 5G,Shop 02
+256,512,20000,Samsung Galaxy S25 Ultra,Shop 11
+256,512,20000,ZTE Z80 Ultra,Shop 02
+256,512,20000,Samsung Galaxy S24 Ultra,Shop 02
+256,512,20000,Samsung Galaxy Z Fold 8,Shop 01
+256,512,20001,Samsung Galaxy S26 Plus,Shop 01
+256,512,20500,Samsung Galaxy Z Flip 6,Shop 02
+256,512,21000,Google Pixel 10 Pro Fold,Shop 11
+256,512,22000,Samsung Galaxy S26 Ultra,Shop 07
+256,512,22000,Samsung Galaxy Z Fold 5,Shop 14
+256,512,22000,Samsung Galaxy Z Fold 7,Shop 14
+256,512,22500,Samsung Galaxy S26 Ultra,Shop 02
+256,512,23000,Samsung Galaxy S26 Ultra,Shop 01
+256,512,23500,Samsung Galaxy S26 Ultra,Shop 11
+256,512,24000,Samsung Galaxy S26 Ultra,Shop 14
+256,512,25000,Samsung Galaxy Z Fold 7,Shop 11
+256,512,25824,Vivo X200s,Shop 02
+256,512,27000,OPPO K13 Turbo,Shop 02
+256,512,27001,Google Pixel 10 Pro XL,Shop 01
+256,512,28000,Samsung Galaxy Z Flip 6,Shop 02
+256,512,29000,Samsung Galaxy S26 Ultra,Shop 01
+256,512,29000,Samsung Galaxy S26 Ultra,Shop 06
+256,512,29000,Samsung Galaxy S26 Ultra,Shop 09
+256,512,29000,Samsung Galaxy S26 Ultra,Shop 03
+256,512,32000,Vivo X Fold5,Shop 02
+256,512,33000,Samsung Galaxy S24 Plus 5G,Shop 02
+256,512,33000,Google Pixel 9 Pro XL,Shop 14
+256,512,35000,Samsung Galaxy Z Fold 6 5G,Shop 02
+256,512,40900,Samsung Galaxy S25 Edge,Shop 02
+256,512,46000,Samsung Galaxy S23 Ultra,Shop 02
+256,512,95000,Google Pixel 9 Pro Fold,Shop 14
+512,1024,4000,ZTE Z80 Ultra,Shop 02
+512,1024,6000,Vivo X300 Pro,Shop 02
+512,1024,7000,Motorola Signature,Shop 11
+512,1024,9000,Motorola Signature,Shop 07
+512,1024,20000,Samsung Galaxy Z TriFold,Shop 02
+512,1024,30001,Samsung Galaxy S25 Ultra,Shop 01
+512,1024,33000,Samsung Galaxy S25 Ultra,Shop 11
+512,1024,37000,Samsung Galaxy S25 Ultra,Shop 02
+512,1024,40000,Samsung Galaxy Z Fold 6 5G,Shop 02
+512,1024,45000,Xiaomi 15 ULTRA,Shop 14
+512,1024,60000,Samsung Galaxy Z Fold 8,Shop 11
+512,1024,109000,Samsung Galaxy Z Fold 6 5G,Shop 02
