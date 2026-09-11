@@ -159,34 +159,25 @@
  fromUrl();
 })();
 (function(){
- /* The video reviews. A reviewer button changes which review the pane shows
-    and nothing else: the still and "Watch on YouTube" are the only ways out
-    to YouTube, and nothing plays here. */
+ /* The video reviews: a summary longer than its clamp gets a toggle, and the
+    themes past the first few wait behind one. The stills and the titles are
+    the only ways out to YouTube, and nothing plays here. */
  var y=document.getElementById('video');if(!y)return;
  y.classList.add('js');
- var rs=[].slice.call(y.querySelectorAll('.ytr')),
-  ps=[].slice.call(y.querySelectorAll('.ytp'));
+ var vs=[].slice.call(y.querySelectorAll('.ytv'));
  /* "Read summary" only where the clamp actually hides something */
- function fit(p){
-  var s=p.querySelector('.ytsum'),b=p.querySelector('.ytx');
+ function fit(v){
+  var s=v.querySelector('.ytsum'),b=v.querySelector('.ytx');
   if(!s||!b||b.getAttribute('aria-expanded')==='true')return;
   b.hidden=s.scrollHeight<=s.clientHeight+1;
  }
- rs.forEach(function(r){r.addEventListener('click',function(){
-  var k=r.getAttribute('data-k');
-  rs.forEach(function(x){x.setAttribute('aria-pressed',String(x===r));});
-  ps.forEach(function(p){
-   p.hidden=p.getAttribute('data-k')!==k;
-   if(!p.hidden)fit(p);
-  });
- });});
  y.addEventListener('click',function(e){
   var b=e.target.closest('.ytx'),a=e.target.closest('.ytall'),on;
   if(b){
    on=b.getAttribute('aria-expanded')!=='true';
    b.setAttribute('aria-expanded',String(on));
    b.textContent=on?'Show less':'Read summary';
-   b.closest('.ytp').classList.toggle('open',on);
+   b.closest('.ytv').classList.toggle('open',on);
   }else if(a){
    on=a.getAttribute('aria-expanded')!=='true';
    a.setAttribute('aria-expanded',String(on));
@@ -194,5 +185,6 @@
    y.querySelector('.rpcols').classList.toggle('all',on);
   }
  });
- ps.forEach(function(p){if(!p.hidden)fit(p);});
+ vs.forEach(fit);
+ addEventListener('resize',function(){vs.forEach(fit);});
 })();
