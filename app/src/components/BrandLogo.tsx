@@ -67,7 +67,9 @@ export function brandLogo(brand: string): string | null {
    fallback: it is what every one of these looked like yesterday. */
 const AREA_K = 1.5;      // a square mark draws this many times `h` tall
 const MIN_K = 0.55;      // a very wide wordmark still has to be readable
-const MAX_K = 1.6;       // a very tall glyph must not tower over its row
+// 1.0, not 1.6: at 1.6 Apple's square glyph drew 45px tall over a 26px name
+// and read as the page's biggest thing (owner 2026-09-12: "brand logos").
+const MAX_K = 1.0;       // a square or tall glyph is never taller than `h`
 
 export function BrandLogo({ brand, h = 16, max = "72px", named = false }: {
   brand: string; h?: number; max?: string; named?: boolean;
