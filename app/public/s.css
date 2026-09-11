@@ -351,7 +351,11 @@ line-height:1.55;text-wrap:pretty}
 .card{grid-template-columns:auto 72px minmax(0,1fr);gap:11px;padding:15px}
 .card .num{width:24px;height:24px;font-size:12px;margin-top:0}
 .card .nm{font-size:15.5px}
-.ctop{gap:9px}
+.ctop{gap:6px 9px;flex-wrap:wrap}
+.csc{flex:1 0 100%;display:flex;align-items:baseline;justify-content:flex-start;
+text-align:left}
+.csc b{font-size:20px}
+.csc i{margin:0 0 0 8px}
 .card .cvd{font-size:13.5px}
 .cbuy{padding:11px 40px 0 0}
 .decide{padding:15px 15px 9px}
@@ -1042,6 +1046,9 @@ margin:0;border:1px solid var(--aqua)}
   clamp(272px,24vw,320px)}
 }
 .dhero.gd .dbuy{align-self:start}
+@media(min-width:861px){
+.dhero.gd .dpick>.dleft,.dhero.gd .dpick>.top{align-self:center}
+}
 .panels{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);
 gap:40px 36px;align-items:start;margin:48px 0 0}
 .panels.one{grid-template-columns:minmax(0,1fr)}
@@ -1050,8 +1057,10 @@ gap:40px 36px;align-items:start;margin:48px 0 0}
 .panels .rcols{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));
 gap:30px 40px}
 .panels>.phist:not(:only-child){padding-left:32px;border-left:1px solid var(--rule)}
+.panels>.rates:not(:only-child){position:sticky;top:calc(var(--hdr-h) + 16px)}
 @media(max-width:820px){.panels{grid-template-columns:minmax(0,1fr)}
-.panels>.phist:not(:only-child){padding-left:0;border-left:0}}
+.panels>.phist:not(:only-child){padding-left:0;border-left:0}
+.panels>.rates{position:static}}
 .rmeth{margin:8px 0 0;font-size:15px;line-height:1.55;color:var(--tx);max-width:74ch}
 .rmeth a{font-weight:600;white-space:nowrap}
 .rmeth a i{font-style:normal}
