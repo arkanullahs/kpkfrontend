@@ -89,10 +89,15 @@ export function YoutubeSection({ yt }: { yt: YoutubeBlock }) {
             <a href={v.url} target="_blank" rel="noopener noreferrer"
               aria-label={`${t("yt_watch")}: ${v.title || v.channel}`}
               style={st("position:relative; display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:16/9; border-radius:8px; overflow:hidden; background:#232a29; color:#fff;")}>
-              {v.thumb
-                ? <img src={v.thumb} alt="" loading="lazy" decoding="async" width={480} height={270}
-                    style={st("position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;")} />
-                : <span aria-hidden="true" style={st("position:absolute; left:14px; bottom:6px; font-size:56px; font-weight:800; line-height:1; opacity:.16;")}>{(v.channel || "?").slice(0, 1).toUpperCase()}</span>}
+              {/* the initial always sits underneath: a still that fails to
+                  load hides itself and the tile reads as a design, not a
+                  broken-image icon */}
+              <span aria-hidden="true" style={st("position:absolute; left:14px; bottom:6px; font-size:56px; font-weight:800; line-height:1; opacity:.16;")}>{(v.channel || "?").slice(0, 1).toUpperCase()}</span>
+              {v.thumb && (
+                <img key={v.thumb} src={v.thumb} alt="" loading="lazy" decoding="async" width={480} height={270}
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
+                  style={st("position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;")} />
+              )}
               <Play size={46} />
             </a>
             <div style={st("margin-top:12px; font-size:13px; color:var(--mut2);")}>{v.channel}</div>
