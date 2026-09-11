@@ -285,6 +285,29 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
+    /* ---- review kit, 2026-09-11: the /phone/ page's verdict and video
+       layouts, on the detail screen. Inline styles cannot carry :hover,
+       :focus-visible or a media query, so those live here. ---- */
+    .kytr:hover { background: rgba(var(--rgb-teal),.06) !important; }
+    .kytr[aria-pressed="true"]:hover { background: var(--tint) !important; }
+    .kytr:focus-visible, .kytall:focus-visible, .kverd a:focus-visible {
+      outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 6px; }
+    .kverd { display: grid; grid-template-columns: minmax(0,30%) minmax(0,1fr);
+      grid-template-areas: "hd cols" "fit cols" "src why"; grid-template-rows: auto 1fr auto; }
+    .kverd .kv-hd { grid-area: hd; } .kverd .kv-fit { grid-area: fit; }
+    .kverd .kv-src { grid-area: src; align-self: end; }
+    .kverd .kv-cols { grid-area: cols; } .kverd .kv-why { grid-area: why; }
+    .kverd .kv-hd, .kverd .kv-fit, .kverd .kv-src { padding-right: clamp(18px,2.6vw,32px); }
+    .kverd .kv-cols, .kverd .kv-why { padding-left: clamp(18px,2.6vw,36px);
+      border-left: 1px solid rgba(var(--rgb-ink),.09); }
+    @media (max-width: 760px) {
+      .kverd { grid-template-columns: minmax(0,1fr); grid-template-rows: none;
+        grid-template-areas: "hd" "fit" "cols" "why" "src"; }
+      .kverd .kv-hd, .kverd .kv-fit, .kverd .kv-src { padding-right: 0; }
+      .kverd .kv-cols, .kverd .kv-why { padding-left: 0; border-left: 0; }
+      .kverd .kv-cols { margin-top: 24px; }
+      .kverd .kv-src { align-self: auto; }
+    }
   </style>
 </head>
 <body>

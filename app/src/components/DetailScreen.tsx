@@ -137,6 +137,8 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   const quotes = ownerQuotes(op, caveats.map((c) => c.text));
   const bestFor = (op.best_for?.length ? op.best_for : d?.ai_verdict?.best_for) || [];
   const avoidIf = op.avoid_if || [];
+  const praiseFlags = op.praise_flags || [];
+  const blameFlags = op.complaint_flags || [];
   const specs = buildSpecs(d);
   const conn = connRows(d?.connectivity, d?.traits);
   const bs = d?.brand_summary;
@@ -236,15 +238,11 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           (owner 2026-08-04). The board's Memory axis is the config chooser
           now, and the price it lands on belongs to a listing that exists. */}
 
-      {/* our take — the RAG verdict, grounded in real evidence */}
-      {ourTake && (
-        <div style={st("background:var(--tint); border-radius:var(--r); padding:clamp(16px,2.5vw,22px); margin-top:14px; display:flex; gap:12px;")}>
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={st("flex-shrink:0; margin-top:2px;")}><path d="M9 1.5l2 4.5 4.9.4-3.7 3.2 1.1 4.8L9 11.8 4.7 14.4l1.1-4.8L2.1 6.4 7 6 9 1.5z" fill="var(--teal)" /></svg>
-          <div>
-            <div style={st("font-size:11.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:var(--lnk); margin-bottom:5px;")}>{t("our_take")}</div>
-            <p style={st("margin:0; font-size:14.5px; color:var(--ink2); line-height:1.6; text-wrap:pretty;")}>{ourTake}</p>
-          </div>
-        </div>
+      {/* the verdict, laid out as the /phone/ page lays it (verdict v6):
+          the answer in a rail, the evidence and the argument beside it */}
+      {(ourTake || bestFor.length > 0 || avoidIf.length > 0 || praiseFlags.length > 0 || blameFlags.length > 0) && (
+        <Verdict model={model} take={ourTake} bestFor={bestFor} avoidIf={avoidIf}
+          works={praiseFlags} tradeoffs={blameFlags} sources={!!d?.youtube?.videos?.length} />
       )}
 
       {/* axes */}
@@ -277,10 +275,9 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
       {/* full-record sections, or a skeleton while they load */}
       {!d ? <LoadingDetail compact /> : (
       <>
-      {/* who it's for — visual, info-first */}
-      {(bestFor.length > 0 || avoidIf.length > 0 || caveats.length > 0) && (
-        <WhoFor bestFor={bestFor} avoidIf={avoidIf} caveats={caveats} />
-      )}
+      {/* what owners flag -- best-for and avoid-if are the verdict's two
+          "choose it if / consider alternatives if" lines now */}
+      {caveats.length > 0 && <OwnerFlags caveats={caveats} />}
 
       {/* align-items:start, or every card in a row stretches to the tallest
           one — the specs card grew icon rows and left a half-empty white slab
@@ -387,7 +384,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
         )}
 
         {/* opinion */}
-        {(op.llm_summary || quotes.length || op.praise_flags?.length || op.complaint_flags?.length) && (
+        {(op.llm_summary || quotes.length > 0) && (
           <Card>
             <SectionLabel>{t("owner_voices")}</SectionLabel>
             {op.llm_summary && <p style={st("margin:15px 0 0; font-size:14px; color:var(--tx); line-height:1.6; text-wrap:pretty;")}>{op.llm_summary}</p>}
@@ -398,14 +395,6 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
                 ))}
               </div>
             )}
-            <div style={st("display:flex; flex-wrap:wrap; gap:7px; margin-top:15px;")}>
-              {(op.praise_flags || []).map((tx, i) => (
-                <span key={"p" + i} style={st("font-size:13px; font-weight:600; color:var(--tealD); background:rgba(var(--rgb-teal),.1); padding:6px 12px; border-radius:var(--r);")}>+ {tx}</span>
-              ))}
-              {(op.complaint_flags || []).map((tx, i) => (
-                <span key={"c" + i} style={st("font-size:13px; font-weight:600; color:var(--acd); background:rgba(var(--rgb-amber),.12); padding:6px 12px; border-radius:var(--r);")}>− {tx}</span>
-              ))}
-            </div>
           </Card>
         )}
 
@@ -482,85 +471,104 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
   );
 }
 
-/* ---------- who it's for — persona chips + classified caveats ---------- */
-const PERSONA_ICON: { re: RegExp; d: string }[] = [
-  { re: /game|gaming/, d: "M6 11h12a3 3 0 110 6H6a3 3 0 110-6zM7.5 13v2.2M6.4 14.1h2.2M16 13.4h.01M17.6 15h.01" },
-  { re: /camera|photo|shoot|picture/, d: "M4 8h3l1.5-2h7L17 8h3v10H4V8zM12 11a3 3 0 100 6 3 3 0 000-6z" },
-  { re: /video|vlog|creat|film/, d: "M3 7h11v10H3V7zM14 10.5l7-3v9l-7-3" },
-  { re: /student|study|school|exam/, d: "M12 4l10 5-10 5L2 9l10-5zM6 11v5c0 1.4 3 3 6 3s6-1.6 6-3v-5" },
-  { re: /senior|parent|elder|simple|easy|read/, d: "M12 20s-7-4.3-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.7-7 9-7 9z" },
-  { re: /value|budget|money|afford|cheap/, d: "M20.5 11.5L12.5 3.5H4v8.5l8 8 8.5-8.5zM7.5 7.5h.01" },
-  { re: /work|professional|office|business|productiv/, d: "M4 8h16v11H4V8zM9 8V6h6v2" },
-  { re: /ride|driv|deliver|battery|all-?day|endur|travel/, d: "M4 8h13v8H4zM17 11h2v2h-2M7.5 10.5v3" },
-  { re: /daily|everyday|general|balanc|reliab/, d: "M12 3v2M12 19v2M5 12H3M21 12h-2M6 6l1.4 1.4M16.6 16.6L18 18M6 18l1.4-1.4M16.6 7.4L18 6M12 8.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z" },
-];
-function personaIcon(label: string): string {
-  const l = label.toLowerCase();
-  return (PERSONA_ICON.find((p) => p.re.test(l)) || { d: "M12 8v5M12 16v.01M12 3a9 9 0 100 18 9 9 0 000-18z" }).d;
-}
-
-function WhoFor({ bestFor, avoidIf, caveats }: {
-  bestFor: string[]; avoidIf: string[]; caveats: { text: string; sev?: string }[];
+/* ---------- the verdict (verdict v6, 2026-09-11) ----------
+   The /phone/ page's shape: the answer in a rail on the left, the evidence
+   and the argument beside it, one column on a phone. It is a synthesis of
+   published reviews and owner reports, never our own testing, and it says
+   so. */
+function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
+  model: string; take: string | null; bestFor: string[]; avoidIf: string[];
+  works: string[]; tradeoffs: string[]; sources: boolean;
 }) {
-  const { major, notes } = classifyCaveats(caveats);
+  const text = (take || "").trim();
+  // the opening sentence is the answer; the rest is the argument for it
+  const m = text.match(/^(.+?[.!?])\s+([\s\S]+)$/);
+  const lead = m ? m[1] : text;
+  const rest = m ? m[2] : "";
+  const RULE = "1px solid rgba(var(--rgb-ink),.08)";
+  const H3 = st("margin:0 0 4px; font-size:18px; font-weight:800; letter-spacing:-.3px; color:var(--ink);");
+  const DT = st("font-size:14.5px; font-weight:700; color:var(--ink);");
+  const DD = st("margin:4px 0 0; font-size:14.5px; line-height:1.55; color:var(--ink2);");
+  const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   return (
-    <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); margin-top:14px;")}>
-      <SectionLabel>{t("who_its_for")}</SectionLabel>
-      <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:18px;")}>
-        {bestFor.length > 0 && (
-          <div style={st("border-radius:var(--r); padding:17px 18px; background:linear-gradient(160deg, rgba(var(--rgb-teal),.1), rgba(var(--rgb-teal),.04)); border:.5px solid rgba(var(--rgb-teal),.16);")}>
-            <div style={st("display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--tealD);")}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="var(--teal)" strokeWidth="1.8" /><path d="M8 12.5l2.5 2.5L16 9" stroke="var(--teal)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              {t("great_for")}
-            </div>
-            <div style={st("display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;")}>
-              {bestFor.map((tx, i) => (
-                <span key={i} style={st("display:inline-flex; align-items:center; gap:7px; padding:8px 13px 8px 10px; border-radius:var(--r); background:var(--card); box-shadow:inset 0 0 0 1px rgba(var(--rgb-teal),.18);")}>
-                  <span style={st("display:flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:var(--r); background:rgba(var(--rgb-teal),.14); color:var(--tealD); flex-shrink:0;")}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d={personaIcon(tx)} stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  </span>
-                  <span style={st("font-size:13.5px; font-weight:600; color:var(--tealD); line-height:1.2; text-transform:capitalize;")}>{tx}</span>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-        {avoidIf.length > 0 && (
-          <div style={st("border-radius:var(--r); padding:17px 18px; background:linear-gradient(160deg, rgba(var(--rgb-amber),.1), rgba(var(--rgb-amber),.03)); border:.5px solid rgba(var(--rgb-amber),.18);")}>
-            <div style={st("display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--acd);")}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.5" stroke="var(--acd)" strokeWidth="1.8" /><path d="M12 7.5v5.5M12 16v.5" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" /></svg>
-              {t("think_twice")}
-            </div>
-            <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:14px;")}>
-              {avoidIf.map((tx, i) => (
-                <div key={i} style={st("display:flex; gap:9px; align-items:flex-start;")}>
-                  <span style={st("display:flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:var(--r); background:rgba(var(--rgb-amber),.14); color:var(--acd); flex-shrink:0; margin-top:1px;")}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" /></svg>
-                  </span>
-                  <span style={st("font-size:13.5px; color:var(--mut); line-height:1.45;")}>{tx}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+    <section className="kverd" style={st("margin-top:14px; background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07);")}>
+      <div className="kv-hd">
+        <div style={st("font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--acd);")}>{t("v_eyebrow")}</div>
+        <h2 style={st("margin:8px 0 0; font-size:clamp(24px,3vw,32px); font-weight:800; line-height:1.05; letter-spacing:-.8px; color:var(--ink); text-wrap:balance;")}>{model}</h2>
+        <div style={st("margin-top:6px; font-size:17px; color:var(--mut);")}>{t("v_question")}</div>
+        {lead && (
+          <>
+            <span aria-hidden="true" style={st("display:block; width:48px; height:2px; margin-top:18px; background:var(--acd);")} />
+            <p style={st("margin:16px 0 0; font-size:19px; font-weight:700; line-height:1.3; letter-spacing:-.2px; color:var(--tealD); text-wrap:pretty;")}>{lead}</p>
+          </>
         )}
       </div>
+      {(bestFor.length > 0 || avoidIf.length > 0) && (
+        <dl className="kv-fit" style={st("margin:22px 0 0;")}>
+          {bestFor.length > 0 && <><dt style={DT}>{t("v_choose")}</dt><dd style={DD}>{cap(bestFor.join(", "))}</dd></>}
+          {avoidIf.length > 0 && (
+            <>
+              <dt style={{ ...DT, marginTop: bestFor.length ? 16 : 0 }}>{t("v_consider")}</dt>
+              {avoidIf.map((x, i) => <dd key={i} style={DD}>{cap(x)}</dd>)}
+            </>
+          )}
+        </dl>
+      )}
+      {(works.length > 0 || tradeoffs.length > 0) && (
+        <div className="kv-cols" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:18px 28px; align-content:start;")}>
+          {([[works, t("v_works")], [tradeoffs, t("v_tradeoffs")]] as const).map(([xs, label]) => xs.length === 0 ? null : (
+            <div key={label} style={st("min-width:0;")}>
+              <h3 style={H3}>{label}</h3>
+              {xs.map((x, i) => (
+                <div key={i} style={st(`padding:11px 0; font-size:15px; font-weight:600; line-height:1.45; color:var(--ink2);${i < xs.length - 1 ? ` border-bottom:${RULE};` : ""}`)}>{cap(x)}</div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+      {rest && (
+        <div className="kv-why" style={st(`margin-top:22px; padding-top:18px; border-top:${RULE};`)}>
+          <h3 style={H3}>{t("v_why")}</h3>
+          <p style={st("margin:8px 0 0; max-width:75ch; font-size:15px; line-height:1.65; color:var(--ink2); text-wrap:pretty;")}>{rest}</p>
+        </div>
+      )}
+      <div className="kv-src" style={st(`margin-top:22px; padding-top:12px; border-top:${RULE};`)}>
+        <div style={st("font-size:12.5px; line-height:1.5; color:var(--mut2);")}>{t("v_basis")}</div>
+        {sources && (
+          <button type="button" className="kytall"
+            onClick={() => document.getElementById("k-yt")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            style={st("display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:0; border:0; background:none; cursor:pointer; font:inherit; font-size:14px; font-weight:600; color:var(--ink); text-decoration:underline; text-underline-offset:4px;")}>
+            {t("v_sources")} <span aria-hidden="true">↓</span>
+          </button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ---------- what owners flag ----------
+   Best-for and avoid-if read as the verdict's "choose it if / consider
+   alternatives if" now, so this card is the caveats alone. */
+function OwnerFlags({ caveats }: { caveats: { text: string; sev?: string }[] }) {
+  const { major, notes } = classifyCaveats(caveats);
+  if (!major.length && !notes.length) return null;
+  return (
+    <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); margin-top:14px;")}>
+      <SectionLabel>{t("owners_flag")}</SectionLabel>
       {major.length > 0 && (
         <div style={st("display:flex; flex-direction:column; gap:9px; margin-top:14px;")}>
           {major.map((cv, i) => <JustSoYouKnow key={i} text={cv.text} />)}
         </div>
       )}
       {notes.length > 0 && (
-        <>
-          <div style={st("font-size:11.5px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--acd); margin:20px 0 0;")}>{t("owners_flag")}</div>
-          <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:9px; margin-top:11px;")}>
-            {notes.map((cv, i) => (
-              <div key={i} style={st("display:flex; gap:10px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.08);")}>
-                <span style={st("width:7px; height:7px; border-radius:var(--r); background:var(--acd); margin-top:6px; flex-shrink:0;")} />
-                <span style={st("font-size:13.5px; color:var(--acd); line-height:1.5;")}>{cv.text}</span>
-              </div>
-            ))}
-          </div>
-        </>
+        <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); gap:9px; margin-top:14px;")}>
+          {notes.map((cv, i) => (
+            <div key={i} style={st("display:flex; gap:10px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.08);")}>
+              <span style={st("width:7px; height:7px; border-radius:var(--r); background:var(--acd); margin-top:6px; flex-shrink:0;")} />
+              <span style={st("font-size:13.5px; color:var(--acd); line-height:1.5;")}>{cv.text}</span>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
