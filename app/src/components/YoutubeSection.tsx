@@ -4,11 +4,12 @@ import { t } from "../i18n";
 import type { YoutubeBlock } from "../api";
 
 /* What reviewers said, on the app's detail screen -- the same block the
-   /phone/ page renders (YouTube reviews v2, 2026-09-11): one review at a time
-   above the list to pick it from, then the themes the reviews raise.
+   /phone/ page renders: every review as a row (its still, whose video it is),
+   then the themes the reviews raise. The master/detail panel before this was
+   mostly empty space for the two to four reviews a phone usually has (owner
+   2026-09-11).
 
-   Picking a reviewer only changes which review is shown. The still and
-   "Watch on YouTube" both open that same video on YouTube; nothing embeds and
+   The still and the title both open the video on YouTube; nothing embeds and
    nothing plays here, because these are other people's videos.
 
    cards.py builds the block once at pipeline time (attribution needs the
@@ -40,14 +41,11 @@ const RULE = "1px solid rgba(var(--rgb-ink),.08)";
 export function YoutubeSection({ yt }: { yt: YoutubeBlock }) {
   const vids = yt.videos || [];
   const points = yt.points || [];
-  const [sel, setSel] = useState(0);
   const [all, setAll] = useState(false);
-  const v = vids.length ? vids[Math.min(sel, vids.length - 1)] : null;
   const praise = points.filter((p) => p.stance === "praise");
   const blame = points.filter((p) => p.stance !== "praise");
   const reach = vids.reduce((s, x) => s + (x.views || 0), 0);
   const extra = praise.length > SHOWN || blame.length > SHOWN;
-  const meta = v ? [v.views ? `${views(v.views)} ${t("yt_views")}` : "", v.aired].filter(Boolean).join(" · ") : "";
 
   const source = (p: Point) => {
     // No credit at all when there is nobody to credit: an owner-written point
@@ -83,57 +81,40 @@ export function YoutubeSection({ yt }: { yt: YoutubeBlock }) {
         </p>
       )}
 
-      {v && (
-        <div style={st(`margin-top:16px; border:${RULE}; border-radius:12px; overflow:hidden; background:var(--card);`)}>
-          <div style={st("padding:14px;")}>
-            <a href={v.url} target="_blank" rel="noopener noreferrer"
-              aria-label={`${t("yt_watch")}: ${v.title || v.channel}`}
-              style={st("position:relative; display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:16/9; border-radius:8px; overflow:hidden; background:#232a29; color:#fff;")}>
-              {/* the initial always sits underneath: a still that fails to
-                  load hides itself and the tile reads as a design, not a
-                  broken-image icon */}
-              <span aria-hidden="true" style={st("position:absolute; left:14px; bottom:6px; font-size:56px; font-weight:800; line-height:1; opacity:.16;")}>{(v.channel || "?").slice(0, 1).toUpperCase()}</span>
-              {v.thumb && (
-                <img key={v.thumb} src={v.thumb} alt="" loading="lazy" decoding="async" width={480} height={270}
-                  onError={(e) => { e.currentTarget.style.display = "none"; }}
-                  style={st("position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;")} />
-              )}
-              <Play size={46} />
-            </a>
-            <div style={st("margin-top:12px; font-size:13px; color:var(--mut2);")}>{v.channel}</div>
-            <div style={st("margin-top:3px; font-size:18px; font-weight:800; line-height:1.25; letter-spacing:-.3px; color:var(--ink); text-wrap:balance;")}>{v.title || v.channel}</div>
-            <div style={st("display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; margin-top:12px;")}>
-              {meta && <span style={st("font-size:13px; color:var(--mut2);")}>{meta}</span>}
-              <a href={v.url} target="_blank" rel="noopener noreferrer"
-                style={st("display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:0 16px; border-radius:10px; background:var(--teal); color:var(--onp); font-size:14px; font-weight:700; text-decoration:none;")}>
-                {t("yt_watch")} <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-          </div>
-          {vids.length > 1 && (
-            <div style={st(`border-top:${RULE}; padding:10px 8px 8px;`)}>
-              <div style={st("margin:2px 6px 6px; font-size:14px; font-weight:700; color:var(--ink);")}>{t("yt_choose")}</div>
-              <ol style={st("list-style:none; margin:0; padding:0;")}>
-                {vids.map((x, i) => (
-                  <li key={x.id || x.url} style={st(i ? `border-top:${RULE};` : "")}>
-                    {/* a button, not a link: choosing a reviewer changes the
-                        pane above and goes nowhere */}
-                    <button type="button" className="kytr" aria-pressed={i === sel} onClick={() => setSel(i)}
-                      style={st(`display:grid; grid-template-columns:34px minmax(0,1fr); align-items:center; gap:0 10px; width:100%; min-height:60px; padding:8px 10px 8px 6px; border:0; border-radius:8px; cursor:pointer; font:inherit; text-align:left; color:inherit; background:${i === sel ? "var(--tint)" : "transparent"};`)}>
-                      <span style={st(`font-size:15px; font-weight:700; font-variant-numeric:tabular-nums; color:${i === sel ? "var(--tealD)" : "var(--mut2)"};`)}>{String(i + 1).padStart(2, "0")}</span>
-                      <span style={st("display:flex; flex-direction:column; min-width:0;")}>
-                        <b style={st("font-size:14px; line-height:1.35; color:var(--ink);")}>{x.channel || "YouTube"}</b>
-                        {/* truncated on screen, whole for a screen reader */}
-                        <span style={st("font-size:13px; line-height:1.4; color:var(--ink2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;")}>{x.title}</span>
-                        {x.views ? <span style={st("font-size:12px; color:var(--mut2);")}>{views(x.views)} {t("yt_views")}</span> : null}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
-        </div>
+      {vids.length > 0 && (
+        <ol style={st("list-style:none; margin:4px 0 0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr)); gap:0 28px;")}>
+          {vids.map((x) => {
+            const meta = [x.views ? `${views(x.views)} ${t("yt_views")}` : "", x.aired].filter(Boolean).join(" · ");
+            return (
+              <li key={x.id || x.url} style={st(`display:grid; grid-template-columns:clamp(112px,34%,168px) minmax(0,1fr); gap:0 14px; align-items:start; padding:14px 0; border-bottom:${RULE};`)}>
+                {/* the still repeats the title's link: one tab stop, not two */}
+                <a href={x.url} target="_blank" rel="noopener noreferrer" tabIndex={-1} aria-hidden="true" className="kytt"
+                  style={st("position:relative; display:flex; align-items:center; justify-content:center; aspect-ratio:16/9; border-radius:8px; overflow:hidden; background:#232a29; color:#fff;")}>
+                  {/* the initial always sits underneath: a still that fails to
+                      load hides itself and the tile reads as a design, not a
+                      broken-image icon */}
+                  <span aria-hidden="true" style={st("position:absolute; left:9px; bottom:2px; font-size:38px; font-weight:800; line-height:1; opacity:.16;")}>{(x.channel || "?").slice(0, 1).toUpperCase()}</span>
+                  {x.thumb && (
+                    <img key={x.thumb} src={x.thumb} alt="" loading="lazy" decoding="async" width={480} height={270}
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                      style={st("position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;")} />
+                  )}
+                  <Play size={26} />
+                </a>
+                <div style={st("min-width:0;")}>
+                  <a href={x.url} target="_blank" rel="noopener noreferrer" className="kytl"
+                    aria-label={`${x.title || x.channel} (${t("yt_watch")})`}
+                    style={st("font-size:15px; font-weight:700; line-height:1.35; color:var(--ink); text-decoration:none;")}>
+                    {x.title || x.channel}
+                  </a>
+                  <div style={st("margin-top:5px; font-size:12.5px; line-height:1.45; color:var(--mut2);")}>
+                    <b style={st("font-weight:600; color:var(--ink2);")}>{x.channel || "YouTube"}</b>{meta ? ` · ${meta}` : ""}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
       )}
 
       {(praise.length > 0 || blame.length > 0) && (

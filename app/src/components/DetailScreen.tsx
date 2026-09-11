@@ -485,63 +485,72 @@ function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
   const m = text.match(/^(.+?[.!?])\s+([\s\S]+)$/);
   const lead = m ? m[1] : text;
   const rest = m ? m[2] : "";
+  // each column flows on its own; with nothing for the right one the
+  // rail takes the width instead of leaving a half empty
+  const right = works.length > 0 || tradeoffs.length > 0 || !!rest;
   const RULE = "1px solid rgba(var(--rgb-ink),.08)";
   const H3 = st("margin:0 0 4px; font-size:18px; font-weight:800; letter-spacing:-.3px; color:var(--ink);");
   const DT = st("font-size:14.5px; font-weight:700; color:var(--ink);");
   const DD = st("margin:4px 0 0; font-size:14.5px; line-height:1.55; color:var(--ink2);");
   const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   return (
-    <section className="kverd" style={st("margin-top:14px; background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07);")}>
-      <div className="kv-hd">
-        <div style={st("font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--acd);")}>{t("v_eyebrow")}</div>
-        <h2 style={st("margin:8px 0 0; font-size:clamp(24px,3vw,32px); font-weight:800; line-height:1.05; letter-spacing:-.8px; color:var(--ink); text-wrap:balance;")}>{model}</h2>
-        <div style={st("margin-top:6px; font-size:17px; color:var(--mut);")}>{t("v_question")}</div>
-        {lead && (
-          <>
-            <span aria-hidden="true" style={st("display:block; width:48px; height:2px; margin-top:18px; background:var(--acd);")} />
-            <p style={st("margin:16px 0 0; font-size:19px; font-weight:700; line-height:1.3; letter-spacing:-.2px; color:var(--tealD); text-wrap:pretty;")}>{lead}</p>
-          </>
-        )}
-      </div>
-      {(bestFor.length > 0 || avoidIf.length > 0) && (
-        <dl className="kv-fit" style={st("margin:22px 0 0;")}>
-          {bestFor.length > 0 && <><dt style={DT}>{t("v_choose")}</dt><dd style={DD}>{cap(bestFor.join(", "))}</dd></>}
-          {avoidIf.length > 0 && (
+    <section className={right ? "kverd" : "kverd solo"} style={st("margin-top:14px; background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07);")}>
+      <div className="kv-l">
+        <div className="kv-hd">
+          <div style={st("font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--acd);")}>{t("v_eyebrow")}</div>
+          <h2 style={st("margin:8px 0 0; font-size:clamp(24px,3vw,32px); font-weight:800; line-height:1.05; letter-spacing:-.8px; color:var(--ink); text-wrap:balance;")}>{model}</h2>
+          <div style={st("margin-top:6px; font-size:17px; color:var(--mut);")}>{t("v_question")}</div>
+          {lead && (
             <>
-              <dt style={{ ...DT, marginTop: bestFor.length ? 16 : 0 }}>{t("v_consider")}</dt>
-              {avoidIf.map((x, i) => <dd key={i} style={DD}>{cap(x)}</dd>)}
+              <span aria-hidden="true" style={st("display:block; width:48px; height:2px; margin-top:18px; background:var(--acd);")} />
+              <p style={st("margin:16px 0 0; font-size:19px; font-weight:700; line-height:1.3; letter-spacing:-.2px; color:var(--tealD); text-wrap:pretty;")}>{lead}</p>
             </>
           )}
-        </dl>
-      )}
-      {(works.length > 0 || tradeoffs.length > 0) && (
-        <div className="kv-cols" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:18px 28px; align-content:start;")}>
-          {([[works, t("v_works")], [tradeoffs, t("v_tradeoffs")]] as const).map(([xs, label]) => xs.length === 0 ? null : (
-            <div key={label} style={st("min-width:0;")}>
-              <h3 style={H3}>{label}</h3>
-              {xs.map((x, i) => (
-                <div key={i} style={st(`padding:11px 0; font-size:15px; font-weight:600; line-height:1.45; color:var(--ink2);${i < xs.length - 1 ? ` border-bottom:${RULE};` : ""}`)}>{cap(x)}</div>
+        </div>
+        {(bestFor.length > 0 || avoidIf.length > 0) && (
+          <dl className="kv-fit" style={st("margin:22px 0 0;")}>
+            {bestFor.length > 0 && <><dt style={DT}>{t("v_choose")}</dt><dd style={DD}>{cap(bestFor.join(", "))}</dd></>}
+            {avoidIf.length > 0 && (
+              <>
+                <dt style={{ ...DT, marginTop: bestFor.length ? 16 : 0 }}>{t("v_consider")}</dt>
+                {avoidIf.map((x, i) => <dd key={i} style={DD}>{cap(x)}</dd>)}
+              </>
+            )}
+          </dl>
+        )}
+        <div className="kv-src" style={st(`margin-top:22px; padding-top:12px; border-top:${RULE};`)}>
+          <div style={st("font-size:12.5px; line-height:1.5; color:var(--mut2);")}>{t("v_basis")}</div>
+          {sources && (
+            <button type="button" className="kytall"
+              onClick={() => document.getElementById("k-yt")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              style={st("display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:0; border:0; background:none; cursor:pointer; font:inherit; font-size:14px; font-weight:600; color:var(--ink); text-decoration:underline; text-underline-offset:4px;")}>
+              {t("v_sources")} <span aria-hidden="true">↓</span>
+            </button>
+          )}
+        </div>
+      </div>
+      {right && (
+        <div className="kv-r">
+          {(works.length > 0 || tradeoffs.length > 0) && (
+            <div className="kv-cols" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:18px 28px; align-content:start;")}>
+              {([[works, t("v_works")], [tradeoffs, t("v_tradeoffs")]] as const).map(([xs, label]) => xs.length === 0 ? null : (
+                <div key={label} style={st("min-width:0;")}>
+                  <h3 style={H3}>{label}</h3>
+                  {xs.map((x, i) => (
+                    <div key={i} style={st(`padding:11px 0; font-size:15px; font-weight:600; line-height:1.45; color:var(--ink2);${i < xs.length - 1 ? ` border-bottom:${RULE};` : ""}`)}>{cap(x)}</div>
+                  ))}
+                </div>
               ))}
             </div>
-          ))}
+          )}
+          {rest && (
+            <div className="kv-why" style={st(`margin-top:22px; padding-top:18px; border-top:${RULE};`)}>
+              <h3 style={H3}>{t("v_why")}</h3>
+              <p style={st("margin:8px 0 0; max-width:75ch; font-size:15px; line-height:1.65; color:var(--ink2); text-wrap:pretty;")}>{rest}</p>
+            </div>
+          )}
         </div>
       )}
-      {rest && (
-        <div className="kv-why" style={st(`margin-top:22px; padding-top:18px; border-top:${RULE};`)}>
-          <h3 style={H3}>{t("v_why")}</h3>
-          <p style={st("margin:8px 0 0; max-width:75ch; font-size:15px; line-height:1.65; color:var(--ink2); text-wrap:pretty;")}>{rest}</p>
-        </div>
-      )}
-      <div className="kv-src" style={st(`margin-top:22px; padding-top:12px; border-top:${RULE};`)}>
-        <div style={st("font-size:12.5px; line-height:1.5; color:var(--mut2);")}>{t("v_basis")}</div>
-        {sources && (
-          <button type="button" className="kytall"
-            onClick={() => document.getElementById("k-yt")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-            style={st("display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:0; border:0; background:none; cursor:pointer; font:inherit; font-size:14px; font-weight:600; color:var(--ink); text-decoration:underline; text-underline-offset:4px;")}>
-            {t("v_sources")} <span aria-hidden="true">↓</span>
-          </button>
-        )}
-      </div>
     </section>
   );
 }
