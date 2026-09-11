@@ -150,24 +150,26 @@
            card.querySelector(".cbuy") || card);
   }
 
-  /* The device page ships its own button, server-rendered inside the buy
-     panel where a real control belongs, carrying the phone's identity. */
+  /* Server-rendered buttons: the device page's own, inside the buy panel, and
+     one under every "Compare at this price" card. Each carries its phone's
+     identity in data attributes -- none of them sits on a card this script
+     could read a slug off. */
   function wireSelf() {
-    var b = document.getElementById("cmpself");
-    if (!b) return;
-    var p = { s: b.dataset.s, n: b.dataset.n, i: b.dataset.i || "" };
-    if (!p.s) return;
-    var lab = b.querySelector("span");
-    function draw() {
-      var on = has(p.s);
-      b.classList.toggle("on", on);
-      if (lab) lab.textContent = on ? "In your comparison"
-        : "Add to compare";
-      b.setAttribute("aria-pressed", on ? "true" : "false");
-    }
-    b.addEventListener("click", function () { toggle(p, b); });
-    b._draw = draw;
-    draw();
+    [].forEach.call(document.querySelectorAll("button.cmpbig[data-s]"),
+      function (b) {
+        var p = { s: b.dataset.s, n: b.dataset.n, i: b.dataset.i || "" };
+        if (!p.s || b._draw) return;
+        var lab = b.querySelector("span");
+        b._draw = function () {
+          var on = has(p.s);
+          b.classList.toggle("on", on);
+          if (lab) lab.textContent = on ? "In your comparison"
+            : "Add to compare";
+          b.setAttribute("aria-pressed", on ? "true" : "false");
+        };
+        b.addEventListener("click", function () { toggle(p, b); });
+        b._draw();
+      });
   }
 
   function chip(p) {
@@ -199,8 +201,8 @@
     [].forEach.call(document.querySelectorAll(".cmpadd"), function (b) {
       mark(b, has(b.dataset.s), b.dataset.n || "this phone");
     });
-    var self = document.getElementById("cmpself");
-    if (self && self._draw) self._draw();
+    [].forEach.call(document.querySelectorAll("button.cmpbig[data-s]"),
+      function (b) { if (b._draw) b._draw(); });
 
     if (!PICKS.length) {
       if (tray) { tray.classList.remove("up"); document.body.classList.remove("tray-up"); }

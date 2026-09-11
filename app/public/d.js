@@ -134,6 +134,65 @@
   paint();
  });
  if(all)all.addEventListener('click',function(){open=!open;paint();});
+ /* A pick carried in from the buying panel's button, or a shared link:
+    ?cfg=&chan=&stock= set the same filters a reader could set by hand. A
+    value this board does not offer is dropped, never half-applied. */
+ function fromUrl(){
+  var P=new URLSearchParams(location.search);
+  axes.forEach(function(k){
+   var v=P.get(k)||'',ok=false;
+   sels.forEach(function(x){
+    if(x.getAttribute('data-axis')!==k)return;
+    ok=[].some.call(x.options,function(o){return o.value===v;});
+    x.value=ok?v:'';
+   });
+   tabs.forEach(function(b){
+    if(b.parentNode.getAttribute('data-axis')===k&&b.getAttribute('data-v')===v)
+     ok=true;
+   });
+   sel[k]=ok?v:'';
+  });
+  open=false;mark();paint();
+ }
+ document.addEventListener('dbpick',fromUrl);
  box.hidden=false;
- paint();
+ fromUrl();
+})();
+(function(){
+ /* The video reviews. A reviewer button changes which review the pane shows
+    and nothing else: the still and "Watch on YouTube" are the only ways out
+    to YouTube, and nothing plays here. */
+ var y=document.getElementById('video');if(!y)return;
+ y.classList.add('js');
+ var rs=[].slice.call(y.querySelectorAll('.ytr')),
+  ps=[].slice.call(y.querySelectorAll('.ytp'));
+ /* "Read summary" only where the clamp actually hides something */
+ function fit(p){
+  var s=p.querySelector('.ytsum'),b=p.querySelector('.ytx');
+  if(!s||!b||b.getAttribute('aria-expanded')==='true')return;
+  b.hidden=s.scrollHeight<=s.clientHeight+1;
+ }
+ rs.forEach(function(r){r.addEventListener('click',function(){
+  var k=r.getAttribute('data-k');
+  rs.forEach(function(x){x.setAttribute('aria-pressed',String(x===r));});
+  ps.forEach(function(p){
+   p.hidden=p.getAttribute('data-k')!==k;
+   if(!p.hidden)fit(p);
+  });
+ });});
+ y.addEventListener('click',function(e){
+  var b=e.target.closest('.ytx'),a=e.target.closest('.ytall'),on;
+  if(b){
+   on=b.getAttribute('aria-expanded')!=='true';
+   b.setAttribute('aria-expanded',String(on));
+   b.textContent=on?'Show less':'Read summary';
+   b.closest('.ytp').classList.toggle('open',on);
+  }else if(a){
+   on=a.getAttribute('aria-expanded')!=='true';
+   a.setAttribute('aria-expanded',String(on));
+   a.textContent=on?'Fewer themes':'All reported themes';
+   y.querySelector('.rpcols').classList.toggle('all',on);
+  }
+ });
+ ps.forEach(function(p){if(!p.hidden)fit(p);});
 })();

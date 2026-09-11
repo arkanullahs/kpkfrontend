@@ -72,6 +72,21 @@
   ],
   "redirects": [
     {
+      "source": "/best/battery-phone-under-8000",
+      "destination": "/best",
+      "permanent": true
+    },
+    {
+      "source": "/best/camera-phone-under-8000",
+      "destination": "/best",
+      "permanent": true
+    },
+    {
+      "source": "/best/gaming-phone-under-8000",
+      "destination": "/best",
+      "permanent": true
+    },
+    {
       "source": "/phone/helio-47-smart-phone",
       "destination": "/brand/helio",
       "permanent": true
@@ -83,6 +98,11 @@
     },
     {
       "source": "/phone/hmd-110",
+      "destination": "/brand/hmd",
+      "permanent": true
+    },
+    {
+      "source": "/phone/hmd-skyline-ta-1600-5g",
       "destination": "/brand/hmd",
       "permanent": true
     },
@@ -107,7 +127,7 @@
       "permanent": true
     },
     {
-      "source": "/phone/infinix-hot-70-pro",
+      "source": "/phone/infinix-hot-70-pro-5g",
       "destination": "/brand/infinix",
       "permanent": true
     },
@@ -132,13 +152,18 @@
       "permanent": true
     },
     {
-      "source": "/phone/motorola-a100",
+      "source": "/phone/motorola-g-stylus-5g-2026",
       "destination": "/brand/motorola",
       "permanent": true
     },
     {
       "source": "/phone/nokia-150-2023",
       "destination": "/phone/nokia-150-ds-2023",
+      "permanent": true
+    },
+    {
+      "source": "/phone/nubia-a56",
+      "destination": "/brand/nubia",
       "permanent": true
     },
     {
@@ -182,18 +207,18 @@
       "permanent": true
     },
     {
-      "source": "/phone/oppo-find-n5",
+      "source": "/phone/oppo-f33-pro-5g",
       "destination": "/brand/oppo",
       "permanent": true
     },
     {
-      "source": "/phone/oppo-reno-14-5g",
-      "destination": "/phone/oppo-reno14-5g",
+      "source": "/phone/oppo-find-n5-5g",
+      "destination": "/brand/oppo",
       "permanent": true
     },
     {
-      "source": "/phone/oppo-reno-16",
-      "destination": "/phone/oppo-reno16",
+      "source": "/phone/oppo-reno-15f-5g",
+      "destination": "/brand/oppo",
       "permanent": true
     },
     {
@@ -202,8 +227,13 @@
       "permanent": true
     },
     {
-      "source": "/phone/oppo-reno15-f",
-      "destination": "/phone/oppo-reno15-f-5g",
+      "source": "/phone/oppo-reno14-5g",
+      "destination": "/phone/oppo-reno-14-5g",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-reno16",
+      "destination": "/phone/oppo-reno-16",
       "permanent": true
     },
     {
@@ -272,11 +302,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/realme-gt5-pro",
-      "destination": "/brand/realme",
-      "permanent": true
-    },
-    {
       "source": "/phone/realme-gt7",
       "destination": "/brand/realme",
       "permanent": true
@@ -307,6 +332,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/realme-neo-7x-5g",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
       "source": "/phone/realme-neo-8",
       "destination": "/phone/realme-neo8",
       "permanent": true
@@ -318,6 +348,11 @@
     },
     {
       "source": "/phone/realme-p4-lite",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-v60-pro-5g",
       "destination": "/brand/realme",
       "permanent": true
     },
@@ -442,8 +477,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/vivo-v50",
-      "destination": "/phone/vivo-v50-5g",
+      "source": "/phone/vivo-v50-5g",
+      "destination": "/phone/vivo-v50",
       "permanent": true
     },
     {
@@ -462,8 +497,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/xiaomi-17t-pro",
-      "destination": "/phone/xiaomi-17t-pro-5g",
+      "source": "/phone/xiaomi-17t-pro-5g",
+      "destination": "/phone/xiaomi-17t-pro",
       "permanent": true
     },
     {
