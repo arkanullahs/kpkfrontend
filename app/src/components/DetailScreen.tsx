@@ -189,7 +189,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
         <div className="dident" style={st("min-width:0;")}>
             <div style={st("display:flex; align-items:center; gap:9px; flex-wrap:wrap;")}>
               <span style={st("display:flex; align-items:center; gap:7px; font-size:13px; color:var(--mut2); font-weight:500;")}>
-                <BrandLogo brand={brand} h={28} max="150px" named />
+                <BrandLogo brand={brand} h={22} max="120px" named />
                 {!brandLogo(brand) && brand}
               </span>
               {/* only a confident "Top pick" or an honest "Has trade-offs" — never a lukewarm "Worth a look" on a phone the buyer is already looking at */}
@@ -202,13 +202,19 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
         <div className="dprice">
           <div className="dpmain">
           <div style={st("display:flex; align-items:flex-end; gap:11px; flex-wrap:wrap;")}>
-            <span style={st("font-size:clamp(28px,3.4vw,38px); font-weight:300; letter-spacing:-1.4px; line-height:1;")}>{takaRange(priceLo, priceHi)}</span>
+            {/* the lowest price is the number; the top of the range is its
+                footnote, so the pair never breaks at the dash (owner
+                2026-09-12: the hero's price ran over two lines) */}
+            <span style={st("font-size:clamp(28px,3.4vw,38px); font-weight:300; letter-spacing:-1.4px; line-height:1;")}>{priceLo && priceHi && priceHi > priceLo ? taka(priceLo) : takaRange(priceLo, priceHi)}</span>
+            {priceLo && priceHi && priceHi > priceLo ? (
+              <span style={st("font-size:15px; font-weight:500; color:var(--mut); white-space:nowrap; margin-bottom:2px;")}>– {taka(priceHi)}</span>
+            ) : null}
           </div>
           <div style={st("display:flex; align-items:center; gap:7px; margin-top:10px; flex-wrap:wrap;")}>
             <ChannelChips p={{ best_price_official: isOff, best_official_price: offPrice, channels: chans }} />
             {/* which import market the money buys — same chips as the /phone/
                 page hero and the guide cards */}
-            <MarketChips regions={d?.regions} />
+            <MarketChips regions={d?.regions} max={3} />
           </div>
           <div style={st("margin-top:12px; font-size:14px; color:var(--mut2); line-height:1.7;")}>
             At {inStock} shops · <span style={st(`color:${fitColor}; font-weight:600;`)}>{fit}</span>
@@ -476,6 +482,13 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
    and the argument beside it, one column on a phone. It is a synthesis of
    published reviews and owner reports, never our own testing, and it says
    so. */
+/* An opinion key as words -- "performance_gaming" is "Gaming performance".
+   A key we have no label for still reads as words, never as a slug. */
+function opinionWord(prefix: string, key: string): string {
+  const s = t(prefix + key);
+  return s && s !== prefix + key ? s : key.replace(/_/g, " ");
+}
+
 function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
   model: string; take: string | null; bestFor: string[]; avoidIf: string[];
   works: string[]; tradeoffs: string[]; sources: boolean;
@@ -509,7 +522,9 @@ function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
         </div>
         {(bestFor.length > 0 || avoidIf.length > 0) && (
           <dl className="kv-fit" style={st("margin:22px 0 0;")}>
-            {bestFor.length > 0 && <><dt style={DT}>{t("v_choose")}</dt><dd style={DD}>{cap(bestFor.join(", "))}</dd></>}
+            {/* best_for is a list of use cases, so it reads under "Best for";
+                "Choose it if" belongs to a sentence, which this is not */}
+            {bestFor.length > 0 && <><dt style={DT}>{t("yt_best_for")}</dt><dd style={DD}>{cap(bestFor.map((k) => opinionWord("bf_", k)).join(", "))}</dd></>}
             {avoidIf.length > 0 && (
               <>
                 <dt style={{ ...DT, marginTop: bestFor.length ? 16 : 0 }}>{t("v_consider")}</dt>
@@ -537,7 +552,7 @@ function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
                 <div key={label} style={st("min-width:0;")}>
                   <h3 style={H3}>{label}</h3>
                   {xs.map((x, i) => (
-                    <div key={i} style={st(`padding:11px 0; font-size:15px; font-weight:600; line-height:1.45; color:var(--ink2);${i < xs.length - 1 ? ` border-bottom:${RULE};` : ""}`)}>{cap(x)}</div>
+                    <div key={i} style={st(`padding:11px 0; font-size:15px; font-weight:600; line-height:1.45; color:var(--ink2);${i < xs.length - 1 ? ` border-bottom:${RULE};` : ""}`)}>{cap(opinionWord("asp_", x))}</div>
                   ))}
                 </div>
               ))}

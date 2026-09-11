@@ -93,14 +93,24 @@ export function SpecStrip({ tiles, small }: { tiles?: SpecTile[] | null; small?:
     prices, and only the SEO pages said which one the money buys. This is also
     the disclosure that lets a phone with a China-ROM listing be ranked at all
     (backend value_pass.caveats). */
-export function MarketChips({ regions, small }: { regions?: RegionOffer[] | null; small?: boolean }) {
+export function MarketChips({ regions, small, max }: { regions?: RegionOffer[] | null; small?: boolean; max?: number }) {
   if (!regions || !regions.length) return null;
   const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:var(--r); color:var(--lnk); background:var(--tealL);`;
+  /* Capped, the rest counted: nine market chips on one card were a wall
+     between the name and the price (owner 2026-09-12). Nothing is hidden --
+     the count says how many more, the tooltip names them, and the detail
+     screen and the /phone/ page draw every one. */
+  const shown = max != null ? regions.slice(0, max) : regions;
+  const rest = regions.slice(shown.length);
   return (
     <>
-      {regions.map((r) => (
+      {shown.map((r) => (
         <span key={r.code} style={st(base)}>{r.name} {t("from")} {taka(r.price)}</span>
       ))}
+      {rest.length > 0 && (
+        <span title={rest.map((r) => `${r.name} ${t("from")} ${taka(r.price)}`).join(" · ")}
+          style={st(base + " color:var(--mut); background:rgba(var(--rgb-ink),.055);")}>+{rest.length}</span>
+      )}
     </>
   );
 }
@@ -286,18 +296,17 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                 <span style={st("position:absolute; top:-8px; left:-8px; width:24px; height:24px; border-radius:var(--r); background:var(--card); color:var(--mut2); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 3px rgba(var(--rgb-ink),.12), inset 0 0 0 1px rgba(var(--rgb-ink),.07);")}>{i + 2}</span>
               </span>
               <div style={st("flex:1; min-width:0; display:flex; flex-direction:column;")}>
-                {/* the mark sits in a fixed column so every row's model name
-                    starts at the same x -- sized by its own aspect, OPPO's
-                    wordmark is three times the width of Xiaomi's and the
-                    names came out on a ragged left edge (owner 2026-08-11) */}
-                <span style={st("display:flex; align-items:center; gap:8px; font-size:16px; font-weight:600; color:var(--ink); min-width:0;")}>
-                  {brandLogo(r.brand) && (
-                    <span style={st("display:flex; align-items:center; width:58px; flex:none;")}>
-                      <BrandLogo brand={r.brand} h={15} max="58px" named />
-                    </span>
-                  )}
-                  <span style={st("white-space:nowrap; overflow:hidden; text-overflow:ellipsis;")}>{brandLogo(r.brand) ? r.model : `${r.brand} ${r.model}`}</span>
-                </span>
+                {/* The maker's mark on its own line over the name, as the hero
+                    and the /phone/ page set it. In a fixed column beside the
+                    name, a narrow mark -- Apple's glyph -- left a gap the width
+                    of the widest one (owner 2026-09-12); over the name, every
+                    row's model still starts on one edge (owner 2026-08-11). */}
+                {brandLogo(r.brand) && (
+                  <span style={st("display:flex; margin-bottom:6px;")}>
+                    <BrandLogo brand={r.brand} h={16} max="96px" named />
+                  </span>
+                )}
+                <span style={st("font-size:16px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;")}>{brandLogo(r.brand) ? r.model : `${r.brand} ${r.model}`}</span>
                 <div style={st("font-size:13.5px; color:var(--mut2); margin-top:2px;")}>{headlinePhrase(r.headline_axis)}{r.headline_axis && r.headline_value != null ? ` · ${axisLabel(r.headline_axis)} ${r.headline_value}` : ""}</div>
                 {/* price left, verdict right — the verdict used to be a third
                     fixed column and wrapped "৳13,510 under budget" over 3 lines */}
@@ -312,7 +321,7 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
                 </div>
                 <div style={st("display:flex; align-items:center; gap:6px; margin-top:10px; flex-wrap:wrap;")}>
                   <ChannelChips p={r} small />
-                  <MarketChips regions={r.regions} small />
+                  <MarketChips regions={r.regions} small max={2} />
                   {lo != null && <PriceSource primary={r.best_price_primary} compact />}
                   <DataCautionChip dc={r.data_caution} small />
                 </div>
@@ -367,24 +376,29 @@ function HeroPick({ p, budget, pct, onClick }: {
               phone image in results") */}
           <div style={st("position:relative; flex-shrink:0; padding:6px; border-radius:var(--r); background:linear-gradient(160deg, var(--tint), transparent 75%);")}>
             <PhonePhoto src={p.image} pid={p.id} pad={1}
-              w="clamp(112px,32vw,190px)" h="clamp(150px,42vw,252px)" />
+              w="clamp(104px,26vw,164px)" h="clamp(140px,35vw,218px)" />
           </div>
           <div style={st("flex:1; min-width:0;")}>
-            <div style={st("display:flex; align-items:flex-start; justify-content:space-between; gap:8px;")}>
-              <div style={st("min-width:0;")}>
-                <div style={st("display:flex; align-items:center; gap:7px; font-size:13px; color:var(--mut2); font-weight:500;")}>
-                  <BrandLogo brand={p.brand} h={28} max="150px" named />
-                  {!brandLogo(p.brand) && p.brand}
-                </div>
-                <div style={st("font-size:clamp(21px,2.4vw,26px); font-weight:700; color:var(--ink); line-height:1.12; letter-spacing:-.4px;")}>{p.model}</div>
-              </div>
+            {/* the mark and the badge share the top line, so the name under
+                them has the column's whole width -- beside the badge
+                "iPhone 17" broke over two lines (owner 2026-09-12) */}
+            <div style={st("display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:24px;")}>
+              <span style={st("display:flex; align-items:center; gap:7px; min-width:0; font-size:13px; color:var(--mut2); font-weight:500;")}>
+                <BrandLogo brand={p.brand} h={20} max="110px" named />
+                {!brandLogo(p.brand) && p.brand}
+              </span>
               <span style={st(`font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:var(--r); white-space:nowrap; flex-shrink:0; color:${badge.c}; background:${badge.bg};`)}>{badge.label}</span>
             </div>
+            <div style={st("margin-top:6px; font-size:clamp(21px,2.4vw,26px); font-weight:700; color:var(--ink); line-height:1.12; letter-spacing:-.4px;")}>{p.model}</div>
             <div style={st("margin-top:7px; font-size:14.5px; color:var(--mut);")}>{headlinePhrase(p.headline_axis)}{p.headline_axis && p.headline_value != null && <> · {axisLabel(p.headline_axis)} <span style={st("color:var(--lnk); font-weight:700;")}>{p.headline_value}</span></>}</div>
             {/* price lives beside the photo — the old full-width row left this
                 whole block empty under the name (owner: dead space) */}
             <div style={st("display:flex; align-items:flex-end; gap:9px; margin-top:12px; flex-wrap:wrap;")}>
-              <span style={st("font-size:clamp(23px,2.6vw,30px); font-weight:400; letter-spacing:-1px; color:var(--ink); line-height:1;")}>{takaRange(lo, hi)}</span>
+              {/* the lowest price is the number, the top of the range its
+                  footnote: "৳1,04,499 –" over "৳2,24,999" was a number broken
+                  at the dash (owner 2026-09-12) */}
+              <span style={st("font-size:clamp(21px,2.3vw,26px); font-weight:400; letter-spacing:-.8px; color:var(--ink); line-height:1.1;")}>{lo != null && hi != null && hi > lo ? taka(lo) : takaRange(lo, hi)}</span>
+              {lo != null && hi != null && hi > lo && <span style={st("font-size:14px; font-weight:500; color:var(--mut); white-space:nowrap; margin-bottom:2px;")}>– {taka(hi)}</span>}
               <span style={st("font-size:13px; color:var(--mut2); margin-bottom:2px;")}>at {p.in_stock_shops ?? 0} shops</span>
             </div>
           </div>
@@ -438,7 +452,7 @@ function HeroPick({ p, budget, pct, onClick }: {
             scanning a results page actually reads. */}
         <div style={st("display:flex; align-items:center; gap:7px; margin-top:4px; flex-wrap:wrap;")}>
           <ChannelChips p={p} />
-          <MarketChips regions={p.regions} />
+          <MarketChips regions={p.regions} max={3} />
           <PriceSource primary={p.best_price_primary} />
           {p.data_caution && p.data_caution.level !== "low" && <DataCautionChip dc={p.data_caution} small />}
           {(p.strengths || []).map((s, i) => (

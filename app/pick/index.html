@@ -185,7 +185,11 @@
        a style attribute, which is all st() can emit, has no media queries.
        Anything a query has to flip lives HERE, never inline: an inline style
        outranks a stylesheet at any specificity. */
-    .dhero { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: clamp(18px,2.2vw,26px); align-items: center; --ph-w: 124px; --ph-h: 166px; }
+    /* The price column is BOUNDED. As `auto` it grew to the max-content width
+       of nine market chips on one line and crushed the name column to nothing:
+       "iPhone 17" printed one word per line under its own price (owner
+       2026-09-12). */
+    .dhero { display: grid; grid-template-columns: auto minmax(0,1fr) minmax(240px,36%); gap: clamp(18px,2.2vw,26px); align-items: center; --ph-w: 124px; --ph-h: 166px; }
     .dphoto { display: flex; border-radius: 18px; }
     .dprice { display: flex; flex-direction: column; justify-content: center; align-items: flex-end; text-align: right; }
     .dprice > div { justify-content: flex-end; }
@@ -289,7 +293,19 @@
        layouts, on the detail screen. Inline styles cannot carry :hover,
        :focus-visible or a media query, so those live here. ---- */
     .kytt svg { transition: transform .2s cubic-bezier(.22,1,.36,1); }
-    .kytt:hover svg { transform: scale(1.1); }
+    .kytt:hover svg, .kytv:hover .kytt svg { transform: scale(1.1); }
+    .kytt img { transition: transform .35s cubic-bezier(.22,1,.36,1); }
+    .kytv:hover .kytt img { transform: scale(1.04); }
+    .kysrc:hover { color: var(--lnk) !important; text-decoration: underline !important; text-underline-offset: 3px; }
+    /* one video: the still beside its words, not a still the width of the card */
+    .kytg.one > li { display: grid !important; grid-template-columns: minmax(0,5fr) minmax(0,6fr); gap: 12px 22px !important; align-items: start; }
+    /* a swipeable row of stills on a phone, as on the /phone/ page: four
+       stacked 16:9 cards ran a screen and a half */
+    @media (max-width: 560px) {
+      .kytg:not(.one) { grid-template-columns: none !important; grid-auto-flow: column; grid-auto-columns: 82%; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 2px 2px 14px !important; }
+      .kytg:not(.one)::-webkit-scrollbar { display: none; }
+      .kytg:not(.one) > li { scroll-snap-align: start; }
+    }
     /* the clamp on the link itself, so its focus ring is never clipped */
     .kytl { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .kytl:hover { text-decoration: underline !important; text-underline-offset: 3px; }
