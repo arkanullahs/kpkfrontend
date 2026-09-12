@@ -89,7 +89,8 @@
     if (btn._on === on) return;
     btn._on = on;
     btn.classList.toggle("on", on);
-    btn.innerHTML = on ? TICK : PLUS;
+    btn.innerHTML = (on ? TICK : PLUS)
+      + "<span>" + (on ? "Added" : "Compare") + "</span>";
     btn.setAttribute("aria-pressed", on ? "true" : "false");
     btn.setAttribute("aria-label",
       (on ? "Remove " : "Add ") + name + (on ? " from" : " to")
