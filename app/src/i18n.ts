@@ -15,6 +15,13 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   footer_tagline: { en: "AI-powered phone recommendations for Bangladesh", bn: "বাংলাদেশের জন্য এআই-চালিত ফোন সুপারিশ" },
   footer_compare: { en: "Compare phones", bn: "ফোন তুলনা করুন" },
   footer_home: { en: "Home", bn: "হোম" },
+  // the rest of what the static site's footer names, so both
+  // surfaces end a page with the same map (owner 2026-09-12)
+  footer_prices: { en: "Phone prices", bn: "ফোনের দাম" },
+  footer_verdicts: { en: "Head-to-head verdicts", bn: "মুখোমুখি তুলনা" },
+  footer_pick: { en: "Personal pick", bn: "ব্যক্তিগত পছন্দ" },
+  footer_report: { en: "Price report", bn: "দামের রিপোর্ট" },
+  footer_method: { en: "How this site works", bn: "সাইট যেভাবে কাজ করে" },
   // header / nav
   in_stock: { en: "phones tracked", bn: "ফোন ট্র্যাক করছি" },
   prices_loading: { en: "live prices", bn: "লাইভ দাম" },
