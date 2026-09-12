@@ -17,6 +17,8 @@ interface Props {
   loading: boolean;
   error: string | null;
   budget: number;
+  /** the day we last read every BD shop, for the price table's header */
+  checked?: string;
   onBack: () => void;
   onRetry: () => void;
 }
@@ -92,7 +94,7 @@ function buildTraits(tr: Record<string, any> | undefined): string[] {
   return out.slice(0, 5);
 }
 
-export function DetailScreen({ detail, hint, loading, error, budget, onBack, onRetry }: Props) {
+export function DetailScreen({ detail, hint, loading, error, budget, checked, onBack, onRetry }: Props) {
   if (error) return <Wrap onBack={onBack}><div style={st("padding:60px 0; text-align:center; color:var(--danger);")}>{error}<br /><button onClick={onRetry} style={st("margin-top:16px; padding:10px 20px; border-radius:var(--r); border:none; cursor:pointer; background:var(--teal); color:var(--onp); font-weight:600;")}>Retry</button></div></Wrap>;
 
   const d = detail;
@@ -251,32 +253,69 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
           works={praiseFlags} tradeoffs={blameFlags} sources={!!d?.youtube?.videos?.length} />
       )}
 
-      {/* axes */}
-      {Object.values(scores).some((v) => v != null) && (
-        <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); margin-top:14px;")}>
-          <SectionLabel>{t("scores")}</SectionLabel>
-          <p style={st("margin:9px 0 0; font-size:13.5px; color:var(--mut2); line-height:1.5; text-wrap:pretty;")}>{t("scores_help")}</p>
-          <div style={st("display:flex; flex-direction:column; gap:17px; margin-top:16px;")}>
-            {AXES.map((k) => {
-              const v = scores[k];
-              if (v == null) return null;
-              const reason = (d?.score_reasons?.[k] || []).join("; ");
-              return (
-                <div key={k}>
-                  <div style={st("display:flex; justify-content:space-between; align-items:baseline; gap:12px;")}>
-                    <span style={st("font-size:15.5px; font-weight:600; color:var(--ink2);")}>{axisLabel(k)}</span>
-                    <span style={st("font-size:15px; font-weight:700; color:var(--lnk);")}>{v.toFixed(1)} / 10</span>
+      {/* How this phone rates — the /phone/ page's two columns. */}
+      {(() => {
+        const card = d?.ratings_card || null;
+        const mined = d?.opinion_profile?.ratings || null;
+        const keys = mined
+          ? Object.keys(mined).filter((k) => typeof mined[k] === "number")
+            .sort((a, b) => mined[b] - mined[a])
+          : [];
+        if (!card && keys.length === 0) return null;
+        const avg = keys.length
+          ? keys.reduce((s, k) => s + mined![k], 0) / keys.length : null;
+        const basis = (d?.opinion_profile?.rating_basis || "").trim();
+        const conf = (d?.opinion_profile?.rating_confidence || "").toLowerCase();
+        // said every time, not only where the miner left a basis line: the
+        // scale is someone else's reading and the card says so
+        const note = [
+          basis ? (/[.!?]$/.test(basis) ? basis : basis + ".") : "",
+          t("v_basis_note"),
+          conf === "low" ? t("v_hedge_low") : conf && conf !== "high" ? t("v_hedge_mid") : "",
+        ].filter(Boolean).join(" ");
+        return (
+          <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); margin-top:14px;")}>
+            <SectionLabel>{t("v_rates_title")}</SectionLabel>
+            <div style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:26px 50px; margin-top:16px;")}>
+              {card && (
+                <div style={st("min-width:0;")}>
+                  <ColHead title={t("v_col_catalogue")} scale={t("v_scale_100")} />
+                  <div style={st("display:flex; align-items:center; gap:18px; margin:4px 0 12px;")}>
+                    <Ring v={card.overall} />
+                    <p style={st("margin:0; font-size:15px; line-height:1.5; color:var(--tx); max-width:26ch; text-wrap:balance;")}>
+                      {t("v_ahead").replace("{p}", bnNum(String(card.overall)))
+                        .replace("{n}", bnNum(String(card.n)))}
+                    </p>
                   </div>
-                  <div style={st("position:relative; height:7px; border-radius:var(--r); background:rgba(var(--rgb-ink),.06); margin-top:8px; overflow:hidden;")}>
-                    <div style={st(`position:absolute; top:0; bottom:0; left:0; width:${v * 10}%; border-radius:var(--r); background:var(--teal);`)} />
-                  </div>
-                  {reason && <div style={st("font-size:13.5px; color:var(--mut2); margin-top:7px; line-height:1.5;")}>{reason}</div>}
+                  {CAP_ORDER.map((k) => {
+                    const v = card[k];
+                    return v == null ? null : (
+                      <RateRow key={k} label={axisLabel(k)} pct={v}
+                        out={bnNum(String(v))} lvl={band100(v)} />
+                    );
+                  })}
                 </div>
-              );
-            })}
+              )}
+              {keys.length > 0 && (
+                <div style={st("min-width:0;")}>
+                  <ColHead title={t("v_col_owners")} scale={t("v_scale_10")} />
+                  {avg != null && (
+                    <p style={st("display:flex; align-items:baseline; gap:10px; margin:0 0 8px;")}>
+                      <b style={st("font-family:var(--f-display); font-size:36px; font-weight:700; letter-spacing:-1px; line-height:1.1; color:var(--tealD); font-variant-numeric:tabular-nums;")}>{bnNum(avg.toFixed(1))}</b>
+                      <span style={st("font-size:14px; color:var(--mut);")}>{t("v_avg").replace("{n}", bnNum(String(keys.length)))}</span>
+                    </p>
+                  )}
+                  {keys.map((k) => (
+                    <RateRow key={k} label={axisLabel(k)} pct={Math.min(100, mined![k] * 10)}
+                      out={bnNum(String(mined![k]))} lvl={band10(mined![k])} />
+                  ))}
+                  <p style={st("margin:14px 0 0; font-size:14px; line-height:1.6; color:var(--mut); max-width:62ch;")}>{note}</p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* full-record sections, or a skeleton while they load */}
       {!d ? <LoadingDetail compact /> : (
@@ -443,6 +482,9 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
               <p style={st("margin:8px 0 0; font-size:13px; line-height:1.55; color:var(--mut2);")}>{t(ch.note)}</p>
             )}
             {i === 0 && (
+              <p style={st("margin:9px 0 0; font-size:13.5px; line-height:1.6; color:var(--mut2); max-width:70ch; text-wrap:pretty;")}>{t("prices_sub")}</p>
+            )}
+            {i === 0 && (
               <>
                 <div style={st("display:flex; gap:9px; margin-top:12px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1);")}>
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -461,7 +503,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
                 )}
               </>
             )}
-            <ShopPrices view={c.view} />
+            <ShopPrices view={c.view} checked={checked} />
             {i === shopCards.length - 1 && (
               <p style={st("margin:18px 0 0; padding-top:14px; border-top:1px solid rgba(var(--rgb-ink),.06); font-size:12px; color:var(--faint); line-height:1.55; text-wrap:pretty;")}>
                 {t("shop_names_note")}
@@ -474,6 +516,62 @@ export function DetailScreen({ detail, hint, loading, error, budget, onBack, onR
       </>
       )}
     </Wrap>
+  );
+}
+
+/* ---------- how this phone rates (2026-09-12) ----------
+   The /phone/ page's two-column block, brought over whole. Two columns
+   because there are two questions: where this phone ranks against everything
+   we publish, and what owners and reviewers actually said. They are on
+   different scales and each column is headed by its own, which is what stops
+   a 0-100 percentile reading as a second opinion score. */
+
+/* Band colours, the static pages' own: a flat bar makes a 6.0 look like a
+   9.5, which is exactly the judgement a buyer needs to see. */
+const BAND_BAR = ["var(--ac)", "var(--aqua)", "var(--teal)", "var(--tealD)"];
+const BAND_INK = ["var(--lnk)", "var(--mut)", "var(--teal)", "var(--tealD)"];
+const band100 = (v: number) => (v >= 80 ? 3 : v >= 62 ? 2 : v >= 42 ? 1 : 0);
+const band10 = (v: number) => (v >= 8 ? 3 : v >= 6.5 ? 2 : v >= 5 ? 1 : 0);
+/* the catalogue card's rows, in the order the /phone/ page prints them */
+const CAP_ORDER = ["performance", "camera", "battery", "display", "software", "value"] as const;
+
+function ColHead({ title, scale }: { title: string; scale: string }) {
+  return (
+    <div style={st("display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding-bottom:10px; margin-bottom:12px; border-bottom:1px solid rgba(var(--rgb-ink),.10);")}>
+      <h3 style={st("margin:0; font-size:17px; font-weight:700; letter-spacing:-.2px; color:var(--ink);")}>{title}</h3>
+      <span style={st("font-size:13px; color:var(--mut); white-space:nowrap;")}>{scale}</span>
+    </div>
+  );
+}
+
+/* label, bar, number -- the same three columns on both sides, so the eye can
+   run down one and across to the other. The label track flexes instead of
+   taking a media query: at 360 a fixed 132px left nothing for the bar. */
+function RateRow({ label, pct, out, lvl }: {
+  label: string; pct: number; out: string; lvl: number;
+}) {
+  return (
+    <div style={st("display:grid; grid-template-columns:minmax(88px,132px) minmax(0,1fr) 38px; gap:8px 14px; align-items:center; padding:6px 0; font-size:15px; color:var(--tx);")}>
+      <span>{label}</span>
+      <span style={st("height:8px; border-radius:var(--r); background:rgba(var(--rgb-ink),.08); overflow:hidden;")}>
+        <i style={st(`display:block; height:100%; border-radius:var(--r); width:${pct}%; background:${BAND_BAR[lvl]};`)} />
+      </span>
+      <b style={st(`font-weight:700; text-align:right; font-variant-numeric:tabular-nums; color:${BAND_INK[lvl]};`)}>{out}</b>
+    </div>
+  );
+}
+
+function Ring({ v }: { v: number }) {
+  const r = 39, c = 2 * Math.PI * r, lvl = band100(v);
+  return (
+    <span style={st("position:relative; flex:none; display:inline-flex; align-items:center; justify-content:center; width:88px; height:88px;")}>
+      <svg viewBox="0 0 88 88" aria-hidden="true" style={st("width:100%; height:100%; transform:rotate(-90deg);")}>
+        <circle cx="44" cy="44" r={r} fill="none" strokeWidth="6" stroke="rgba(var(--rgb-ink),.09)" />
+        <circle cx="44" cy="44" r={r} fill="none" strokeWidth="6" strokeLinecap="round"
+          stroke={BAND_BAR[lvl]} strokeDasharray={`${(c * v / 100).toFixed(1)} ${c.toFixed(1)}`} />
+      </svg>
+      <b style={st(`position:absolute; font-family:var(--f-display); font-weight:700; font-size:30px; letter-spacing:-.5px; color:${BAND_INK[lvl]};`)}>{bnNum(String(v))}</b>
+    </span>
   );
 }
 

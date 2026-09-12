@@ -385,6 +385,14 @@ export default function App() {
     if (isNaN(d.getTime())) return "";
     return `${t("updated_on")} ${d.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`;
   })();
+  // the same day, without the "updated on" -- the price table prints it after
+  // "Cheapest first", exactly as the /phone/ page does
+  const checkedDay = (() => {
+    if (!meta?.last_refresh) return "";
+    const d = new Date(meta.last_refresh);
+    return isNaN(d.getTime()) ? ""
+      : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  })();
 
   return (
     <div key={lang} style={st("min-height:100vh; background:var(--bg); color:var(--ink); font-family:var(--f-sans);")}>
@@ -487,7 +495,7 @@ export default function App() {
         {screen === "detail" && (
           <DetailScreen
             detail={detail} hint={pickHint} loading={detailLoading} error={detailError}
-            budget={form.budget} onBack={goResults}
+            budget={form.budget} onBack={goResults} checked={checkedDay}
             onRetry={() => selectedId && openDetail(selectedId)}
           />
         )}

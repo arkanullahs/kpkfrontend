@@ -96,7 +96,11 @@ export const AXES: AxisKey[] = ["camera", "battery", "gaming", "performance", "e
 export function axisLabel(a: string): string {
   return ({ camera: "Camera", battery: "Battery", gaming: "Gaming",
     performance: "Performance", ease_of_use: "Ease of use", ease: "Ease of use",
-    balanced: "Balance", video: "Video" } as Record<string, string>)[a] || a;
+    balanced: "Balance", video: "Video",
+    // the mined ratings carry two axes the quiz never asks about, and the
+    // catalogue card two more; unlabelled they printed as raw keys
+    display: "Display", build: "Build",
+    software: "Software & support", value: "Value" } as Record<string, string>)[a] || a;
 }
 
 // short tagline shown next to the model name (API has no marketing headline)

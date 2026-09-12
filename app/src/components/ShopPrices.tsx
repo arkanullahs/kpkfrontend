@@ -93,65 +93,77 @@ function Swatch({ hex, name, size = 15, dim }: { hex: string[]; name: string; si
   );
 }
 
-function Axis({ axis, value, count, onPick }: {
+/* Availability, spelled out. Whether anyone actually HAS the phone outranks
+   which one you would pick if they did (the /phone/ page's rule), so this axis
+   stays a row of tabs while every other one folds into a menu. */
+function Tabs({ axis, value, count, onPick }: {
   axis: ListingAxis; value: string;
   count: (option: string) => number;
   onPick: (v: string) => void;
 }) {
-  // a long axis is capped rather than run across three lines: an iPhone lists
-  // seven import markets
-  const [open, setOpen] = useState(false);
-  const opts = open ? axis.options : axis.options.slice(0, CAP);
-  const over = axis.options.length - CAP;
-  const btn = (v: string, label: string, hex?: string[]) => {
-    const on = value === v;
-    const n = count(v);
-    return (
-      <button
-        key={v || "all"}
-        type="button"
-        disabled={!!v && n === 0}
-        // clicking the active option clears the axis, so every filter is its
-        // own undo and nobody has to hunt back to All
-        onClick={() => onPick(on ? "" : v)}
-        style={st("display:inline-flex; align-items:center; gap:8px; min-height:34px; font:inherit;"
-          + " font-size:12.5px; font-weight:600; padding:6px 12px; border-radius:var(--r);"
-          + " white-space:nowrap; transition:color .14s, background .14s, border-color .14s;"
-          + (!v || n > 0
-            ? `cursor:pointer; border:1px solid ${on ? "var(--teal)" : "var(--rule)"};`
-              + ` background:${on ? "var(--tealL)" : "var(--card)"};`
-              + ` color:${on ? "var(--tealD)" : "var(--tx)"};`
-            : "cursor:default; border:1px solid transparent; background:var(--tone);"
-              + " color:var(--faint);"))}
-      >
-        {hex !== undefined && <Swatch hex={hex} name={label} size={14} />}
-        <span style={st("min-width:0; overflow:hidden; text-overflow:ellipsis;")}>{label}</span>
-        <span style={st("flex:none; font-size:10.5px; font-weight:600; font-variant-numeric:tabular-nums;"
-          + ` color:${!v || n > 0 ? (on ? "var(--lnk)" : "var(--mut2)") : "var(--faint)"};`)}>
-          {bnNum(String(n))}
-        </span>
-      </button>
-    );
-  };
+  const opts = [{ value: "", label: t("filter_all") }, ...axis.options];
   return (
-    <div style={st("display:flex; flex-direction:column; gap:6px; min-width:0;")}>
-      <div style={st("display:flex; align-items:baseline; gap:7px;")}>
-        <span style={st("font-size:10.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--mut);")}>{axis.title}</span>
-        {axis.hint && <span style={st("font-size:10.5px; color:var(--mut2);")}>{axis.hint}</span>}
-      </div>
-      <div style={st("display:flex; flex-wrap:wrap; gap:5px; min-width:0;")}>
-        {btn("", t("filter_all"))}
-        {opts.map((o) => btn(o.value, o.label, axis.key === "color" ? (o.hex || []) : undefined))}
-      </div>
-      {over > 0 && !open && (
-        <button type="button" onClick={() => setOpen(true)}
-          style={st("align-self:flex-start; font:inherit; font-size:11.5px; font-weight:700; color:var(--lnk);"
-            + " background:none; border:0; padding:2px; cursor:pointer; text-decoration:underline;"
-            + " text-underline-offset:3px;")}>
-          +{bnNum(String(over))} {t("filter_more")}
-        </button>
-      )}
+    <div role="group" aria-label={axis.title}
+      style={st("display:flex; flex-wrap:wrap; gap:0 2px; border-bottom:1px solid var(--rule); min-width:0;")}>
+      {opts.map((o) => {
+        const on = value === o.value;
+        const n = count(o.value);
+        const dead = !!o.value && n === 0;
+        return (
+          <button key={o.value || "all"} type="button" disabled={dead}
+            aria-pressed={on}
+            // clicking the active tab clears the axis, so every filter is its
+            // own undo
+            onClick={() => onPick(on ? "" : o.value)}
+            style={st("display:inline-flex; align-items:center; gap:8px; min-height:44px;"
+              + " padding:0 12px; margin-bottom:-1px; font:inherit; font-size:15px;"
+              + " background:none; border:0; border-bottom:2px solid transparent;"
+              + (dead ? " color:var(--faint); cursor:default;"
+                : on ? " color:var(--ink); font-weight:700; border-bottom-color:var(--teal); cursor:pointer;"
+                  : " color:var(--tx); font-weight:500; cursor:pointer;"))}>
+            {o.label}
+            <i style={st("font-style:normal; font-size:13px; font-weight:600;"
+              + " font-variant-numeric:tabular-nums;"
+              + ` color:${dead ? "var(--faint)" : on ? "var(--lnk)" : "var(--mut2)"};`)}>
+              {bnNum(String(n))}
+            </i>
+          </button>
+        );
+      })}
     </div>
+  );
+}
+
+/* Every other axis. A button per option made the panel taller than the list it
+   filtered -- an iPhone carries five axes and twenty-three options -- and one
+   select holds any number of them in a single 44px control. .ksel (in
+   pick/index.html) draws our own chevron; the platform's cannot be styled. */
+function Sel({ axis, value, count, onPick }: {
+  axis: ListingAxis; value: string;
+  count: (option: string) => number;
+  onPick: (v: string) => void;
+}) {
+  return (
+    <label style={st("display:flex; flex-direction:column; gap:5px; flex:0 1 190px; min-width:150px;")}>
+      <span style={st("font-size:14px; color:var(--mut); white-space:nowrap;")}>
+        {axis.title}
+        {axis.hint && <i style={st("font-style:normal; color:var(--mut2);")}> {axis.hint}</i>}
+      </span>
+      <select className="ksel" value={value}
+        onChange={(e) => onPick(e.target.value)}>
+        <option value="">{t("filter_all")} ({bnNum(String(count("")))})</option>
+        {axis.options.map((o) => {
+          const n = count(o.value);
+          // disabled, never removed: a menu that reshuffles under the cursor
+          // is impossible to aim at
+          return (
+            <option key={o.value} value={o.value} disabled={n === 0}>
+              {o.label} ({bnNum(String(n))})
+            </option>
+          );
+        })}
+      </select>
+    </label>
   );
 }
 
@@ -217,7 +229,7 @@ function Row({ l, low }: { l: Listing; low: number | null }) {
         </span>
         {atLow ? (
           <span style={st("display:block; margin-top:3px; font-size:13.5px; font-weight:700;"
-            + " color:var(--tealD); white-space:nowrap;")}>{t("cheapest_in_stock")}</span>
+            + " color:var(--tealD); white-space:nowrap;")}>{t("lowest_in_stock")}</span>
         ) : !!gap && (
           <span style={st("display:block; margin-top:3px; font-size:14px; color:var(--mut);"
             + " white-space:nowrap; font-variant-numeric:tabular-nums;")}>
@@ -229,7 +241,7 @@ function Row({ l, low }: { l: Listing; low: number | null }) {
   );
 }
 
-export function ShopPrices({ view }: { view: ListingView }) {
+export function ShopPrices({ view, checked }: { view: ListingView; checked?: string }) {
   const [sel, setSel] = useState<Record<string, string>>(
     { stock: "", chan: "", cfg: "", color: "", region: "" });
   const [showAll, setShowAll] = useState(false);
@@ -259,26 +271,39 @@ export function ShopPrices({ view }: { view: ListingView }) {
   const shown = showAll ? vis : vis.slice(0, SHOWN);
   return (
     <div style={st("display:flex; flex-direction:column; gap:13px; margin-top:14px;")}>
-      {view.axes.length > 0 && (
-        <div style={st("display:flex; flex-wrap:wrap; align-items:flex-start; gap:13px 24px;"
-          + " padding:14px 16px; border-radius:var(--r); background:var(--card);"
-          + " box-shadow:inset 0 0 0 1px var(--rule);")}>
-          {view.axes.map((a) => (
-            <Axis key={a.key} axis={a} value={sel[a.key] || ""}
-              // an option that would return nothing is dimmed, never removed: a
-              // panel that reshuffles under the cursor is impossible to aim at
-              count={(v) => view.listings.filter((l) =>
-                hit(l, sel, a.key) && (!v || hit(l, { [a.key]: v }))).length}
-              onPick={(v) => { setSel({ ...sel, [a.key]: v }); setShowAll(false); }} />
-          ))}
-          <button type="button" onClick={() => setSel({ stock: "", chan: "", cfg: "", color: "", region: "" })}
-            style={st("margin-left:auto; align-self:center; font:inherit; font-size:12px; font-weight:600;"
-              + " color:var(--mut); background:none; border:0; padding:4px 2px; cursor:pointer;"
-              + " text-decoration:underline; text-underline-offset:3px;")}>
-            {t("clear_filters")}
-          </button>
-        </div>
-      )}
+      {view.axes.length > 0 && (() => {
+        const count = (a: ListingAxis) => (v: string) => view.listings.filter(
+          (l) => hit(l, sel, a.key) && (!v || hit(l, { [a.key]: v }))).length;
+        const pick = (a: ListingAxis) => (v: string) => {
+          setSel({ ...sel, [a.key]: v }); setShowAll(false);
+        };
+        const stock = view.axes.find((a) => a.key === "stock");
+        const rest = view.axes.filter((a) => a.key !== "stock");
+        return (
+          <div style={st("display:flex; flex-direction:column; gap:14px; min-width:0;")}>
+            {stock && (
+              <Tabs axis={stock} value={sel[stock.key] || ""}
+                count={count(stock)} onPick={pick(stock)} />
+            )}
+            {rest.length > 0 && (
+              <div style={st("display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px 16px;")}>
+                {rest.map((a) => (
+                  <Sel key={a.key} axis={a} value={sel[a.key] || ""}
+                    count={count(a)} onPick={pick(a)} />
+                ))}
+                <button type="button"
+                  onClick={() => setSel({ stock: "", chan: "", cfg: "", color: "", region: "" })}
+                  style={st("margin-left:auto; min-height:44px; padding:0 2px; font:inherit;"
+                    + " font-size:15px; font-weight:600; color:var(--lnk); background:none;"
+                    + " border:0; cursor:pointer; text-decoration:underline;"
+                    + " text-underline-offset:3px;")}>
+                  {t("clear_filters")}
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       <div style={st("display:flex; align-items:baseline; justify-content:space-between; gap:4px 16px; flex-wrap:wrap;")}>
         <span style={st("font-size:15px; color:var(--tx);")}>
@@ -287,7 +312,9 @@ export function ShopPrices({ view }: { view: ListingView }) {
           <b style={st("font-weight:700; color:var(--ink);")}>{bnNum(String(shops))}</b> {t("sellers")}
           {nLive > 0 && <>, {bnNum(String(nLive))} {t("in_stock_at")} {bnNum(String(liveShops))} {liveShops === 1 ? t("shop_one") : t("sellers")}</>}
         </span>
-        <span style={st("font-size:14px; color:var(--mut);")}>{t("cheapest_first")}</span>
+        <span style={st("font-size:14px; color:var(--mut);")}>
+          {t("cheapest_first")}{checked ? ` \u00b7 ${t("last_checked")} ${checked}` : ""}
+        </span>
       </div>
 
       {note && (

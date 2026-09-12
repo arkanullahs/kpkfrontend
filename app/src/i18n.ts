@@ -73,6 +73,17 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   // detail
   back_to_results: { en: "Back to results", bn: "ফলাফলে ফিরুন" },
   scores: { en: "Scores", bn: "স্কোর" },
+  // the /phone/ page's two-column ratings block
+  v_rates_title: { en: "How this phone rates", bn: "এই ফোনের রেটিং" },
+  v_col_catalogue: { en: "Compared with other phones", bn: "অন্য ফোনের তুলনায়" },
+  v_col_owners: { en: "What owners and reviewers say", bn: "ব্যবহারকারী ও রিভিউয়াররা যা বলেন" },
+  v_scale_100: { en: "Score out of 100", bn: "১০০-এর মধ্যে স্কোর" },
+  v_scale_10: { en: "Rating out of 10", bn: "১০-এর মধ্যে রেটিং" },
+  v_ahead: { en: "Ahead of {p}% of the {n} phones we track.", bn: "আমরা যে {n}টি ফোন ট্র্যাক করি তার {p}% থেকে এগিয়ে।" },
+  v_avg: { en: "average of {n} ratings", bn: "{n}টি রেটিংয়ের গড়" },
+  v_basis_note: { en: "Scores are mined from published reviews and owner reports, not from our own testing.", bn: "স্কোরগুলো প্রকাশিত রিভিউ ও ব্যবহারকারীদের রিপোর্ট থেকে নেওয়া, আমাদের নিজস্ব পরীক্ষা নয়।" },
+  v_hedge_low: { en: "Only a handful of sources mention this phone, so read these as a first impression, not a settled score.", bn: "খুব কম সূত্রেই এই ফোনটির উল্লেখ আছে, তাই এগুলোকে চূড়ান্ত স্কোর নয়, প্রাথমিক ধারণা হিসেবে দেখুন।" },
+  v_hedge_mid: { en: "Fewer sources than usual back this one, so treat the decimals as approximate.", bn: "সাধারণের চেয়ে কম সূত্র এটিকে সমর্থন করে, তাই দশমিকগুলো আনুমানিক ধরুন।" },
   specs: { en: "Specs", bn: "স্পেক" },
   owner_voices: { en: "Owner voices", bn: "ব্যবহারকারীদের মত" },
   yt_title: { en: "What reviewers said on YouTube", bn: "ইউটিউব রিভিউয়াররা যা বলেছেন" },
@@ -120,7 +131,14 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   v_why: { en: "Why we say that", bn: "কেন এমন বলছি" },
   v_basis: { en: "Based on published reviews and owner reports.", bn: "প্রকাশিত রিভিউ ও ব্যবহারকারীদের অভিজ্ঞতার ভিত্তিতে।" },
   v_sources: { en: "Review sources", bn: "রিভিউয়ের উৎস" },
-  where_to_buy: { en: "Prices we checked", bn: "আমরা যেসব দাম যাচাই করেছি" },
+  // the /phone/ page's own heading and opening line, so one product
+  // does not name this section two different things (owner 2026-09-12)
+  where_to_buy: { en: "Prices and stock in Bangladesh", bn: "বাংলাদেশে দাম ও স্টক" },
+  prices_sub: {
+    en: "Pick the phone you actually want and the list narrows to the shops selling that exact thing. Stock, variant and colours are what each shop publishes for its own listing \u2014 not for the model as a whole.",
+    bn: "আপনি ঠিক যে ফোনটি চান সেটি বেছে নিন, তালিকা শুধু সেই ফোন বিক্রি করা দোকানগুলোতে সীমিত হবে। স্টক, ভ্যারিয়েন্ট ও রং প্রতিটি দোকান তাদের নিজস্ব লিস্টিংয়ের জন্য যা জানায় — পুরো মডেলের জন্য নয়।" },
+  last_checked: { en: "last checked", bn: "সর্বশেষ যাচাই" },
+  lowest_in_stock: { en: "Lowest in stock", bn: "স্টকে সবচেয়ে কম" },
   brand_ownership: { en: "Brand & ownership", bn: "ব্র্যান্ড ও মালিকানা" },
   who_its_for: { en: "Who it's for", bn: "কাদের জন্য" },
   official: { en: "Official", bn: "অফিসিয়াল" },

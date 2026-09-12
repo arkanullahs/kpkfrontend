@@ -203,6 +203,26 @@ export interface OpinionProfile {
   llm_summary?: string | null; praise_flags?: string[]; complaint_flags?: string[];
   standout_praise?: string[]; best_for?: string[]; avoid_if?: string[];
   aspects?: Record<string, { quotes?: string[]; summary?: string }>;
+  /** mined per-capability figures, 0-10, on the same scale the prose quotes.
+      Always shipped (the endpoint returns the record whole); the app simply
+      never read them until 2026-09-12. */
+  ratings?: Record<string, number>;
+  /** the one-line reading those figures were mined from */
+  rating_basis?: string | null;
+  /** how much evidence is behind them: "high" | "medium" | "low" */
+  rating_confidence?: string | null;
+}
+
+/** Where a phone ranks against the whole published catalogue, 0-100, off the
+    same Scale /compare and the /phone/ pages draw from. null when too few
+    capabilities scored to support an overall -- a ring drawn from four
+    missing ones is a confident number standing on nothing. */
+export interface RatingsCard {
+  performance: number | null; camera: number | null; battery: number | null;
+  display: number | null; software: number | null; value: number | null;
+  overall: number;
+  /** how many phones the percentile is measured against */
+  n: number;
 }
 
 /** One shop's listing, as `core.specfmt.listing_view` derives it. The static
@@ -287,6 +307,7 @@ export interface PhoneDetail {
   connectivity?: Connectivity | null;
   blended_scores?: Scores; scores?: Scores;
   score_reasons?: Record<string, string[]>;
+  ratings_card?: RatingsCard | null;
   traits?: Record<string, any>;
   opinion_profile?: OpinionProfile | null;
   /** what reviewers said, absent for a phone we hold no video or digest for */
