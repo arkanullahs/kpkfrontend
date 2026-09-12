@@ -442,8 +442,9 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
             )}
           </Card>
         )}
+      </div>
 
-        {/* Who sells it, at what price — last, and clearly flagged as prices
+      {/* Who sells it, at what price — last, and clearly flagged as prices
             we read off shop websites rather than confirmed at a counter.
 
             Shops are NAMED here now (owner 2026-08-04). This screen used to
@@ -459,10 +460,12 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
             so the cheapest row was whichever channel happened to undercut,
             with the warranty question left to the reader.
 
-            It also un-wedges the layout. This card is by far the tallest thing
-            on the screen -- 700px taller than anything that could sit beside
-            it -- so as one block it left the other column empty to the footer.
-            Two cards can flow into two columns.
+            These cards sit OUTSIDE the two-column flow above. They used to be
+            in it, and once the listings became a TABLE that stopped working:
+            the table wants ~513px, a 330px column gives it 407, and unlike
+            the listing cards it replaced a table cannot shrink to fit — it
+            spilled 106px past the card's edge (owner 2026-09-12). Full width
+            is also the shape the /phone/ page gives this section.
 
             The `chan` axis is dropped inside each card: filtering a channel
             list by channel is a control that can only ever remove everything.
@@ -512,7 +515,6 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
           </Card>
           );
         })}
-      </div>
       </>
       )}
     </Wrap>
