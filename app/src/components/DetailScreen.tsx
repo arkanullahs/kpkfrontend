@@ -149,25 +149,18 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
   // disagree about who is cheapest (core.specfmt.listing_view)
   const listings = d?.listings || null;
 
-  /* The shop list, split into one view per channel. `unstated` rides with
-     unofficial: it is a listing whose warranty nobody would call official, and
-     a third card for "we could not tell" would be a bucket, not a market.
-     One channel present = one card under the plain heading, because a split
-     with nothing on the other side is just a label. */
+  /* ONE card, one table -- the site's shape. This used to split into a card
+     per channel (owner 2026-08-30), and on a phone that sells both ways it
+     printed "PRICES AND STOCK IN BANGLADESH" twice, one heading directly
+     under the other, which is what read as broken (owner 2026-09-12, asked
+     and answered: one table with the Warranty filter).
+
+     The `chan` axis stays in the view now, because it IS the split: choosing
+     Warranty = Official is the same question the second card used to ask, and
+     the /phone/ page has always asked it that way. */
   const shopCards = (() => {
     if (!listings || !listings.listings.length) return [];
-    const axes = listings.axes.filter((a) => a.key !== "chan");
-    const official = listings.listings.filter((l) => l.channel === "official");
-    const other = listings.listings.filter((l) => l.channel !== "official");
-    if (!official.length || !other.length) {
-      return [{ key: "all", chan: null, title: t("where_to_buy"), view: listings }];
-    }
-    return [
-      { key: "official", chan: "official", title: t("where_to_buy"),
-        view: { ...listings, listings: official, axes } },
-      { key: "unofficial", chan: "unofficial", title: t("where_to_buy"),
-        view: { ...listings, listings: other, axes } },
-    ];
+    return [{ key: "all", chan: null, title: t("where_to_buy"), view: listings }];
   })();
 
   const traitChips = (cls: string) =>
@@ -453,12 +446,13 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
             "who is cheapest". Both render core.specfmt.listing_view now.
             Still no outbound links: naming a shop is disclosure, sending it
             traffic is a business model we do not have. */}
-        {/* ONE CARD PER CHANNEL (owner 2026-08-30: "split the shop list into
-            two cards, OFFICIAL AND UNOFFICIAL"). Same split the price charts,
-            the daily posts and the /phone/ pages all moved to: official and
-            unofficial are separate markets, and a single list interleaved them
-            so the cheapest row was whichever channel happened to undercut,
-            with the warranty question left to the reader.
+        {/* ONE CARD, ONE TABLE. This was a card per channel (owner 2026-08-30,
+            "split the shop list into two cards, OFFICIAL AND UNOFFICIAL"),
+            which on a phone selling both ways printed "PRICES AND STOCK IN
+            BANGLADESH" twice, one heading under the other. Asked and answered
+            on 2026-09-12: one table, and the channel becomes the Warranty
+            filter beside Market, Memory and Colour -- which is how the
+            /phone/ page has always asked the same question.
 
             These cards sit OUTSIDE the two-column flow above. They used to be
             in it, and once the listings became a TABLE that stopped working:
@@ -467,54 +461,32 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
             spilled 106px past the card's edge (owner 2026-09-12). Full width
             is also the shape the /phone/ page gives this section.
 
-            The `chan` axis is dropped inside each card: filtering a channel
-            list by channel is a control that can only ever remove everything.
-            A phone that sells on one channel only renders one card, under the
-            plain heading, because "official" on its own is not a split. */}
-        {shopCards.map((c, i) => {
-          const ch = c.chan ? CHAN_CARD[c.chan] : null;
-          return (
-          <Card key={c.key} accent={ch?.ink}>
-            <div style={st("display:flex; align-items:center; gap:10px; flex-wrap:wrap;")}>
-              <SectionLabel>{c.title}</SectionLabel>
-              {ch && (
-                <span style={st(`display:inline-flex; align-items:center; font-size:12px; font-weight:700; padding:5px 12px; border-radius:var(--r); color:${ch.ink}; background:${ch.bg};`)}>{t(ch.pill)}</span>
-              )}
+            The `chan` axis stays in the view: with one table it is no longer
+            a control that can only remove everything, it is the split. */}
+        {shopCards.map((c) => (
+          <Card key={c.key}>
+            <SectionLabel>{c.title}</SectionLabel>
+            <p style={st("margin:9px 0 0; font-size:13.5px; line-height:1.6; color:var(--mut2); max-width:70ch; text-wrap:pretty;")}>{t("prices_sub")}</p>
+            <div style={st("display:flex; gap:9px; margin-top:12px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1);")}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span style={st("font-size:13.5px; color:var(--acd); line-height:1.55;")}>{t("price_warning")}</span>
             </div>
-            {ch && (
-              <p style={st("margin:8px 0 0; font-size:13px; line-height:1.55; color:var(--mut2);")}>{t(ch.note)}</p>
-            )}
-            {i === 0 && (
-              <p style={st("margin:9px 0 0; font-size:13.5px; line-height:1.6; color:var(--mut2); max-width:70ch; text-wrap:pretty;")}>{t("prices_sub")}</p>
-            )}
-            {i === 0 && (
-              <>
-                <div style={st("display:flex; gap:9px; margin-top:12px; padding:12px 14px; border-radius:var(--r); background:rgba(var(--rgb-amber),.1);")}>
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" style={st("flex-shrink:0; margin-top:1px;")}><path d="M12 3L2 21h20L12 3zM12 9v5M12 17.5v.5" stroke="var(--acd)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  <span style={st("font-size:13.5px; color:var(--acd); line-height:1.55;")}>{t("price_warning")}</span>
-                </div>
-                {/* the warranty premium, subtracted for the reader and told
-                    once — only on a configuration where BOTH channels are
-                    really on sale, or it is two different phones being
-                    subtracted */}
-                {listings!.premium && (
-                  <p style={st("margin:14px 0 0; font-size:13.5px; line-height:1.55; color:var(--mut);")}>
-                    {t("warranty_premium")
-                      .replace("{v}", listings!.premium.variant)
-                      .replace("{p}", taka(listings!.premium.diff))}
-                  </p>
-                )}
-              </>
-            )}
-            <ShopPrices view={c.view} checked={checked} />
-            {i === shopCards.length - 1 && (
-              <p style={st("margin:18px 0 0; padding-top:14px; border-top:1px solid rgba(var(--rgb-ink),.06); font-size:12px; color:var(--faint); line-height:1.55; text-wrap:pretty;")}>
-                {t("shop_names_note")}
+            {/* the warranty premium, subtracted for the reader and told once —
+                only on a configuration where BOTH channels are really on sale,
+                or it is two different phones being subtracted */}
+            {listings!.premium && (
+              <p style={st("margin:14px 0 0; font-size:13.5px; line-height:1.55; color:var(--mut);")}>
+                {t("warranty_premium")
+                  .replace("{v}", listings!.premium.variant)
+                  .replace("{p}", taka(listings!.premium.diff))}
               </p>
             )}
+            <ShopPrices view={c.view} checked={checked} />
+            <p style={st("margin:18px 0 0; padding-top:14px; border-top:1px solid rgba(var(--rgb-ink),.06); font-size:12px; color:var(--faint); line-height:1.55; text-wrap:pretty;")}>
+              {t("shop_names_note")}
+            </p>
           </Card>
-          );
-        })}
+        ))}
       </>
       )}
     </Wrap>
@@ -833,23 +805,15 @@ function Wrap({ children }: { children: ReactNode; onBack?: () => void }) {
     </div>
   );
 }
-function Card({ children, accent }: { children: ReactNode; accent?: string }) {
-  return <div style={st(`background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); break-inside:avoid; margin-bottom:14px;${accent ? ` border-top:3px solid ${accent};` : ""}`)}>{children}</div>;
+/* No accent stripe any more: its only caller was the per-channel shop card,
+   and the channel is a filter now (owner 2026-09-12). */
+function Card({ children }: { children: ReactNode }) {
+  return <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); break-inside:avoid; margin-bottom:14px;")}>{children}</div>;
 }
 
-/* The two shop cards carry the SAME shops, the same variant chips and prices
-   in the same order -- the only thing that differed was a "· Official" suffix
-   on a 12px grey label, so at a glance the buyer could not tell which market
-   they were reading (owner 2026-08-30: "the both price variant picking thing
-   looks almost identical"). Each card now states its channel in its own colour
-   and says what that channel means for the warranty. Strings are the ones the
-   quiz and the hero chips already use, so the wording matches everywhere. */
-const CHAN_CARD: Record<string, { pill: string; note: string; ink: string; bg: string }> = {
-  official: { pill: "official_bd", note: "s_warranty_why",
-    ink: "var(--tealD)", bg: "rgba(var(--rgb-teal),.12)" },
-  unofficial: { pill: "unofficial_import", note: "q_channel_s",
-    ink: "var(--acd)", bg: "rgba(var(--rgb-amber),.13)" },
-};
+/* The channel is a filter now, not a card: what used to be two shop cards is
+   one table with the Warranty axis in it (owner 2026-09-12). CHAN_CARD's
+   per-channel pill, note and accent colour went with the second card. */
 function SectionLabel({ children }: { children: ReactNode }) {
   return <div style={st("font-size:12px; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:var(--mut2);")}>{children}</div>;
 }
