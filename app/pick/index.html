@@ -366,6 +366,16 @@
         grid-row: 1/9; font-size: 13px; line-height: 1.9; color: var(--mut); }
       .ktbl .kvar > *, .ktbl .kst > * { grid-column: 2; }
     }
+    /* our chevron, not the platform's -- the same control the /phone/ page's
+       filter row draws. appearance:none is why it needs a stylesheet rather
+       than an st() call. */
+    .ksel { -webkit-appearance: none; appearance: none; min-height: 44px; min-width: 0;
+      max-width: 100%; font: inherit; font-size: 15px; font-weight: 600; color: var(--ink);
+      background: var(--card) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2363726f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6.5 4 4 4-4'/%3E%3C/svg%3E") no-repeat right 10px center;
+      border: 1px solid var(--rule); border-radius: var(--r-sm); padding: 0 34px 0 12px;
+      cursor: pointer; transition: border-color .15s; }
+    .ksel:hover { border-color: var(--teal); }
+    .ksel:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
   </style>
 </head>
 <body>
