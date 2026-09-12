@@ -480,6 +480,22 @@ table.evt{min-width:760px}
 table.evt thead th.evl{width:180px}
 tr.evgh span,tr.evtog button{position:sticky;left:0}
 }
+@media(max-width:720px){
+.swipe{display:none}
+.evwrap{max-height:none;overflow:visible}
+table.evt{display:block;min-width:0;font-size:15px}
+table.evt thead{display:none}
+table.evt tbody,table.evt tr{display:block}
+table.evt tbody th[scope=row]{display:block;position:static;background:none;
+box-shadow:none;padding:18px 0 2px;border-bottom:0;font-size:16px}
+table.evt td{display:grid;grid-template-columns:minmax(0,8.5em) minmax(0,1fr);
+gap:4px 12px;align-items:baseline;align-content:start;padding:8px 0;border-left:0}
+table.evt td::before{content:attr(data-ph);grid-column:1;font-size:13px;
+font-weight:600;color:var(--mut);line-height:1.4}
+table.evt td>*{grid-column:2}
+tr.evgh th{position:static;padding:24px 0 8px}
+tr.evgh span,tr.evtog button{position:static}
+}
 .decide{margin:22px 0 0;padding:18px 20px 12px;border-radius:var(--r);background:var(--card);
 box-shadow:var(--sh-card)}
 .decide h2{font-family:var(--f-display);font-size:17px;font-weight:600;letter-spacing:-.3px;margin:0}
