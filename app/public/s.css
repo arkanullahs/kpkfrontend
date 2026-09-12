@@ -348,7 +348,13 @@ line-height:1.55;text-wrap:pretty}
 .hero h2{font-size:20px}
 .price{margin-top:14px}
 .price .amt{font-size:29px;letter-spacing:-1.2px}
-.card{grid-template-columns:auto 72px minmax(0,1fr);gap:11px;padding:15px}
+.card{position:relative;display:block;padding:15px}
+.card .num{position:absolute;left:9px;top:9px;z-index:1;margin:0;
+width:24px;height:24px;font-size:12px;background:rgba(var(--rgb-white),.92);
+box-shadow:0 1px 3px rgba(var(--rgb-ink),.14)}
+.cmedia{float:left;width:clamp(100px,27vw,116px);margin:0 13px 8px 0}
+.card .cvd,.card .kf:not(.vlist){display:flow-root}
+.cbuy{clear:both}
 .card .num{width:24px;height:24px;font-size:12px;margin-top:0}
 .card .nm{font-size:15.5px}
 .ctop{gap:6px 9px;flex-wrap:wrap}
@@ -2015,14 +2021,17 @@ font-size:13.5px;font-weight:700;color:var(--lnk)}
 .ytg.one .ytv{display:flex}
 }
 @media(max-width:640px){
-.dv{grid-template-columns:108px minmax(0,1fr);gap:14px;
-  grid-template-areas:"img id" "chp chp" "buy buy" "sm sm"}
+.dv{grid-template-columns:108px minmax(0,1fr);gap:14px 14px;
+  grid-template-areas:"img rt" "img chp" "kf kf" "buy buy" "sm sm"}
 .dv .dleft,.dv .dmid{display:contents}
+.dv .did{display:contents}
+.dv .drate{grid-area:rt;align-self:start}
 .dv .dimg{grid-area:img;width:100%;margin:0}
-.dv .dmid>.chips{grid-area:chp;margin:0;justify-content:flex-start}
-.dv .did{grid-area:id;gap:10px}
+.dv .dmid>.chips{grid-area:chp;margin:0;justify-content:flex-start;
+  align-self:start}
 .dv .dsm{grid-area:sm;min-width:0}
-.dv .kfx{grid-template-columns:minmax(0,1fr);gap:8px}
+.dv .kfx{grid-area:kf;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:10px 16px;margin-top:2px}
 .dv .kft .kv{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 6px}
 .drate{font-size:13px}
 .drail{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
