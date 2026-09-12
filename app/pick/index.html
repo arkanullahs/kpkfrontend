@@ -329,6 +329,43 @@
       .kverd .kv-cols { grid-area: cols; margin-top: 24px; } .kverd .kv-why { grid-area: why; }
       .kverd .kv-src { grid-area: src; }
     }
+    /* --- the price table (2026-09-12) --------------------------------
+       The /phone/ page's "Prices and stock in Bangladesh", brought over
+       whole (owner: "bring the same Prices and stock in Bangladesh from
+       webapp to the picker"). A price list is read DOWN a column: the shop,
+       what the listing is, whether it is in stock and what it costs, in the
+       same four places on every row. A grid of cards put those four facts
+       in a different spot on every card.
+
+       These are device_pages' .otbl rules in the picker's tokens, including
+       its phone layout: four columns at 360px are four slivers, so each
+       listing becomes a block of labelled lines with the shop and its price
+       sharing the first one. */
+    .ktbl { width: 100%; border-collapse: collapse; margin: 10px 0 0; }
+    .ktbl thead th { padding: 10px 16px 10px 0; text-align: left; font-size: 13px;
+      font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+      color: var(--mut); border-bottom: 1px solid var(--rule); white-space: nowrap; }
+    .ktbl td { padding: 16px 16px 16px 0; text-align: left; vertical-align: top;
+      border-bottom: 1px solid var(--rule); }
+    .ktbl thead .kpc, .ktbl .kpc { text-align: right; padding-right: 0; }
+    .ktbl .ksh { width: 28%; }
+    @media (max-width: 640px) {
+      .ktbl, .ktbl tbody { display: block; }
+      .ktbl thead { display: none; }
+      .ktbl tr { display: grid; grid-template-columns: minmax(0,1fr) auto;
+        gap: 6px 14px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+      .ktbl td { padding: 0; border: 0; }
+      .ktbl .ksh { width: auto; grid-column: 1; grid-row: 1; }
+      .ktbl .kpc { grid-column: 2; grid-row: 1; }
+      .ktbl .kvar { grid-column: 1/-1; grid-row: 2; }
+      .ktbl .kst { grid-column: 1/-1; grid-row: 3; }
+      .ktbl .kvar, .ktbl .kst {
+        display: grid; grid-template-columns: 62px minmax(0,1fr); gap: 0 10px; }
+      /* the label the hidden <thead> was carrying, put back per line */
+      .ktbl .kvar::before, .ktbl .kst::before { content: attr(data-label);
+        grid-row: 1/9; font-size: 13px; line-height: 1.9; color: var(--mut); }
+      .ktbl .kvar > *, .ktbl .kst > * { grid-column: 2; }
+    }
   </style>
 </head>
 <body>

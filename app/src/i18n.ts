@@ -15,6 +15,22 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   footer_tagline: { en: "AI-powered phone recommendations for Bangladesh", bn: "বাংলাদেশের জন্য এআই-চালিত ফোন সুপারিশ" },
   footer_compare: { en: "Compare phones", bn: "ফোন তুলনা করুন" },
   footer_home: { en: "Home", bn: "হোম" },
+  // the price table's column heads, same four as the /phone/ page
+  col_shop: { en: "Shop", bn: "দোকান" },
+  col_variant: { en: "Variant & warranty", bn: "ভ্যারিয়েন্ট ও ওয়ারেন্টি" },
+  col_stock: { en: "Stock", bn: "স্টক" },
+  col_price: { en: "Listed price", bn: "তালিকাভুক্ত দাম" },
+  offers_foot: { en: "A + or − amount is the difference from the cheapest listing in stock. Shop names are shown so you know who is selling: we carry no links and take no commission.", bn: "+ বা − হলো স্টকে থাকা সবচেয়ে কম দামের সন্গে পার্থক্য। দোকানের নাম দেওয়া হয় জানানোর জন্য — কোনো লিংক বা কমিশন নেই।" },
+  // the verdict's balance bar: short enough to sit under a count
+  v_bal_good: { en: "strengths", bn: "ভালো দিক" },
+  v_bal_bad: { en: "trade-offs", bn: "দুর্বল দিক" },
+  // the rest of what the static site's footer names, so both
+  // surfaces end a page with the same map (owner 2026-09-12)
+  footer_prices: { en: "Phone prices", bn: "ফোনের দাম" },
+  footer_verdicts: { en: "Head-to-head verdicts", bn: "মুখোমুখি তুলনা" },
+  footer_pick: { en: "Personal pick", bn: "ব্যক্তিগত পছন্দ" },
+  footer_report: { en: "Price report", bn: "দামের রিপোর্ট" },
+  footer_method: { en: "How this site works", bn: "সাইট যেভাবে কাজ করে" },
   // header / nav
   in_stock: { en: "phones tracked", bn: "ফোন ট্র্যাক করছি" },
   prices_loading: { en: "live prices", bn: "লাইভ দাম" },

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { AXES, axisLabel, classifyCaveats, fitOf, headlinePhrase, retentionCurve, st, taka, takaRange, verdictMeta } from "../theme";
-import { t } from "../i18n";
+import { bnNum, t } from "../i18n";
 import type { Connectivity, OpinionProfile, PhoneDetail, Pick } from "../api";
 import { BrandLogo, brandLogo } from "./BrandLogo";
 import { PhonePhoto } from "./PhonePhoto";
@@ -519,6 +519,25 @@ function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
               <p style={st("margin:16px 0 0; font-size:19px; font-weight:700; line-height:1.3; letter-spacing:-.2px; color:var(--tealD); text-wrap:pretty;")}>{lead}</p>
             </>
           )}
+          {/* the balance before a word is read -- and only when there IS a
+              balance: a bar of one colour says nothing the heading has not
+              (owner 2026-09-12, "glancing it once ... should let users know
+              whats the thing with the phones") */}
+          {works.length > 0 && tradeoffs.length > 0 && (
+            <div role="img"
+              aria-label={`${works.length} ${t("v_bal_good")}, ${tradeoffs.length} ${t("v_bal_bad")}`}
+              style={st("display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:18px 0 0; font-size:13px;")}>
+              <span aria-hidden="true" style={st("display:flex; gap:3px; width:clamp(96px,32vw,150px); height:8px;")}>
+                <i style={st(`flex:${works.length}; border-radius:99px; background:var(--teal);`)} />
+                <i style={st(`flex:${tradeoffs.length}; border-radius:99px; background:var(--ac);`)} />
+              </span>
+              <span aria-hidden="true">
+                <b style={st("font-weight:700; color:var(--tealD);")}>{bnNum(String(works.length))} {t("v_bal_good")}</b>
+                <span style={st("color:var(--mut2);")}> · </span>
+                <b style={st("font-weight:700; color:var(--acd);")}>{bnNum(String(tradeoffs.length))} {t("v_bal_bad")}</b>
+              </span>
+            </div>
+          )}
         </div>
         {(bestFor.length > 0 || avoidIf.length > 0) && (
           <dl className="kv-fit" style={st("margin:22px 0 0;")}>
@@ -548,9 +567,18 @@ function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
         <div className="kv-r">
           {(works.length > 0 || tradeoffs.length > 0) && (
             <div className="kv-cols" style={st("display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:18px 28px; align-content:start;")}>
-              {([[works, t("v_works")], [tradeoffs, t("v_tradeoffs")]] as const).map(([xs, label]) => xs.length === 0 ? null : (
-                <div key={label} style={st("min-width:0;")}>
-                  <h3 style={H3}>{label}</h3>
+              {/* Tinted, so which list is which is answered by colour
+                  before it is answered by reading. Same pairing as the
+                  /phone/ page: teal for what works, amber for what does
+                  not. */}
+              {([[works, t("v_works"), "var(--tealD)", "rgba(var(--rgb-teal),.07)"],
+                 [tradeoffs, t("v_tradeoffs"), "var(--acd)", "rgba(var(--rgb-amber),.10)"]] as const)
+                .map(([xs, label, ink, fill]) => xs.length === 0 ? null : (
+                <div key={label} style={st(`min-width:0; padding:16px 18px 8px; border-radius:var(--r); background:${fill};`)}>
+                  <h3 style={st(`display:flex; align-items:center; gap:9px; margin:0 0 4px; font-size:17px; font-weight:800; letter-spacing:-.3px; color:${ink};`)}>
+                    {label}
+                    <span style={st("margin-left:auto; min-width:26px; padding:2px 8px; border-radius:var(--r-pill); background:var(--card); font-size:12px; font-weight:700; text-align:center; color:var(--ink);")}>{bnNum(String(xs.length))}</span>
+                  </h3>
                   {xs.map((x, i) => (
                     <div key={i} style={st(`padding:11px 0; font-size:15px; font-weight:600; line-height:1.45; color:var(--ink2);${i < xs.length - 1 ? ` border-bottom:${RULE};` : ""}`)}>{cap(opinionWord("asp_", x))}</div>
                   ))}

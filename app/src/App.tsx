@@ -526,27 +526,47 @@ export default function App() {
             </div>
             <p style={st("margin:15px 0 0; font-size:13px; line-height:1.65; color:var(--mut2);")}>{t("footer_tagline")}.</p>
           </div>
-          <div style={st("flex:1 1 130px;")}>
-            <div style={st("color:var(--rule); font-size:12px; font-weight:700; margin:0 0 14px;")}>Explore</div>
-            <div style={st("display:flex; flex-direction:column; gap:11px;")}>
-              <a href="/best/" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>{t("footer_guides")}</a>
-              <a href="/vs" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>{t("footer_compare")}</a>
-              <a href="/" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>{t("footer_home")}</a>
+          {/* The same four columns, in the same order, carrying the same
+              destinations as pages._footer_html. The picker named five where
+              the static pages name ten, so one product ended a page two
+              different ways depending on which surface you were on (owner
+              2026-09-12: "why pickers footer is different the webapp, should
+              be same"). The site's Contact line is the one thing missing: it
+              is built from site_config's email, which the picker has no
+              read of.
+
+              Inline rather than a module const because the labels come from
+              t(), which has to be re-read when the language toggle re-keys
+              the tree. */}
+          {([
+            ["Explore", [
+              [t("footer_guides"), "/best"],
+              [t("footer_prices"), "/phone"],
+              [t("footer_compare"), "/compare"],
+              [t("footer_verdicts"), "/vs"],
+              [t("footer_pick"), "/pick"],
+            ]],
+            ["Social", [["Facebook", "https://www.facebook.com/bhalophone", "me"]]],
+            ["More", [
+              [t("footer_report"), "/price-report"],
+              [t("footer_method"), "/methodology"],
+              [t("footer_support"), "/support"],
+              ["Made by Arkanullah Saad ↗", "https://arkanullah.pro.bd", "out"],
+            ]],
+          ] as [string, [string, string, string?][]][]).map(([head, links]) => (
+            <div key={head} style={st("flex:1 1 130px;")}>
+              <div style={st("color:var(--rule); font-size:12px; font-weight:700; margin:0 0 14px;")}>{head}</div>
+              <div style={st("display:flex; flex-direction:column; gap:11px;")}>
+                {links.map(([label, href, kind]) => (
+                  <a key={href} href={href}
+                    {...(kind === "me" ? { rel: "me" }
+                      : kind ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                    style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>{label}</a>
+                ))}
+              </div>
             </div>
-          </div>
-          <div style={st("flex:1 1 130px;")}>
-            <div style={st("color:var(--rule); font-size:12px; font-weight:700; margin:0 0 14px;")}>Social</div>
-            <div style={st("display:flex; flex-direction:column; gap:11px;")}>
-              <a href="https://www.facebook.com/bhalophone" rel="me" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>Facebook</a>
-            </div>
-          </div>
-          <div style={st("flex:1 1 130px;")}>
-            <div style={st("color:var(--rule); font-size:12px; font-weight:700; margin:0 0 14px;")}>More</div>
-            <div style={st("display:flex; flex-direction:column; gap:11px;")}>
-              <a href="/support" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>{t("footer_support")}</a>
-              <a href="https://arkanullah.pro.bd" target="_blank" rel="noopener noreferrer" style={st("color:var(--mut2); font-size:13.5px; text-decoration:none;")}>Made by Arkanullah Saad ↗</a>
-            </div>
-          </div>
+          ))}
         </div>
         )}
         {/* the 96px well under the copyright was dock clearance, and it read as
