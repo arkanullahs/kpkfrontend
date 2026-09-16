@@ -217,6 +217,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/oppo-reno-15f-5g",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
       "source": "/phone/oppo-reno-16-5g",
       "destination": "/brand/oppo",
       "permanent": true
@@ -224,16 +229,6 @@
     {
       "source": "/phone/oppo-reno14-5g",
       "destination": "/phone/oppo-reno-14-5g",
-      "permanent": true
-    },
-    {
-      "source": "/phone/oppo-reno15-f",
-      "destination": "/brand/oppo",
-      "permanent": true
-    },
-    {
-      "source": "/phone/oppo-reno15-f-5g",
-      "destination": "/brand/oppo",
       "permanent": true
     },
     {
@@ -397,6 +392,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/samsung-galaxy-f05",
+      "destination": "/brand/samsung",
+      "permanent": true
+    },
+    {
       "source": "/phone/samsung-galaxy-f16-5g",
       "destination": "/brand/samsung",
       "permanent": true
@@ -517,7 +517,7 @@
       "permanent": true
     },
     {
-      "source": "/phone/zte-neo-5g",
+      "source": "/phone/zte-v80-design",
       "destination": "/brand/zte",
       "permanent": true
     },
