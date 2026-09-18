@@ -217,11 +217,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/oppo-reno-15f-5g",
-      "destination": "/brand/oppo",
-      "permanent": true
-    },
-    {
       "source": "/phone/oppo-reno-16-5g",
       "destination": "/brand/oppo",
       "permanent": true
@@ -229,6 +224,16 @@
     {
       "source": "/phone/oppo-reno14-5g",
       "destination": "/phone/oppo-reno-14-5g",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-reno15-f",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-reno15-f-5g",
+      "destination": "/brand/oppo",
       "permanent": true
     },
     {
@@ -372,8 +377,13 @@
       "permanent": true
     },
     {
-      "source": "/phone/redmi-note-17-pro-5g",
-      "destination": "/phone/redmi-note-17-pro",
+      "source": "/phone/redmi-note-17-pro",
+      "destination": "/phone/redmi-note-17-pro-5g",
+      "permanent": true
+    },
+    {
+      "source": "/phone/redmi-note-17-pro-max",
+      "destination": "/phone/redmi-note-17-pro-max-5g",
       "permanent": true
     },
     {
@@ -412,8 +422,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/samsung-galaxy-m17-5g",
-      "destination": "/phone/samsung-galaxy-m17",
+      "source": "/phone/samsung-galaxy-m17",
+      "destination": "/phone/samsung-galaxy-m17-5g",
       "permanent": true
     },
     {
@@ -482,8 +492,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/vivo-t4-lite-5g",
-      "destination": "/phone/vivo-t4-lite",
+      "source": "/phone/vivo-t4-lite",
+      "destination": "/phone/vivo-t4-lite-5g",
       "permanent": true
     },
     {
@@ -514,11 +524,6 @@
     {
       "source": "/phone/xiaomi-17t-pro-5g",
       "destination": "/phone/xiaomi-17t-pro",
-      "permanent": true
-    },
-    {
-      "source": "/phone/zte-v80-design",
-      "destination": "/brand/zte",
       "permanent": true
     },
     {
@@ -602,11 +607,6 @@
       "permanent": true
     },
     {
-      "source": "/vs/motorola-edge-60-pro-vs-nothing-phone-3a-lite",
-      "destination": "/phone/motorola-edge-60-pro",
-      "permanent": true
-    },
-    {
       "source": "/vs/motorola-edge-60-pro-vs-poco-x7-pro-5g",
       "destination": "/phone/motorola-edge-60-pro",
       "permanent": true
@@ -624,11 +624,6 @@
     {
       "source": "/vs/motorola-edge-70-vs-poco-x8-pro",
       "destination": "/phone/motorola-edge-70",
-      "permanent": true
-    },
-    {
-      "source": "/vs/nothing-phone-3a-lite-vs-samsung-galaxy-m36-5g",
-      "destination": "/phone/nothing-phone-3a-lite",
       "permanent": true
     },
     {
