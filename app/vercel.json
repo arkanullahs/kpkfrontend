@@ -197,11 +197,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/nubia-a56",
-      "destination": "/brand/nubia",
-      "permanent": true
-    },
-    {
       "source": "/phone/oneplus-nord-6-5g",
       "destination": "/phone/oneplus-nord-6",
       "permanent": true
@@ -217,8 +212,18 @@
       "permanent": true
     },
     {
+      "source": "/phone/oneplus-nord-ce4-lite-5g",
+      "destination": "/brand/oneplus",
+      "permanent": true
+    },
+    {
       "source": "/phone/oneplus-nord-ce5",
       "destination": "/brand/oneplus",
+      "permanent": true
+    },
+    {
+      "source": "/phone/oppo-a58",
+      "destination": "/brand/oppo",
       "permanent": true
     },
     {
@@ -352,6 +357,16 @@
       "permanent": true
     },
     {
+      "source": "/phone/realme-gt7",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-gt7-pro-racing",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
       "source": "/phone/realme-narzo-60-5g",
       "destination": "/phone/realme-narzo-60",
       "permanent": true
@@ -407,8 +422,13 @@
       "permanent": true
     },
     {
+      "source": "/phone/redmi-note-17",
+      "destination": "/brand/redmi",
+      "permanent": true
+    },
+    {
       "source": "/phone/redmi-note-17-5g",
-      "destination": "/phone/redmi-note-17",
+      "destination": "/brand/redmi",
       "permanent": true
     },
     {
@@ -417,8 +437,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/redmi-note-17-pro-max",
-      "destination": "/phone/redmi-note-17-pro-max-5g",
+      "source": "/phone/redmi-note-17-pro-max-5g",
+      "destination": "/phone/redmi-note-17-pro-max",
       "permanent": true
     },
     {
@@ -434,6 +454,11 @@
     {
       "source": "/phone/samsung-galaxy-a35",
       "destination": "/phone/samsung-galaxy-a35-5g",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-galaxy-f05",
+      "destination": "/brand/samsung",
       "permanent": true
     },
     {
@@ -479,6 +504,11 @@
     {
       "source": "/phone/samsung-galaxy-m33-5g",
       "destination": "/phone/samsung-galaxy-m33",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-galaxy-s23-5g",
+      "destination": "/brand/samsung",
       "permanent": true
     },
     {
@@ -614,11 +644,6 @@
     {
       "source": "/vs/google-pixel-9-pro-xl-vs-xiaomi-15t-pro",
       "destination": "/phone/google-pixel-9-pro-xl",
-      "permanent": true
-    },
-    {
-      "source": "/vs/honor-400-lite-vs-realme-c85",
-      "destination": "/phone/honor-400-lite",
       "permanent": true
     },
     {
