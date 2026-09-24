@@ -107,6 +107,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/honor-300-ultra",
+      "destination": "/brand/honor",
+      "permanent": true
+    },
+    {
       "source": "/phone/honor-600",
       "destination": "/phone/honor-600-5g",
       "permanent": true
@@ -197,6 +202,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/oneplus-15t",
+      "destination": "/phone/oneplus-15t-5g",
+      "permanent": true
+    },
+    {
       "source": "/phone/oneplus-nord-6-5g",
       "destination": "/phone/oneplus-nord-6",
       "permanent": true
@@ -212,18 +222,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/oneplus-nord-ce4-lite-5g",
-      "destination": "/brand/oneplus",
-      "permanent": true
-    },
-    {
       "source": "/phone/oneplus-nord-ce5",
       "destination": "/brand/oneplus",
-      "permanent": true
-    },
-    {
-      "source": "/phone/oppo-a58",
-      "destination": "/brand/oppo",
       "permanent": true
     },
     {
@@ -332,11 +332,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/realme-gt-7-pro",
-      "destination": "/phone/realme-gt7-pro",
-      "permanent": true
-    },
-    {
       "source": "/phone/realme-gt-8",
       "destination": "/phone/realme-gt8",
       "permanent": true
@@ -352,13 +347,18 @@
       "permanent": true
     },
     {
+      "source": "/phone/realme-gt-neo-7-turbo",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
       "source": "/phone/realme-gt5",
       "destination": "/brand/realme",
       "permanent": true
     },
     {
-      "source": "/phone/realme-gt7",
-      "destination": "/brand/realme",
+      "source": "/phone/realme-gt7-pro",
+      "destination": "/phone/realme-gt-7-pro",
       "permanent": true
     },
     {
@@ -457,11 +457,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/samsung-galaxy-f05",
-      "destination": "/brand/samsung",
-      "permanent": true
-    },
-    {
       "source": "/phone/samsung-galaxy-f15-5g",
       "destination": "/phone/samsung-galaxy-f15",
       "permanent": true
@@ -504,11 +499,6 @@
     {
       "source": "/phone/samsung-galaxy-m33-5g",
       "destination": "/phone/samsung-galaxy-m33",
-      "permanent": true
-    },
-    {
-      "source": "/phone/samsung-galaxy-s23-5g",
-      "destination": "/brand/samsung",
       "permanent": true
     },
     {
@@ -607,8 +597,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/vivo-x-fold5",
-      "destination": "/phone/vivo-x-fold-5",
+      "source": "/phone/vivo-x-fold-5",
+      "destination": "/phone/vivo-x-fold5",
       "permanent": true
     },
     {
@@ -644,6 +634,11 @@
     {
       "source": "/vs/google-pixel-9-pro-xl-vs-xiaomi-15t-pro",
       "destination": "/phone/google-pixel-9-pro-xl",
+      "permanent": true
+    },
+    {
+      "source": "/vs/honor-400-lite-vs-realme-c85",
+      "destination": "/phone/honor-400-lite",
       "permanent": true
     },
     {
@@ -719,11 +714,6 @@
     {
       "source": "/vs/motorola-edge-70-vs-poco-x8-pro",
       "destination": "/phone/motorola-edge-70",
-      "permanent": true
-    },
-    {
-      "source": "/vs/oneplus-nord-6-vs-poco-f7",
-      "destination": "/phone/oneplus-nord-6",
       "permanent": true
     },
     {
