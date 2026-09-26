@@ -72,11 +72,6 @@
   ],
   "redirects": [
     {
-      "source": "/best/5g-phone-under-15000",
-      "destination": "/best",
-      "permanent": true
-    },
-    {
       "source": "/best/battery-phone-under-8000",
       "destination": "/best",
       "permanent": true
@@ -152,8 +147,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/infinix-gt-20-pro-5g",
-      "destination": "/phone/infinix-gt-20-pro",
+      "source": "/phone/infinix-gt-20-pro",
+      "destination": "/phone/infinix-gt-20-pro-5g",
       "permanent": true
     },
     {
@@ -177,8 +172,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/iqoo-z9s-5g",
-      "destination": "/phone/iqoo-z9s",
+      "source": "/phone/iqoo-z9s",
+      "destination": "/phone/iqoo-z9s-5g",
       "permanent": true
     },
     {
@@ -353,6 +348,11 @@
     },
     {
       "source": "/phone/realme-gt5",
+      "destination": "/brand/realme",
+      "permanent": true
+    },
+    {
+      "source": "/phone/realme-gt7",
       "destination": "/brand/realme",
       "permanent": true
     },
@@ -562,6 +562,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/tecno-pova-slim-5g",
+      "destination": "/phone/tecno-pova-slim",
+      "permanent": true
+    },
+    {
       "source": "/phone/tecno-spark-50",
       "destination": "/brand/tecno",
       "permanent": true
@@ -637,18 +642,8 @@
       "permanent": true
     },
     {
-      "source": "/vs/honor-400-lite-vs-realme-c85",
-      "destination": "/phone/honor-400-lite",
-      "permanent": true
-    },
-    {
       "source": "/vs/honor-400-pro-5g-vs-oneplus-15r",
       "destination": "/phone/oneplus-15r",
-      "permanent": true
-    },
-    {
-      "source": "/vs/honor-600-lite-vs-poco-x8-pro",
-      "destination": "/phone/honor-600-lite",
       "permanent": true
     },
     {
@@ -702,18 +697,8 @@
       "permanent": true
     },
     {
-      "source": "/vs/motorola-edge-60-pro-vs-poco-x8-pro",
-      "destination": "/phone/motorola-edge-60-pro",
-      "permanent": true
-    },
-    {
       "source": "/vs/motorola-edge-60-stylus-vs-samsung-galaxy-m36-5g",
       "destination": "/phone/motorola-edge-60-stylus",
-      "permanent": true
-    },
-    {
-      "source": "/vs/motorola-edge-70-vs-poco-x8-pro",
-      "destination": "/phone/motorola-edge-70",
       "permanent": true
     },
     {
@@ -724,11 +709,6 @@
     {
       "source": "/vs/oppo-reno-15c-5g-vs-vivo-v60-lite-5g",
       "destination": "/phone/vivo-v60-lite-5g",
-      "permanent": true
-    },
-    {
-      "source": "/vs/poco-x8-pro-vs-samsung-galaxy-a57-5g",
-      "destination": "/phone/poco-x8-pro",
       "permanent": true
     },
     {
