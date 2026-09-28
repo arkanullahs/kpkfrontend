@@ -437,8 +437,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/redmi-note-17-pro-max-5g",
-      "destination": "/phone/redmi-note-17-pro-max",
+      "source": "/phone/redmi-note-17-pro-max",
+      "destination": "/phone/redmi-note-17-pro-max-5g",
       "permanent": true
     },
     {
@@ -494,6 +494,11 @@
     {
       "source": "/phone/samsung-galaxy-m17-5g",
       "destination": "/phone/samsung-m17-5g",
+      "permanent": true
+    },
+    {
+      "source": "/phone/samsung-galaxy-m17e",
+      "destination": "/phone/samsung-galaxy-m17e-5g",
       "permanent": true
     },
     {
