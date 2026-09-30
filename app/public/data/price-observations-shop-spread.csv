@@ -1,7 +1,7 @@
 ﻿phone,brand,configuration,channel,shops_carrying_it,lowest_taka,highest_taka,difference_taka,spread_pct
-Apple iPhone 17 Pro Max,Apple,512GB,official,4,239999,289999,50000,21
+Apple iPhone 17 Pro Max,Apple,512GB,official,4,237999,289999,52000,22
+Apple iPhone 17 Pro,Apple,256GB,official,4,181499,229999,48500,27
 Apple iPhone Air,Apple,256GB,official,3,164999,209999,45000,27
-Apple iPhone 17 Pro,Apple,256GB,official,4,186999,229999,43000,23
 Samsung Galaxy S25 Ultra,Samsung,12GB/256GB,official,3,189999,226999,37000,19
 Apple iPhone 17,Apple,256GB,official,3,147999,179999,32000,22
 Samsung Galaxy S26 Ultra,Samsung,12GB/512GB,official,5,199999,228999,29000,15
@@ -10,11 +10,12 @@ Samsung Galaxy S25 FE,Samsung,8GB/256GB,official,5,75399,99999,24600,33
 Xiaomi 17T,Xiaomi,12GB/256GB,official,6,60499,79999,19500,32
 Vivo X300,Vivo,12GB/256GB,unofficial,3,79990,97999,18009,23
 Samsung Galaxy A57 5G,Samsung,12GB/256GB,official,6,70999,88199,17200,24
-Samsung Galaxy A37 5G,Samsung,8GB/256GB,official,5,54999,68999,14000,25
+Samsung Galaxy A37 5G,Samsung,8GB/256GB,official,6,54999,68999,14000,25
 Vivo X300 Ultra,Vivo,12GB/256GB,unofficial,3,128990,140999,12009,9
+Infinix Note 60,Infinix,8GB/256GB,official,3,33999,44999,11000,32
 Huawei Nova 15 Max,Huawei,8GB/256GB,official,5,47999,57999,10000,21
 Huawei Mate X7,Huawei,16GB/512GB,official,4,239999,249999,10000,4
-Vivo Y11d,Vivo,4GB/128GB,official,6,16499,25999,9500,58
+Vivo Y11d,Vivo,4GB/128GB,official,5,16499,25999,9500,58
 Samsung Galaxy S26 Plus,Samsung,12GB/256GB,official,4,162999,172499,9500,6
 Samsung Galaxy Z Fold 7,Samsung,12GB/256GB,unofficial,3,145499,154999,9500,7
 Vivo Y31d,Vivo,8GB/128GB,official,5,25799,34999,9200,36
@@ -32,41 +33,40 @@ Honor X9d,Honor,12GB/256GB,official,6,40499,46999,6500,16
 Vivo Y05,Vivo,4GB/128GB,official,5,14699,20999,6300,43
 Honor 600 Pro,Honor,12GB/256GB,official,4,93999,99999,6000,6
 Samsung Galaxy Z Fold8 Ultra,Samsung,12GB/256GB,unofficial,3,183990,189499,5509,3
-OPPO A6 4G,OPPO,8GB/256GB,official,4,31499,36999,5500,17
+OPPO A6 4G,OPPO,8GB/256GB,official,5,31499,36999,5500,17
 Google Pixel 7 Pro,Google,12GB/128GB,official,3,54499,59999,5500,10
-Redmi Note 17 Pro Max 5G,Redmi,12GB/256GB,official,4,64499,69999,5500,9
+Infinix Note Edge,Infinix,8GB/256GB,official,3,29999,34999,5000,17
+Infinix Note 60 Pro,Infinix,8GB/256GB,official,3,41999,46999,5000,12
 Honor 600 5G,Honor,8GB/256GB,official,5,59999,64999,5000,8
-Realme 15 Pro 5G,Realme,12GB/256GB,official,6,55499,59999,4500,8
 Samsung Galaxy A56 5G,Samsung,8GB/256GB,official,3,52499,56999,4500,9
+Realme 15 Pro 5G,Realme,12GB/256GB,official,6,55499,59999,4500,8
 Tecno Camon 50,Tecno,8GB/128GB,official,4,30520,34999,4479,15
 Honor X5c Plus,Honor,4GB/128GB,official,6,14299,18499,4200,29
-Redmi Note 17 Pro 5G,Redmi,8GB/256GB,official,5,50999,54999,4000,8
 Google Pixel 7,Google,8GB/128GB,official,3,45999,49999,4000,9
 Xiaomi 17 Pro Max,Xiaomi,12GB/512GB,unofficial,3,114999,118999,4000,3
+OPPO Reno 14 5G,OPPO,12GB/256GB,official,3,55999,59890,3891,7
 Samsung Galaxy A27 5G,Samsung,6GB/128GB,official,6,46380,49999,3619,8
 Tecno POVA Curve 2 5G,Tecno,8GB/128GB,official,3,33410,36999,3589,11
 iQOO Neo 11,iQOO,12GB/256GB,unofficial,3,59990,63499,3509,6
+Redmi Note 17 Pro 5G,Redmi,8GB/256GB,official,4,51499,54999,3500,7
 Redmi Note 15 Pro Plus 5G,Redmi,12GB/512GB,official,5,56499,59999,3500,6
+Redmi Note 17 Pro Max,Redmi,12GB/256GB,official,3,66499,69999,3500,5
 Honor X8d,Honor,8GB/256GB,official,4,34699,37999,3300,10
-Infinix Note 60 Pro,Infinix,8GB/256GB,official,3,46799,49999,3200,7
-OPPO Reno 14 5G,OPPO,12GB/256GB,official,3,56799,59999,3200,6
 OPPO A6k,OPPO,4GB/128GB,official,5,20999,23999,3000,14
 Vivo V70 FE 5G,Vivo,8GB/256GB,official,6,53999,56999,3000,6
 Realme 14 5G,Realme,12GB/256GB,official,5,39099,41999,2900,7
 Realme C100x,Realme,4GB/128GB,official,7,21199,23999,2800,13
-Infinix Note 60,Infinix,8GB/256GB,official,3,42199,44999,2800,7
 Honor X7d 4G,Honor,8GB/128GB,official,6,23299,25999,2700,12
-Honor 600 Lite,Honor,8GB/256GB,official,3,42299,44999,2700,6
-Realme C100i,Realme,4GB/128GB,official,4,18499,20999,2500,14
+Realme C100i,Realme,4GB/128GB,official,5,18499,20999,2500,14
 OPPO A6x,OPPO,4GB/64GB,official,5,17499,19999,2500,14
-OPPO A6c,OPPO,4GB/64GB,official,3,17499,19999,2500,14
+OPPO A6c,OPPO,4GB/64GB,official,4,17499,19999,2500,14
 Honor X6c,Honor,6GB/128GB,official,6,19499,21999,2500,13
 Realme 15 5G,Realme,12GB/256GB,official,4,42499,44999,2500,6
 Vivo V60 Lite 5G,Vivo,12GB/256GB,official,3,41499,43999,2500,6
-Infinix Note Edge,Infinix,8GB/256GB,official,3,32799,34999,2200,7
+Honor 600 Lite,Honor,8GB/256GB,unofficial,3,37990,39999,2009,5
 Vivo S50 Pro mini,Vivo,12GB/256GB,unofficial,3,62490,64499,2009,3
 Infinix Smart 20,Infinix,4GB/128GB,official,3,16999,18999,2000,12
-Vivo V60 Lite 4G,Vivo,8GB/256GB,official,4,32999,34999,2000,6
+Vivo V60 Lite 4G,Vivo,8GB/256GB,official,3,32999,34999,2000,6
 Samsung Galaxy A36 5G,Samsung,8GB/128GB,official,4,44499,46499,2000,4
 Huawei Mate 80 Pro,Huawei,16GB/512GB,official,4,137999,139999,2000,1
 Honor Magic V6,Honor,16GB/512GB,unofficial,3,185999,187999,2000,1
@@ -82,15 +82,16 @@ Redmi Note 17 4G,Redmi,8GB/256GB,official,4,35499,36999,1500,4
 Huawei Nova Y74,Huawei,8GB/256GB,official,4,28499,29999,1500,5
 Realme GT 7 Pro,Realme,12GB/256GB,unofficial,3,70999,72499,1500,2
 Redmi 15 4G,Redmi,6GB/128GB,official,3,21399,22799,1400,7
-Samsung Galaxy A07 4G,Samsung,6GB/128GB,official,5,27499,28799,1300,5
+Realme Note 70,Realme,4GB/64GB,official,3,15699,16999,1300,8
+Samsung Galaxy A07 4G,Samsung,6GB/128GB,official,4,27499,28799,1300,5
 Redmi Note 15 4G,Redmi,8GB/256GB,official,3,31799,32999,1200,4
 Vivo Y21d,Vivo,6GB/128GB,official,5,25899,26999,1100,4
 iQOO Z11 Turbo,iQOO,12GB/256GB,unofficial,3,58490,59499,1009,2
 Samsung Galaxy S25,Samsung,12GB/256GB,unofficial,3,77490,78499,1009,1
 Samsung Galaxy M06 5G,Samsung,6GB/128GB,official,3,26499,27499,1000,4
 Infinix Hot 70,Infinix,4GB/128GB,official,3,19999,20999,1000,5
-Realme C85 Pro,Realme,8GB/128GB,official,3,26999,27999,1000,4
 iQOO Z10x,iQOO,8GB/128GB,unofficial,3,25690,26499,809,3
+iQOO Z10 Turbo,iQOO,12GB/256GB,unofficial,3,43699,44499,800,2
 Tecno Spark 50 4G,Tecno,6GB/128GB,official,3,21260,21999,739,3
 Motorola Edge 60 Fusion,Motorola,8GB/128GB,unofficial,3,34790,35499,709,2
 Redmi Turbo 4 Pro,Redmi,12GB/256GB,unofficial,3,47490,48199,709,1
