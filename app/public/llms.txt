@@ -121,7 +121,7 @@
 
 ## Individual phones
 
-- [920 phone pages](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with its latest BD price and whether any shop has it in stock today, which shops those are, full specs and owner ratings. A page stays up when a phone sells out, and says so. The hub lists every one; they are not enumerated in this file.
+- [923 phone pages](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with its latest BD price and whether any shop has it in stock today, which shops those are, full specs and owner ratings. A page stays up when a phone sells out, and says so. The hub lists every one; they are not enumerated in this file.
 
 
 ## Market data
