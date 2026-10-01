@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { api, type Meta, type PhoneDetail, type Pick, type RecommendResp, type RecParams } from "./api";
+import { api, type Meta, type PhoneDetail, type Pick, type RecommendResp } from "./api";
 import { st } from "./theme";
 import { getLang, setLang, t, type Lang } from "./i18n";
 import { anyFilterSet, clearClause } from "./filters";
@@ -19,8 +19,9 @@ import { Dock } from "./components/Dock";
 import { BootNotice, Breadcrumbs } from "./components/Chrome";
 import { track } from "./track";
 import { DEFAULT_FORM, formToQuery, queryToForm, toParams, type Form } from "./need";
+import { captureSubmission, navigation, readNavigation, RequestGate, type Navigation, type Screen, type Submission } from "./requestState";
 
-export type Screen = "ask" | "results" | "detail" | "method";
+export type { Screen } from "./requestState";
 
 export type { Form, QuizIntent } from "./need";
 export { DEFAULT_FORM, weightAt, CHOICES, deriveIntent, toParams, formToQuery, queryToForm } from "./need";
@@ -38,6 +39,17 @@ export default function App() {
   const [recReady, setRecReady] = useState(false); // data in, loader playing its finish beat
   const [recError, setRecError] = useState<string | null>(null);
   const [matchCount, setMatchCount] = useState<number | null>(null);
+  const [submission, setSubmission] = useState<Submission | null>(null);
+  const submissionRef = useRef<Submission | null>(null);
+  const recGate = useRef(new RequestGate());
+  const detailGate = useRef(new RequestGate());
+  const resultsByRequest = useRef(new Map<string, RecommendResp>());
+  const restoreNav = useRef<(h: Navigation) => void>(() => {});
+  const invalidateRequests = useCallback(() => {
+    recGate.current.invalidate(); detailGate.current.invalidate();
+    setRecLoading(false); setRecReady(false); setDetailLoading(false);
+  }, []);
+  useEffect(() => () => { recGate.current.invalidate(); detailGate.current.invalidate(); }, []);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [pickHint, setPickHint] = useState<Pick | null>(null);
@@ -71,14 +83,15 @@ export default function App() {
      history entry; every back control calls history.back(), so the button and
      the on-screen "Back" do the same thing. A popstate with no state of ours
      is a real exit — we let it through. */
-  const pushNav = useCallback((s: Screen, node: string = ENTRY) => {
-    window.history.pushState({ kpk: true, screen: s, node }, "");
+  const pushNav = useCallback((s: Screen, node: string = ENTRY, phoneId?: string) => {
+    window.history.pushState(navigation(s, node, submissionRef.current, phoneId), "");
   }, []);
   useEffect(() => {
     window.history.replaceState({ kpk: true, screen: "ask", node: ENTRY }, "");
     const onPop = (e: PopStateEvent) => {
-      const h = e.state as { kpk?: boolean; screen?: Screen; node?: string } | null;
-      if (!h?.kpk) return;
+      const h = readNavigation(e.state);
+      invalidateRequests();
+      if (!h) return;
       setScreen(h.screen || "ask");
       // the node rides in the history entry, so Back walks the graph rather
       // than jumping straight out of the flow
@@ -91,11 +104,12 @@ export default function App() {
       const q = window.location.search.slice(1);
       const { node: _n, ...f } = queryToForm(q);
       setForm((prev) => ({ ...DEFAULT_FORM, ...f, wantMore: prev.wantMore }));
+      restoreNav.current(h);
       window.scrollTo({ top: 0 });
     };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
-  }, []);
+  }, [invalidateRequests]);
   const goBack = useCallback(() => window.history.back(), []);
 
   const patch = useCallback((d: Partial<Form>) => setForm((f) => ({ ...f, ...d })), []);
@@ -174,8 +188,9 @@ export default function App() {
   useEffect(() => {
     const q = formToQuery(form, nodeId);
     const next = q ? `${window.location.pathname}?${q}` : window.location.pathname;
-    if (next !== window.location.pathname + window.location.search) {
-      window.history.replaceState(window.history.state, "", next);
+    const h = window.history.state;
+    if (next !== window.location.pathname + window.location.search || (h?.screen === "ask" && h.node !== nodeId)) {
+      window.history.replaceState(h?.screen === "ask" ? { ...h, node: nodeId } : h, "", next);
     }
   }, [form, nodeId]);
 
@@ -185,26 +200,29 @@ export default function App() {
   // quota) on every keystroke just to show a match count.
   const debounceRef = useRef<number | undefined>(undefined);
   useEffect(() => {
+    let alive = true;
+    const controller = new AbortController();
     window.clearTimeout(debounceRef.current);
     // no budget yet -> no count. The channel and elderly screens come BEFORE
     // budget in the owner's flow, and a candidate count against no budget is
     // meaningless (and the backend requires budget > 0). Pills stay hidden
     // until the buyer sets a number.
-    if (form.budget <= 0) { setMatchCount(null); setCheapestIphone(null); return; }
+    setMatchCount(null); setCheapestIphone(null);
+    if (form.budget <= 0) return;
     debounceRef.current = window.setTimeout(() => {
-      api.count(toParams(form))
-        .then((r) => setMatchCount(r.candidates))
-        .catch(() => setMatchCount(null));
+      api.count(toParams(form), controller.signal)
+        .then((r) => { if (alive) setMatchCount(r.candidates); })
+        .catch(() => { if (alive) setMatchCount(null); });
       // the live iPhone threshold, the one count the pool cannot stand in for.
       // Only worth fetching on the elderly path — it is the only branch with a
       // guard that reads it.
       if (form.forElderly) {
-        api.cheapest({ brand: "Apple", official_only: form.officialOnly })
-          .then((r) => setCheapestIphone(r.price))
-          .catch(() => setCheapestIphone(null));
+        api.cheapest({ brand: "Apple", official_only: form.officialOnly }, controller.signal)
+          .then((r) => { if (alive) setCheapestIphone(r.price); })
+          .catch(() => { if (alive) setCheapestIphone(null); });
       }
     }, 350);
-    return () => window.clearTimeout(debounceRef.current);
+    return () => { alive = false; controller.abort(); window.clearTimeout(debounceRef.current); };
   }, [form]);
 
   /* The price floor. Depends on the channel and the elderly preset and NOT on
@@ -213,18 +231,15 @@ export default function App() {
      debounced /count effect above cannot carry it. */
   useEffect(() => {
     let stop = false;
+    const controller = new AbortController();
     api.cheapest({
       official_only: form.officialOnly,
       ...(form.forElderly ? { bd_service_floor: 6 } : {}),
-    })
+    }, controller.signal)
       .then((r) => { if (!stop) setFloorPrice(r.price); })
       .catch(() => { if (!stop) setFloorPrice(null); });
-    return () => { stop = true; };
+    return () => { stop = true; controller.abort(); };
   }, [form.officialOnly, form.forElderly]);
-
-  // signature of the form the current `result` was computed from, so navigating
-  // back to Results after editing the query re-runs instead of showing stale picks
-  const lastRunKey = useRef<string>("");
 
   // keep the loader on screen at least this long so a cached/instant result
   // doesn't flash through the staged animation; the loader then plays a short
@@ -236,14 +251,19 @@ export default function App() {
   // → RagProgress, and sent to /recommend so the backend stores the trail under it.
   const requestIdRef = useRef<string>("");
 
-  const runRecommend = useCallback(async () => {
+  const runRecommend = useCallback(async (options?: { form?: Form; matchCount?: number | null; replace?: boolean }) => {
+    const submittedForm = options?.form ?? form;
     const requestId = crypto.randomUUID();
+    const captured = captureSubmission(submittedForm, requestId, options?.matchCount !== undefined ? options.matchCount : matchCount);
+    const ticket = recGate.current.begin(requestId, JSON.stringify(toParams(submittedForm, 5)));
+    if (!ticket) return;
+    detailGate.current.invalidate();
     requestIdRef.current = requestId;
-    track("see_results", { budget: form.budget, quiz: !!(form.useCase || form.priorities.length) });
-    const params: RecParams = { ...toParams(form, 5), request_id: requestId };
-    lastRunKey.current = JSON.stringify(toParams(form, 5));
+    submissionRef.current = captured; setSubmission(captured);
+    track("see_results", { budget: submittedForm.budget, quiz: !!(submittedForm.useCase || submittedForm.priorities.length) });
     setScreen("results");
-    pushNav("results");
+    if (options?.replace) window.history.replaceState(navigation("results", nodeId, captured), "");
+    else pushNav("results", nodeId);
     window.scrollTo({ top: 0 });
     setRecLoading(true);
     setRecReady(false);
@@ -251,16 +271,21 @@ export default function App() {
     setResult(null);
     const t0 = Date.now();
     try {
-      const r = await api.recommend(params);
+      const r = await api.recommend(captured.params, ticket.controller.signal);
+      if (!recGate.current.owns(ticket)) return;
       const wait = MIN_LOADER_MS - (Date.now() - t0);
       if (wait > 0) await new Promise((res) => setTimeout(res, wait));
+      if (!recGate.current.owns(ticket)) return;
+      resultsByRequest.current.set(requestId, r);
       setResult(r);
       setRecReady(true);          // loader plays its finish, then calls onLoaderDone
     } catch (e: any) {
+      if (!recGate.current.owns(ticket)) return;
+      recGate.current.finish(ticket);
       setRecError(e?.message || "Could not load recommendations");
       setRecLoading(false);       // errors skip the finish beat
     }
-  }, [form]);
+  }, [form, matchCount, nodeId, pushNav]);
 
   /* The nudge. Fires ONCE, and only when a buyer LEAVES THE WALK EARLY without
      having set a single filter — the case where one tap would sharpen the pick
@@ -282,7 +307,7 @@ export default function App() {
     runRecommend();
   }, [form, sheetSeen, runRecommend]);
   // reaching END is a commit, never a nudge
-  onSeeResultsRef.current = runRecommend;
+  onSeeResultsRef.current = () => { runRecommend(); };
 
   // the affirmative button does NOT rank — it returns the buyer to the walk at
   // the first filter step. Only the commit spends a ranking call.
@@ -304,6 +329,9 @@ export default function App() {
 
   const [resetting, setResetting] = useState(false);
   const doReset = useCallback(() => {
+    invalidateRequests();
+    setResult(null); setRecError(null); setSubmission(null); submissionRef.current = null;
+    setDetail(null); setDetailError(null); setSelectedId(null); setPickHint(null);
     setResetting(false);
     setForm(DEFAULT_FORM);
     setPopup(null);
@@ -319,38 +347,61 @@ export default function App() {
     setScreen("ask");
     window.scrollTo({ top: 0 });
     track("picker_reset", {});
-  }, []);
+  }, [invalidateRequests]);
 
   // RagProgress finished its completion beat -> reveal the results
-  const onLoaderDone = useCallback(() => { setRecLoading(false); setRecReady(false); }, []);
+  const loaderRequestId = requestIdRef.current;
+  const onLoaderDone = useCallback(() => {
+    if (!recGate.current.ownsId(loaderRequestId) || !recReady) return;
+    recGate.current.finishId(loaderRequestId);
+    setRecLoading(false); setRecReady(false);
+  }, [loaderRequestId, recReady]);
 
-  const openDetail = useCallback(async (id: string) => {
+  const openDetail = useCallback(async (id: string, replace = false, hintResult = result) => {
+    const ticket = detailGate.current.begin(crypto.randomUUID(), id);
+    if (!ticket) return;
+    recGate.current.invalidate(); setRecLoading(false); setRecReady(false);
     setScreen("detail");
-    pushNav("detail");
+    if (!replace) pushNav("detail", nodeId, id);
     setSelectedId(id);
-    const rank = (result?.picks.findIndex((p) => p.id === id) ?? -1) + 1;
+    const rank = (hintResult?.picks.findIndex((p) => p.id === id) ?? -1) + 1;
     track("result_click", { phone: id, rank: rank || null });
     // instant hero/scores/verdict from the result pick while the full
     // DB-backed detail (specs, offers, owner voices) loads behind it
-    setPickHint(result?.picks.find((p) => p.id === id) ?? null);
+    setPickHint(hintResult?.picks.find((p) => p.id === id) ?? null);
     window.scrollTo({ top: 0 });
     setDetail(null);
     setDetailLoading(true);
     setDetailError(null);
     try {
-      setDetail(await api.phone(id));
+      const phone = await api.phone(id, ticket.controller.signal);
+      if (detailGate.current.owns(ticket)) setDetail(phone);
     } catch (e: any) {
-      setDetailError(e?.message || "Could not load phone");
+      if (detailGate.current.owns(ticket)) setDetailError(e?.message || "Could not load phone");
     } finally {
-      setDetailLoading(false);
+      if (detailGate.current.owns(ticket)) { detailGate.current.finish(ticket); setDetailLoading(false); }
     }
-  }, [result]);
+  }, [result, nodeId, pushNav]);
 
-  const goAsk = () => { setScreen("ask"); pushNav("ask"); window.scrollTo({ top: 0 }); };
+  restoreNav.current = (h) => {
+    if (h.submission) {
+      submissionRef.current = h.submission; setSubmission(h.submission);
+      requestIdRef.current = h.submission.requestId;
+      setResult(resultsByRequest.current.get(h.submission.requestId) ?? null);
+      setRecError(null);
+    }
+    if (h.screen === "detail" && h.phoneId) {
+      openDetail(h.phoneId, true, h.submission ? resultsByRequest.current.get(h.submission.requestId) ?? null : null);
+    } else if (h.screen === "results" && h.submission && !resultsByRequest.current.has(h.submission.requestId)) {
+      runRecommend({ form: h.submission.form, matchCount: h.submission.matchCount, replace: true });
+    }
+  };
+
+  const goAsk = () => { invalidateRequests(); setScreen("ask"); pushNav("ask", nodeId); window.scrollTo({ top: 0 }); };
   // "back to results" from a detail/method screen IS a back navigation — going
   // through history keeps the browser button and this button in step
   const goResults = () => goBack();
-  const goMethod = () => { setScreen("method"); pushNav("method"); window.scrollTo({ top: 0 }); };
+  const goMethod = () => { invalidateRequests(); setScreen("method"); pushNav("method", nodeId); window.scrollTo({ top: 0 }); };
 
   // one-time "prices are a guide" notice when results first appear this session
   const [showNotice, setShowNotice] = useState(false);
@@ -472,7 +523,7 @@ export default function App() {
             onNext={(next) => advance(nodeId, next)}
             onBack={goBack}
             onExit={onExitEarly}
-            onCommit={runRecommend}
+            onCommit={() => { runRecommend(); }}
             onClear={onClear}
             onReset={() => setResetting(true)}
             floorPrice={floorPrice}
@@ -485,18 +536,20 @@ export default function App() {
         {resetting && <ResetConfirm onYes={doReset} onNo={() => setResetting(false)} />}
         {screen === "results" && (
           <ResultsScreen
+            key={requestIdRef.current}
             result={result} loading={recLoading} error={recError}
-            form={form} matchCount={matchCount} ready={recReady} onLoaderDone={onLoaderDone}
+            form={submission?.form ?? form} matchCount={submission ? submission.matchCount : matchCount} ready={recReady} onLoaderDone={onLoaderDone}
             onEdit={goAsk} onNewSearch={goAsk} onPick={openDetail}
-            onRetry={runRecommend} onHowItWorks={goMethod}
+            onRetry={() => { runRecommend({ form: submission?.form, matchCount: submission?.matchCount, replace: true }); }} onHowItWorks={goMethod}
             requestId={requestIdRef.current}
           />
         )}
         {screen === "detail" && (
           <DetailScreen
             detail={detail} hint={pickHint} loading={detailLoading} error={detailError}
-            budget={form.budget} onBack={goResults} checked={checkedDay}
-            onRetry={() => selectedId && openDetail(selectedId)}
+            key={selectedId}
+            budget={submission?.form.budget ?? form.budget} onBack={goResults} checked={checkedDay}
+            onRetry={() => selectedId && openDetail(selectedId, true)}
           />
         )}
         {screen === "method" && <MethodScreen onBack={goResults} />}

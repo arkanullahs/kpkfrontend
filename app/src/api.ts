@@ -4,7 +4,7 @@
 
 const BASE = (import.meta as any).env?.VITE_API_BASE ?? "/api";
 
-async function get<T>(path: string, params?: Record<string, unknown>): Promise<T> {
+async function get<T>(path: string, params?: Record<string, unknown>, signal?: AbortSignal): Promise<T> {
   const url = new URL(BASE + path, window.location.origin);
   if (params) {
     for (const [k, v] of Object.entries(params)) {
@@ -12,7 +12,7 @@ async function get<T>(path: string, params?: Record<string, unknown>): Promise<T
       url.searchParams.set(k, String(v));
     }
   }
-  const res = await fetch(url.toString());
+  const res = await fetch(url.toString(), { signal });
   if (!res.ok) {
     let detail = res.statusText;
     try { detail = (await res.json()).detail ?? detail; } catch { /* ignore */ }
@@ -431,13 +431,13 @@ export const api = {
   status: (request_id?: string) =>
     request_id ? get<QueueStatus>("/status", { request_id }) : get<QueueStatus>("/status"),
   archetypes: () => get<Archetype[]>("/archetypes"),
-  recommend: (p: RecParams) => get<RecommendResp>("/recommend", p as any),
-  count: (p: RecParams) => get<CountResp>("/count", p as any),
+  recommend: (p: RecParams, signal?: AbortSignal) => get<RecommendResp>("/recommend", p as any, signal),
+  count: (p: RecParams, signal?: AbortSignal) => get<CountResp>("/count", p as any, signal),
   /** The least this buyer could spend. No brand = the catalogue floor, which
       is what the budget screen refuses to let them type under. */
-  cheapest: (p: { brand?: string; official_only?: boolean; bd_service_floor?: number }) =>
-    get<{ price: number | null }>("/cheapest", p as any),
-  phone: (id: string) => get<PhoneDetail>("/phones/" + id.split("/").map(encodeURIComponent).join("/")),
+  cheapest: (p: { brand?: string; official_only?: boolean; bd_service_floor?: number }, signal?: AbortSignal) =>
+    get<{ price: number | null }>("/cheapest", p as any, signal),
+  phone: (id: string, signal?: AbortSignal) => get<PhoneDetail>("/phones/" + id.split("/").map(encodeURIComponent).join("/"), undefined, signal),
   phoneImage: (id: string) => get<{ url: string | null }>("/phone-image/" + id.split("/").map(encodeURIComponent).join("/")),
   browse: (p: { q?: string; brand?: string; min_price?: number; max_price?: number; in_stock?: boolean; limit?: number; offset?: number }) =>
     get<BrowseResp>("/phones", p as any),
