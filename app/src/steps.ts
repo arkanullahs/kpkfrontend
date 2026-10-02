@@ -116,6 +116,7 @@ export const UNOWNED: Record<string, string> = {
   useCase: "derived from q by deriveIntent",
   priorities: "derived from q by deriveIntent",
   weights: "derived from q by deriveIntent",
+  subject: "set only by a /phone/ page's link (?subject=brand|key), never by a screen. Not a filter: the results answer about that phone separately (N05).",
 };
 
 /* The tile icons.
