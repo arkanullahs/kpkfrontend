@@ -52,6 +52,16 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   updated_on: { en: "updated", bn: "আপডেট" },
   // results
   top_picks: { en: "top picks", bn: "সেরা পছন্দ" },
+  // the results' differences panel (plan 03 W09)
+  diff_title: { en: "How your top picks differ", bn: "সেরা পছন্দগুলোর পার্থক্য" },
+  diff_same: { en: "Same on", bn: "একই" },
+  diff_prio: { en: "your priority", bn: "আপনার অগ্রাধিকার" },
+  diff_note: { en: "Shaded = better on that one measure. Megapixels and screen size are listed, never ranked.", bn: "রঙ করা ঘর = ঐ একটি মাপে ভালো। মেগাপিক্সেল ও স্ক্রিন সাইজ শুধু দেখানো হয়, র‍্যাঙ্ক করা হয় না।" },
+  diff_noevidence: { en: "Specs and catalogue scores only: owner reviews are not part of this comparison.", bn: "শুধু স্পেক ও ক্যাটালগ স্কোর: ব্যবহারকারীর রিভিউ এই তুলনায় নেই।" },
+  diff_unresolved: { en: "is no longer listed in this configuration. Run the search again for current prices.", bn: "এই কনফিগারেশনে আর তালিকায় নেই। বর্তমান দামের জন্য আবার খুঁজুন।" },
+  diff_stale: { en: "Prices were updated after these results. Run the search again to compare.", bn: "এই ফলাফলের পর দাম আপডেট হয়েছে। তুলনা করতে আবার খুঁজুন।" },
+  diff_loading: { en: "Comparing…", bn: "তুলনা করা হচ্ছে…" },
+  diff_error: { en: "Couldn't load the comparison.", bn: "তুলনা লোড করা যায়নি।" },
   edit: { en: "Edit", bn: "এডিট" },
   any_channel: { en: "any channel", bn: "যেকোনো চ্যানেল" },
   official_only: { en: "official only", bn: "শুধু অফিসিয়াল" },

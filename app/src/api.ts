@@ -154,6 +154,40 @@ export interface Pick {
   preorder_deal?: unknown;
   niche?: boolean;
   upgrade?: Upgrade | null;
+  /** the one listing this pick's price is for (backend offers.public):
+      every requirement was tested on it, and it is what the differences
+      panel compares. Shop-anonymous. */
+  selected_offer?: SelectedOffer | null;
+}
+
+export interface SelectedOffer {
+  model_id: string; configuration_id: string; variant: string | null;
+  channel: "official" | "unofficial" | "unstated" | string;
+  price: number; price_low: number; price_high: number; availability: string;
+}
+
+/** POST /decision-differences: two exact picks, row by row, from the same
+    axis table and scorecard the static pages use. No ranker call. */
+export interface DiffRef { model_id: string; configuration_id: string; channel: string; }
+export interface DiffRow {
+  key: string; label: string;
+  basis: "specification" | "catalogue_percentile" | "review_evidence" | "unknown";
+  cells: { model_id: string; configuration_id: string; text: string; evidence_ids: string[] }[];
+  /** relative to the request order; null = this row is printed, never ranked */
+  direction: "left" | "right" | "same" | "unresolved" | null;
+  relevance: "priority" | "hard_requirement" | "context";
+}
+export interface DiffResp {
+  status: "ready" | "unresolved";
+  selections: DiffRef[];
+  differences: DiffRow[];
+  issues: { selection_index: 0 | 1 | null; code: string }[];
+  catalogue_version: string; evidence_version: string;
+}
+export interface DiffReq {
+  requirements: { priorities: string[]; min_ram: number; min_storage: number };
+  selections: [DiffRef, DiffRef];
+  catalogue_version: string; evidence_version: string;
 }
 
 export interface Stretch {
@@ -173,6 +207,8 @@ export interface RecommendResp {
     requested?: boolean;
     cached?: boolean;
     request_id?: string | null;
+    /** the catalogue these picks were read from (last_refresh) */
+    catalogue_version?: string;
   };
   top_reasoning: string[] | null;
   picks: Pick[];
@@ -411,17 +447,23 @@ export interface QueueStatus {
   breaker?: Record<string, { reason: string; cooldown_s: number }>;
 }
 
-async function post<T>(path: string, body: unknown): Promise<T> {
+/** carries the HTTP status, so a caller can tell a 409 from a failure */
+export class HttpError extends Error {
+  constructor(message: string, public status: number) { super(message); }
+}
+
+async function post<T>(path: string, body: unknown, signal?: AbortSignal): Promise<T> {
   const url = new URL(BASE + path, window.location.origin);
   const res = await fetch(url.toString(), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    signal,
   });
   if (!res.ok) {
-    let detail = res.statusText;
+    let detail: unknown = res.statusText;
     try { detail = (await res.json()).detail ?? detail; } catch { /* ignore */ }
-    throw new Error(detail || `HTTP ${res.status}`);
+    throw new HttpError(typeof detail === "string" ? detail : JSON.stringify(detail), res.status);
   }
   return res.json() as Promise<T>;
 }
@@ -442,4 +484,5 @@ export const api = {
   browse: (p: { q?: string; brand?: string; min_price?: number; max_price?: number; in_stock?: boolean; limit?: number; offset?: number }) =>
     get<BrowseResp>("/phones", p as any),
   feedback: (p: FeedbackPayload) => post<{ ok: boolean }>("/feedback", p),
+  differences: (b: DiffReq, signal?: AbortSignal) => post<DiffResp>("/decision-differences", b, signal),
 };
