@@ -14,7 +14,7 @@
 - [Best phones under ৳15,000](https://bhalophone.com/best/phone-under-15000): ranked list, live BD prices. Current #1: Vivo Y05.
 - [Best phones under ৳20,000](https://bhalophone.com/best/phone-under-20000): ranked list, live BD prices. Current #1: Infinix Hot 70.
 - [Best phones under ৳25,000](https://bhalophone.com/best/phone-under-25000): ranked list, live BD prices. Current #1: POCO M7 5G.
-- [Best phones under ৳26,000](https://bhalophone.com/best/phone-under-26000): ranked list, live BD prices. Current #1: Samsung Galaxy M17e 5G.
+- [Best phones under ৳26,000](https://bhalophone.com/best/phone-under-26000): ranked list, live BD prices. Current #1: Redmi Note 14S.
 - [Best phones under ৳30,000](https://bhalophone.com/best/phone-under-30000): ranked list, live BD prices. Current #1: Infinix Note Edge.
 - [Best phones under ৳35,000](https://bhalophone.com/best/phone-under-35000): ranked list, live BD prices. Current #1: Redmi Note 17 Pro 5G.
 - [Best phones under ৳40,000](https://bhalophone.com/best/phone-under-40000): ranked list, live BD prices. Current #1: Honor X9d.
@@ -59,7 +59,7 @@
 - [Best battery phones under ৳12,000](https://bhalophone.com/best/battery-phone-under-12000): ranked list, live BD prices. Current #1: itel A200 Plus. Stretch pick: ৳999 over ৳12,000.
 - [Best battery phones under ৳15,000](https://bhalophone.com/best/battery-phone-under-15000): ranked list, live BD prices. Current #1: Vivo Y05.
 - [Best battery phones under ৳20,000](https://bhalophone.com/best/battery-phone-under-20000): ranked list, live BD prices. Current #1: OPPO A6c.
-- [Best battery phones under ৳25,000](https://bhalophone.com/best/battery-phone-under-25000): ranked list, live BD prices. Current #1: Vivo Y31d.
+- [Best battery phones under ৳25,000](https://bhalophone.com/best/battery-phone-under-25000): ranked list, live BD prices. Current #1: Tecno Spark 50 Pro.
 - [Best battery phones under ৳30,000](https://bhalophone.com/best/battery-phone-under-30000): ranked list, live BD prices. Current #1: Infinix Note Edge.
 - [Best battery phones under ৳35,000](https://bhalophone.com/best/battery-phone-under-35000): ranked list, live BD prices. Current #1: Redmi Note 17 Pro 5G.
 - [Best battery phones under ৳40,000](https://bhalophone.com/best/battery-phone-under-40000): ranked list, live BD prices. Current #1: Honor X9d.
@@ -121,7 +121,7 @@
 
 ## Individual phones
 
-- [925 phone pages](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with its latest BD price and whether any shop has it in stock today, which shops those are, full specs and owner ratings. A page stays up when a phone sells out, and says so. The hub lists every one; they are not enumerated in this file.
+- [929 phone pages](https://bhalophone.com/phone): one page per phone at https://bhalophone.com/phone/<brand-model> with its latest BD price and whether any shop has it in stock today, which shops those are, full specs and owner ratings. A page stays up when a phone sells out, and says so. The hub lists every one; they are not enumerated in this file.
 
 
 ## Market data

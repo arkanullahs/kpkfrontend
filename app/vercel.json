@@ -88,22 +88,22 @@
     },
     {
       "source": "/phone/helio-47-smart-phone",
-      "destination": "/brand/helio",
+      "destination": "/brand/helio?gone=helio-47-smart-phone",
       "permanent": true
     },
     {
       "source": "/phone/helio-62-smart-phone",
-      "destination": "/brand/helio",
+      "destination": "/brand/helio?gone=helio-62-smart-phone",
       "permanent": true
     },
     {
       "source": "/phone/hmd-110",
-      "destination": "/brand/hmd",
+      "destination": "/brand/hmd?gone=hmd-110",
       "permanent": true
     },
     {
       "source": "/phone/honor-300-ultra",
-      "destination": "/brand/honor",
+      "destination": "/brand/honor?gone=honor-300-ultra",
       "permanent": true
     },
     {
@@ -118,27 +118,27 @@
     },
     {
       "source": "/phone/honor-magic5-pro",
-      "destination": "/brand/honor",
+      "destination": "/phone/honor-magic-5-pro",
       "permanent": true
     },
     {
       "source": "/phone/honor-magic6",
-      "destination": "/brand/honor",
+      "destination": "/phone/honor-magic-6",
       "permanent": true
     },
     {
       "source": "/phone/honor-magic6-pro",
-      "destination": "/brand/honor",
+      "destination": "/phone/honor-magic-6-pro",
       "permanent": true
     },
     {
       "source": "/phone/honor-magic8-pro-5g",
-      "destination": "/brand/honor",
+      "destination": "/brand/honor?gone=honor-magic8-pro-5g",
       "permanent": true
     },
     {
       "source": "/phone/honor-power2-5g",
-      "destination": "/brand/honor",
+      "destination": "/brand/honor?gone=honor-power2-5g",
       "permanent": true
     },
     {
@@ -153,12 +153,12 @@
     },
     {
       "source": "/phone/infinix-hot-70-pro-5g",
-      "destination": "/brand/infinix",
+      "destination": "/brand/infinix?gone=infinix-hot-70-pro-5g",
       "permanent": true
     },
     {
-      "source": "/phone/iqoo-neo11",
-      "destination": "/brand/iqoo",
+      "source": "/phone/iqoo-neo-11",
+      "destination": "/phone/iqoo-neo11",
       "permanent": true
     },
     {
@@ -168,7 +168,7 @@
     },
     {
       "source": "/phone/iqoo-z9-turbo-endurance-5g",
-      "destination": "/brand/iqoo",
+      "destination": "/brand/iqoo?gone=iqoo-z9-turbo-endurance-5g",
       "permanent": true
     },
     {
@@ -178,17 +178,17 @@
     },
     {
       "source": "/phone/motorola-edge-60s",
-      "destination": "/brand/motorola",
+      "destination": "/brand/motorola?gone=motorola-edge-60s",
       "permanent": true
     },
     {
       "source": "/phone/motorola-g-stylus-5g-2026",
-      "destination": "/brand/motorola",
+      "destination": "/brand/motorola?gone=motorola-g-stylus-5g-2026",
       "permanent": true
     },
     {
       "source": "/phone/nokia-130-music-2025",
-      "destination": "/brand/nokia",
+      "destination": "/brand/nokia?gone=nokia-130-music-2025",
       "permanent": true
     },
     {
@@ -212,33 +212,23 @@
       "permanent": true
     },
     {
-      "source": "/phone/oneplus-nord-ce4-lite-5g",
-      "destination": "/brand/oneplus",
-      "permanent": true
-    },
-    {
-      "source": "/phone/oneplus-nord-ce5",
-      "destination": "/brand/oneplus",
-      "permanent": true
-    },
-    {
       "source": "/phone/oneplus-nord-ce6",
       "destination": "/phone/oneplus-nord-ce-6",
       "permanent": true
     },
     {
       "source": "/phone/oppo-a58",
-      "destination": "/brand/oppo",
+      "destination": "/brand/oppo?gone=oppo-a58",
       "permanent": true
     },
     {
       "source": "/phone/oppo-a6",
-      "destination": "/brand/oppo",
+      "destination": "/brand/oppo?gone=oppo-a6",
       "permanent": true
     },
     {
       "source": "/phone/oppo-a6i",
-      "destination": "/brand/oppo",
+      "destination": "/brand/oppo?gone=oppo-a6i",
       "permanent": true
     },
     {
@@ -248,17 +238,17 @@
     },
     {
       "source": "/phone/oppo-f33-pro-5g",
-      "destination": "/brand/oppo",
+      "destination": "/brand/oppo?gone=oppo-f33-pro-5g",
       "permanent": true
     },
     {
       "source": "/phone/oppo-find-n5-5g",
-      "destination": "/brand/oppo",
+      "destination": "/brand/oppo?gone=oppo-find-n5-5g",
       "permanent": true
     },
     {
       "source": "/phone/oppo-reno-13-5g",
-      "destination": "/brand/oppo",
+      "destination": "/brand/oppo?gone=oppo-reno-13-5g",
       "permanent": true
     },
     {
@@ -273,17 +263,17 @@
     },
     {
       "source": "/phone/oppo-reno-16-5g",
-      "destination": "/brand/oppo",
+      "destination": "/brand/oppo?gone=oppo-reno-16-5g",
       "permanent": true
     },
     {
       "source": "/phone/oppo-reno15-f",
-      "destination": "/brand/oppo",
+      "destination": "/phone/oppo-reno-15f-5g",
       "permanent": true
     },
     {
       "source": "/phone/oppo-reno15-f-5g",
-      "destination": "/brand/oppo",
+      "destination": "/phone/oppo-reno-15f-5g",
       "permanent": true
     },
     {
@@ -308,7 +298,7 @@
     },
     {
       "source": "/phone/realme-12x-5g",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-12x-5g",
       "permanent": true
     },
     {
@@ -318,17 +308,17 @@
     },
     {
       "source": "/phone/realme-13-pro-5g",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-13-pro-5g",
       "permanent": true
     },
     {
       "source": "/phone/realme-13-pro-plus-5g",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-13-pro-plus-5g",
       "permanent": true
     },
     {
       "source": "/phone/realme-14-pro-lite-5g",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-14-pro-lite-5g",
       "permanent": true
     },
     {
@@ -348,27 +338,17 @@
     },
     {
       "source": "/phone/realme-gt-neo-6-se-5g",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-gt-neo-6-se-5g",
       "permanent": true
     },
     {
       "source": "/phone/realme-gt-neo-7-turbo",
-      "destination": "/brand/realme",
-      "permanent": true
-    },
-    {
-      "source": "/phone/realme-gt5",
-      "destination": "/brand/realme",
-      "permanent": true
-    },
-    {
-      "source": "/phone/realme-gt7",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-gt-neo-7-turbo",
       "permanent": true
     },
     {
       "source": "/phone/realme-gt7-pro-racing",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-gt7-pro-racing",
       "permanent": true
     },
     {
@@ -393,12 +373,12 @@
     },
     {
       "source": "/phone/realme-neo-7-5g",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-neo-7-5g",
       "permanent": true
     },
     {
       "source": "/phone/realme-neo-7x-5g",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-neo-7x-5g",
       "permanent": true
     },
     {
@@ -413,17 +393,17 @@
     },
     {
       "source": "/phone/realme-p3-pro-5g",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-p3-pro-5g",
       "permanent": true
     },
     {
       "source": "/phone/realme-p4-lite",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-p4-lite",
       "permanent": true
     },
     {
       "source": "/phone/realme-v60-pro-5g",
-      "destination": "/brand/realme",
+      "destination": "/brand/realme?gone=realme-v60-pro-5g",
       "permanent": true
     },
     {
@@ -433,17 +413,17 @@
     },
     {
       "source": "/phone/redmi-17c-4g",
-      "destination": "/brand/redmi",
+      "destination": "/brand/redmi?gone=redmi-17c-4g",
       "permanent": true
     },
     {
       "source": "/phone/redmi-note-17",
-      "destination": "/brand/redmi",
+      "destination": "/brand/redmi?gone=redmi-note-17",
       "permanent": true
     },
     {
       "source": "/phone/redmi-note-17-5g",
-      "destination": "/brand/redmi",
+      "destination": "/brand/redmi?gone=redmi-note-17-5g",
       "permanent": true
     },
     {
@@ -463,7 +443,7 @@
     },
     {
       "source": "/phone/samsung-galaxy-a26-4g",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-galaxy-a26-4g",
       "permanent": true
     },
     {
@@ -473,7 +453,7 @@
     },
     {
       "source": "/phone/samsung-galaxy-f05",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-galaxy-f05",
       "permanent": true
     },
     {
@@ -483,7 +463,7 @@
     },
     {
       "source": "/phone/samsung-galaxy-f16-5g",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-galaxy-f16-5g",
       "permanent": true
     },
     {
@@ -498,7 +478,7 @@
     },
     {
       "source": "/phone/samsung-galaxy-f70e-5g",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-galaxy-f70e-5g",
       "permanent": true
     },
     {
@@ -523,7 +503,7 @@
     },
     {
       "source": "/phone/samsung-galaxy-s23-5g",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-galaxy-s23-5g",
       "permanent": true
     },
     {
@@ -538,7 +518,7 @@
     },
     {
       "source": "/phone/samsung-galaxy-s26-dual",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-galaxy-s26-dual",
       "permanent": true
     },
     {
@@ -548,12 +528,12 @@
     },
     {
       "source": "/phone/samsung-galaxy-z-flip-6-5g",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-galaxy-z-flip-6-5g",
       "permanent": true
     },
     {
       "source": "/phone/samsung-galaxy-z-flip-7fe",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-galaxy-z-flip-7fe",
       "permanent": true
     },
     {
@@ -568,22 +548,22 @@
     },
     {
       "source": "/phone/samsung-galaxy-z-fold4",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-galaxy-z-fold4",
       "permanent": true
     },
     {
       "source": "/phone/samsung-z-flip6",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-z-flip6",
       "permanent": true
     },
     {
       "source": "/phone/samsung-z-fold5",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-z-fold5",
       "permanent": true
     },
     {
       "source": "/phone/samsung-z-fold6",
-      "destination": "/brand/samsung",
+      "destination": "/brand/samsung?gone=samsung-z-fold6",
       "permanent": true
     },
     {
@@ -598,12 +578,12 @@
     },
     {
       "source": "/phone/tecno-spark-50",
-      "destination": "/brand/tecno",
+      "destination": "/brand/tecno?gone=tecno-spark-50",
       "permanent": true
     },
     {
       "source": "/phone/vivo-t3-pro-5g",
-      "destination": "/brand/vivo",
+      "destination": "/brand/vivo?gone=vivo-t3-pro-5g",
       "permanent": true
     },
     {
@@ -613,7 +593,7 @@
     },
     {
       "source": "/phone/vivo-v40-pro-5g",
-      "destination": "/brand/vivo",
+      "destination": "/brand/vivo?gone=vivo-v40-pro-5g",
       "permanent": true
     },
     {
@@ -627,8 +607,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/vivo-v70fe",
-      "destination": "/brand/vivo",
+      "source": "/phone/vivo-v70-fe-5g",
+      "destination": "/phone/vivo-v70fe",
       "permanent": true
     },
     {
@@ -638,7 +618,7 @@
     },
     {
       "source": "/phone/vivo-yo4",
-      "destination": "/brand/vivo",
+      "destination": "/brand/vivo?gone=vivo-yo4",
       "permanent": true
     },
     {

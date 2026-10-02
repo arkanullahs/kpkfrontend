@@ -870,6 +870,7 @@ padding:10px 15px 11px;border-radius:var(--r)}
   display:block;flex:0 1 auto}
 img.inv{filter:invert(1)}
 .bhd{display:flex;align-items:center;justify-content:space-between;gap:26px}
+.gone{background:var(--amsoft);border:1px solid var(--amline);border-radius:var(--r);padding:10px 14px;margin:10px 0 16px}
 .bhd>div:first-child{flex:1 1 auto;min-width:0}
 .blk{flex:none;margin:0}
 .blk img{width:auto;max-width:190px;object-fit:contain;display:block}
