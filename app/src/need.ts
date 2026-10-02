@@ -60,6 +60,9 @@ export interface Form {
   wantMore: boolean;
   includeCnRom: boolean;         // "a China ROM is fine" — actively re-admits
                                  // cn_rom phones the engine excludes by default
+  // the phone a /phone/ page sent ("brand|key"), "" = none. NOT a filter: the
+  // results answer about it separately (N05), and it never narrows the pool.
+  subject: string;
 }
 
 export const DEFAULT_FORM: Form = {
@@ -71,7 +74,7 @@ export const DEFAULT_FORM: Form = {
   minRam: 0, minStorage: 0,
   q: { picks: [], hw: [] },
   useCase: "", priorities: [], weights: {},
-  forElderly: null, rechannel: "", wantMore: false, includeCnRom: false,
+  forElderly: null, rechannel: "", wantMore: false, includeCnRom: false, subject: "",
 };
 
 /** The forced-choice quiz → the buyer's need.
@@ -219,6 +222,7 @@ export function formToQuery(f: Form, node: string = ENTRY_NODE): string {
   if (f.regions.length) p.set("mkt", f.regions.join(","));
   if (f.requireRom) p.set("lineage", "1");
   if (f.hwStrict) p.set("strict", "1");
+  if (f.subject) p.set("subject", f.subject);
   return p.toString();
 }
 
@@ -226,6 +230,12 @@ export function formToQuery(f: Form, node: string = ENTRY_NODE): string {
     shared link is exactly where hand-edited junk arrives. Every scalar is
     validated back to a legal value rather than cast: `?b=abc` would otherwise
     put NaN in the form and 422 every /count call with no visible cause. */
+/** "brand|key" and nothing else: one bar, bounded lengths, no control
+    characters. Anything else is dropped -- the picker then works as before. */
+export function validSubject(v: string | null): string {
+  return v && /^[^|\u0000-\u001f]{1,40}\|[^|\u0000-\u001f]{1,80}$/.test(v) ? v : "";
+}
+
 export function queryToForm(s: string): Partial<Form> & { node: string } {
   const p = new URLSearchParams(s);
   const list = (k: string) => (p.get(k) ? p.get(k)!.split(",").filter(Boolean) : []);
@@ -257,6 +267,7 @@ export function queryToForm(s: string): Partial<Form> & { node: string } {
     regions: list("mkt"),
     requireRom: p.get("lineage") === "1",
     hwStrict: p.get("strict") === "1",
+    subject: validSubject(p.get("subject")),
     // the hardware answers are BOTH a need field and three hard filters, so
     // they have to be rebuilt on both sides or a shared URL loses the filter
     requireJack: hw.includes("jack"),

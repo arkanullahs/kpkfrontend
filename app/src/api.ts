@@ -168,6 +168,16 @@ export interface SelectedOffer {
 
 /** POST /decision-differences: two exact picks, row by row, from the same
     axis table and scorecard the static pages use. No ranker call. */
+/** /count's answer about one named phone, from the pool's own rules */
+export interface SubjectEval {
+  status: "qualified" | "requirements_failed" | "policy_gated" | "unverified"
+    | "not_available" | "unknown_model";
+  reasons: string[];
+  model_id?: string; brand?: string; model?: string;
+  selected_offer?: SelectedOffer;
+  catalogue_version?: string;
+}
+
 export interface DiffRef { model_id: string; configuration_id: string; channel: string; }
 export interface DiffRow {
   key: string; label: string;
@@ -371,7 +381,10 @@ export interface BrowseCard {
 export interface BrowseResp { total: number; limit: number; offset: number; items: BrowseCard[]; }
 
 /** /count — structured pre-filter only (no LLM); powers the live match badge */
-export interface CountResp { candidates: number; relaxed: boolean; }
+export interface CountResp { candidates: number; relaxed: boolean;
+  /** present when `subject` was asked */
+  subject?: SubjectEval;
+}
 
 export interface FeedbackPayload {
   rating: "up" | "down";
@@ -384,6 +397,8 @@ export interface FeedbackPayload {
 /* ---------- recommend params ---------- */
 export interface RecParams {
   budget: number;
+  /** /count only: a phone id ("brand|key") to answer about (N05) */
+  subject?: string;
   archetype?: string;
   priorities?: string;
   /** free-text buyer situation from the Simple quiz — embedded as the intent */

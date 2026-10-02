@@ -6,6 +6,7 @@ import { BrandLogo, brandLogo } from "./BrandLogo";
 import { PhonePhoto } from "./PhonePhoto";
 import { SpecIcon } from "./Chrome";
 import { JustSoYouKnow } from "./Compare";
+import { SubjectAnswer } from "./SubjectAnswer";
 import { DecisionDiff } from "./DecisionDiff";
 import { toParams } from "../need";
 import { RagProgress } from "./RagProgress";
@@ -270,6 +271,10 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
           <p style={st("margin:0; font-size:15px; color:var(--ink2); line-height:1.6; text-wrap:pretty;")}>{reasoning}</p>
         </div>
       )}
+
+      {/* the phone a /phone/ page sent: what happened to it, before the
+          picks, because it is the question the visitor came with */}
+      {form.subject && <SubjectAnswer form={form} picks={picks} onPick={onPick} />}
 
       {/* HERO pick */}
       <HeroPick p={first} budget={b} pct={pct} onClick={() => onPick(first.id)} />
