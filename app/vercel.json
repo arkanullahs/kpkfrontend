@@ -237,6 +237,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/oppo-a6i",
+      "destination": "/brand/oppo",
+      "permanent": true
+    },
+    {
       "source": "/phone/oppo-f31-pro-plus-5g",
       "destination": "/phone/oppo-f31-pro-plus",
       "permanent": true
@@ -553,7 +558,7 @@
     },
     {
       "source": "/phone/samsung-galaxy-z-fold-6-5g",
-      "destination": "/brand/samsung",
+      "destination": "/phone/samsung-galaxy-z-fold-6",
       "permanent": true
     },
     {
@@ -629,11 +634,6 @@
     {
       "source": "/phone/vivo-x-fold5",
       "destination": "/phone/vivo-x-fold-5",
-      "permanent": true
-    },
-    {
-      "source": "/phone/vivo-y500",
-      "destination": "/brand/vivo",
       "permanent": true
     },
     {
@@ -727,8 +727,8 @@
       "permanent": true
     },
     {
-      "source": "/vs/oppo-k14-vs-samsung-galaxy-m36-5g",
-      "destination": "/phone/oppo-k14",
+      "source": "/vs/oneplus-13s-vs-xiaomi-15t-pro",
+      "destination": "/phone/oneplus-13s",
       "permanent": true
     },
     {
