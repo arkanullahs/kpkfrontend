@@ -6,6 +6,8 @@ import { BrandLogo, brandLogo } from "./BrandLogo";
 import { PhonePhoto } from "./PhonePhoto";
 import { SpecIcon } from "./Chrome";
 import { JustSoYouKnow } from "./Compare";
+import { DecisionDiff } from "./DecisionDiff";
+import { toParams } from "../need";
 import { RagProgress } from "./RagProgress";
 import type { Channels, DataCaution, Pick, RecommendResp, RegionOffer, SpecTile, Stretch, VariantPrice } from "../api";
 import type { Form } from "../App";
@@ -338,6 +340,11 @@ export function ResultsScreen({ result, loading, error, form, matchCount, ready,
         })}
       </div>
 
+      {/* the top picks side by side -- after every card, so it reads as a
+          second look, not a verdict ahead of the ranking */}
+      <DecisionDiff picks={picks} version={meta.catalogue_version}
+        priorities={diffPriorities(form)} minRam={form.minRam} minStorage={form.minStorage} />
+
       {/* stretch — promoted: spending a little more is often the smart move */}
       {stretch && <StretchCard s={stretch} budget={b} onClick={() => onPick(`${stretch.brand}|${stretch.key}`)} />}
 
@@ -576,6 +583,13 @@ function FeedbackCard({ picks, budget, archetype }: { picks: Pick[]; budget: num
 }
 
 /* ---------- small shared bits ---------- */
+/** the axes this request weighted, as the server names them */
+function diffPriorities(form: Props["form"]): string[] {
+  const p = toParams(form);
+  const raw = p.weights ? p.weights.split(",").map((w) => w.split(":")[0]) : (p.priorities || "").split(",");
+  return raw.map((x) => x.trim()).filter(Boolean);
+}
+
 function Centered({ children }: { children: ReactNode }) {
   return <div style={st("max-width:680px; margin:0 auto; padding:80px 0; text-align:center; color:var(--mut2); font-size:15px;")}>{children}</div>;
 }
