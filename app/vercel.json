@@ -552,6 +552,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/samsung-m07",
+      "destination": "/brand/samsung?gone=samsung-m07",
+      "permanent": true
+    },
+    {
       "source": "/phone/samsung-z-flip6",
       "destination": "/brand/samsung?gone=samsung-z-flip6",
       "permanent": true
