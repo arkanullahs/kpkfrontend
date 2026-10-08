@@ -102,6 +102,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/honor-200",
+      "destination": "/phone/honor-200-5g",
+      "permanent": true
+    },
+    {
       "source": "/phone/honor-300-ultra",
       "destination": "/brand/honor?gone=honor-300-ultra",
       "permanent": true
@@ -194,6 +199,11 @@
     {
       "source": "/phone/nokia-150-ds-2023",
       "destination": "/phone/nokia-150-2023",
+      "permanent": true
+    },
+    {
+      "source": "/phone/nubia-a56",
+      "destination": "/brand/nubia?gone=nubia-a56",
       "permanent": true
     },
     {
@@ -652,18 +662,23 @@
       "permanent": true
     },
     {
+      "source": "/vs/honor-400-pro-5g-vs-motorola-edge-60-pro",
+      "destination": "/phone/motorola-edge-60-pro",
+      "permanent": true
+    },
+    {
       "source": "/vs/honor-400-pro-5g-vs-oneplus-15r",
       "destination": "/phone/oneplus-15r",
       "permanent": true
     },
     {
-      "source": "/vs/honor-x6d-5g-vs-samsung-galaxy-a16-4g",
-      "destination": "/phone/samsung-galaxy-a16-4g",
+      "source": "/vs/honor-400-pro-5g-vs-oneplus-nord-6",
+      "destination": "/brand/honor",
       "permanent": true
     },
     {
-      "source": "/vs/honor-x6d-5g-vs-samsung-galaxy-m06-5g",
-      "destination": "/phone/samsung-galaxy-m06-5g",
+      "source": "/vs/honor-x6d-5g-vs-samsung-galaxy-a16-4g",
+      "destination": "/phone/samsung-galaxy-a16-4g",
       "permanent": true
     },
     {
@@ -679,11 +694,6 @@
     {
       "source": "/vs/infinix-gt-30-vs-redmi-note-15",
       "destination": "/phone/infinix-gt-30",
-      "permanent": true
-    },
-    {
-      "source": "/vs/itel-a100c-vs-realme-note-60x",
-      "destination": "/phone/itel-a100c",
       "permanent": true
     },
     {
@@ -734,11 +744,6 @@
     {
       "source": "/vs/redmi-note-14-4g-vs-samsung-galaxy-a16-4g",
       "destination": "/phone/redmi-note-14-4g",
-      "permanent": true
-    },
-    {
-      "source": "/vs/samsung-galaxy-a07-vs-samsung-galaxy-m06-5g",
-      "destination": "/phone/samsung-galaxy-m06-5g",
       "permanent": true
     }
   ]
