@@ -192,11 +192,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/nokia-130-2023",
-      "destination": "/brand/nokia?gone=nokia-130-2023",
-      "permanent": true
-    },
-    {
       "source": "/phone/nokia-130-music-2025",
       "destination": "/brand/nokia?gone=nokia-130-music-2025",
       "permanent": true
