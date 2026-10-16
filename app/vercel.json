@@ -192,6 +192,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/nokia-130-2023",
+      "destination": "/brand/nokia?gone=nokia-130-2023",
+      "permanent": true
+    },
+    {
       "source": "/phone/nokia-130-music-2025",
       "destination": "/brand/nokia?gone=nokia-130-music-2025",
       "permanent": true
@@ -199,6 +204,11 @@
     {
       "source": "/phone/nokia-150-ds-2023",
       "destination": "/phone/nokia-150-2023",
+      "permanent": true
+    },
+    {
+      "source": "/phone/nubia-a35e",
+      "destination": "/brand/nubia?gone=nubia-a35e",
       "permanent": true
     },
     {
@@ -299,6 +309,11 @@
     {
       "source": "/phone/poco-m6-pro",
       "destination": "/phone/poco-m6-pro-5g",
+      "permanent": true
+    },
+    {
+      "source": "/phone/poco-m8",
+      "destination": "/phone/poco-m8-5g",
       "permanent": true
     },
     {
@@ -682,6 +697,11 @@
       "permanent": true
     },
     {
+      "source": "/vs/honor-x9d-5g-vs-samsung-galaxy-m56-5g",
+      "destination": "/phone/samsung-galaxy-m56-5g",
+      "permanent": true
+    },
+    {
       "source": "/vs/infinix-gt-30-vs-realme-p4x",
       "destination": "/phone/infinix-gt-30",
       "permanent": true
@@ -742,11 +762,6 @@
       "permanent": true
     },
     {
-      "source": "/vs/realme-p4x-vs-redmi-note-15",
-      "destination": "/phone/realme-p4x",
-      "permanent": true
-    },
-    {
       "source": "/vs/redmi-a7-vs-samsung-galaxy-m06-5g",
       "destination": "/phone/redmi-a7",
       "permanent": true
@@ -754,6 +769,11 @@
     {
       "source": "/vs/redmi-note-14-4g-vs-samsung-galaxy-a16-4g",
       "destination": "/phone/redmi-note-14-4g",
+      "permanent": true
+    },
+    {
+      "source": "/vs/samsung-galaxy-m36-5g-vs-samsung-galaxy-m56-5g",
+      "destination": "/phone/samsung-galaxy-m36-5g",
       "permanent": true
     }
   ]
