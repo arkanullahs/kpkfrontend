@@ -577,11 +577,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/samsung-galaxy-z-fold4",
-      "destination": "/brand/samsung?gone=samsung-galaxy-z-fold4",
-      "permanent": true
-    },
-    {
       "source": "/phone/samsung-m07",
       "destination": "/brand/samsung?gone=samsung-m07",
       "permanent": true
