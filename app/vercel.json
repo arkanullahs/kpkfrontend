@@ -277,6 +277,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/oppo-reno-15",
+      "destination": "/phone/oppo-reno15-5g",
+      "permanent": true
+    },
+    {
       "source": "/phone/oppo-reno-16",
       "destination": "/phone/oppo-reno16",
       "permanent": true
@@ -447,11 +452,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/redmi-note-17-5g",
-      "destination": "/brand/redmi?gone=redmi-note-17-5g",
-      "permanent": true
-    },
-    {
       "source": "/phone/redmi-note-17-pro-5g",
       "destination": "/phone/redmi-note-17-pro",
       "permanent": true
@@ -572,6 +572,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/samsung-galaxy-z-fold-8",
+      "destination": "/phone/samsung-galaxy-z-fold8",
+      "permanent": true
+    },
+    {
       "source": "/phone/samsung-galaxy-z-fold4",
       "destination": "/brand/samsung?gone=samsung-galaxy-z-fold4",
       "permanent": true
@@ -664,6 +669,11 @@
     {
       "source": "/vs/apple-iphone-16-pro-vs-google-pixel-9-pro-xl",
       "destination": "/phone/apple-iphone-16-pro",
+      "permanent": true
+    },
+    {
+      "source": "/vs/apple-iphone-17-vs-xiaomi-15t-pro",
+      "destination": "/phone/apple-iphone-17",
       "permanent": true
     },
     {
@@ -774,6 +784,11 @@
     {
       "source": "/vs/samsung-galaxy-m36-5g-vs-samsung-galaxy-m56-5g",
       "destination": "/phone/samsung-galaxy-m36-5g",
+      "permanent": true
+    },
+    {
+      "source": "/vs/samsung-galaxy-s25-ultra-5g-vs-xiaomi-15t-pro",
+      "destination": "/phone/xiaomi-15t-pro",
       "permanent": true
     }
   ]
