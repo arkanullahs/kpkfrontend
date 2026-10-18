@@ -125,7 +125,10 @@ export default function App() {
   // A null count makes a guard pass through (spec §4.2), so the flow never
   // blocks on the network.
   const [cheapestIphone, setCheapestIphone] = useState<number | null>(null);
-  const counts: Counts = { pool: matchCount, cheapestIphone };
+  // the foldables-only pool, read by the g_fold guard: no foldable at this
+  // budget and these brands -> the foldable question is skipped
+  const [foldPool, setFoldPool] = useState<number | null>(null);
+  const counts: Counts = { pool: matchCount, cheapestIphone, foldPool };
 
   // the cheapest phone this buyer's channel + preset can buy at all. The
   // budget screen refuses to advance below it (owner: "it shouldnt let anyone
@@ -151,11 +154,11 @@ export default function App() {
   // one forward step from an ask node: END commits, a popup opens its dialog,
   // an ask node is navigated to. Guards are already skipped by nextNode.
   const advance = useCallback((fromNode: string, f = form) => {
-    const nxt = nextNode(f, { pool: matchCount, cheapestIphone }, fromNode);
+    const nxt = nextNode(f, { pool: matchCount, cheapestIphone, foldPool }, fromNode);
     if (nxt === "END") { onSeeResultsRef.current(); return; }
     if (NODES[nxt].kind === "popup") { setPopup(nxt); return; }
     goTo(nxt);
-  }, [form, matchCount, cheapestIphone, goTo]);
+  }, [form, matchCount, cheapestIphone, foldPool, goTo]);
 
   const answerMore = useCallback((yes: boolean) => {
     const nf = { ...form, wantMore: yes };
@@ -163,10 +166,10 @@ export default function App() {
     const pnode = popup!;
     setPopup(null);
     // resolve the popup's own route from its node, with the answer applied
-    const after = nextNode(nf, { pool: matchCount, cheapestIphone }, pnode);
+    const after = nextNode(nf, { pool: matchCount, cheapestIphone, foldPool }, pnode);
     if (after === "END") { onSeeResultsRef.current(); return; }
     goTo(after);
-  }, [form, popup, patch, matchCount, cheapestIphone, goTo]);
+  }, [form, popup, patch, matchCount, cheapestIphone, foldPool, goTo]);
 
   // hydrate once from the URL, so a shared or reloaded brief comes back on the
   // node it was shared from rather than at the start of the walk
@@ -225,6 +228,22 @@ export default function App() {
     return () => { alive = false; controller.abort(); window.clearTimeout(debounceRef.current); };
   }, [form]);
 
+  /* The foldables-only pool, for the g_fold guard. Fetched only on the
+     screen that leads to it (brands), so the question can be skipped when no
+     foldable fits this budget and these brands; every other screen would be
+     paying a second /count per edit for a number nothing reads. The elderly
+     path never reaches brands, so it never asks. */
+  useEffect(() => {
+    setFoldPool(null);
+    if (nodeId !== "brands" || form.budget <= 0) return;
+    let alive = true;
+    const controller = new AbortController();
+    api.count(toParams({ ...form, foldable: "only" }), controller.signal)
+      .then((r) => { if (alive) setFoldPool(r.relaxed ? 0 : r.candidates); })
+      .catch(() => { if (alive) setFoldPool(null); });
+    return () => { alive = false; controller.abort(); };
+  }, [form, nodeId]);
+
   /* The price floor. Depends on the channel and the elderly preset and NOT on
      the budget — which is the point: it has to be known while the buyer is
      still typing the budget, including while that budget is zero, so the
@@ -235,11 +254,13 @@ export default function App() {
     api.cheapest({
       official_only: form.officialOnly,
       ...(form.forElderly ? { bd_service_floor: 6 } : {}),
+      // a foldables-only buyer's floor is the cheapest foldable
+      ...(form.foldable === "only" ? { foldable: "only" as const } : {}),
     }, controller.signal)
       .then((r) => { if (!stop) setFloorPrice(r.price); })
       .catch(() => { if (!stop) setFloorPrice(null); });
     return () => { stop = true; controller.abort(); };
-  }, [form.officialOnly, form.forElderly]);
+  }, [form.officialOnly, form.forElderly, form.foldable]);
 
   // keep the loader on screen at least this long so a cached/instant result
   // doesn't flash through the staged animation; the loader then plays a short

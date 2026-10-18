@@ -268,3 +268,21 @@ describe("flow-graph control fields in the URL", () => {
     expect(toParams(DEFAULT_FORM).include_cn).toBeUndefined();
   });
 });
+
+describe("foldable answer", () => {
+  it("is excluded by default: nothing is sent", () => {
+    expect(toParams(DEFAULT_FORM).foldable).toBeUndefined();
+    expect(toParams({ ...DEFAULT_FORM, foldable: "no" }).foldable).toBeUndefined();
+  });
+  it("sends any / only", () => {
+    expect(toParams({ ...DEFAULT_FORM, foldable: "any" }).foldable).toBe("any");
+    expect(toParams({ ...DEFAULT_FORM, foldable: "only" }).foldable).toBe("only");
+  });
+  it("?fold=yes from the static pages means foldables only, and round-trips", () => {
+    expect(queryToForm("fold=yes").foldable).toBe("only");
+    expect(queryToForm("fold=junk").foldable).toBe("");
+    for (const v of ["no", "any", "only"] as const) {
+      expect(queryToForm(formToQuery({ ...DEFAULT_FORM, foldable: v })).foldable).toBe(v);
+    }
+  });
+});
