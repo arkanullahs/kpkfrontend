@@ -840,6 +840,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   fg_market_help: {
     en: "Imported phones are built for one market. An India unit takes two SIMs; a China unit may have no Play Store. Leave this alone unless you know you need it.",
     bn: "ইমপোর্ট করা ফোন এক-একটা দেশের জন্য বানানো। ইন্ডিয়ার ইউনিটে দুইটা সিম চলে; চীনের ইউনিটে প্লে স্টোর না-ও থাকতে পারে। দরকার আছে নিশ্চিত না হলে এটা ছোঁবেন না।" },
+  fg_fold_only: { en: "foldables only", bn: "শুধু ফোল্ডেবল" },
+  fg_fold_any: { en: "foldables welcome", bn: "ফোল্ডেবলও চলবে" },
   fg_rom_on: { en: "custom ROM support", bn: "কাস্টম রম চলে" },
   fg_strict_on: { en: "verified only", bn: "শুধু যাচাই করা" },
 

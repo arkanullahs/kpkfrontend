@@ -72,9 +72,12 @@ export const GROUPS: FilterGroup[] = [
   {
     id: "type", tier: 2, icon: ICON.phone,
     labelKey: "fg_type", helpKey: "fg_type_help",
+    // the foldable answer is a phone TYPE, so it reads here: "foldables
+    // only" in the brief is the buyer's proof the pool is foldables alone
     summary: (f) => join([f.platform !== "any" && t("fg_platform_" + f.platform),
-                          f.osStyle !== "any" && t("fg_os_" + f.osStyle)]),
-    patchOff: () => ({ platform: "any", osStyle: "any" }),
+                          f.osStyle !== "any" && t("fg_os_" + f.osStyle),
+                          (f.foldable === "only" || f.foldable === "any") && t("fg_fold_" + f.foldable)]),
+    patchOff: () => ({ platform: "any", osStyle: "any", foldable: "" }),
   },
   {
     id: "power", tier: 2, icon: ICON.chip,
