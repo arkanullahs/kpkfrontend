@@ -60,6 +60,11 @@ export interface Form {
   wantMore: boolean;
   includeCnRom: boolean;         // "a China ROM is fine" — actively re-admits
                                  // cn_rom phones the engine excludes by default
+  // Do you want a foldable? The engine leaves foldables out unless asked:
+  // they top every band only because they cost the most (owner 2026-10-18).
+  // "" = not asked (excluded, like "no" -- but no tile arrives pre-pressed),
+  // "any" = admit them alongside slabs, "only" = foldables only.
+  foldable: "" | "no" | "any" | "only";
   // the phone a /phone/ page sent ("brand|key"), "" = none. NOT a filter: the
   // results answer about it separately (N05), and it never narrows the pool.
   subject: string;
@@ -75,6 +80,7 @@ export const DEFAULT_FORM: Form = {
   q: { picks: [], hw: [] },
   useCase: "", priorities: [], weights: {},
   forElderly: null, rechannel: "", wantMore: false, includeCnRom: false, subject: "",
+  foldable: "",
 };
 
 /** The forced-choice quiz → the buyer's need.
@@ -164,6 +170,7 @@ export function toParams(f: Form, top = 5): RecParams {
   if (f.osStyle !== "any") p.os_style = f.osStyle;
   if (f.avoidChinese) p.chinese = "exclude"; // brand-origin hard filter (engine)
   if (f.includeCnRom) p.include_cn = true;   // re-admit cn_rom phones (rom node)
+  if (f.foldable === "any" || f.foldable === "only") p.foldable = f.foldable;
   // elderly preset: a service-network floor stands in for "renowned" (spec §7).
   // 6 is the opening value; the golden set tunes it so Tk12-15k stays non-empty.
   if (f.forElderly) p.bd_service_floor = 6;
@@ -208,6 +215,9 @@ export function formToQuery(f: Form, node: string = ENTRY_NODE): string {
   // serialised so a reload mid-divert does not re-arm the guard and ask again
   if (f.rechannel) p.set("rech", f.rechannel);
   if (f.includeCnRom) p.set("cnrom", "1");
+  // "yes" in the URL, not "only": the static /foldable-phones page and a
+  // foldable's own device page link here with ?fold=yes
+  if (f.foldable) p.set("fold", f.foldable === "only" ? "yes" : f.foldable);
   if (f.q.picks.length) p.set("w", f.q.picks.join(","));
   if (f.q.hw.length) p.set("hw", f.q.hw.join(","));
   if (f.officialOnly) p.set("official", "1");
@@ -236,6 +246,8 @@ export function validSubject(v: string | null): string {
   return v && /^[^|\u0000-\u001f]{1,40}\|[^|\u0000-\u001f]{1,80}$/.test(v) ? v : "";
 }
 
+const FOLD_FROM_URL: Record<string, Form["foldable"]> = { yes: "only", no: "no", any: "any" };
+
 export function queryToForm(s: string): Partial<Form> & { node: string } {
   const p = new URLSearchParams(s);
   const list = (k: string) => (p.get(k) ? p.get(k)!.split(",").filter(Boolean) : []);
@@ -254,6 +266,7 @@ export function queryToForm(s: string): Partial<Form> & { node: string } {
       : p.get("eld") === "0" ? false : null,
     rechannel: oneOf("rech", ["", "widen", "keep"] as const, ""),
     includeCnRom: p.get("cnrom") === "1",
+    foldable: FOLD_FROM_URL[p.get("fold") || ""] || "",
     q: { picks: list("w"), hw },
     officialOnly: p.get("official") === "1",
     avoidChinese: p.get("nocn") === "1",

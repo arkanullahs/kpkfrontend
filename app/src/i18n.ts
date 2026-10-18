@@ -73,6 +73,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   subj_r_exclude_brand: { en: "you hid this brand", bn: "আপনি এই ব্র্যান্ড লুকিয়েছেন" },
   subj_r_platform: { en: "it isn't on the platform you chose", bn: "এটি আপনার বেছে নেওয়া প্ল্যাটফর্মের নয়" },
   subj_r_chinese: { en: "your brand-origin filter rules it out", bn: "ব্র্যান্ডের দেশ ফিল্টারে এটি বাদ পড়েছে" },
+  subj_r_foldable: { en: "it's a foldable, and you didn't ask for one", bn: "এটি ফোল্ডেবল, আর আপনি ফোল্ডেবল চাননি" },
   subj_r_cn_rom: { en: "it runs China-market software, which you haven't allowed", bn: "এতে চায়না-মার্কেট সফটওয়্যার, যা আপনি অনুমতি দেননি" },
   subj_r_bd_service_floor: { en: "its brand's service network in Bangladesh is below what you asked for", bn: "বাংলাদেশে এই ব্র্যান্ডের সার্ভিস নেটওয়ার্ক আপনার চাওয়ার চেয়ে কম" },
   subj_r_require_jack: { en: "no confirmed headphone jack", bn: "হেডফোন জ্যাক নিশ্চিত নয়" },
@@ -717,6 +718,14 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   s_soft_global: { en: "Global software only", bn: "শুধু গ্লোবাল সফটওয়্যার" },
   s_soft_global_sub: { en: "Works out of the box", bn: "খুলেই ব্যবহার করা যায়" },
   s_soft_cn: { en: "A China ROM is fine", bn: "চায়না রম চলবে" },
+  s_fold_t: { en: "Do you want a foldable?", bn: "ফোল্ডেবল ফোন চান?" },
+  s_fold_why: { en: "Foldables top every budget because they cost the most, not because they suit most buyers. A hinge, a crease and a dearer screen repair come with them.", bn: "ফোল্ডেবল ফোন দামি বলেই সব বাজেটের ওপরে থাকে, সবার জন্য ভালো বলে নয়। সাথে আসে হিঞ্জ, ভাঁজের দাগ আর দামি স্ক্রিন মেরামত।" },
+  s_fold_yes: { en: "Yes, a foldable", bn: "হ্যাঁ, ফোল্ডেবল" },
+  s_fold_yes_sub: { en: "Flip or book-style only", bn: "শুধু ফ্লিপ বা বই-ধরনের" },
+  s_fold_no: { en: "No, a normal phone", bn: "না, সাধারণ ফোন" },
+  s_fold_no_sub: { en: "Foldables left out", bn: "ফোল্ডেবল বাদ" },
+  s_fold_any: { en: "Either is fine", bn: "যেকোনোটা চলবে" },
+  s_fold_any_sub: { en: "Rank foldables with the rest", bn: "বাকিদের সাথে ফোল্ডেবলও" },
   s_soft_cn_sub: { en: "Cheaper, if you'll flash it", bn: "সস্তা, যদি ফ্ল্যাশ করেন" },
 
   s_rom_support_t: { en: "Custom ROM support?", bn: "কাস্টম রম সাপোর্ট?" },
@@ -831,6 +840,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   fg_market_help: {
     en: "Imported phones are built for one market. An India unit takes two SIMs; a China unit may have no Play Store. Leave this alone unless you know you need it.",
     bn: "ইমপোর্ট করা ফোন এক-একটা দেশের জন্য বানানো। ইন্ডিয়ার ইউনিটে দুইটা সিম চলে; চীনের ইউনিটে প্লে স্টোর না-ও থাকতে পারে। দরকার আছে নিশ্চিত না হলে এটা ছোঁবেন না।" },
+  fg_fold_only: { en: "foldables only", bn: "শুধু ফোল্ডেবল" },
+  fg_fold_any: { en: "foldables welcome", bn: "ফোল্ডেবলও চলবে" },
   fg_rom_on: { en: "custom ROM support", bn: "কাস্টম রম চলে" },
   fg_strict_on: { en: "verified only", bn: "শুধু যাচাই করা" },
 

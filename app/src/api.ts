@@ -433,6 +433,8 @@ export interface RecParams {
   min_storage?: number;
   /** elderly preset: minimum BD service-network score (brand_reliability) */
   bd_service_floor?: number;
+  /** foldables are excluded unless this says "any" or "only" */
+  foldable?: "any" | "only";
   os_style?: string;
   platform?: string;
   channel?: string;
@@ -492,7 +494,7 @@ export const api = {
   count: (p: RecParams, signal?: AbortSignal) => get<CountResp>("/count", p as any, signal),
   /** The least this buyer could spend. No brand = the catalogue floor, which
       is what the budget screen refuses to let them type under. */
-  cheapest: (p: { brand?: string; official_only?: boolean; bd_service_floor?: number }, signal?: AbortSignal) =>
+  cheapest: (p: { brand?: string; official_only?: boolean; bd_service_floor?: number; foldable?: "only" }, signal?: AbortSignal) =>
     get<{ price: number | null }>("/cheapest", p as any, signal),
   phone: (id: string, signal?: AbortSignal) => get<PhoneDetail>("/phones/" + id.split("/").map(encodeURIComponent).join("/"), undefined, signal),
   phoneImage: (id: string) => get<{ url: string | null }>("/phone-image/" + id.split("/").map(encodeURIComponent).join("/")),

@@ -102,7 +102,7 @@ export const FORM_PATHS = [
   "includeBrands", "excludeBrands", "avoidChinese",
   "platform", "socVendor", "minRam", "minStorage",
   "requireRom",
-  "forElderly", "rechannel", "includeCnRom",
+  "forElderly", "rechannel", "includeCnRom", "foldable",
 ] as const;
 
 /** Fields on Form that no screen owns, and why. */
@@ -165,6 +165,10 @@ const ICON = {
   // so the glyph does not need to be the vendor's mark, and tracing that mark
   // would be brand misuse for an icon we drew ourselves
   apple: "M12 21.4c-3.1 0-5.6-3.2-5.6-7.1S8.9 7.2 12 7.2s5.6 3.2 5.6 7.1-2.5 7.1-5.6 7.1zM12 7.2V4.1M12.1 5.6c1.5-2 3.5-1.8 3.5-1.8s.1 2-1.5 2.7c-1.1.5-2-.9-2-.9z",
+
+  // ---- form factor: a book that opens, against a plain slab ----
+  fold: "M3.5 6.5l7.5-2v15l-7.5 2zM20.5 6.5l-7.5-2v15l7.5 2zM11 4.5h2M11 19.5h2",
+  slab: "M8 2.5h8a1.5 1.5 0 011.5 1.5v16a1.5 1.5 0 01-1.5 1.5H8A1.5 1.5 0 016.5 20V4A1.5 1.5 0 018 2.5zM11 18.5h2",
 
   // ---- software ----
   chip: "M7.5 7.5h9a1 1 0 011 1v7a1 1 0 01-1 1h-9a1 1 0 01-1-1v-7a1 1 0 011-1zM10.2 10.2h3.6v3.6h-3.6zM9.8 3.5V6M14.2 3.5V6M9.8 18v2.5M14.2 18v2.5M3.5 9.8H6M3.5 14.2H6M18 9.8h2.5M18 14.2h2.5",
@@ -408,6 +412,25 @@ export const SCREENS: Record<string, Screen> = {
     },
     clear: () => ({ includeBrands: [], excludeBrands: [], avoidChinese: false }),
     skipStyle: "equal", skipKey: "s_skip_brands", skipIcon: ICON.any,
+  },
+
+  fold: {
+    /* Do you want a foldable? (owner 2026-10-18). Foldables are out unless
+       the buyer opts in, so this is the opt-in: "yes" = foldables only,
+       "either" (the equal skip) = admit them, "no" = the default, stated. */
+    id: "fold", kind: "single", layout: "grid2",
+    titleKey: "s_fold_t", whyKey: "s_fold_why",
+    owns: ["foldable"],
+    options: () => [
+      { id: "fold_yes", labelKey: "s_fold_yes", subKey: "s_fold_yes_sub", icon: ICON.fold,
+        patch: () => ({ foldable: "only" as const }), isOn: (f) => f.foldable === "only",
+        probe: () => ({ foldable: "only" as const }) },
+      { id: "fold_no", labelKey: "s_fold_no", subKey: "s_fold_no_sub", icon: ICON.slab,
+        patch: () => ({ foldable: "no" as const }), isOn: (f) => f.foldable === "no",
+        probe: () => ({ foldable: "no" as const }) },
+    ],
+    clear: () => ({ foldable: "any" as const }),
+    skipStyle: "equal", skipKey: "s_fold_any", skipSubKey: "s_fold_any_sub", skipIcon: ICON.any,
   },
 
   rom: {

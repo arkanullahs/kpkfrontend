@@ -337,3 +337,23 @@ describe("askPosition counts only ask screens on the live path", () => {
     }
   });
 });
+
+describe("do you want a foldable? (owner 2026-10-18)", () => {
+  it("is asked on the main path, after brands and before rom", () => {
+    const path = replay(form({ budget: 100000 }), { ...COUNTS, foldPool: 3 });
+    expect(path.indexOf("fold")).toBeGreaterThan(path.indexOf("brands"));
+    expect(path.indexOf("fold")).toBeLessThan(path.indexOf("rom"));
+  });
+  it("is asked when the foldable count is not known yet", () => {
+    expect(replay(form(), COUNTS)).toContain("fold");
+  });
+  it("is skipped when no foldable fits this budget", () => {
+    expect(replay(form(), { ...COUNTS, foldPool: 0 })).not.toContain("fold");
+  });
+  it("stays visible when the buyer already said yes, so it can be undone", () => {
+    expect(replay(form({ foldable: "only" }), { ...COUNTS, foldPool: 0 })).toContain("fold");
+  });
+  it("is never asked on the elderly path", () => {
+    expect(replay(form({ forElderly: true }), { ...COUNTS, foldPool: 5 })).not.toContain("fold");
+  });
+});

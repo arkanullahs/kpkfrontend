@@ -29,6 +29,10 @@ export interface Counts {
   pool: number | null;
   /** cheapest in-stock iPhone eff-price, or null. */
   cheapestIphone: number | null;
+  /** candidates for this form with foldables ONLY. 0 = no foldable at this
+      money, so "do you want a foldable?" is not worth asking. Optional and
+      null both pass through to the question. */
+  foldPool?: number | null;
 }
 
 /** The threshold below which a guard offers to loosen (Global Constraint). */
@@ -90,7 +94,15 @@ export const NODES: Record<string, FlowNode> = {
 
   brands:  { id: "brands",  kind: "ask",
     next: (f) => (onlyApple(f) ? "END" : "g_brands") },
-  g_brands:{ id: "g_brands",kind: "guard", next: () => "rom" },
+  g_brands:{ id: "g_brands",kind: "guard", next: () => "g_fold" },
+
+  /* Do you want a foldable? (owner 2026-10-18). Skipped only when no foldable
+     fits this budget and these brands -- a question whose "yes" is dead on
+     arrival is noise -- unless the buyer already said yes (a ?fold=yes link
+     from the foldables page), which must stay visible to be undone. */
+  g_fold: { id: "g_fold", kind: "guard",
+    next: (f, c) => (c.foldPool === 0 && f.foldable !== "only" ? "rom" : "fold") },
+  fold:   { id: "fold",   kind: "ask", next: () => "rom" },
 
   rom:    { id: "rom",    kind: "ask", next: () => "sizes" },
   sizes:  { id: "sizes",  kind: "ask", next: () => "extras" },
