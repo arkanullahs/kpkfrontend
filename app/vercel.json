@@ -87,6 +87,11 @@
       "permanent": true
     },
     {
+      "source": "/best/phone-under-26000",
+      "destination": "/best/phone-under-25000",
+      "permanent": true
+    },
+    {
       "source": "/phone/helio-47-smart-phone",
       "destination": "/brand/helio?gone=helio-47-smart-phone",
       "permanent": true
