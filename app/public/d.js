@@ -127,6 +127,10 @@
    paint();
   }
  });
+ if(empty)empty.addEventListener('click',function(e){
+  var r=box.querySelector('.freset');
+  if(r&&e.target.closest('.freset'))r.click();
+ });
  box.addEventListener('change',function(e){
   var x=e.target;
   if(!x.matches||!x.matches('select[data-axis]'))return;
@@ -164,7 +168,7 @@
     the only ways out to YouTube, and nothing plays here. */
  var y=document.getElementById('video');if(!y)return;
  y.classList.add('js');
- var vs=[].slice.call(y.querySelectorAll('.ytv'));
+ var vs=[].slice.call(y.querySelectorAll('.ytv')),cur=null;
  /* "Read summary" only where the clamp actually hides something */
  function fit(v){
   var s=v.querySelector('.ytsum'),b=v.querySelector('.ytx');
@@ -172,8 +176,32 @@
   b.hidden=s.scrollHeight<=s.clientHeight+1;
  }
  y.addEventListener('click',function(e){
-  var b=e.target.closest('.ytx'),a=e.target.closest('.ytall'),on;
-  if(b){
+  var b=e.target.closest('.ytx'),a=e.target.closest('.ytall'),
+   p=e.target.closest('.ytt[data-embed]'),on,f;
+  /* play in place, the card grown to the whole row; one video at a time.
+     A modified click still opens YouTube in a new tab. */
+  if(p&&!(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)){
+   e.preventDefault();
+   var li=p.closest('.ytv'),g=y.querySelector('.ytg'),
+    calm=matchMedia('(prefers-reduced-motion: reduce)').matches,
+    vt=document.startViewTransition&&!calm;
+   f=document.createElement('iframe');
+   f.className='ytf';f.src=p.getAttribute('data-embed');
+   f.title=(p.getAttribute('aria-label')||'Play video').replace(/^Play /,'');
+   f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+   f.allowFullscreen=true;f.referrerPolicy='strict-origin-when-cross-origin';
+   var go=function(){
+    if(cur){cur.f.closest('.ytv').classList.remove('play','grow');cur.f.replaceWith(cur.a);}
+    p.replaceWith(f);cur={f:f,a:p};
+    li.classList.add('play');if(!vt)li.classList.add('grow');g.classList.add('playing');
+   },show=function(){
+    vs.forEach(fit);
+    li.scrollIntoView({behavior:calm?'auto':'smooth',block:'center'});
+    f.focus({preventScroll:true});
+   };
+   if(vt){var t=document.startViewTransition(go);(t.finished||t.ready).then(show,show);}
+   else{go();show();}
+  }else if(b){
    on=b.getAttribute('aria-expanded')!=='true';
    b.setAttribute('aria-expanded',String(on));
    b.textContent=on?'Show less':'Read summary';
