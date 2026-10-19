@@ -187,11 +187,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/motorola-edge-60s",
-      "destination": "/brand/motorola?gone=motorola-edge-60s",
-      "permanent": true
-    },
-    {
       "source": "/phone/motorola-g-stylus-5g-2026",
       "destination": "/brand/motorola?gone=motorola-g-stylus-5g-2026",
       "permanent": true
@@ -209,6 +204,11 @@
     {
       "source": "/phone/nokia-150-ds-2023",
       "destination": "/phone/nokia-150-2023",
+      "permanent": true
+    },
+    {
+      "source": "/phone/nokia-225-4g-2024",
+      "destination": "/brand/nokia?gone=nokia-225-4g-2024",
       "permanent": true
     },
     {
@@ -722,18 +722,8 @@
       "permanent": true
     },
     {
-      "source": "/vs/itel-a100c-vs-redmi-a7",
-      "destination": "/phone/itel-a100c",
-      "permanent": true
-    },
-    {
       "source": "/vs/itel-a100c-vs-symphony-atom-5",
       "destination": "/phone/itel-a100c",
-      "permanent": true
-    },
-    {
-      "source": "/vs/itel-a200-plus-vs-redmi-a7",
-      "destination": "/phone/itel-a200-plus",
       "permanent": true
     },
     {
@@ -769,11 +759,6 @@
     {
       "source": "/vs/oppo-reno-15c-5g-vs-vivo-v60-lite-5g",
       "destination": "/phone/vivo-v60-lite-5g",
-      "permanent": true
-    },
-    {
-      "source": "/vs/redmi-a7-vs-samsung-galaxy-m06-5g",
-      "destination": "/phone/redmi-a7",
       "permanent": true
     },
     {
