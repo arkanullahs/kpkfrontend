@@ -1623,6 +1623,15 @@ a.stretchcard:hover .stretch{box-shadow:var(--sh-hover)}
   font-variant-numeric:tabular-nums}
 .rtot span{font-size:14px;color:var(--mut)}
 .rnote{margin:14px 0 0;font-size:14px;line-height:1.6;color:var(--mut);max-width:62ch}
+.dlead{max-width:34ch}
+.dlead .dlp{font-family:var(--f-display);font-size:1.3em;letter-spacing:-.6px;
+color:var(--ac);white-space:nowrap}
+.dchk{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin:6px 0 0;
+font-size:13px;color:var(--mut)}
+.dchk span{width:7px;height:7px;border-radius:50%;background:var(--teal);
+box-shadow:0 0 0 3px var(--tint)}
+.dchk a{color:var(--lnk);font-weight:600}
+.dsb+.rgo{margin-top:10px}
 .rlink{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:4px;
   font-size:15px;font-weight:600;color:var(--lnk);text-decoration:underline;
   text-underline-offset:3px}
@@ -2401,12 +2410,12 @@ text-align:center;line-height:1.25}
 .ytg.one .ytv{display:flex}
 }
 @media(max-width:640px){
-.dv{grid-template-columns:108px minmax(0,1fr);gap:14px 14px;
-  grid-template-areas:"img rt" "img chp" "kf kf" "buy buy" "sm sm"}
+.dv{grid-template-columns:minmax(0,1fr);gap:14px;
+  grid-template-areas:"img" "chp" "rt" "kf" "buy" "sm"}
 .dv .dleft,.dv .dmid{display:contents}
 .dv .did{display:contents}
 .dv .drate{grid-area:rt;align-self:start}
-.dv .dimg{grid-area:img;width:100%;margin:0}
+.dv .dimg{grid-area:img;width:min(80vw,320px);margin:0 auto}
 .dv .dmid>.chips{grid-area:chp;margin:0;justify-content:flex-start;
   align-self:start}
 .dv .dsm{grid-area:sm;min-width:0}
