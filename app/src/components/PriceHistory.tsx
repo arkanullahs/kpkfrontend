@@ -125,12 +125,12 @@ function Chart({ chan, pts }: { chan: string; pts: Pt[] }) {
             top/middle/bottom, but a flat series has ONE line drawn down the
             middle, and space-between would pin its price to the top where
             there is nothing to read it against */}
-        <div style={st(`flex:none; display:flex; flex-direction:column; justify-content:${flat ? "center" : "space-between"}; font-size:11.5px; font-variant-numeric:tabular-nums; color:var(--mut2); height:132px;`)}>
+        <div style={st(`flex:none; display:flex; flex-direction:column; justify-content:${flat ? "center" : "space-between"}; font-size:12px; font-variant-numeric:tabular-nums; color:var(--mut2); height:132px;`)}>
           {refs.map((v) => <span key={v}>{taka(v)}</span>)}
         </div>
       </div>
 
-      <div style={st("display:flex; justify-content:space-between; font-size:11.5px; color:var(--mut2); margin-top:6px;")}>
+      <div style={st("display:flex; justify-content:space-between; font-size:12px; color:var(--mut2); margin-top:6px;")}>
         <span>{pts[0].date}</span>
         <span style={st("opacity:.75;")}>{pts.length} nightly reads</span>
         <span>{last.date}</span>
@@ -141,7 +141,7 @@ function Chart({ chan, pts }: { chan: string; pts: Pt[] }) {
 
 function Stat({ big, small, teal }: { big: string; small: string; teal?: boolean }) {
   return (
-    <span style={st(`display:flex; flex-direction:column; gap:1px; padding:7px 11px; border-radius:var(--r-sm, 10px); font-size:10px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; ${teal ? "background:var(--tealL); color:var(--tealD);" : "background:rgba(var(--rgb-ink),.045); color:var(--mut2);"}`)}>
+    <span style={st(`display:flex; flex-direction:column; gap:1px; padding:7px 11px; border-radius:var(--r-sm, 10px); font-size:12px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; ${teal ? "background:var(--tealL); color:var(--tealD);" : "background:rgba(var(--rgb-ink),.045); color:var(--mut2);"}`)}>
       <b style={st(`font-family:var(--f-price); font-variant-numeric:tabular-nums; font-size:15px; font-weight:700; letter-spacing:-.2px; text-transform:none; ${teal ? "color:var(--tealD);" : "color:var(--ink2);"}`)}>{big}</b>
       {small}
     </span>
