@@ -849,6 +849,8 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   fg_tier2: { en: "More controls", bn: "আরও অপশন" },
   fg_of: { en: "of", bn: "টির মধ্যে" },
   fg_zero: { en: "nothing matches", bn: "কিছুই মেলে না" },
+  fg_n_phones: { en: "{n} phones", bn: "{n}টি ফোন" },
+  fg_one_phone: { en: "1 phone", bn: "১টি ফোন" },
   s_ram_t: { en: "How much RAM? (what it can juggle)", bn: "কত RAM? (একসাথে কতটা সামলাবে)" },
   s_reset_no: { en: "Keep my answers", bn: "উত্তরগুলো থাক" },
   s_reset_yes: { en: "Yes, clear it all", bn: "হ্যাঁ, সব মুছুন" },
