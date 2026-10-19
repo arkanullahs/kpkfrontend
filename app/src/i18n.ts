@@ -140,6 +140,7 @@ const STRINGS: Record<string, { en: string; bn: string }> = {
   yt_the_reviews: { en: "The reviews", bn: "রিভিউগুলো" },
   yt_choose: { en: "Choose a reviewer", bn: "রিভিউয়ার বেছে নিন" },
   yt_watch: { en: "Watch on YouTube", bn: "ইউটিউবে দেখুন" },
+  yt_play: { en: "Play", bn: "চালান" },
   yt_highlight: { en: "What the reviews highlight", bn: "রিভিউগুলোতে যা উঠে এসেছে" },
   yt_tradeoffs: { en: "Trade-offs", bn: "সীমাবদ্ধতা" },
   yt_all_themes: { en: "All reported themes", bn: "সব বিষয় দেখুন" },

@@ -316,12 +316,16 @@ export interface ListingView {
 export interface YoutubeVideo {
   id: string; url: string; channel: string; title: string;
   views: number; aired: string;
-  /** absolute URL of our OWN copy of the still, or null when we never got one */
-  thumb: string | null;
+  /** the still's URL; unused -- the app derives YouTube's own still from `id`,
+      which also works against an API that still serves a self-hosted copy */
+  thumb?: string | null;
+  /** the channel's own avatar URL on YouTube's CDN, null when unresolved */
+  avatar?: string | null;
 }
 export interface YoutubePoint {
   point: string; detail: string; stance: "praise" | "criticism";
   channel: string; title: string; url: string;
+  avatar?: string | null;
 }
 export interface YoutubeBlock {
   verdict: string; best_for: string;

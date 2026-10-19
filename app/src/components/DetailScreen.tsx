@@ -167,7 +167,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
     traits.length > 0 ? (
       <div className={cls} style={st("display:flex; flex-wrap:wrap; gap:6px; margin-top:13px;")}>
         {traits.map((tx, i) => (
-          <span key={i} style={st("font-size:11.5px; font-weight:600; white-space:nowrap; color:var(--mut); background:rgba(var(--rgb-ink),.05); padding:5px 11px; border-radius:var(--r);")}>{tx}</span>
+          <span key={i} style={st("font-size:12px; font-weight:600; white-space:nowrap; color:var(--mut); background:rgba(var(--rgb-ink),.05); padding:5px 11px; border-radius:var(--r);")}>{tx}</span>
         ))}
       </div>
     ) : null;
@@ -188,7 +188,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
                 {!brandLogo(brand) && brand}
               </span>
               {/* only a confident "Top pick" or an honest "Has trade-offs" — never a lukewarm "Worth a look" on a phone the buyer is already looking at */}
-              {(rec === "buy" || rec === "avoid") && <span style={st(`font-size:11.5px; font-weight:700; padding:4px 11px; border-radius:var(--r); color:${vm.c}; background:${vm.bg};`)}>{vm.label}</span>}
+              {(rec === "buy" || rec === "avoid") && <span style={st(`font-size:12px; font-weight:700; padding:4px 11px; border-radius:var(--r); color:${vm.c}; background:${vm.bg};`)}>{vm.label}</span>}
             </div>
             <h1 style={st("margin:4px 0 0; font-size:clamp(26px,3.6vw,38px); font-weight:700; letter-spacing:-1.2px; line-height:1.1;")}>{model}</h1>
             <div style={st("margin-top:8px; font-size:14px; color:var(--mut);")}>{headlinePhrase(dom)}{scores[dom] != null && <> · {axisLabel(dom)} <span style={st("color:var(--lnk); font-weight:700;")}>{scores[dom]}</span></>}</div>
@@ -243,7 +243,8 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
           the answer in a rail, the evidence and the argument beside it */}
       {(ourTake || bestFor.length > 0 || avoidIf.length > 0 || praiseFlags.length > 0 || blameFlags.length > 0) && (
         <Verdict model={model} take={ourTake} bestFor={bestFor} avoidIf={avoidIf}
-          works={praiseFlags} tradeoffs={blameFlags} sources={!!d?.youtube?.videos?.length} />
+          works={praiseFlags} tradeoffs={blameFlags} sources={!!d?.youtube?.videos?.length}
+          ratings={op.ratings} aspects={op.aspects} />
       )}
 
       {/* How this phone rates — the /phone/ page's two columns. */}
@@ -348,7 +349,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
               <div style={st("display:flex; flex-direction:column; gap:14px;")}>
                 {d.spec_sheet.map((g) => (
                   <section key={g.title} style={st("padding:14px 16px 4px; border-radius:var(--r); background:var(--card); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), inset 0 0 0 1px rgba(var(--rgb-ink),.05);")}>
-                    <h3 style={st("font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:var(--mut2); font-weight:700; margin:0 0 4px;")}>{g.title}</h3>
+                    <h3 style={st("font-size:12px; text-transform:uppercase; letter-spacing:.8px; color:var(--mut2); font-weight:700; margin:0 0 4px;")}>{g.title}</h3>
                     {g.rows.map((r) => (
                       <div key={r.label} style={st("display:flex; gap:12px; flex-wrap:wrap; padding:9px 0; border-bottom:1px solid rgba(var(--rgb-ink),.05); font-size:13.5px;")}>
                         <span style={st("flex:0 0 128px; font-weight:600; color:var(--ink2);")}>{r.label}</span>
@@ -413,7 +414,7 @@ export function DetailScreen({ detail, hint, loading, error, budget, checked, on
             them ended in a third of a screen of nothing. Filling that beats
             three-across. */}
         {d?.youtube && (d.youtube.videos?.length || d.youtube.points?.length || d.youtube.verdict) && (
-          <Card><YoutubeSection yt={d.youtube} /></Card>
+          <Card className="kytcard"><YoutubeSection yt={d.youtube} /></Card>
         )}
 
         {/* value retention (estimated from brand resale reputation) */}
@@ -561,9 +562,13 @@ function opinionWord(prefix: string, key: string): string {
   return s && s !== prefix + key ? s : key.replace(/_/g, " ");
 }
 
-function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
+function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources, ratings, aspects }: {
   model: string; take: string | null; bestFor: string[]; avoidIf: string[];
   works: string[]; tradeoffs: string[]; sources: boolean;
+  /** the owner ratings out of 10 and the per-aspect one-line readings, both
+      keyed like the flags -- a flag shows only what its own key holds */
+  ratings?: Record<string, number>;
+  aspects?: Record<string, { summary?: string }>;
 }) {
   const text = (take || "").trim();
   // the opening sentence is the answer; the rest is the argument for it
@@ -573,14 +578,17 @@ function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
   // each column flows on its own; with nothing for the right one the
   // rail takes the width instead of leaving a half empty
   const right = works.length > 0 || tradeoffs.length > 0 || !!rest;
+  const fit = bestFor.length > 0 || avoidIf.length > 0;
   const RULE = "1px solid rgba(var(--rgb-ink),.08)";
   const H3 = st("margin:0 0 4px; font-size:18px; font-weight:800; letter-spacing:-.3px; color:var(--ink);");
   const DT = st("font-size:14.5px; font-weight:700; color:var(--ink);");
   const DD = st("margin:4px 0 0; font-size:14.5px; line-height:1.55; color:var(--ink2);");
   const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   return (
-    <section className={right ? "kverd" : "kverd solo"} style={st("margin-top:14px; background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07);")}>
-      <div className="kv-l">
+    /* The answer spans the card; the fit and the evidence share the row
+       under it. The answer used to sit in a 30% rail beside two short lists,
+       so a long verdict left a hole under them (owner 2026-10-19). */
+    <section className={"kverd" + (right ? "" : " solo") + (fit ? "" : " nofit")} style={st("margin-top:14px; background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,30px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07);")}>
         <div className="kv-hd">
           <div style={st("font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--acd);")}>{t("v_eyebrow")}</div>
           <h2 style={st("margin:8px 0 0; font-size:clamp(24px,3vw,32px); font-weight:800; line-height:1.05; letter-spacing:-.8px; color:var(--ink); text-wrap:balance;")}>{model}</h2>
@@ -611,7 +619,8 @@ function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
             </div>
           )}
         </div>
-        {(bestFor.length > 0 || avoidIf.length > 0) && (
+      <div className="kv-l">
+        {fit && (
           <dl className="kv-fit" style={st("margin:22px 0 0;")}>
             {/* best_for is a list of use cases, so it reads under "Best for";
                 "Choose it if" belongs to a sentence, which this is not */}
@@ -651,9 +660,26 @@ function Verdict({ model, take, bestFor, avoidIf, works, tradeoffs, sources }: {
                     {label}
                     <span style={st("margin-left:auto; min-width:26px; padding:2px 8px; border-radius:var(--r-pill); background:var(--card); font-size:12px; font-weight:700; text-align:center; color:var(--ink);")}>{bnNum(String(xs.length))}</span>
                   </h3>
-                  {xs.map((x, i) => (
-                    <div key={i} style={st(`padding:11px 0; font-size:15px; font-weight:600; line-height:1.45; color:var(--ink2);${i < xs.length - 1 ? ` border-bottom:${RULE};` : ""}`)}>{cap(opinionWord("asp_", x))}</div>
-                  ))}
+                  {/* each aspect with its owner rating and the one-line
+                      reading behind it, as the /phone/ page's columns carry
+                      figures -- only where the data holds them */}
+                  {xs.map((x, i) => {
+                    const sc = ratings?.[x];
+                    const why = (aspects?.[x]?.summary || "").trim();
+                    return (
+                      <div key={i} style={st(`padding:11px 0;${i < xs.length - 1 ? ` border-bottom:${RULE};` : ""}`)}>
+                        <div style={st("display:flex; align-items:baseline; gap:10px;")}>
+                          <b style={st("min-width:0; font-size:15px; font-weight:700; line-height:1.4; color:var(--ink);")}>{cap(opinionWord("asp_", x))}</b>
+                          {typeof sc === "number" && (
+                            <span style={st(`margin-left:auto; flex:none; font-size:16px; font-weight:800; font-variant-numeric:tabular-nums; color:${ink};`)}>
+                              {bnNum(String(sc))}<span style={st("font-size:12px; font-weight:600; color:var(--mut2);")}>/{bnNum("10")}</span>
+                            </span>
+                          )}
+                        </div>
+                        {why && <p style={st("margin:3px 0 0; font-size:14px; line-height:1.5; color:var(--ink2); text-wrap:pretty;")}>{why}</p>}
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
             </div>
@@ -734,11 +760,11 @@ function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
         {[100, 75, 50, 25].map((g) => (
           <g key={g}>
             <line x1={padL} y1={y(g)} x2={W - padR} y2={y(g)} stroke="rgba(var(--rgb-ink),.07)" strokeWidth="1" />
-            <text x={padL - 6} y={y(g) + 3} textAnchor="end" style={st("font-size:8px; fill:var(--faint);")}>{g}%</text>
+            <text x={padL - 6} y={y(g) + 3} textAnchor="end" style={st("font-size:10.5px; fill:var(--mut2);")}>{g}%</text>
           </g>
         ))}
         {[0, 1, 2, 3].map((yr) => (
-          <text key={yr} x={x(yr)} y={H - 6} textAnchor="middle" style={st("font-size:8px; fill:var(--faint);")}>{yr === 0 ? "now" : `${yr}y`}</text>
+          <text key={yr} x={x(yr)} y={H - 6} textAnchor="middle" style={st("font-size:10.5px; fill:var(--mut2);")}>{yr === 0 ? "now" : `${yr}y`}</text>
         ))}
         <path d={area} fill="url(#vrfill)" />
         <path d={path(market)} fill="none" stroke="var(--faint)" strokeWidth="1.6" strokeDasharray="3 3" strokeLinecap="round" strokeLinejoin="round" />
@@ -747,7 +773,7 @@ function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
         {[1, 2, 3].map((yr) => (
           <g key={yr}>
             <circle cx={x(yr)} cy={y(mine[yr])} r="2.8" fill="var(--teal)" />
-            {taTaka(mine[yr]) && <text x={x(yr)} y={y(mine[yr]) - 7} textAnchor="middle" style={st("font-size:7.5px; font-weight:700; fill:var(--lnk);")}>{taTaka(mine[yr])}</text>}
+            {taTaka(mine[yr]) && <text x={x(yr)} y={y(mine[yr]) - 7} textAnchor="middle" style={st("font-size:10px; font-weight:700; fill:var(--lnk);")}>{taTaka(mine[yr])}</text>}
           </g>
         ))}
         <circle cx={x(0)} cy={y(mine[0])} r="2.8" fill="var(--teal)" />
@@ -757,13 +783,13 @@ function ValueRetention({ brand, resale, updateRecord, ageYears, price }: {
       </svg>
 
       <div style={st("display:flex; align-items:center; gap:14px; margin-top:8px; flex-wrap:wrap;")}>
-        <span style={st("display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--mut); font-weight:600;")}><span style={st("width:14px; height:2.5px; border-radius:var(--r); background:var(--teal);")} />{brand}</span>
-        <span style={st("display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--mut2);")}><span style={st("width:14px; height:0; border-top:2px dashed var(--faint);")} />{t("typical_phone")}</span>
+        <span style={st("display:flex; align-items:center; gap:6px; font-size:12px; color:var(--mut); font-weight:600;")}><span style={st("width:14px; height:2.5px; border-radius:var(--r); background:var(--teal);")} />{brand}</span>
+        <span style={st("display:flex; align-items:center; gap:6px; font-size:12px; color:var(--mut2);")}><span style={st("width:14px; height:0; border-top:2px dashed var(--faint);")} />{t("typical_phone")}</span>
         {updateRecord != null && (
-          <span style={st("font-size:11.5px; color:var(--mut2); margin-left:auto;")}>{t("updates")} <span style={st("font-weight:700; color:var(--ink2);")}>{updateRecord}/10</span></span>
+          <span style={st("font-size:12px; color:var(--mut2); margin-left:auto;")}>{t("updates")} <span style={st("font-weight:700; color:var(--ink2);")}>{updateRecord}/10</span></span>
         )}
       </div>
-      <p style={st("margin:13px 0 0; font-size:11px; color:var(--mut2); line-height:1.5;")}>{t("retention_disclaimer")}</p>
+      <p style={st("margin:13px 0 0; font-size:12px; color:var(--mut2); line-height:1.5;")}>{t("retention_disclaimer")}</p>
     </>
   );
 }
@@ -807,8 +833,8 @@ function Wrap({ children }: { children: ReactNode; onBack?: () => void }) {
 }
 /* No accent stripe any more: its only caller was the per-channel shop card,
    and the channel is a filter now (owner 2026-09-12). */
-function Card({ children }: { children: ReactNode }) {
-  return <div style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); break-inside:avoid; margin-bottom:14px;")}>{children}</div>;
+function Card({ children, className }: { children: ReactNode; className?: string }) {
+  return <div className={className} style={st("background:var(--card); border-radius:var(--r); padding:clamp(20px,3vw,28px); box-shadow:0 1px 2px rgba(var(--rgb-ink),.05), 0 10px 28px rgba(var(--rgb-ink),.07); break-inside:avoid; margin-bottom:14px;")}>{children}</div>;
 }
 
 /* The channel is a filter now, not a card: what used to be two shop cards is

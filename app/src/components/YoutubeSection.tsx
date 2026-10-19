@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { flushSync } from "react-dom";
 import { st } from "../theme";
 import { t } from "../i18n";
 import type { YoutubeBlock } from "../api";
@@ -10,14 +11,19 @@ import type { YoutubeBlock } from "../api";
    that shows the balance before a word is read. The row version before this
    was "very boring to read and see" (owner).
 
-   The still and the title both open the video on YouTube; nothing embeds and
-   nothing plays here, because these are other people's videos.
+   The still is YouTube's own, hotlinked from the video id (owner 2026-10-19),
+   and clicking it plays the video in place: the still is swapped for a
+   youtube-nocookie player, and no player loads before that click. The title
+   still opens the video on YouTube, and so does a modified click on the still.
 
    cards.py builds the block once at pipeline time (attribution needs the
    50 MB YouTube cache, and the API answers on a 0.1-CPU box), so this screen
-   and the page cannot list a different set of reviews for one phone. The
-   stills are ours, never YouTube's CDN; a missing one falls back to the
-   channel's initial, which reads as a design rather than a hole. */
+   and the page cannot list a different set of reviews for one phone. A video
+   with no id keeps the channel's initial, which reads as a design rather
+   than a hole. */
+
+const still = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const player = (id: string) => `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
 
 function views(n: number): string {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -35,9 +41,19 @@ function Play({ size = 22 }: { size?: number }) {
   );
 }
 
-/* A reviewer's avatar: the initial on a tint its own name picks -- the same
-   sum the /phone/ page uses, so one reviewer wears one colour on both. */
-function Avatar({ name, size = 24 }: { name?: string | null; size?: number }) {
+/* A reviewer's avatar: the channel's own picture, hotlinked from YouTube,
+   when the backend resolved one; else (or if it fails to load) the initial
+   on a tint its own name picks -- the same sum the /phone/ page uses, so one
+   reviewer wears one colour on both. The name always prints beside it. */
+function Avatar({ name, src, size = 24 }: { name?: string | null; src?: string | null; size?: number }) {
+  const [bad, setBad] = useState(false);
+  if (src && !bad) {
+    return (
+      <img src={src} alt="" width={size} height={size} loading="lazy" decoding="async"
+        referrerPolicy="no-referrer" onError={() => setBad(true)}
+        style={st(`flex:none; display:block; width:${size}px; height:${size}px; border-radius:50%; object-fit:cover; background:rgba(var(--rgb-ink),.08);`)} />
+    );
+  }
   const n = (name || "?").trim() || "?";
   let sum = 0;
   for (const ch of n) sum += ch.codePointAt(0) || 0;
@@ -66,6 +82,24 @@ export function YoutubeSection({ yt }: { yt: YoutubeBlock }) {
   const vids = yt.videos || [];
   const points = yt.points || [];
   const [all, setAll] = useState(false);
+  const [playing, setPlaying] = useState<string | null>(null);
+  const [grow, setGrow] = useState(false);
+  /* The playing card takes the whole row (pick/index.html .kytv.play) and
+     scrolls into view; one plays at a time because `playing` is one id.
+     A View Transition animates the change where there is one, a short CSS
+     ease where there is not, and nothing moves under reduced motion. */
+  const play = (id: string, li: HTMLElement | null) => {
+    const calm = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const show = () => li?.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" });
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
+    if (doc.startViewTransition && !calm) {
+      doc.startViewTransition(() => flushSync(() => { setGrow(false); setPlaying(id); })).finished.then(show, show);
+    } else {
+      setGrow(!calm);
+      setPlaying(id);
+      requestAnimationFrame(show);
+    }
+  };
   const praise = points.filter((p) => p.stance === "praise");
   const blame = points.filter((p) => p.stance !== "praise");
   const reach = vids.reduce((s, x) => s + (x.views || 0), 0);
@@ -80,8 +114,8 @@ export function YoutubeSection({ yt }: { yt: YoutubeBlock }) {
     return p.url
       ? <a href={p.url} target="_blank" rel="noopener noreferrer" className="kysrc"
           aria-label={label + (p.title ? " · " + p.title : "") + " (YouTube)"}
-          style={st(look + " color:var(--ink2); text-decoration:none;")}><Avatar name={label} size={20} />{label} ↗</a>
-      : <span style={st(look + " color:var(--mut2);")}><Avatar name={label} size={20} />{label}</span>;
+          style={st(look + " color:var(--ink2); text-decoration:none;")}><Avatar name={label} src={p.avatar} size={20} />{label} ↗</a>
+      : <span style={st(look + " color:var(--mut2);")}><Avatar name={label} src={p.avatar} size={20} />{label}</span>;
   };
 
   return (
@@ -114,29 +148,42 @@ export function YoutubeSection({ yt }: { yt: YoutubeBlock }) {
       )}
 
       {vids.length > 0 && (
-        <ol className={"kytg" + (vids.length === 1 ? " one" : "")}
+        <ol className={"kytg" + (vids.length === 1 ? " one" : "") + (playing ? " playing" : "")}
           style={st("list-style:none; margin:18px 0 0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr)); gap:22px 18px;")}>
           {vids.map((x) => {
             const meta = [x.views ? `${views(x.views)} ${t("yt_views")}` : "", x.aired].filter(Boolean).join(" · ");
             return (
-              <li key={x.id || x.url} className="kytv" style={st("display:flex; flex-direction:column; gap:10px; min-width:0;")}>
-                {/* the still repeats the title's link: one tab stop, not two */}
-                <a href={x.url} target="_blank" rel="noopener noreferrer" tabIndex={-1} aria-hidden="true" className="kytt"
+              <li key={x.id || x.url} className={"kytv" + (playing === x.id && x.id ? (grow ? " play grow" : " play") : "")} style={st("display:flex; flex-direction:column; gap:10px; min-width:0;")}>
+                {playing === x.id && x.id ? (
+                  <iframe src={player(x.id)} title={x.title || x.channel || "YouTube"}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen referrerPolicy="strict-origin-when-cross-origin"
+                    style={st("display:block; width:100%; aspect-ratio:16/9; border:0; border-radius:12px; background:#000;")} />
+                ) : (
+                <a href={x.url} target="_blank" rel="noopener noreferrer" className="kytt"
+                  {...(x.id ? { "aria-label": `${t("yt_play")}: ${x.title || x.channel}` } : { tabIndex: -1, "aria-hidden": true })}
+                  onClick={(e) => {
+                    // a modified click keeps the link's own meaning
+                    if (!x.id || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+                    e.preventDefault();
+                    play(x.id, e.currentTarget.closest("li"));
+                  }}
                   style={st("position:relative; display:flex; align-items:center; justify-content:center; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#232a29; color:#fff; box-shadow:0 1px 2px rgba(var(--rgb-ink),.08), 0 10px 24px rgba(var(--rgb-ink),.12);")}>
                   {/* the initial always sits underneath: a still that fails to
                       load hides itself and the tile reads as a design, not a
                       broken-image icon */}
                   <span aria-hidden="true" style={st("position:absolute; left:12px; bottom:2px; font-size:54px; font-weight:800; line-height:1; opacity:.16;")}>{(x.channel || "?").slice(0, 1).toUpperCase()}</span>
-                  {x.thumb && (
-                    <img key={x.thumb} src={x.thumb} alt="" loading="lazy" decoding="async" width={480} height={270}
+                  {x.id && (
+                    <img key={x.id} src={still(x.id)} alt="" loading="lazy" decoding="async" width={480} height={270}
                       onError={(e) => { e.currentTarget.style.display = "none"; }}
                       style={st("position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;")} />
                   )}
                   <Play size={40} />
                 </a>
+                )}
                 <div style={st("min-width:0;")}>
                   <div style={st("display:flex; align-items:center; gap:8px; font-size:13px; line-height:1.3; color:var(--ink2);")}>
-                    <Avatar name={x.channel} />
+                    <Avatar name={x.channel} src={x.avatar} size={26} />
                     <b style={st("min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700;")}>{x.channel || "YouTube"}</b>
                   </div>
                   <a href={x.url} target="_blank" rel="noopener noreferrer" className="kytl"

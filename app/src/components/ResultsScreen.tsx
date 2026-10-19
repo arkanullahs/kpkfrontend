@@ -98,7 +98,7 @@ export function SpecStrip({ tiles, small }: { tiles?: SpecTile[] | null; small?:
     (backend value_pass.caveats). */
 export function MarketChips({ regions, small, max }: { regions?: RegionOffer[] | null; small?: boolean; max?: number }) {
   if (!regions || !regions.length) return null;
-  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:var(--r); color:var(--lnk); background:var(--tealL);`;
+  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 12}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:var(--r); color:var(--lnk); background:var(--tealL);`;
   /* Capped, the rest counted: nine market chips on one card were a wall
      between the name and the price (owner 2026-09-12). Nothing is hidden --
      the count says how many more, the tooltip names them, and the detail
@@ -164,7 +164,7 @@ export function ChannelChips({ p, small }: {
        channels?: Channels | null };
   small?: boolean;
 }) {
-  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 11.5}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:var(--r);`;
+  const base = `display:inline-flex; align-items:center; font-size:${small ? 10.5 : 12}px; font-weight:700; padding:${small ? "3px 9px" : "4px 11px"}; border-radius:var(--r);`;
   // the other channel's chip shows its RANGE from the same channel summary
   // the listings render — one source, no contradictions (owner 2026-07-19)
   const off = p.channels?.official;
