@@ -293,7 +293,7 @@ function Tile({ o, form, count, total, tapped, compact, onPick }: {
         </span>
       )}
       {!lit && count !== null && (
-        <span style={st("margin-top:auto; padding-top:10px;")}><CountPill n={count} total={total} /></span>
+        <span style={st("margin-top:auto; padding-top:10px;")}><CountPill n={count} total={total} swap={o.swap} /></span>
       )}
     </button>
   );
@@ -419,7 +419,7 @@ function GroupLabel({ children }: { children: React.ReactNode }) {
    postposition: concatenating in English order rendered "৩ টির মধ্যে ৩৭",
    which a Bangla reader reads as "37 out of 3". Every pill in the picker
    stated the inverse of the truth. Each language owns its own word order. */
-function CountPill({ n, total }: { n: number | null; total: number | null }) {
+function CountPill({ n, total, swap }: { n: number | null; total: number | null; swap?: boolean }) {
   if (n === null) return null;
   if (n === 0) {
     return (
@@ -431,7 +431,9 @@ function CountPill({ n, total }: { n: number | null; total: number | null }) {
   const wider = total != null && n > total;
   return (
     <span style={st("display:inline-block; font-size:14px; font-weight:700; padding:5px 11px; border-radius:var(--r); background:var(--tint); color:var(--lnk);")}>
-      {wider
+      {swap
+        ? (n === 1 ? t("fg_one_phone") : t("fg_n_phones").replace("{n}", bnNum(String(n))))
+        : wider
         ? `+${bnNum(String(n - total!))}`
         : t("fg_n_of_m")
             .replace("{n}", bnNum(String(n)))

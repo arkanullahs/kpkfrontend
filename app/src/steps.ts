@@ -42,6 +42,10 @@ export interface StepOption {
   isOn: (f: Form) => boolean;
   /** the form to count against, for the "1 of 46" pill. */
   probe?: (f: Form) => Partial<Form>;
+  /** the probe counts a DIFFERENT pool, not a slice of this one, so the
+      pill says "3 phones", never "3 of 49" (foldables-only is not a part
+      of the no-foldables pool it sits beside). */
+  swap?: boolean;
 }
 
 /** A further labelled group on the same screen, shown only when the main
@@ -424,7 +428,7 @@ export const SCREENS: Record<string, Screen> = {
     options: () => [
       { id: "fold_yes", labelKey: "s_fold_yes", subKey: "s_fold_yes_sub", icon: ICON.fold,
         patch: () => ({ foldable: "only" as const }), isOn: (f) => f.foldable === "only",
-        probe: () => ({ foldable: "only" as const }) },
+        probe: () => ({ foldable: "only" as const }), swap: true },
       { id: "fold_no", labelKey: "s_fold_no", subKey: "s_fold_no_sub", icon: ICON.slab,
         patch: () => ({ foldable: "no" as const }), isOn: (f) => f.foldable === "no",
         probe: () => ({ foldable: "no" as const }) },
