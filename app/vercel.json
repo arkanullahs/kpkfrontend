@@ -212,6 +212,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/nokia-5310-ds",
+      "destination": "/brand/nokia?gone=nokia-5310-ds",
+      "permanent": true
+    },
+    {
       "source": "/phone/nubia-a35e",
       "destination": "/brand/nubia?gone=nubia-a35e",
       "permanent": true
@@ -537,6 +542,11 @@
       "permanent": true
     },
     {
+      "source": "/phone/samsung-galaxy-s23-plus",
+      "destination": "/phone/samsung-galaxy-s23-plus-5g",
+      "permanent": true
+    },
+    {
       "source": "/phone/samsung-galaxy-s24-plus",
       "destination": "/phone/samsung-galaxy-s24-plus-5g",
       "permanent": true
@@ -759,11 +769,6 @@
     {
       "source": "/vs/oppo-reno-15c-5g-vs-vivo-v60-lite-5g",
       "destination": "/phone/vivo-v60-lite-5g",
-      "permanent": true
-    },
-    {
-      "source": "/vs/redmi-note-14-4g-vs-samsung-galaxy-a16-4g",
-      "destination": "/phone/redmi-note-14-4g",
       "permanent": true
     },
     {
