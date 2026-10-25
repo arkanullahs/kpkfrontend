@@ -1,15 +1,15 @@
 {
- "generated": "2026-10-24",
+ "generated": "2026-10-25",
  "source": "https://bhalophone.com",
  "method": "Every figure is measured like-for-like from our price price snapshots of Bangladesh phone shops: official against official, import against import, one storage variant against the same variant, and a shop price comparison only across three or more distinct shops.",
  "coverage": {
-  "tracked": 2514,
-  "snapshots": 81,
-  "nights": 136,
+  "tracked": 2518,
+  "snapshots": 82,
+  "nights": 137,
   "since": "2026-06-11",
-  "until": "2026-10-24",
-  "in_stock": 497,
-  "listed": 521,
+  "until": "2026-10-25",
+  "in_stock": 494,
+  "listed": 518,
   "definitions": {
    "tracked": "distinct handsets with at least one price ever recorded",
    "snapshots": "nights on which a price read succeeded and wrote rows",
@@ -22,10 +22,10 @@
   {
    "slug": "risers",
    "kicker": "UNOFFICIAL PRICE",
-   "headline": "The Apple iPhone Duo unofficial price is ==৳339,999 more== than it was a month ago",
-   "caption": "Everyone tells you to wait, that phones only get cheaper. Here is what waiting a month did to the Apple iPhone Duo's unofficial price.\n\n৳10,000 on 24 September. ৳349,999 today. 51 phones we track cost more now than they did a month ago:\n\n• Apple iPhone Duo: ৳10,000 to ৳349,999 (+3400%, unofficial price)\n• Google Pixel 9 Pro Fold: ৳146,990 to ৳179,999 (+22%, unofficial price)\n• Xiaomi 15 Ultra: ৳124,999 to ৳149,999 (+20%, unofficial price)\n• Honor Magic 6 Pro: ৳95,990 to ৳114,990 (+20%, unofficial price)\n\nThat is the cheapest listed price on that channel, read every day or two and plotted above. Full chart:\nhttps://bhalophone.com/phone/apple-iphone-duo\n\nEver waited for a price to fall and watched it climb?",
-   "standfirst": "৳10,000 on 24 September, ৳349,999 today, at 3 shops. Official sat still at ৳449,999.",
-   "source": "bhalophone.com · 51 phones dearer than last month",
+   "headline": "The Apple iPhone Duo unofficial price is ==৳360,000 more== than it was a month ago",
+   "caption": "Everyone tells you to wait, that phones only get cheaper. Here is what waiting a month did to the Apple iPhone Duo's unofficial price.\n\n৳10,000 on 24 September. ৳370,000 today. 52 phones we track cost more now than they did a month ago:\n\n• Apple iPhone Duo: ৳10,000 to ৳370,000 (+3600%, unofficial price)\n• Google Pixel 9 Pro Fold: ৳146,990 to ৳179,999 (+22%, unofficial price)\n• Xiaomi 15 Ultra: ৳124,999 to ৳149,999 (+20%, unofficial price)\n• Honor Magic 6 Pro: ৳95,990 to ৳114,990 (+20%, unofficial price)\n\nThat is the cheapest listed price on that channel, read every day or two and plotted above. Full chart:\nhttps://bhalophone.com/phone/apple-iphone-duo\n\nEver waited for a price to fall and watched it climb?",
+   "standfirst": "৳10,000 on 24 September, ৳370,000 today, at 3 shops. Official sat still at ৳449,999.",
+   "source": "bhalophone.com · 52 phones dearer than last month",
    "panel": {
     "kind": "chart",
     "series": {
@@ -121,13 +121,17 @@
       [
        "2026-10-24",
        349999
+      ],
+      [
+       "2026-10-25",
+       370000
       ]
      ]
     },
     "axis": [
      "11 September",
-     "24 October",
-     "3 October"
+     "25 October",
+     "5 October"
     ],
     "highlight": "unofficial",
     "labels": {
@@ -141,12 +145,12 @@
      "brand": "Apple",
      "channel": "unofficial",
      "was": 10000,
-     "now": 349999,
-     "delta": 339999,
-     "pct": 3400.0,
+     "now": 370000,
+     "delta": 360000,
+     "pct": 3600.0,
      "shops": 3,
      "since": "2026-09-24",
-     "until": "2026-10-24"
+     "until": "2026-10-25"
     },
     {
      "id": "Google|pixel 9 pro fold",
@@ -159,7 +163,7 @@
      "pct": 22.5,
      "shops": 1,
      "since": "2026-09-24",
-     "until": "2026-10-24"
+     "until": "2026-10-25"
     },
     {
      "id": "Xiaomi|15 ultra",
@@ -172,7 +176,7 @@
      "pct": 20.0,
      "shops": 3,
      "since": "2026-09-24",
-     "until": "2026-10-24"
+     "until": "2026-10-25"
     },
     {
      "id": "Honor|magic 6 pro",
@@ -185,11 +189,11 @@
      "pct": 19.8,
      "shops": 1,
      "since": "2026-09-24",
-     "until": "2026-10-24"
+     "until": "2026-10-25"
     }
    ],
    "bullets": [
-    "Apple iPhone Duo: ৳10,000 to ৳349,999 (+3400%, unofficial price)",
+    "Apple iPhone Duo: ৳10,000 to ৳370,000 (+3600%, unofficial price)",
     "Google Pixel 9 Pro Fold: ৳146,990 to ৳179,999 (+22%, unofficial price)",
     "Xiaomi 15 Ultra: ৳124,999 to ৳149,999 (+20%, unofficial price)",
     "Honor Magic 6 Pro: ৳95,990 to ৳114,990 (+20%, unofficial price)"
@@ -205,9 +209,9 @@
    "slug": "risers_other",
    "kicker": "OFFICIAL PRICE",
    "headline": "The Apple iPhone Duo official price ==barely moved== while its unofficial price climbed",
-   "caption": "The other price of the same phone.\n\nWe read the Apple iPhone Duo twice on every pass: once with a brand warranty, once without. Its official price went ৳449,999 to ৳449,999 while its unofficial price went ৳10,000 to ৳349,999. So what official costs:\n\n• On 24 September: ৳439,999\n• Today: ৳100,000\n\nOfficial against official, unofficial against unofficial, on every pass. Both lines:\nhttps://bhalophone.com/phone/apple-iphone-duo\n\nIs the warranty worth that to you?",
-   "standfirst": "৳449,999 then, ৳449,999 now. The two prices went from ৳439,999 apart to ৳100,000.",
-   "source": "bhalophone.com · both prices read on every one of our 81 price nights since 2026-06-11",
+   "caption": "The other price of the same phone.\n\nWe read the Apple iPhone Duo twice on every pass: once with a brand warranty, once without. Its official price went ৳449,999 to ৳449,999 while its unofficial price went ৳10,000 to ৳370,000. So what official costs:\n\n• On 24 September: ৳439,999\n• Today: ৳79,999\n\nOfficial against official, unofficial against unofficial, on every pass. Both lines:\nhttps://bhalophone.com/phone/apple-iphone-duo\n\nIs the warranty worth that to you?",
+   "standfirst": "৳449,999 then, ৳449,999 now. The two prices went from ৳439,999 apart to ৳79,999.",
+   "source": "bhalophone.com · both prices read on every one of our 82 price nights since 2026-06-11",
    "panel": {
     "kind": "chart",
     "series": {
@@ -247,13 +251,17 @@
       [
        "2026-10-24",
        449999
+      ],
+      [
+       "2026-10-25",
+       449999
       ]
      ]
     },
     "axis": [
      "12 October",
-     "24 October",
-     "19 October"
+     "25 October",
+     "20 October"
     ],
     "highlight": "official",
     "labels": {
@@ -272,14 +280,14 @@
      "pct": 0.0,
      "shops": 3,
      "since": "2026-09-24",
-     "until": "2026-10-24"
+     "until": "2026-10-25"
     }
    ],
    "bullets": [
-    "Unofficial: ৳10,000 to ৳349,999",
+    "Unofficial: ৳10,000 to ৳370,000",
     "Official: ৳449,999 to ৳449,999",
     "Gap on 24 September: ৳439,999",
-    "Gap today: ৳100,000"
+    "Gap today: ৳79,999"
    ],
    "ids": [
     "Apple|iphone duo"
@@ -288,120 +296,120 @@
   {
    "slug": "shops",
    "kicker": "SHOP WATCH",
-   "headline": "The same phone costs ==10.3% more== at GadgetAndGear than at the cheapest shop",
-   "caption": "Same phone, same storage, same channel. What does each shop want for it on the same night? We ran that 167 times.\n\nGadgetAndGear came out 10.3% above the cheapest shop on average. GaziElectronics came out 1.1%.\n\n• GaziElectronics: +1.1% (38 comparisons)\n• RioInternational: +1.2% (85 comparisons)\n• SMSGadget: +3.7% (84 comparisons)\n• Pickaboo: +5.6% (78 comparisons)\n• AppleGadgets: +8.1% (67 comparisons)\n• SumashTech: +9.7% (153 comparisons)\n• GadgetAndGear: +10.3% (89 comparisons)\n\nShops bundle differently and stock different things, so a premium is not proof of anything by itself. But if you are about to spend six figures, the shop you walk into is worth knowing. Checked every day or two, every shop we track:\nhttps://bhalophone.com\n\nWhich shop do you actually buy from?",
-   "standfirst": "167 head-to-head comparisons: same model, same storage, same channel, in stock at three or more shops on the same night.",
-   "source": "bhalophone.com · 81 price reads since 2026-06-11",
+   "headline": "The same phone costs ==10.1% more== at GadgetAndGear than at the cheapest shop",
+   "caption": "Same phone, same storage, same channel. What does each shop want for it on the same night? We ran that 161 times.\n\nGadgetAndGear came out 10.1% above the cheapest shop on average. RioInternational came out 1.2%.\n\n• RioInternational: +1.2% (82 comparisons)\n• GaziElectronics: +1.6% (37 comparisons)\n• SMSGadget: +3.5% (81 comparisons)\n• Pickaboo: +5.2% (73 comparisons)\n• AppleGadgets: +7.8% (66 comparisons)\n• SumashTech: +9.6% (146 comparisons)\n• GadgetAndGear: +10.1% (88 comparisons)\n\nShops bundle differently and stock different things, so a premium is not proof of anything by itself. But if you are about to spend six figures, the shop you walk into is worth knowing. Checked every day or two, every shop we track:\nhttps://bhalophone.com\n\nWhich shop do you actually buy from?",
+   "standfirst": "161 head-to-head comparisons: same model, same storage, same channel, in stock at three or more shops on the same night.",
+   "source": "bhalophone.com · 82 price reads since 2026-06-11",
    "panel": {
     "kind": "bars",
     "unit": "% over the cheapest shop",
     "bars": [
      {
-      "label": "GaziElectronics",
-      "value": 1.1,
-      "note": "38 comparisons"
-     },
-     {
       "label": "RioInternational",
       "value": 1.2,
-      "note": "85 comparisons"
+      "note": "82 comparisons"
+     },
+     {
+      "label": "GaziElectronics",
+      "value": 1.6,
+      "note": "37 comparisons"
      },
      {
       "label": "SMSGadget",
-      "value": 3.7,
-      "note": "84 comparisons"
+      "value": 3.5,
+      "note": "81 comparisons"
      },
      {
       "label": "Pickaboo",
-      "value": 5.6,
-      "note": "78 comparisons"
+      "value": 5.2,
+      "note": "73 comparisons"
      },
      {
       "label": "AppleGadgets",
-      "value": 8.1,
-      "note": "67 comparisons"
+      "value": 7.8,
+      "note": "66 comparisons"
      },
      {
       "label": "SumashTech",
-      "value": 9.7,
-      "note": "153 comparisons"
+      "value": 9.6,
+      "note": "146 comparisons"
      },
      {
       "label": "GadgetAndGear",
-      "value": 10.3,
-      "note": "89 comparisons"
+      "value": 10.1,
+      "note": "88 comparisons"
      }
     ]
    },
    "items": [
     {
+     "shop": "RioInternational",
+     "seen": 82,
+     "premium": 1.2,
+     "cheapest_pct": 65,
+     "dearest_pct": 6
+    },
+    {
      "shop": "GaziElectronics",
-     "seen": 38,
-     "premium": 1.1,
-     "cheapest_pct": 74,
+     "seen": 37,
+     "premium": 1.6,
+     "cheapest_pct": 68,
      "dearest_pct": 11
     },
     {
-     "shop": "RioInternational",
-     "seen": 85,
-     "premium": 1.2,
-     "cheapest_pct": 67,
-     "dearest_pct": 5
-    },
-    {
      "shop": "SMSGadget",
-     "seen": 84,
-     "premium": 3.7,
-     "cheapest_pct": 25,
-     "dearest_pct": 18
+     "seen": 81,
+     "premium": 3.5,
+     "cheapest_pct": 26,
+     "dearest_pct": 15
     },
     {
      "shop": "Pickaboo",
-     "seen": 78,
-     "premium": 5.6,
-     "cheapest_pct": 41,
-     "dearest_pct": 5
+     "seen": 73,
+     "premium": 5.2,
+     "cheapest_pct": 47,
+     "dearest_pct": 3
     },
     {
      "shop": "AppleGadgets",
-     "seen": 67,
-     "premium": 8.1,
-     "cheapest_pct": 9,
-     "dearest_pct": 7
+     "seen": 66,
+     "premium": 7.8,
+     "cheapest_pct": 14,
+     "dearest_pct": 8
     },
     {
      "shop": "SumashTech",
-     "seen": 153,
-     "premium": 9.7,
+     "seen": 146,
+     "premium": 9.6,
      "cheapest_pct": 3,
-     "dearest_pct": 76
+     "dearest_pct": 78
     },
     {
      "shop": "GadgetAndGear",
-     "seen": 89,
-     "premium": 10.3,
-     "cheapest_pct": 4,
-     "dearest_pct": 15
+     "seen": 88,
+     "premium": 10.1,
+     "cheapest_pct": 5,
+     "dearest_pct": 16
     }
    ],
    "bullets": [
-    "GaziElectronics: +1.1% over the cheapest, across 38 comparisons",
-    "RioInternational: +1.2% over the cheapest, across 85 comparisons",
-    "SMSGadget: +3.7% over the cheapest, across 84 comparisons",
-    "Pickaboo: +5.6% over the cheapest, across 78 comparisons",
-    "AppleGadgets: +8.1% over the cheapest, across 67 comparisons",
-    "SumashTech: +9.7% over the cheapest, across 153 comparisons",
-    "GadgetAndGear: +10.3% over the cheapest, across 89 comparisons"
+    "RioInternational: +1.2% over the cheapest, across 82 comparisons",
+    "GaziElectronics: +1.6% over the cheapest, across 37 comparisons",
+    "SMSGadget: +3.5% over the cheapest, across 81 comparisons",
+    "Pickaboo: +5.2% over the cheapest, across 73 comparisons",
+    "AppleGadgets: +7.8% over the cheapest, across 66 comparisons",
+    "SumashTech: +9.6% over the cheapest, across 146 comparisons",
+    "GadgetAndGear: +10.1% over the cheapest, across 88 comparisons"
    ],
    "ids": []
   },
   {
    "slug": "depreciation",
    "kicker": "THE COST OF BUYING EARLY",
-   "headline": "Waiting 123 days on the Samsung Galaxy A33 5G saved you ==৳21,009==",
-   "caption": "Somebody paid ৳49,999 for a Samsung Galaxy A33 5G back on 23 June. It is ৳28,990 today.\n\n৳21,009, for waiting 123 days. The four phones we have watched fall hardest since the first night anyone here quoted a price:\n\n• Samsung Galaxy A33 5G: ৳49,999 to ৳28,990, −-42% in 123 days (official price)\n• Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −-27% in 112 days (official price)\n• Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −-27% in 135 days (official price)\n• Redmi Note 17 Pro Max 5G: ৳64,999 to ৳48,990, −-25% in 43 days (unofficial price)\n\nEvery line is one channel against itself, so a sold-out listing never reads as a price cut. Night-by-night history:\nhttps://bhalophone.com/phone/samsung-galaxy-a33-5g\n\nAnything you are holding out on? Name it and we will watch it.",
+   "headline": "Waiting 124 days on the Samsung Galaxy A33 5G saved you ==৳21,009==",
+   "caption": "Somebody paid ৳49,999 for a Samsung Galaxy A33 5G back on 23 June. It is ৳28,990 today.\n\n৳21,009, for waiting 124 days. The four phones we have watched fall hardest since the first night anyone here quoted a price:\n\n• Samsung Galaxy A33 5G: ৳49,999 to ৳28,990, −-42% in 124 days (official price)\n• Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −-27% in 136 days (official price)\n• Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −-27% in 113 days (official price)\n• Samsung Galaxy S25 Plus: ৳181,999 to ৳139,999, −-23% in 97 days (official price)\n\nEvery line is one channel against itself, so a sold-out listing never reads as a price cut. Night-by-night history:\nhttps://bhalophone.com/phone/samsung-galaxy-a33-5g\n\nAnything you are holding out on? Name it and we will watch it.",
    "standfirst": "৳49,999 when we first saw it, ৳28,990 today. Official price, tracked every day or two since 23 June.",
-   "source": "bhalophone.com · 97 more phones falling this fast",
+   "source": "bhalophone.com · 98 more phones falling this fast",
    "panel": {
     "kind": "beforeafter",
     "was": 49999,
@@ -422,19 +430,7 @@
      "delta": -21009,
      "pct": -42,
      "since": "2026-06-23",
-     "days": 123
-    },
-    {
-     "id": "Samsung|s23 ultra",
-     "name": "Samsung Galaxy S23 Ultra",
-     "brand": "Samsung",
-     "channel": "official",
-     "was": 245999,
-     "now": 179999,
-     "delta": -66000,
-     "pct": -27,
-     "since": "2026-07-04",
-     "days": 112
+     "days": 124
     },
     {
      "id": "Apple|iphone 16 plus",
@@ -446,41 +442,53 @@
      "delta": -49999,
      "pct": -27,
      "since": "2026-06-11",
-     "days": 135
+     "days": 136
     },
     {
-     "id": "Redmi|note 17 pro max",
-     "name": "Redmi Note 17 Pro Max 5G",
-     "brand": "Redmi",
-     "channel": "unofficial",
-     "was": 64999,
-     "now": 48990,
-     "delta": -16009,
-     "pct": -25,
-     "since": "2026-09-11",
-     "days": 43
+     "id": "Samsung|s23 ultra",
+     "name": "Samsung Galaxy S23 Ultra",
+     "brand": "Samsung",
+     "channel": "official",
+     "was": 245999,
+     "now": 179999,
+     "delta": -66000,
+     "pct": -27,
+     "since": "2026-07-04",
+     "days": 113
+    },
+    {
+     "id": "Samsung|s25 plus",
+     "name": "Samsung Galaxy S25 Plus",
+     "brand": "Samsung",
+     "channel": "official",
+     "was": 181999,
+     "now": 139999,
+     "delta": -42000,
+     "pct": -23,
+     "since": "2026-07-20",
+     "days": 97
     }
    ],
    "bullets": [
-    "Samsung Galaxy A33 5G: ৳49,999 to ৳28,990, −-42% in 123 days (official)",
-    "Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −-27% in 112 days (official)",
-    "Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −-27% in 135 days (official)",
-    "Redmi Note 17 Pro Max 5G: ৳64,999 to ৳48,990, −-25% in 43 days (unofficial)"
+    "Samsung Galaxy A33 5G: ৳49,999 to ৳28,990, −-42% in 124 days (official)",
+    "Apple iPhone 16 Plus: ৳184,999 to ৳135,000, −-27% in 136 days (official)",
+    "Samsung Galaxy S23 Ultra: ৳245,999 to ৳179,999, −-27% in 113 days (official)",
+    "Samsung Galaxy S25 Plus: ৳181,999 to ৳139,999, −-23% in 97 days (official)"
    ],
    "ids": [
     "Samsung|a33 5g",
-    "Samsung|s23 ultra",
     "Apple|iphone 16 plus",
-    "Redmi|note 17 pro max"
+    "Samsung|s23 ultra",
+    "Samsung|s25 plus"
    ]
   },
   {
    "slug": "warranty",
    "kicker": "WHAT OFFICIAL COSTS",
    "headline": "Buying the Galaxy Z Fold 5 official costs ==৳162,000== more",
-   "caption": "Official Samsung Galaxy Z Fold 5, 12GB/256GB: ৳285,999.\nThe identical unofficial box: ৳123,999.\n\n৳162,000 is what the official channel costs you on this phone. Both in stock today. The four widest gaps we can price on both channels right now:\n\n• Samsung Galaxy Z Fold 5 12GB/256GB: official ৳285,999 vs unofficial ৳123,999 (৳162,000 apart)\n• Apple iPhone 18 Pro Max 1TB: official ৳429,999 vs unofficial ৳289,999 (৳140,000 apart)\n• Apple iPhone 15 Pro Max 512GB: official ৳280,000 vs unofficial ৳144,990 (৳135,010 apart)\n• Samsung Galaxy Z Flip 6 12GB/256GB: official ৳197,999 vs unofficial ৳84,999 (৳113,000 apart)\n\nSame storage on both sides, always. Quoting the cheapest official against the cheapest unofficial usually compares 512GB with 256GB and doubles the gap. Specs, shops and the full history:\nhttps://bhalophone.com/phone/samsung-galaxy-z-fold-5\n\nOfficial or unofficial: which way did you go, and would you do it again?",
+   "caption": "Official Samsung Galaxy Z Fold 5, 12GB/256GB: ৳285,999.\nThe identical unofficial box: ৳123,999.\n\n৳162,000 is what the official channel costs you on this phone. Both in stock today. The four widest gaps we can price on both channels right now:\n\n• Samsung Galaxy Z Fold 5 12GB/256GB: official ৳285,999 vs unofficial ৳123,999 (৳162,000 apart)\n• Samsung Galaxy Z Flip 6 12GB/256GB: official ৳197,999 vs unofficial ৳84,999 (৳113,000 apart)\n• Apple iPhone 18 Pro Max 256GB: official ৳283,999 vs unofficial ৳182,990 (৳101,009 apart)\n• Apple iPhone 17 Pro Max 2TB: official ৳335,999 vs unofficial ৳239,999 (৳96,000 apart)\n\nSame storage on both sides, always. Quoting the cheapest official against the cheapest unofficial usually compares 512GB with 256GB and doubles the gap. Specs, shops and the full history:\nhttps://bhalophone.com/phone/samsung-galaxy-z-fold-5\n\nOfficial or unofficial: which way did you go, and would you do it again?",
    "standfirst": "Same 12GB/256GB variant, both in stock today. Official ৳285,999, unofficial ৳123,999.",
-   "source": "bhalophone.com · 78 phones priced on both channels",
+   "source": "bhalophone.com · 77 phones priced on both channels",
    "panel": {
     "kind": "versus",
     "left": {
@@ -506,28 +514,6 @@
      "saving_pct": 57
     },
     {
-     "id": "Apple|iphone 18 pro max",
-     "name": "Apple iPhone 18 Pro Max",
-     "brand": "Apple",
-     "variant": "1TB",
-     "official": 429999,
-     "unofficial": 289999,
-     "delta": 140000,
-     "premium_pct": 48,
-     "saving_pct": 33
-    },
-    {
-     "id": "Apple|iphone 15 pro max",
-     "name": "Apple iPhone 15 Pro Max",
-     "brand": "Apple",
-     "variant": "512GB",
-     "official": 280000,
-     "unofficial": 144990,
-     "delta": 135010,
-     "premium_pct": 93,
-     "saving_pct": 48
-    },
-    {
      "id": "Samsung|flip 6",
      "name": "Samsung Galaxy Z Flip 6",
      "brand": "Samsung",
@@ -537,28 +523,50 @@
      "delta": 113000,
      "premium_pct": 133,
      "saving_pct": 57
+    },
+    {
+     "id": "Apple|iphone 18 pro max",
+     "name": "Apple iPhone 18 Pro Max",
+     "brand": "Apple",
+     "variant": "256GB",
+     "official": 283999,
+     "unofficial": 182990,
+     "delta": 101009,
+     "premium_pct": 55,
+     "saving_pct": 36
+    },
+    {
+     "id": "Apple|iphone 17 pro max",
+     "name": "Apple iPhone 17 Pro Max",
+     "brand": "Apple",
+     "variant": "2TB",
+     "official": 335999,
+     "unofficial": 239999,
+     "delta": 96000,
+     "premium_pct": 40,
+     "saving_pct": 29
     }
    ],
    "bullets": [
     "Samsung Galaxy Z Fold 5 12GB/256GB: official ৳285,999 vs unofficial ৳123,999, ৳162,000 apart",
-    "Apple iPhone 18 Pro Max 1TB: official ৳429,999 vs unofficial ৳289,999, ৳140,000 apart",
-    "Apple iPhone 15 Pro Max 512GB: official ৳280,000 vs unofficial ৳144,990, ৳135,010 apart",
-    "Samsung Galaxy Z Flip 6 12GB/256GB: official ৳197,999 vs unofficial ৳84,999, ৳113,000 apart"
+    "Samsung Galaxy Z Flip 6 12GB/256GB: official ৳197,999 vs unofficial ৳84,999, ৳113,000 apart",
+    "Apple iPhone 18 Pro Max 256GB: official ৳283,999 vs unofficial ৳182,990, ৳101,009 apart",
+    "Apple iPhone 17 Pro Max 2TB: official ৳335,999 vs unofficial ৳239,999, ৳96,000 apart"
    ],
    "ids": [
     "Samsung|fold 5",
+    "Samsung|flip 6",
     "Apple|iphone 18 pro max",
-    "Apple|iphone 15 pro max",
-    "Samsung|flip 6"
+    "Apple|iphone 17 pro max"
    ]
   },
   {
    "slug": "drops",
    "kicker": "PRICE DROP",
    "headline": "The Apple iPhone 18 Pro Max lost ==৳49,000== in 30 nights",
-   "caption": "The Apple iPhone 18 Pro Max was ৳231,990 a month ago. This morning it is ৳182,990, at 9 shops.\n\nSteepest 30-day fall in our table. The rest of the top four:\n\n• Apple iPhone 18 Pro Max: ৳231,990 to ৳182,990 (-21%, unofficial price)\n• Google Pixel 11 Pro: ৳147,999 to ৳128,999 (-13%, unofficial price)\n• OPPO Reno 15 Pro: ৳77,999 to ৳67,490 (-14%, unofficial price)\n• Vivo X200 Pro: ৳91,490 to ৳81,490 (-11%, unofficial price)\n\nOfficial against official, unofficial against unofficial. When a cheap listing sells out and the headline price jumps to the official one, that is not a rise and it is not in this list. Night-by-night history:\nhttps://bhalophone.com/phone/apple-iphone-18-pro-max\n\nBuying this month, or waiting it out?",
+   "caption": "The Apple iPhone 18 Pro Max was ৳231,990 a month ago. This morning it is ৳182,990, at 9 shops.\n\nSteepest 30-day fall in our table. The rest of the top four:\n\n• Apple iPhone 18 Pro Max: ৳231,990 to ৳182,990 (-21%, unofficial price)\n• Google Pixel 11 Pro: ৳147,999 to ৳128,999 (-13%, unofficial price)\n• OPPO Reno 15 Pro: ৳77,999 to ৳67,490 (-14%, unofficial price)\n• Realme GT 7 Pro: ৳70,999 to ৳60,999 (-14%, unofficial price)\n\nOfficial against official, unofficial against unofficial. When a cheap listing sells out and the headline price jumps to the official one, that is not a rise and it is not in this list. Night-by-night history:\nhttps://bhalophone.com/phone/apple-iphone-18-pro-max\n\nBuying this month, or waiting it out?",
    "standfirst": "৳231,990 to ৳182,990 in 30 days. Unofficial price, in stock at 9 shops.",
-   "source": "bhalophone.com · 81 price reads since 2026-06-11",
+   "source": "bhalophone.com · 82 price reads since 2026-06-11",
    "panel": {
     "kind": "beforeafter",
     "was": 231990,
@@ -580,7 +588,7 @@
      "pct": -21.1,
      "shops": 9,
      "since": "2026-09-24",
-     "until": "2026-10-24"
+     "until": "2026-10-25"
     },
     {
      "id": "Google|pixel 11 pro",
@@ -593,7 +601,7 @@
      "pct": -12.8,
      "shops": 2,
      "since": "2026-09-24",
-     "until": "2026-10-24"
+     "until": "2026-10-25"
     },
     {
      "id": "OPPO|reno 15 pro",
@@ -606,66 +614,66 @@
      "pct": -13.5,
      "shops": 2,
      "since": "2026-09-24",
-     "until": "2026-10-24"
+     "until": "2026-10-25"
     },
     {
-     "id": "Vivo|x200 pro",
-     "name": "Vivo X200 Pro",
-     "brand": "Vivo",
+     "id": "Realme|gt 7 pro",
+     "name": "Realme GT 7 Pro",
+     "brand": "Realme",
      "channel": "unofficial",
-     "was": 91490,
-     "now": 81490,
+     "was": 70999,
+     "now": 60999,
      "delta": -10000,
-     "pct": -10.9,
+     "pct": -14.1,
      "shops": 4,
      "since": "2026-09-24",
-     "until": "2026-10-24"
+     "until": "2026-10-25"
     }
    ],
    "bullets": [
     "Apple iPhone 18 Pro Max: ৳231,990 to ৳182,990 (-21%, unofficial price)",
     "Google Pixel 11 Pro: ৳147,999 to ৳128,999 (-13%, unofficial price)",
     "OPPO Reno 15 Pro: ৳77,999 to ৳67,490 (-14%, unofficial price)",
-    "Vivo X200 Pro: ৳91,490 to ৳81,490 (-11%, unofficial price)"
+    "Realme GT 7 Pro: ৳70,999 to ৳60,999 (-14%, unofficial price)"
    ],
    "ids": [
     "Apple|iphone 18 pro max",
     "Google|pixel 11 pro",
     "OPPO|reno 15 pro",
-    "Vivo|x200 pro"
+    "Realme|gt 7 pro"
    ]
   },
   {
    "slug": "gap",
    "kicker": "SHOP GAP",
-   "headline": "Same Apple iPhone 16 Pro Max, same storage, ==৳76,999== between two Dhaka shops",
-   "caption": "One phone, one storage size, priced on the same night.\n\nApple iPhone 16 Pro Max 256GB, official: ৳173,000 at ExecutiveMachines, ৳249,999 at SumashTech. That's ৳76,999 between two shops selling the same box. Three more from today:\n\n• Apple iPhone 16 Pro Max 256GB: ৳173,000 at ExecutiveMachines vs ৳249,999 at SumashTech (৳76,999 apart)\n• Apple iPhone 17 256GB: ৳121,999 at RioInternational vs ৳179,999 at SumashTech (৳58,000 apart)\n• Apple iPhone 17 Pro Max 512GB: ৳234,999 at Pickaboo vs ৳289,999 at SumashTech (৳55,000 apart)\n• Apple iPhone 17 Pro 256GB: ৳181,499 at ExecutiveMachines vs ৳229,999 at SumashTech (৳48,500 apart)\n\nCheapest offer per shop, three shops minimum, all in stock the same night. Every shop and price we have for it:\nhttps://bhalophone.com/phone/apple-iphone-16-pro-max\n\nWorth the trip across town, or not?",
-   "standfirst": "256GB, official, both in stock today: ৳173,000 at ExecutiveMachines, ৳249,999 at SumashTech.",
+   "headline": "Same Apple iPhone 17 Pro Max, same storage, ==৳65,000== between two Dhaka shops",
+   "caption": "One phone, one storage size, priced on the same night.\n\nApple iPhone 17 Pro Max 512GB, official: ৳224,999 at Pickaboo, ৳289,999 at SumashTech. That's ৳65,000 between two shops selling the same box. Three more from today:\n\n• Apple iPhone 17 Pro Max 512GB: ৳224,999 at Pickaboo vs ৳289,999 at SumashTech (৳65,000 apart)\n• Apple iPhone 17 256GB: ৳121,999 at RioInternational vs ৳179,999 at SumashTech (৳58,000 apart)\n• Apple iPhone 17 Pro 256GB: ৳181,499 at ExecutiveMachines vs ৳229,999 at SumashTech (৳48,500 apart)\n• Samsung Galaxy S25 Ultra 12GB/256GB: ৳189,999 at RioInternational vs ৳226,999 at SMSGadget (৳37,000 apart)\n\nCheapest offer per shop, three shops minimum, all in stock the same night. Every shop and price we have for it:\nhttps://bhalophone.com/phone/apple-iphone-17-pro-max\n\nWorth the trip across town, or not?",
+   "standfirst": "512GB, official, both in stock today: ৳224,999 at Pickaboo, ৳289,999 at SumashTech.",
    "source": "bhalophone.com · 3 shops carry this exact box",
    "panel": {
     "kind": "versus",
     "left": {
-     "label": "EXECUTIVEMACHINES",
-     "value": "৳173,000"
+     "label": "PICKABOO",
+     "value": "৳224,999"
     },
     "right": {
      "label": "SUMASHTECH",
-     "value": "৳249,999"
+     "value": "৳289,999"
     },
-    "delta": "৳76,999 apart"
+    "delta": "৳65,000 apart"
    },
    "items": [
     {
-     "id": "Apple|iphone 16 pro max",
-     "name": "Apple iPhone 16 Pro Max",
+     "id": "Apple|iphone 17 pro max",
+     "name": "Apple iPhone 17 Pro Max",
      "brand": "Apple",
-     "variant": "256GB",
+     "variant": "512GB",
      "channel": "official",
-     "low": 173000,
-     "high": 249999,
-     "delta": 76999,
-     "pct": 45,
-     "low_shop": "ExecutiveMachines",
+     "low": 224999,
+     "high": 289999,
+     "delta": 65000,
+     "pct": 29,
+     "low_shop": "Pickaboo",
      "high_shop": "SumashTech",
      "shops": 3
     },
@@ -684,20 +692,6 @@
      "shops": 3
     },
     {
-     "id": "Apple|iphone 17 pro max",
-     "name": "Apple iPhone 17 Pro Max",
-     "brand": "Apple",
-     "variant": "512GB",
-     "channel": "official",
-     "low": 234999,
-     "high": 289999,
-     "delta": 55000,
-     "pct": 23,
-     "low_shop": "Pickaboo",
-     "high_shop": "SumashTech",
-     "shops": 3
-    },
-    {
      "id": "Apple|iphone 17 pro",
      "name": "Apple iPhone 17 Pro",
      "brand": "Apple",
@@ -710,40 +704,49 @@
      "low_shop": "ExecutiveMachines",
      "high_shop": "SumashTech",
      "shops": 3
+    },
+    {
+     "id": "Samsung|s25 ultra",
+     "name": "Samsung Galaxy S25 Ultra",
+     "brand": "Samsung",
+     "variant": "12GB/256GB",
+     "channel": "official",
+     "low": 189999,
+     "high": 226999,
+     "delta": 37000,
+     "pct": 19,
+     "low_shop": "RioInternational",
+     "high_shop": "SMSGadget",
+     "shops": 3
     }
    ],
    "bullets": [
-    "Apple iPhone 16 Pro Max 256GB: ৳173,000 at ExecutiveMachines, ৳249,999 at SumashTech (৳76,999 apart)",
+    "Apple iPhone 17 Pro Max 512GB: ৳224,999 at Pickaboo, ৳289,999 at SumashTech (৳65,000 apart)",
     "Apple iPhone 17 256GB: ৳121,999 at RioInternational, ৳179,999 at SumashTech (৳58,000 apart)",
-    "Apple iPhone 17 Pro Max 512GB: ৳234,999 at Pickaboo, ৳289,999 at SumashTech (৳55,000 apart)",
-    "Apple iPhone 17 Pro 256GB: ৳181,499 at ExecutiveMachines, ৳229,999 at SumashTech (৳48,500 apart)"
+    "Apple iPhone 17 Pro 256GB: ৳181,499 at ExecutiveMachines, ৳229,999 at SumashTech (৳48,500 apart)",
+    "Samsung Galaxy S25 Ultra 12GB/256GB: ৳189,999 at RioInternational, ৳226,999 at SMSGadget (৳37,000 apart)"
    ],
    "ids": [
-    "Apple|iphone 16 pro max",
-    "Apple|iphone 17",
     "Apple|iphone 17 pro max",
-    "Apple|iphone 17 pro"
+    "Apple|iphone 17",
+    "Apple|iphone 17 pro",
+    "Samsung|s25 ultra"
    ]
   },
   {
    "slug": "new",
    "kicker": "NEW IN BANGLADESH",
-   "headline": "==29 phones== got their first Bangladesh price this month",
-   "caption": "29 phones landed on a Bangladeshi shop's shelf for the first time this month. The four already carried in the most shops:\n\n• Redmi Note 17 4G: from ৳27,999, 8 shops\n• Redmi Note 17 5G: from ৳27,499, 5 shops\n• Realme C100: from ৳26,499, 4 shops\n• Honor X6e: from ৳23,399, 4 shops\n\nFirst seen here, not first announced. A launch abroad means nothing until somebody local quotes a price. Every phone we track:\nhttps://bhalophone.com/phone\n\nWhich one are you actually curious about?",
+   "headline": "==27 phones== got their first Bangladesh price this month",
+   "caption": "27 phones landed on a Bangladeshi shop's shelf for the first time this month. The four already carried in the most shops:\n\n• Honor X7e: from ৳27,499, 4 shops\n• Realme C100: from ৳26,499, 4 shops\n• Honor X6e: from ৳23,399, 4 shops\n• Realme Note 80: from ৳17,999, 4 shops\n\nFirst seen here, not first announced. A launch abroad means nothing until somebody local quotes a price. Every phone we track:\nhttps://bhalophone.com/phone\n\nWhich one are you actually curious about?",
    "standfirst": "First seen, not first released. This is the night a shop here first quoted them.",
-   "source": "bhalophone.com · 81 price reads since 2026-06-11",
+   "source": "bhalophone.com · 82 price reads since 2026-06-11",
    "panel": {
     "kind": "list",
     "items": [
      {
-      "label": "Redmi Note 17 4G",
-      "value": "৳27,999",
-      "note": "8 shops"
-     },
-     {
-      "label": "Redmi Note 17 5G",
+      "label": "Honor X7e",
       "value": "৳27,499",
-      "note": "5 shops"
+      "note": "4 shops"
      },
      {
       "label": "Realme C100",
@@ -754,25 +757,22 @@
       "label": "Honor X6e",
       "value": "৳23,399",
       "note": "4 shops"
+     },
+     {
+      "label": "Realme Note 80",
+      "value": "৳17,999",
+      "note": "4 shops"
      }
     ]
    },
    "items": [
     {
-     "id": "Redmi|note 17 4g",
-     "name": "Redmi Note 17 4G",
-     "brand": "Redmi",
-     "price": 27999,
-     "shops": 8,
-     "first_seen": "2026-09-24"
-    },
-    {
-     "id": "Redmi|note 17 5g",
-     "name": "Redmi Note 17 5G",
-     "brand": "Redmi",
+     "id": "Honor|x7e",
+     "name": "Honor X7e",
+     "brand": "Honor",
      "price": 27499,
-     "shops": 5,
-     "first_seen": "2026-09-24"
+     "shops": 4,
+     "first_seen": "2026-10-15"
     },
     {
      "id": "Realme|c100",
@@ -789,19 +789,27 @@
      "price": 23399,
      "shops": 4,
      "first_seen": "2026-10-06"
+    },
+    {
+     "id": "Realme|note 80",
+     "name": "Realme Note 80",
+     "brand": "Realme",
+     "price": 17999,
+     "shops": 4,
+     "first_seen": "2026-10-17"
     }
    ],
    "bullets": [
-    "Redmi Note 17 4G: from ৳27,999, 8 shops, first seen 2026-09-24",
-    "Redmi Note 17 5G: from ৳27,499, 5 shops, first seen 2026-09-24",
+    "Honor X7e: from ৳27,499, 4 shops, first seen 2026-10-15",
     "Realme C100: from ৳26,499, 4 shops, first seen 2026-10-03",
-    "Honor X6e: from ৳23,399, 4 shops, first seen 2026-10-06"
+    "Honor X6e: from ৳23,399, 4 shops, first seen 2026-10-06",
+    "Realme Note 80: from ৳17,999, 4 shops, first seen 2026-10-17"
    ],
    "ids": [
-    "Redmi|note 17 4g",
-    "Redmi|note 17 5g",
+    "Honor|x7e",
     "Realme|c100",
-    "Honor|x6e"
+    "Honor|x6e",
+    "Realme|note 80"
    ]
   }
  ]
