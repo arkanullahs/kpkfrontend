@@ -1,9 +1,9 @@
 ﻿finding,measure,unit,value,readings
-"Official unit over the import, same configuration",median premium,%,23,77
-"Official unit over the import, same configuration",median difference,taka,11009,77
-"Official unit over the import, same configuration",median saving off the official price,%,18,77
-"Same phone, cheapest shop against dearest",median spread,%,8,98
-64GB to 128GB at the same shop,median step,taka,2000,61
-128GB to 256GB at the same shop,median step,taka,3800,289
-256GB to 512GB at the same shop,median step,taka,8000,179
+"Official unit over the import, same configuration",median premium,%,25,76
+"Official unit over the import, same configuration",median difference,taka,11509,76
+"Official unit over the import, same configuration",median saving off the official price,%,20,76
+"Same phone, cheapest shop against dearest",median spread,%,8,93
+64GB to 128GB at the same shop,median step,taka,2000,60
+128GB to 256GB at the same shop,median step,taka,3700,290
+256GB to 512GB at the same shop,median step,taka,8000,182
 512GB to 1024GB at the same shop,median step,taka,35000,15

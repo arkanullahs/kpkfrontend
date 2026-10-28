@@ -87,6 +87,11 @@
       "permanent": true
     },
     {
+      "source": "/best/phone-under-12000",
+      "destination": "/best",
+      "permanent": true
+    },
+    {
       "source": "/best/phone-under-26000",
       "destination": "/best/phone-under-25000",
       "permanent": true
@@ -187,18 +192,8 @@
       "permanent": true
     },
     {
-      "source": "/phone/itel-power-80",
-      "destination": "/brand/itel?gone=itel-power-80",
-      "permanent": true
-    },
-    {
       "source": "/phone/motorola-g-stylus-5g-2026",
       "destination": "/brand/motorola?gone=motorola-g-stylus-5g-2026",
-      "permanent": true
-    },
-    {
-      "source": "/phone/nokia-130-2023",
-      "destination": "/brand/nokia?gone=nokia-130-2023",
       "permanent": true
     },
     {
@@ -209,6 +204,11 @@
     {
       "source": "/phone/nokia-150-ds-2023",
       "destination": "/phone/nokia-150-2023",
+      "permanent": true
+    },
+    {
+      "source": "/phone/nokia-225-4g-2024",
+      "destination": "/brand/nokia?gone=nokia-225-4g-2024",
       "permanent": true
     },
     {
@@ -729,6 +729,11 @@
     {
       "source": "/vs/infinix-gt-30-vs-redmi-note-15",
       "destination": "/phone/infinix-gt-30",
+      "permanent": true
+    },
+    {
+      "source": "/vs/itel-a100c-vs-realme-note-60x",
+      "destination": "/phone/itel-a100c",
       "permanent": true
     },
     {
