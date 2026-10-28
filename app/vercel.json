@@ -87,11 +87,6 @@
       "permanent": true
     },
     {
-      "source": "/best/phone-under-12000",
-      "destination": "/best",
-      "permanent": true
-    },
-    {
       "source": "/best/phone-under-26000",
       "destination": "/best/phone-under-25000",
       "permanent": true
