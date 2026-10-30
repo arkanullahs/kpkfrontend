@@ -1,48 +1,80 @@
 ﻿month,section,group,item,field,value
 2026-10,changes,summary,,floor,20
-2026-10,changes,overall,,n,2706
+2026-10,changes,overall,,n,2725
 2026-10,changes,overall,,median_pct,0.0
-2026-10,changes,overall,,cut,332
-2026-10,changes,overall,,raised,449
-2026-10,changes,overall,,held,1925
-2026-10,changes,overall,,held_pct,71
-2026-10,changes,overall,,cut_pct,12.3
-2026-10,changes,overall,,raised_pct,16.6
+2026-10,changes,overall,,cut,366
+2026-10,changes,overall,,raised,483
+2026-10,changes,overall,,held,1876
+2026-10,changes,overall,,held_pct,69
+2026-10,changes,overall,,cut_pct,13.4
+2026-10,changes,overall,,raised_pct,17.7
 2026-10,changes,overall,,typical_cut_pct,-2.2
 2026-10,changes,overall,,typical_raise_pct,2.9
 2026-10,changes,by_brand,Nothing,brand,Nothing
 2026-10,changes,by_brand,Nothing,n,61
 2026-10,changes,by_brand,Nothing,median_pct,0.0
-2026-10,changes,by_brand,Nothing,cut,20
-2026-10,changes,by_brand,Nothing,raised,4
-2026-10,changes,by_brand,Nothing,held,37
-2026-10,changes,by_brand,Nothing,held_pct,61
-2026-10,changes,by_brand,Nothing,cut_pct,32.8
-2026-10,changes,by_brand,Nothing,raised_pct,6.6
-2026-10,changes,by_brand,Nothing,typical_cut_pct,-3.1
-2026-10,changes,by_brand,Nothing,typical_raise_pct,1.2
+2026-10,changes,by_brand,Nothing,cut,27
+2026-10,changes,by_brand,Nothing,raised,1
+2026-10,changes,by_brand,Nothing,held,33
+2026-10,changes,by_brand,Nothing,held_pct,54
+2026-10,changes,by_brand,Nothing,cut_pct,44.3
+2026-10,changes,by_brand,Nothing,raised_pct,1.6
+2026-10,changes,by_brand,Nothing,typical_cut_pct,-3.4
+2026-10,changes,by_brand,Nothing,typical_raise_pct,0.9
+2026-10,changes,by_brand,Redmi,brand,Redmi
+2026-10,changes,by_brand,Redmi,n,341
+2026-10,changes,by_brand,Redmi,median_pct,0.0
+2026-10,changes,by_brand,Redmi,cut,36
+2026-10,changes,by_brand,Redmi,raised,96
+2026-10,changes,by_brand,Redmi,held,209
+2026-10,changes,by_brand,Redmi,held_pct,61
+2026-10,changes,by_brand,Redmi,cut_pct,10.6
+2026-10,changes,by_brand,Redmi,raised_pct,28.2
+2026-10,changes,by_brand,Redmi,typical_cut_pct,-1.6
+2026-10,changes,by_brand,Redmi,typical_raise_pct,3.5
 2026-10,changes,by_brand,Honor,brand,Honor
 2026-10,changes,by_brand,Honor,n,224
 2026-10,changes,by_brand,Honor,median_pct,0.0
-2026-10,changes,by_brand,Honor,cut,10
+2026-10,changes,by_brand,Honor,cut,13
 2026-10,changes,by_brand,Honor,raised,74
-2026-10,changes,by_brand,Honor,held,140
-2026-10,changes,by_brand,Honor,held_pct,62
-2026-10,changes,by_brand,Honor,cut_pct,4.5
+2026-10,changes,by_brand,Honor,held,137
+2026-10,changes,by_brand,Honor,held_pct,61
+2026-10,changes,by_brand,Honor,cut_pct,5.8
 2026-10,changes,by_brand,Honor,raised_pct,33.0
-2026-10,changes,by_brand,Honor,typical_cut_pct,-1.1
-2026-10,changes,by_brand,Honor,typical_raise_pct,3.7
-2026-10,changes,by_brand,Redmi,brand,Redmi
-2026-10,changes,by_brand,Redmi,n,339
-2026-10,changes,by_brand,Redmi,median_pct,0.0
-2026-10,changes,by_brand,Redmi,cut,34
-2026-10,changes,by_brand,Redmi,raised,93
-2026-10,changes,by_brand,Redmi,held,212
-2026-10,changes,by_brand,Redmi,held_pct,63
-2026-10,changes,by_brand,Redmi,cut_pct,10.0
-2026-10,changes,by_brand,Redmi,raised_pct,27.4
-2026-10,changes,by_brand,Redmi,typical_cut_pct,-1.5
-2026-10,changes,by_brand,Redmi,typical_raise_pct,3.0
+2026-10,changes,by_brand,Honor,typical_cut_pct,-1.8
+2026-10,changes,by_brand,Honor,typical_raise_pct,3.1
+2026-10,changes,by_brand,Infinix,brand,Infinix
+2026-10,changes,by_brand,Infinix,n,49
+2026-10,changes,by_brand,Infinix,median_pct,0.0
+2026-10,changes,by_brand,Infinix,cut,0
+2026-10,changes,by_brand,Infinix,raised,19
+2026-10,changes,by_brand,Infinix,held,30
+2026-10,changes,by_brand,Infinix,held_pct,61
+2026-10,changes,by_brand,Infinix,cut_pct,0.0
+2026-10,changes,by_brand,Infinix,raised_pct,38.8
+2026-10,changes,by_brand,Infinix,typical_raise_pct,6.3
+2026-10,changes,by_brand,Samsung,brand,Samsung
+2026-10,changes,by_brand,Samsung,n,509
+2026-10,changes,by_brand,Samsung,median_pct,0.0
+2026-10,changes,by_brand,Samsung,cut,74
+2026-10,changes,by_brand,Samsung,raised,109
+2026-10,changes,by_brand,Samsung,held,326
+2026-10,changes,by_brand,Samsung,held_pct,64
+2026-10,changes,by_brand,Samsung,cut_pct,14.5
+2026-10,changes,by_brand,Samsung,raised_pct,21.4
+2026-10,changes,by_brand,Samsung,typical_cut_pct,-2.4
+2026-10,changes,by_brand,Samsung,typical_raise_pct,2.7
+2026-10,changes,by_brand,Apple,brand,Apple
+2026-10,changes,by_brand,Apple,n,315
+2026-10,changes,by_brand,Apple,median_pct,0.0
+2026-10,changes,by_brand,Apple,cut,79
+2026-10,changes,by_brand,Apple,raised,28
+2026-10,changes,by_brand,Apple,held,208
+2026-10,changes,by_brand,Apple,held_pct,66
+2026-10,changes,by_brand,Apple,cut_pct,25.1
+2026-10,changes,by_brand,Apple,raised_pct,8.9
+2026-10,changes,by_brand,Apple,typical_cut_pct,-1.8
+2026-10,changes,by_brand,Apple,typical_raise_pct,2.2
 2026-10,changes,by_brand,OnePlus,brand,OnePlus
 2026-10,changes,by_brand,OnePlus,n,74
 2026-10,changes,by_brand,OnePlus,median_pct,0.0
@@ -53,93 +85,62 @@
 2026-10,changes,by_brand,OnePlus,cut_pct,17.6
 2026-10,changes,by_brand,OnePlus,raised_pct,16.2
 2026-10,changes,by_brand,OnePlus,typical_cut_pct,-2.4
-2026-10,changes,by_brand,OnePlus,typical_raise_pct,2.4
-2026-10,changes,by_brand,Samsung,brand,Samsung
-2026-10,changes,by_brand,Samsung,n,503
-2026-10,changes,by_brand,Samsung,median_pct,0.0
-2026-10,changes,by_brand,Samsung,cut,79
-2026-10,changes,by_brand,Samsung,raised,89
-2026-10,changes,by_brand,Samsung,held,335
-2026-10,changes,by_brand,Samsung,held_pct,67
-2026-10,changes,by_brand,Samsung,cut_pct,15.7
-2026-10,changes,by_brand,Samsung,raised_pct,17.7
-2026-10,changes,by_brand,Samsung,typical_cut_pct,-2.4
-2026-10,changes,by_brand,Samsung,typical_raise_pct,2.4
-2026-10,changes,by_brand,Infinix,brand,Infinix
-2026-10,changes,by_brand,Infinix,n,49
-2026-10,changes,by_brand,Infinix,median_pct,0.0
-2026-10,changes,by_brand,Infinix,cut,0
-2026-10,changes,by_brand,Infinix,raised,16
-2026-10,changes,by_brand,Infinix,held,33
-2026-10,changes,by_brand,Infinix,held_pct,67
-2026-10,changes,by_brand,Infinix,cut_pct,0.0
-2026-10,changes,by_brand,Infinix,raised_pct,32.7
-2026-10,changes,by_brand,Infinix,typical_raise_pct,3.8
+2026-10,changes,by_brand,OnePlus,typical_raise_pct,2.9
 2026-10,changes,by_brand,iQOO,brand,iQOO
 2026-10,changes,by_brand,iQOO,n,76
 2026-10,changes,by_brand,iQOO,median_pct,0.0
 2026-10,changes,by_brand,iQOO,cut,9
-2026-10,changes,by_brand,iQOO,raised,15
-2026-10,changes,by_brand,iQOO,held,52
-2026-10,changes,by_brand,iQOO,held_pct,68
+2026-10,changes,by_brand,iQOO,raised,16
+2026-10,changes,by_brand,iQOO,held,51
+2026-10,changes,by_brand,iQOO,held_pct,67
 2026-10,changes,by_brand,iQOO,cut_pct,11.8
-2026-10,changes,by_brand,iQOO,raised_pct,19.7
-2026-10,changes,by_brand,iQOO,typical_cut_pct,-1.9
-2026-10,changes,by_brand,iQOO,typical_raise_pct,1.9
-2026-10,changes,by_brand,Apple,brand,Apple
-2026-10,changes,by_brand,Apple,n,308
-2026-10,changes,by_brand,Apple,median_pct,0.0
-2026-10,changes,by_brand,Apple,cut,62
-2026-10,changes,by_brand,Apple,raised,32
-2026-10,changes,by_brand,Apple,held,214
-2026-10,changes,by_brand,Apple,held_pct,69
-2026-10,changes,by_brand,Apple,cut_pct,20.1
-2026-10,changes,by_brand,Apple,raised_pct,10.4
-2026-10,changes,by_brand,Apple,typical_cut_pct,-1.8
-2026-10,changes,by_brand,Apple,typical_raise_pct,2.1
+2026-10,changes,by_brand,iQOO,raised_pct,21.1
+2026-10,changes,by_brand,iQOO,typical_cut_pct,-2.6
+2026-10,changes,by_brand,iQOO,typical_raise_pct,2.4
+2026-10,changes,by_brand,Realme,brand,Realme
+2026-10,changes,by_brand,Realme,n,171
+2026-10,changes,by_brand,Realme,median_pct,0.0
+2026-10,changes,by_brand,Realme,cut,25
+2026-10,changes,by_brand,Realme,raised,26
+2026-10,changes,by_brand,Realme,held,120
+2026-10,changes,by_brand,Realme,held_pct,70
+2026-10,changes,by_brand,Realme,cut_pct,14.6
+2026-10,changes,by_brand,Realme,raised_pct,15.2
+2026-10,changes,by_brand,Realme,typical_cut_pct,-2.7
+2026-10,changes,by_brand,Realme,typical_raise_pct,5.5
 2026-10,changes,by_brand,Tecno,brand,Tecno
 2026-10,changes,by_brand,Tecno,n,58
 2026-10,changes,by_brand,Tecno,median_pct,0.0
 2026-10,changes,by_brand,Tecno,cut,14
-2026-10,changes,by_brand,Tecno,raised,0
-2026-10,changes,by_brand,Tecno,held,44
-2026-10,changes,by_brand,Tecno,held_pct,76
+2026-10,changes,by_brand,Tecno,raised,2
+2026-10,changes,by_brand,Tecno,held,42
+2026-10,changes,by_brand,Tecno,held_pct,72
 2026-10,changes,by_brand,Tecno,cut_pct,24.1
-2026-10,changes,by_brand,Tecno,raised_pct,0.0
-2026-10,changes,by_brand,Tecno,typical_cut_pct,-3.6
+2026-10,changes,by_brand,Tecno,raised_pct,3.4
+2026-10,changes,by_brand,Tecno,typical_cut_pct,-3.5
+2026-10,changes,by_brand,Tecno,typical_raise_pct,21.1
 2026-10,changes,by_brand,Vivo,brand,Vivo
 2026-10,changes,by_brand,Vivo,n,218
 2026-10,changes,by_brand,Vivo,median_pct,0.0
 2026-10,changes,by_brand,Vivo,cut,26
-2026-10,changes,by_brand,Vivo,raised,25
-2026-10,changes,by_brand,Vivo,held,167
-2026-10,changes,by_brand,Vivo,held_pct,77
+2026-10,changes,by_brand,Vivo,raised,27
+2026-10,changes,by_brand,Vivo,held,165
+2026-10,changes,by_brand,Vivo,held_pct,76
 2026-10,changes,by_brand,Vivo,cut_pct,11.9
-2026-10,changes,by_brand,Vivo,raised_pct,11.5
+2026-10,changes,by_brand,Vivo,raised_pct,12.4
 2026-10,changes,by_brand,Vivo,typical_cut_pct,-3.6
 2026-10,changes,by_brand,Vivo,typical_raise_pct,2.9
 2026-10,changes,by_brand,Motorola,brand,Motorola
-2026-10,changes,by_brand,Motorola,n,143
+2026-10,changes,by_brand,Motorola,n,144
 2026-10,changes,by_brand,Motorola,median_pct,0.0
-2026-10,changes,by_brand,Motorola,cut,6
-2026-10,changes,by_brand,Motorola,raised,27
-2026-10,changes,by_brand,Motorola,held,110
+2026-10,changes,by_brand,Motorola,cut,5
+2026-10,changes,by_brand,Motorola,raised,28
+2026-10,changes,by_brand,Motorola,held,111
 2026-10,changes,by_brand,Motorola,held_pct,77
-2026-10,changes,by_brand,Motorola,cut_pct,4.2
-2026-10,changes,by_brand,Motorola,raised_pct,18.9
-2026-10,changes,by_brand,Motorola,typical_cut_pct,-1.0
-2026-10,changes,by_brand,Motorola,typical_raise_pct,1.5
-2026-10,changes,by_brand,Realme,brand,Realme
-2026-10,changes,by_brand,Realme,n,171
-2026-10,changes,by_brand,Realme,median_pct,0.0
-2026-10,changes,by_brand,Realme,cut,16
-2026-10,changes,by_brand,Realme,raised,20
-2026-10,changes,by_brand,Realme,held,135
-2026-10,changes,by_brand,Realme,held_pct,79
-2026-10,changes,by_brand,Realme,cut_pct,9.4
-2026-10,changes,by_brand,Realme,raised_pct,11.7
-2026-10,changes,by_brand,Realme,typical_cut_pct,-2.9
-2026-10,changes,by_brand,Realme,typical_raise_pct,6.6
+2026-10,changes,by_brand,Motorola,cut_pct,3.5
+2026-10,changes,by_brand,Motorola,raised_pct,19.4
+2026-10,changes,by_brand,Motorola,typical_cut_pct,-0.6
+2026-10,changes,by_brand,Motorola,typical_raise_pct,1.7
 2026-10,changes,by_brand,OPPO,brand,OPPO
 2026-10,changes,by_brand,OPPO,n,131
 2026-10,changes,by_brand,OPPO,median_pct,0.0
@@ -152,25 +153,25 @@
 2026-10,changes,by_brand,OPPO,typical_cut_pct,-1.3
 2026-10,changes,by_brand,OPPO,typical_raise_pct,3.3
 2026-10,changes,by_brand,Google,brand,Google
-2026-10,changes,by_brand,Google,n,108
+2026-10,changes,by_brand,Google,n,109
 2026-10,changes,by_brand,Google,median_pct,0.0
 2026-10,changes,by_brand,Google,cut,13
-2026-10,changes,by_brand,Google,raised,9
+2026-10,changes,by_brand,Google,raised,10
 2026-10,changes,by_brand,Google,held,86
-2026-10,changes,by_brand,Google,held_pct,80
-2026-10,changes,by_brand,Google,cut_pct,12.0
-2026-10,changes,by_brand,Google,raised_pct,8.3
+2026-10,changes,by_brand,Google,held_pct,79
+2026-10,changes,by_brand,Google,cut_pct,11.9
+2026-10,changes,by_brand,Google,raised_pct,9.2
 2026-10,changes,by_brand,Google,typical_cut_pct,-2.0
-2026-10,changes,by_brand,Google,typical_raise_pct,2.9
+2026-10,changes,by_brand,Google,typical_raise_pct,2.7
 2026-10,changes,by_brand,Xiaomi,brand,Xiaomi
-2026-10,changes,by_brand,Xiaomi,n,60
+2026-10,changes,by_brand,Xiaomi,n,61
 2026-10,changes,by_brand,Xiaomi,median_pct,0.0
 2026-10,changes,by_brand,Xiaomi,cut,3
 2026-10,changes,by_brand,Xiaomi,raised,9
-2026-10,changes,by_brand,Xiaomi,held,48
+2026-10,changes,by_brand,Xiaomi,held,49
 2026-10,changes,by_brand,Xiaomi,held_pct,80
-2026-10,changes,by_brand,Xiaomi,cut_pct,5.0
-2026-10,changes,by_brand,Xiaomi,raised_pct,15.0
+2026-10,changes,by_brand,Xiaomi,cut_pct,4.9
+2026-10,changes,by_brand,Xiaomi,raised_pct,14.8
 2026-10,changes,by_brand,Xiaomi,typical_cut_pct,-0.7
 2026-10,changes,by_brand,Xiaomi,typical_raise_pct,7.0
 2026-10,changes,by_brand,Huawei,brand,Huawei
@@ -186,82 +187,83 @@
 2026-10,changes,by_brand,POCO,brand,POCO
 2026-10,changes,by_brand,POCO,n,65
 2026-10,changes,by_brand,POCO,median_pct,0.0
-2026-10,changes,by_brand,POCO,cut,0
-2026-10,changes,by_brand,POCO,raised,2
-2026-10,changes,by_brand,POCO,held,63
-2026-10,changes,by_brand,POCO,held_pct,97
-2026-10,changes,by_brand,POCO,cut_pct,0.0
-2026-10,changes,by_brand,POCO,raised_pct,3.1
-2026-10,changes,by_brand,POCO,typical_raise_pct,3.1
+2026-10,changes,by_brand,POCO,cut,2
+2026-10,changes,by_brand,POCO,raised,4
+2026-10,changes,by_brand,POCO,held,59
+2026-10,changes,by_brand,POCO,held_pct,91
+2026-10,changes,by_brand,POCO,cut_pct,3.1
+2026-10,changes,by_brand,POCO,raised_pct,6.2
+2026-10,changes,by_brand,POCO,typical_cut_pct,-0.9
+2026-10,changes,by_brand,POCO,typical_raise_pct,4.6
 2026-10,changes,by_band,"Under ৳15,000",band,"Under ৳15,000"
-2026-10,changes,by_band,"Under ৳15,000",n,55
+2026-10,changes,by_band,"Under ৳15,000",n,56
 2026-10,changes,by_band,"Under ৳15,000",median_pct,0.0
 2026-10,changes,by_band,"Under ৳15,000",cut,2
 2026-10,changes,by_band,"Under ৳15,000",raised,3
-2026-10,changes,by_band,"Under ৳15,000",held,50
+2026-10,changes,by_band,"Under ৳15,000",held,51
 2026-10,changes,by_band,"Under ৳15,000",held_pct,91
 2026-10,changes,by_band,"Under ৳15,000",cut_pct,3.6
-2026-10,changes,by_band,"Under ৳15,000",raised_pct,5.5
+2026-10,changes,by_band,"Under ৳15,000",raised_pct,5.4
 2026-10,changes,by_band,"Under ৳15,000",typical_cut_pct,-3.7
 2026-10,changes,by_band,"Under ৳15,000",typical_raise_pct,5.4
 2026-10,changes,by_band,"৳15,000 to ৳24,999",band,"৳15,000 to ৳24,999"
 2026-10,changes,by_band,"৳15,000 to ৳24,999",n,428
 2026-10,changes,by_band,"৳15,000 to ৳24,999",median_pct,0.0
-2026-10,changes,by_band,"৳15,000 to ৳24,999",cut,32
-2026-10,changes,by_band,"৳15,000 to ৳24,999",raised,105
-2026-10,changes,by_band,"৳15,000 to ৳24,999",held,291
-2026-10,changes,by_band,"৳15,000 to ৳24,999",held_pct,68
-2026-10,changes,by_band,"৳15,000 to ৳24,999",cut_pct,7.5
-2026-10,changes,by_band,"৳15,000 to ৳24,999",raised_pct,24.5
-2026-10,changes,by_band,"৳15,000 to ৳24,999",typical_cut_pct,-3.2
-2026-10,changes,by_band,"৳15,000 to ৳24,999",typical_raise_pct,4.9
+2026-10,changes,by_band,"৳15,000 to ৳24,999",cut,30
+2026-10,changes,by_band,"৳15,000 to ৳24,999",raised,114
+2026-10,changes,by_band,"৳15,000 to ৳24,999",held,284
+2026-10,changes,by_band,"৳15,000 to ৳24,999",held_pct,66
+2026-10,changes,by_band,"৳15,000 to ৳24,999",cut_pct,7.0
+2026-10,changes,by_band,"৳15,000 to ৳24,999",raised_pct,26.6
+2026-10,changes,by_band,"৳15,000 to ৳24,999",typical_cut_pct,-3.0
+2026-10,changes,by_band,"৳15,000 to ৳24,999",typical_raise_pct,5.4
 2026-10,changes,by_band,"৳25,000 to ৳39,999",band,"৳25,000 to ৳39,999"
-2026-10,changes,by_band,"৳25,000 to ৳39,999",n,647
+2026-10,changes,by_band,"৳25,000 to ৳39,999",n,651
 2026-10,changes,by_band,"৳25,000 to ৳39,999",median_pct,0.0
-2026-10,changes,by_band,"৳25,000 to ৳39,999",cut,85
-2026-10,changes,by_band,"৳25,000 to ৳39,999",raised,112
-2026-10,changes,by_band,"৳25,000 to ৳39,999",held,450
-2026-10,changes,by_band,"৳25,000 to ৳39,999",held_pct,70
-2026-10,changes,by_band,"৳25,000 to ৳39,999",cut_pct,13.1
-2026-10,changes,by_band,"৳25,000 to ৳39,999",raised_pct,17.3
-2026-10,changes,by_band,"৳25,000 to ৳39,999",typical_cut_pct,-1.7
+2026-10,changes,by_band,"৳25,000 to ৳39,999",cut,89
+2026-10,changes,by_band,"৳25,000 to ৳39,999",raised,123
+2026-10,changes,by_band,"৳25,000 to ৳39,999",held,439
+2026-10,changes,by_band,"৳25,000 to ৳39,999",held_pct,67
+2026-10,changes,by_band,"৳25,000 to ৳39,999",cut_pct,13.7
+2026-10,changes,by_band,"৳25,000 to ৳39,999",raised_pct,18.9
+2026-10,changes,by_band,"৳25,000 to ৳39,999",typical_cut_pct,-1.8
 2026-10,changes,by_band,"৳25,000 to ৳39,999",typical_raise_pct,2.3
 2026-10,changes,by_band,"৳40,000 to ৳69,999",band,"৳40,000 to ৳69,999"
-2026-10,changes,by_band,"৳40,000 to ৳69,999",n,712
+2026-10,changes,by_band,"৳40,000 to ৳69,999",n,715
 2026-10,changes,by_band,"৳40,000 to ৳69,999",median_pct,0.0
-2026-10,changes,by_band,"৳40,000 to ৳69,999",cut,84
-2026-10,changes,by_band,"৳40,000 to ৳69,999",raised,130
-2026-10,changes,by_band,"৳40,000 to ৳69,999",held,498
-2026-10,changes,by_band,"৳40,000 to ৳69,999",held_pct,70
-2026-10,changes,by_band,"৳40,000 to ৳69,999",cut_pct,11.8
-2026-10,changes,by_band,"৳40,000 to ৳69,999",raised_pct,18.3
+2026-10,changes,by_band,"৳40,000 to ৳69,999",cut,99
+2026-10,changes,by_band,"৳40,000 to ৳69,999",raised,138
+2026-10,changes,by_band,"৳40,000 to ৳69,999",held,478
+2026-10,changes,by_band,"৳40,000 to ৳69,999",held_pct,67
+2026-10,changes,by_band,"৳40,000 to ৳69,999",cut_pct,13.8
+2026-10,changes,by_band,"৳40,000 to ৳69,999",raised_pct,19.3
 2026-10,changes,by_band,"৳40,000 to ৳69,999",typical_cut_pct,-2.6
-2026-10,changes,by_band,"৳40,000 to ৳69,999",typical_raise_pct,2.7
+2026-10,changes,by_band,"৳40,000 to ৳69,999",typical_raise_pct,2.9
 2026-10,changes,by_band,"৳70,000 to ৳119,999",band,"৳70,000 to ৳119,999"
-2026-10,changes,by_band,"৳70,000 to ৳119,999",n,445
+2026-10,changes,by_band,"৳70,000 to ৳119,999",n,448
 2026-10,changes,by_band,"৳70,000 to ৳119,999",median_pct,0.0
-2026-10,changes,by_band,"৳70,000 to ৳119,999",cut,52
-2026-10,changes,by_band,"৳70,000 to ৳119,999",raised,68
-2026-10,changes,by_band,"৳70,000 to ৳119,999",held,325
-2026-10,changes,by_band,"৳70,000 to ৳119,999",held_pct,73
-2026-10,changes,by_band,"৳70,000 to ৳119,999",cut_pct,11.7
-2026-10,changes,by_band,"৳70,000 to ৳119,999",raised_pct,15.3
-2026-10,changes,by_band,"৳70,000 to ৳119,999",typical_cut_pct,-1.9
-2026-10,changes,by_band,"৳70,000 to ৳119,999",typical_raise_pct,2.3
+2026-10,changes,by_band,"৳70,000 to ৳119,999",cut,58
+2026-10,changes,by_band,"৳70,000 to ৳119,999",raised,74
+2026-10,changes,by_band,"৳70,000 to ৳119,999",held,316
+2026-10,changes,by_band,"৳70,000 to ৳119,999",held_pct,71
+2026-10,changes,by_band,"৳70,000 to ৳119,999",cut_pct,12.9
+2026-10,changes,by_band,"৳70,000 to ৳119,999",raised_pct,16.5
+2026-10,changes,by_band,"৳70,000 to ৳119,999",typical_cut_pct,-1.8
+2026-10,changes,by_band,"৳70,000 to ৳119,999",typical_raise_pct,2.5
 2026-10,changes,by_band,"৳120,000 and up",band,"৳120,000 and up"
-2026-10,changes,by_band,"৳120,000 and up",n,419
+2026-10,changes,by_band,"৳120,000 and up",n,427
 2026-10,changes,by_band,"৳120,000 and up",median_pct,0.0
-2026-10,changes,by_band,"৳120,000 and up",cut,77
+2026-10,changes,by_band,"৳120,000 and up",cut,88
 2026-10,changes,by_band,"৳120,000 and up",raised,31
-2026-10,changes,by_band,"৳120,000 and up",held,311
-2026-10,changes,by_band,"৳120,000 and up",held_pct,74
-2026-10,changes,by_band,"৳120,000 and up",cut_pct,18.4
-2026-10,changes,by_band,"৳120,000 and up",raised_pct,7.4
-2026-10,changes,by_band,"৳120,000 and up",typical_cut_pct,-2.0
-2026-10,changes,by_band,"৳120,000 and up",typical_raise_pct,2.0
-2026-10,drops,summary,,measured,149
-2026-10,drops,summary,,fell,12
-2026-10,drops,summary,,rose,15
+2026-10,changes,by_band,"৳120,000 and up",held,308
+2026-10,changes,by_band,"৳120,000 and up",held_pct,72
+2026-10,changes,by_band,"৳120,000 and up",cut_pct,20.6
+2026-10,changes,by_band,"৳120,000 and up",raised_pct,7.3
+2026-10,changes,by_band,"৳120,000 and up",typical_cut_pct,-2.2
+2026-10,changes,by_band,"৳120,000 and up",typical_raise_pct,2.2
+2026-10,drops,summary,,measured,150
+2026-10,drops,summary,,fell,10
+2026-10,drops,summary,,rose,18
 2026-10,drops,rows,Apple iPhone Duo,name,Apple iPhone Duo
 2026-10,drops,rows,Apple iPhone Duo,configuration,12GB/256GB
 2026-10,drops,rows,Apple iPhone Duo,channel,import
@@ -270,8 +272,18 @@
 2026-10,drops,rows,Apple iPhone Duo,delta,-58000
 2026-10,drops,rows,Apple iPhone Duo,pct,-13.9
 2026-10,drops,rows,Apple iPhone Duo,from,2026-10-24
-2026-10,drops,rows,Apple iPhone Duo,to,2026-10-28
+2026-10,drops,rows,Apple iPhone Duo,to,2026-10-30
 2026-10,drops,rows,Apple iPhone Duo,released,2026-10
+2026-10,drops,rows,Apple iPhone 18 Pro Max,name,Apple iPhone 18 Pro Max
+2026-10,drops,rows,Apple iPhone 18 Pro Max,configuration,12GB/256GB HK
+2026-10,drops,rows,Apple iPhone 18 Pro Max,channel,import
+2026-10,drops,rows,Apple iPhone 18 Pro Max,was,211999
+2026-10,drops,rows,Apple iPhone 18 Pro Max,now,192999
+2026-10,drops,rows,Apple iPhone 18 Pro Max,delta,-19000
+2026-10,drops,rows,Apple iPhone 18 Pro Max,pct,-9.0
+2026-10,drops,rows,Apple iPhone 18 Pro Max,from,2026-10-06
+2026-10,drops,rows,Apple iPhone 18 Pro Max,to,2026-10-30
+2026-10,drops,rows,Apple iPhone 18 Pro Max,released,2026-09
 2026-10,drops,rows,Google Pixel 11 Pro,name,Google Pixel 11 Pro
 2026-10,drops,rows,Google Pixel 11 Pro,configuration,12GB/256GB
 2026-10,drops,rows,Google Pixel 11 Pro,channel,import
@@ -280,18 +292,8 @@
 2026-10,drops,rows,Google Pixel 11 Pro,delta,-13000
 2026-10,drops,rows,Google Pixel 11 Pro,pct,-8.8
 2026-10,drops,rows,Google Pixel 11 Pro,from,2026-10-06
-2026-10,drops,rows,Google Pixel 11 Pro,to,2026-10-28
+2026-10,drops,rows,Google Pixel 11 Pro,to,2026-10-30
 2026-10,drops,rows,Google Pixel 11 Pro,released,2026-08
-2026-10,drops,rows,Apple iPhone 18 Pro Max,name,Apple iPhone 18 Pro Max
-2026-10,drops,rows,Apple iPhone 18 Pro Max,configuration,12GB/512GB
-2026-10,drops,rows,Apple iPhone 18 Pro Max,channel,official
-2026-10,drops,rows,Apple iPhone 18 Pro Max,was,339999
-2026-10,drops,rows,Apple iPhone 18 Pro Max,now,310999
-2026-10,drops,rows,Apple iPhone 18 Pro Max,delta,-29000
-2026-10,drops,rows,Apple iPhone 18 Pro Max,pct,-8.5
-2026-10,drops,rows,Apple iPhone 18 Pro Max,from,2026-10-12
-2026-10,drops,rows,Apple iPhone 18 Pro Max,to,2026-10-28
-2026-10,drops,rows,Apple iPhone 18 Pro Max,released,2026-09
 2026-10,drops,rows,Nothing Phone 4b,name,Nothing Phone 4b
 2026-10,drops,rows,Nothing Phone 4b,configuration,8GB/128GB IN
 2026-10,drops,rows,Nothing Phone 4b,channel,import
@@ -300,7 +302,7 @@
 2026-10,drops,rows,Nothing Phone 4b,delta,-3500
 2026-10,drops,rows,Nothing Phone 4b,pct,-8.3
 2026-10,drops,rows,Nothing Phone 4b,from,2026-10-06
-2026-10,drops,rows,Nothing Phone 4b,to,2026-10-28
+2026-10,drops,rows,Nothing Phone 4b,to,2026-10-30
 2026-10,drops,rows,Nothing Phone 4b,released,2026-07
 2026-10,drops,rows,Redmi Note 17 Pro 5G,name,Redmi Note 17 Pro 5G
 2026-10,drops,rows,Redmi Note 17 Pro 5G,configuration,8GB/256GB
@@ -310,18 +312,8 @@
 2026-10,drops,rows,Redmi Note 17 Pro 5G,delta,-3009
 2026-10,drops,rows,Redmi Note 17 Pro 5G,pct,-5.5
 2026-10,drops,rows,Redmi Note 17 Pro 5G,from,2026-10-06
-2026-10,drops,rows,Redmi Note 17 Pro 5G,to,2026-10-28
+2026-10,drops,rows,Redmi Note 17 Pro 5G,to,2026-10-30
 2026-10,drops,rows,Redmi Note 17 Pro 5G,released,2026-07
-2026-10,drops,rows,Samsung Galaxy A08,name,Samsung Galaxy A08
-2026-10,drops,rows,Samsung Galaxy A08,configuration,6GB/128GB
-2026-10,drops,rows,Samsung Galaxy A08,channel,official
-2026-10,drops,rows,Samsung Galaxy A08,was,38499
-2026-10,drops,rows,Samsung Galaxy A08,now,36499
-2026-10,drops,rows,Samsung Galaxy A08,delta,-2000
-2026-10,drops,rows,Samsung Galaxy A08,pct,-5.2
-2026-10,drops,rows,Samsung Galaxy A08,from,2026-10-19
-2026-10,drops,rows,Samsung Galaxy A08,to,2026-10-28
-2026-10,drops,rows,Samsung Galaxy A08,released,2026-09
 2026-10,drops,rows,Redmi 17C,name,Redmi 17C
 2026-10,drops,rows,Redmi 17C,configuration,8GB/256GB CN
 2026-10,drops,rows,Redmi 17C,channel,import
@@ -330,10 +322,10 @@
 2026-10,drops,rows,Redmi 17C,delta,-1000
 2026-10,drops,rows,Redmi 17C,pct,-4.5
 2026-10,drops,rows,Redmi 17C,from,2026-10-06
-2026-10,drops,rows,Redmi 17C,to,2026-10-28
+2026-10,drops,rows,Redmi 17C,to,2026-10-30
 2026-10,drops,rows,Redmi 17C,released,2026-06
 2026-10,channel_gap,summary,,n,67
-2026-10,channel_gap,summary,,median_premium_pct,7.7
+2026-10,channel_gap,summary,,median_premium_pct,7.3
 2026-10,channel_gap,summary,,official_cheaper,15
 2026-10,channel_gap,rows,Apple iPhone 18 Pro Max,name,Apple iPhone 18 Pro Max
 2026-10,channel_gap,rows,Apple iPhone 18 Pro Max,configuration,12GB/256GB
@@ -354,10 +346,10 @@
 2026-10,channel_gap,rows,Apple iPhone 17,name,Apple iPhone 17
 2026-10,channel_gap,rows,Apple iPhone 17,configuration,8GB/256GB
 2026-10,channel_gap,rows,Apple iPhone 17,channel,both
-2026-10,channel_gap,rows,Apple iPhone 17,official,147999
+2026-10,channel_gap,rows,Apple iPhone 17,official,151499
 2026-10,channel_gap,rows,Apple iPhone 17,import,113990
-2026-10,channel_gap,rows,Apple iPhone 17,delta,34009
-2026-10,channel_gap,rows,Apple iPhone 17,premium_pct,30
+2026-10,channel_gap,rows,Apple iPhone 17,delta,37509
+2026-10,channel_gap,rows,Apple iPhone 17,premium_pct,33
 2026-10,channel_gap,rows,Apple iPhone 17,shops,9
 2026-10,channel_gap,rows,Samsung Galaxy S26,name,Samsung Galaxy S26
 2026-10,channel_gap,rows,Samsung Galaxy S26,configuration,12GB/256GB
@@ -371,8 +363,8 @@
 2026-10,channel_gap,rows,Samsung Galaxy A57 5G,configuration,8GB/256GB
 2026-10,channel_gap,rows,Samsung Galaxy A57 5G,channel,both
 2026-10,channel_gap,rows,Samsung Galaxy A57 5G,official,65999
-2026-10,channel_gap,rows,Samsung Galaxy A57 5G,import,49490
-2026-10,channel_gap,rows,Samsung Galaxy A57 5G,delta,16509
+2026-10,channel_gap,rows,Samsung Galaxy A57 5G,import,49740
+2026-10,channel_gap,rows,Samsung Galaxy A57 5G,delta,16259
 2026-10,channel_gap,rows,Samsung Galaxy A57 5G,premium_pct,33
 2026-10,channel_gap,rows,Samsung Galaxy A57 5G,shops,9
 2026-10,channel_gap,rows,Samsung Galaxy A37 5G,name,Samsung Galaxy A37 5G
@@ -402,18 +394,18 @@
 2026-10,channel_gap,rows,Redmi Note 17 4G,name,Redmi Note 17 4G
 2026-10,channel_gap,rows,Redmi Note 17 4G,configuration,6GB/128GB
 2026-10,channel_gap,rows,Redmi Note 17 4G,channel,both
-2026-10,channel_gap,rows,Redmi Note 17 4G,official,31799
-2026-10,channel_gap,rows,Redmi Note 17 4G,import,29490
-2026-10,channel_gap,rows,Redmi Note 17 4G,delta,2309
-2026-10,channel_gap,rows,Redmi Note 17 4G,premium_pct,7.8
+2026-10,channel_gap,rows,Redmi Note 17 4G,official,31899
+2026-10,channel_gap,rows,Redmi Note 17 4G,import,29240
+2026-10,channel_gap,rows,Redmi Note 17 4G,delta,2659
+2026-10,channel_gap,rows,Redmi Note 17 4G,premium_pct,9.1
 2026-10,channel_gap,rows,Redmi Note 17 4G,shops,9
 2026-10,channel_gap,rows,Honor X6c,name,Honor X6c
 2026-10,channel_gap,rows,Honor X6c,configuration,6GB/128GB
 2026-10,channel_gap,rows,Honor X6c,channel,both
-2026-10,channel_gap,rows,Honor X6c,official,19999
+2026-10,channel_gap,rows,Honor X6c,official,20249
 2026-10,channel_gap,rows,Honor X6c,import,20290
-2026-10,channel_gap,rows,Honor X6c,delta,-291
-2026-10,channel_gap,rows,Honor X6c,premium_pct,-1.4
+2026-10,channel_gap,rows,Honor X6c,delta,-41
+2026-10,channel_gap,rows,Honor X6c,premium_pct,-0.2
 2026-10,channel_gap,rows,Honor X6c,shops,9
 2026-10,channel_gap,rows,Samsung Galaxy A07 4G,name,Samsung Galaxy A07 4G
 2026-10,channel_gap,rows,Samsung Galaxy A07 4G,configuration,4GB/64GB
@@ -469,7 +461,7 @@
 2026-10,fastest_chip,rows,"৳15,000 to ৳24,999",band,"৳15,000 to ৳24,999"
 2026-10,fastest_chip,rows,"৳15,000 to ৳24,999",band_lo,15000
 2026-10,fastest_chip,rows,"৳15,000 to ৳24,999",band_hi,25000
-2026-10,fastest_chip,rows,"৳15,000 to ৳24,999",candidates,111
+2026-10,fastest_chip,rows,"৳15,000 to ৳24,999",candidates,110
 2026-10,fastest_chip,rows,"৳15,000 to ৳24,999",name,Redmi Note 15 5G
 2026-10,fastest_chip,rows,"৳15,000 to ৳24,999",configuration,6GB/128GB CN
 2026-10,fastest_chip,rows,"৳15,000 to ৳24,999",channel,channel not stated
@@ -479,7 +471,7 @@
 2026-10,fastest_chip,rows,"৳25,000 to ৳39,999",band,"৳25,000 to ৳39,999"
 2026-10,fastest_chip,rows,"৳25,000 to ৳39,999",band_lo,25000
 2026-10,fastest_chip,rows,"৳25,000 to ৳39,999",band_hi,40000
-2026-10,fastest_chip,rows,"৳25,000 to ৳39,999",candidates,108
+2026-10,fastest_chip,rows,"৳25,000 to ৳39,999",candidates,112
 2026-10,fastest_chip,rows,"৳25,000 to ৳39,999",name,Redmi Turbo 4 Pro
 2026-10,fastest_chip,rows,"৳25,000 to ৳39,999",configuration,12GB/256GB
 2026-10,fastest_chip,rows,"৳25,000 to ৳39,999",channel,channel not stated
@@ -516,8 +508,8 @@
 2026-10,fastest_chip,rows,"৳120,000 and up",antutu,5228014
 2026-10,fastest_chip,rows,"৳120,000 and up",chipset,XRing O3
 2026-10,stock,summary,,listed,1258
-2026-10,stock,summary,,always,513
-2026-10,stock,summary,,sometimes,79
-2026-10,stock,summary,,never,666
-2026-10,stock,summary,,buyable,592
-2026-10,stock,summary,,always_pct,87
+2026-10,stock,summary,,always,512
+2026-10,stock,summary,,sometimes,81
+2026-10,stock,summary,,never,665
+2026-10,stock,summary,,buyable,593
+2026-10,stock,summary,,always_pct,86

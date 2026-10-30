@@ -4,8 +4,8 @@
  "method_version": 1,
  "window": {
   "first": "2026-10-06",
-  "last": "2026-10-28",
-  "read_dates": 13,
+  "last": "2026-10-30",
+  "read_dates": 14,
   "sources": 16
  },
  "sections": {
@@ -20,14 +20,14 @@
    ],
    "method": "Each listing is one shop's offer of one exact configuration. Its first in-stock price of the month is compared with its last; listings read in stock on fewer than two dates are left out, as are listings whose memory size is not stated. One listing, one vote; the band is the listing's first price.",
    "overall": {
-    "n": 2706,
+    "n": 2725,
     "median_pct": 0.0,
-    "cut": 332,
-    "raised": 449,
-    "held": 1925,
-    "held_pct": 71,
-    "cut_pct": 12.3,
-    "raised_pct": 16.6,
+    "cut": 366,
+    "raised": 483,
+    "held": 1876,
+    "held_pct": 69,
+    "cut_pct": 13.4,
+    "raised_pct": 17.7,
     "typical_cut_pct": -2.2,
     "typical_raise_pct": 2.9
    },
@@ -36,40 +36,79 @@
      "brand": "Nothing",
      "n": 61,
      "median_pct": 0.0,
-     "cut": 20,
-     "raised": 4,
-     "held": 37,
+     "cut": 27,
+     "raised": 1,
+     "held": 33,
+     "held_pct": 54,
+     "cut_pct": 44.3,
+     "raised_pct": 1.6,
+     "typical_cut_pct": -3.4,
+     "typical_raise_pct": 0.9
+    },
+    {
+     "brand": "Redmi",
+     "n": 341,
+     "median_pct": 0.0,
+     "cut": 36,
+     "raised": 96,
+     "held": 209,
      "held_pct": 61,
-     "cut_pct": 32.8,
-     "raised_pct": 6.6,
-     "typical_cut_pct": -3.1,
-     "typical_raise_pct": 1.2
+     "cut_pct": 10.6,
+     "raised_pct": 28.2,
+     "typical_cut_pct": -1.6,
+     "typical_raise_pct": 3.5
     },
     {
      "brand": "Honor",
      "n": 224,
      "median_pct": 0.0,
-     "cut": 10,
+     "cut": 13,
      "raised": 74,
-     "held": 140,
-     "held_pct": 62,
-     "cut_pct": 4.5,
+     "held": 137,
+     "held_pct": 61,
+     "cut_pct": 5.8,
      "raised_pct": 33.0,
-     "typical_cut_pct": -1.1,
-     "typical_raise_pct": 3.7
+     "typical_cut_pct": -1.8,
+     "typical_raise_pct": 3.1
     },
     {
-     "brand": "Redmi",
-     "n": 339,
+     "brand": "Infinix",
+     "n": 49,
      "median_pct": 0.0,
-     "cut": 34,
-     "raised": 93,
-     "held": 212,
-     "held_pct": 63,
-     "cut_pct": 10.0,
-     "raised_pct": 27.4,
-     "typical_cut_pct": -1.5,
-     "typical_raise_pct": 3.0
+     "cut": 0,
+     "raised": 19,
+     "held": 30,
+     "held_pct": 61,
+     "cut_pct": 0.0,
+     "raised_pct": 38.8,
+     "typical_cut_pct": null,
+     "typical_raise_pct": 6.3
+    },
+    {
+     "brand": "Samsung",
+     "n": 509,
+     "median_pct": 0.0,
+     "cut": 74,
+     "raised": 109,
+     "held": 326,
+     "held_pct": 64,
+     "cut_pct": 14.5,
+     "raised_pct": 21.4,
+     "typical_cut_pct": -2.4,
+     "typical_raise_pct": 2.7
+    },
+    {
+     "brand": "Apple",
+     "n": 315,
+     "median_pct": 0.0,
+     "cut": 79,
+     "raised": 28,
+     "held": 208,
+     "held_pct": 66,
+     "cut_pct": 25.1,
+     "raised_pct": 8.9,
+     "typical_cut_pct": -1.8,
+     "typical_raise_pct": 2.2
     },
     {
      "brand": "OnePlus",
@@ -82,111 +121,72 @@
      "cut_pct": 17.6,
      "raised_pct": 16.2,
      "typical_cut_pct": -2.4,
-     "typical_raise_pct": 2.4
-    },
-    {
-     "brand": "Samsung",
-     "n": 503,
-     "median_pct": 0.0,
-     "cut": 79,
-     "raised": 89,
-     "held": 335,
-     "held_pct": 67,
-     "cut_pct": 15.7,
-     "raised_pct": 17.7,
-     "typical_cut_pct": -2.4,
-     "typical_raise_pct": 2.4
-    },
-    {
-     "brand": "Infinix",
-     "n": 49,
-     "median_pct": 0.0,
-     "cut": 0,
-     "raised": 16,
-     "held": 33,
-     "held_pct": 67,
-     "cut_pct": 0.0,
-     "raised_pct": 32.7,
-     "typical_cut_pct": null,
-     "typical_raise_pct": 3.8
+     "typical_raise_pct": 2.9
     },
     {
      "brand": "iQOO",
      "n": 76,
      "median_pct": 0.0,
      "cut": 9,
-     "raised": 15,
-     "held": 52,
-     "held_pct": 68,
+     "raised": 16,
+     "held": 51,
+     "held_pct": 67,
      "cut_pct": 11.8,
-     "raised_pct": 19.7,
-     "typical_cut_pct": -1.9,
-     "typical_raise_pct": 1.9
+     "raised_pct": 21.1,
+     "typical_cut_pct": -2.6,
+     "typical_raise_pct": 2.4
     },
     {
-     "brand": "Apple",
-     "n": 308,
+     "brand": "Realme",
+     "n": 171,
      "median_pct": 0.0,
-     "cut": 62,
-     "raised": 32,
-     "held": 214,
-     "held_pct": 69,
-     "cut_pct": 20.1,
-     "raised_pct": 10.4,
-     "typical_cut_pct": -1.8,
-     "typical_raise_pct": 2.1
+     "cut": 25,
+     "raised": 26,
+     "held": 120,
+     "held_pct": 70,
+     "cut_pct": 14.6,
+     "raised_pct": 15.2,
+     "typical_cut_pct": -2.7,
+     "typical_raise_pct": 5.5
     },
     {
      "brand": "Tecno",
      "n": 58,
      "median_pct": 0.0,
      "cut": 14,
-     "raised": 0,
-     "held": 44,
-     "held_pct": 76,
+     "raised": 2,
+     "held": 42,
+     "held_pct": 72,
      "cut_pct": 24.1,
-     "raised_pct": 0.0,
-     "typical_cut_pct": -3.6,
-     "typical_raise_pct": null
+     "raised_pct": 3.4,
+     "typical_cut_pct": -3.5,
+     "typical_raise_pct": 21.1
     },
     {
      "brand": "Vivo",
      "n": 218,
      "median_pct": 0.0,
      "cut": 26,
-     "raised": 25,
-     "held": 167,
-     "held_pct": 77,
+     "raised": 27,
+     "held": 165,
+     "held_pct": 76,
      "cut_pct": 11.9,
-     "raised_pct": 11.5,
+     "raised_pct": 12.4,
      "typical_cut_pct": -3.6,
      "typical_raise_pct": 2.9
     },
     {
      "brand": "Motorola",
-     "n": 143,
+     "n": 144,
      "median_pct": 0.0,
-     "cut": 6,
-     "raised": 27,
-     "held": 110,
+     "cut": 5,
+     "raised": 28,
+     "held": 111,
      "held_pct": 77,
-     "cut_pct": 4.2,
-     "raised_pct": 18.9,
-     "typical_cut_pct": -1.0,
-     "typical_raise_pct": 1.5
-    },
-    {
-     "brand": "Realme",
-     "n": 171,
-     "median_pct": 0.0,
-     "cut": 16,
-     "raised": 20,
-     "held": 135,
-     "held_pct": 79,
-     "cut_pct": 9.4,
-     "raised_pct": 11.7,
-     "typical_cut_pct": -2.9,
-     "typical_raise_pct": 6.6
+     "cut_pct": 3.5,
+     "raised_pct": 19.4,
+     "typical_cut_pct": -0.6,
+     "typical_raise_pct": 1.7
     },
     {
      "brand": "OPPO",
@@ -203,27 +203,27 @@
     },
     {
      "brand": "Google",
-     "n": 108,
+     "n": 109,
      "median_pct": 0.0,
      "cut": 13,
-     "raised": 9,
+     "raised": 10,
      "held": 86,
-     "held_pct": 80,
-     "cut_pct": 12.0,
-     "raised_pct": 8.3,
+     "held_pct": 79,
+     "cut_pct": 11.9,
+     "raised_pct": 9.2,
      "typical_cut_pct": -2.0,
-     "typical_raise_pct": 2.9
+     "typical_raise_pct": 2.7
     },
     {
      "brand": "Xiaomi",
-     "n": 60,
+     "n": 61,
      "median_pct": 0.0,
      "cut": 3,
      "raised": 9,
-     "held": 48,
+     "held": 49,
      "held_pct": 80,
-     "cut_pct": 5.0,
-     "raised_pct": 15.0,
+     "cut_pct": 4.9,
+     "raised_pct": 14.8,
      "typical_cut_pct": -0.7,
      "typical_raise_pct": 7.0
     },
@@ -244,27 +244,27 @@
      "brand": "POCO",
      "n": 65,
      "median_pct": 0.0,
-     "cut": 0,
-     "raised": 2,
-     "held": 63,
-     "held_pct": 97,
-     "cut_pct": 0.0,
-     "raised_pct": 3.1,
-     "typical_cut_pct": null,
-     "typical_raise_pct": 3.1
+     "cut": 2,
+     "raised": 4,
+     "held": 59,
+     "held_pct": 91,
+     "cut_pct": 3.1,
+     "raised_pct": 6.2,
+     "typical_cut_pct": -0.9,
+     "typical_raise_pct": 4.6
     }
    ],
    "by_band": [
     {
      "band": "Under ৳15,000",
-     "n": 55,
+     "n": 56,
      "median_pct": 0.0,
      "cut": 2,
      "raised": 3,
-     "held": 50,
+     "held": 51,
      "held_pct": 91,
      "cut_pct": 3.6,
-     "raised_pct": 5.5,
+     "raised_pct": 5.4,
      "typical_cut_pct": -3.7,
      "typical_raise_pct": 5.4
     },
@@ -272,66 +272,66 @@
      "band": "৳15,000 to ৳24,999",
      "n": 428,
      "median_pct": 0.0,
-     "cut": 32,
-     "raised": 105,
-     "held": 291,
-     "held_pct": 68,
-     "cut_pct": 7.5,
-     "raised_pct": 24.5,
-     "typical_cut_pct": -3.2,
-     "typical_raise_pct": 4.9
+     "cut": 30,
+     "raised": 114,
+     "held": 284,
+     "held_pct": 66,
+     "cut_pct": 7.0,
+     "raised_pct": 26.6,
+     "typical_cut_pct": -3.0,
+     "typical_raise_pct": 5.4
     },
     {
      "band": "৳25,000 to ৳39,999",
-     "n": 647,
+     "n": 651,
      "median_pct": 0.0,
-     "cut": 85,
-     "raised": 112,
-     "held": 450,
-     "held_pct": 70,
-     "cut_pct": 13.1,
-     "raised_pct": 17.3,
-     "typical_cut_pct": -1.7,
+     "cut": 89,
+     "raised": 123,
+     "held": 439,
+     "held_pct": 67,
+     "cut_pct": 13.7,
+     "raised_pct": 18.9,
+     "typical_cut_pct": -1.8,
      "typical_raise_pct": 2.3
     },
     {
      "band": "৳40,000 to ৳69,999",
-     "n": 712,
+     "n": 715,
      "median_pct": 0.0,
-     "cut": 84,
-     "raised": 130,
-     "held": 498,
-     "held_pct": 70,
-     "cut_pct": 11.8,
-     "raised_pct": 18.3,
+     "cut": 99,
+     "raised": 138,
+     "held": 478,
+     "held_pct": 67,
+     "cut_pct": 13.8,
+     "raised_pct": 19.3,
      "typical_cut_pct": -2.6,
-     "typical_raise_pct": 2.7
+     "typical_raise_pct": 2.9
     },
     {
      "band": "৳70,000 to ৳119,999",
-     "n": 445,
+     "n": 448,
      "median_pct": 0.0,
-     "cut": 52,
-     "raised": 68,
-     "held": 325,
-     "held_pct": 73,
-     "cut_pct": 11.7,
-     "raised_pct": 15.3,
-     "typical_cut_pct": -1.9,
-     "typical_raise_pct": 2.3
+     "cut": 58,
+     "raised": 74,
+     "held": 316,
+     "held_pct": 71,
+     "cut_pct": 12.9,
+     "raised_pct": 16.5,
+     "typical_cut_pct": -1.8,
+     "typical_raise_pct": 2.5
     },
     {
      "band": "৳120,000 and up",
-     "n": 419,
+     "n": 427,
      "median_pct": 0.0,
-     "cut": 77,
+     "cut": 88,
      "raised": 31,
-     "held": 311,
-     "held_pct": 74,
-     "cut_pct": 18.4,
-     "raised_pct": 7.4,
-     "typical_cut_pct": -2.0,
-     "typical_raise_pct": 2.0
+     "held": 308,
+     "held_pct": 72,
+     "cut_pct": 20.6,
+     "raised_pct": 7.3,
+     "typical_cut_pct": -2.2,
+     "typical_raise_pct": 2.2
     }
    ],
    "floor": 20
@@ -345,9 +345,9 @@
     "phones.specs:specs_raw.status"
    ],
    "method": "A box is one exact configuration on one channel. Its lowest in-stock price at any shop on the month's first read is compared with the same on its last. Recent = released, per the spec sheet, in the 6 calendar months up to this one. A move under 4% or ৳700 is not counted, nor is a box under ৳8,000.",
-   "measured": 149,
-   "fell": 12,
-   "rose": 15,
+   "measured": 150,
+   "fell": 10,
+   "rose": 18,
    "rows": [
     {
      "id": "Apple|iphone duo",
@@ -359,8 +359,21 @@
      "delta": -58000,
      "pct": -13.9,
      "from": "2026-10-24",
-     "to": "2026-10-28",
+     "to": "2026-10-30",
      "released": "2026-10"
+    },
+    {
+     "id": "Apple|iphone 18 pro max",
+     "name": "Apple iPhone 18 Pro Max",
+     "configuration": "12GB/256GB HK",
+     "channel": "import",
+     "was": 211999,
+     "now": 192999,
+     "delta": -19000,
+     "pct": -9.0,
+     "from": "2026-10-06",
+     "to": "2026-10-30",
+     "released": "2026-09"
     },
     {
      "id": "Google|pixel 11 pro",
@@ -372,21 +385,8 @@
      "delta": -13000,
      "pct": -8.8,
      "from": "2026-10-06",
-     "to": "2026-10-28",
+     "to": "2026-10-30",
      "released": "2026-08"
-    },
-    {
-     "id": "Apple|iphone 18 pro max",
-     "name": "Apple iPhone 18 Pro Max",
-     "configuration": "12GB/512GB",
-     "channel": "official",
-     "was": 339999,
-     "now": 310999,
-     "delta": -29000,
-     "pct": -8.5,
-     "from": "2026-10-12",
-     "to": "2026-10-28",
-     "released": "2026-09"
     },
     {
      "id": "Nothing|4b",
@@ -398,7 +398,7 @@
      "delta": -3500,
      "pct": -8.3,
      "from": "2026-10-06",
-     "to": "2026-10-28",
+     "to": "2026-10-30",
      "released": "2026-07"
     },
     {
@@ -411,21 +411,8 @@
      "delta": -3009,
      "pct": -5.5,
      "from": "2026-10-06",
-     "to": "2026-10-28",
+     "to": "2026-10-30",
      "released": "2026-07"
-    },
-    {
-     "id": "Samsung|a08 4g",
-     "name": "Samsung Galaxy A08",
-     "configuration": "6GB/128GB",
-     "channel": "official",
-     "was": 38499,
-     "now": 36499,
-     "delta": -2000,
-     "pct": -5.2,
-     "from": "2026-10-19",
-     "to": "2026-10-28",
-     "released": "2026-09"
     },
     {
      "id": "Redmi|17c",
@@ -437,7 +424,7 @@
      "delta": -1000,
      "pct": -4.5,
      "from": "2026-10-06",
-     "to": "2026-10-28",
+     "to": "2026-10-30",
      "released": "2026-06"
     }
    ]
@@ -452,7 +439,7 @@
    ],
    "method": "Same phone, same configuration, both channels. Each channel's monthly price is the median of its daily lowest in-stock price, and needs 3 read dates. Premium = (official - import) / import. Popular = carried in stock by the most shops this month; we have no sales figures.",
    "n": 67,
-   "median_premium_pct": 7.7,
+   "median_premium_pct": 7.3,
    "official_cheaper": 15,
    "rows": [
     {
@@ -482,10 +469,10 @@
      "name": "Apple iPhone 17",
      "configuration": "8GB/256GB",
      "channel": "both",
-     "official": 147999,
+     "official": 151499,
      "import": 113990,
-     "delta": 34009,
-     "premium_pct": 30,
+     "delta": 37509,
+     "premium_pct": 33,
      "shops": 9
     },
     {
@@ -505,8 +492,8 @@
      "configuration": "8GB/256GB",
      "channel": "both",
      "official": 65999,
-     "import": 49490,
-     "delta": 16509,
+     "import": 49740,
+     "delta": 16259,
      "premium_pct": 33,
      "shops": 9
     },
@@ -548,10 +535,10 @@
      "name": "Redmi Note 17 4G",
      "configuration": "6GB/128GB",
      "channel": "both",
-     "official": 31799,
-     "import": 29490,
-     "delta": 2309,
-     "premium_pct": 7.8,
+     "official": 31899,
+     "import": 29240,
+     "delta": 2659,
+     "premium_pct": 9.1,
      "shops": 9
     },
     {
@@ -559,10 +546,10 @@
      "name": "Honor X6c",
      "configuration": "6GB/128GB",
      "channel": "both",
-     "official": 19999,
+     "official": 20249,
      "import": 20290,
-     "delta": -291,
-     "premium_pct": -1.4,
+     "delta": -41,
+     "premium_pct": -0.2,
      "shops": 9
     },
     {
@@ -666,7 +653,7 @@
      "band": "৳15,000 to ৳24,999",
      "band_lo": 15000,
      "band_hi": 25000,
-     "candidates": 111,
+     "candidates": 110,
      "id": "Redmi|note 15 5g",
      "name": "Redmi Note 15 5G",
      "configuration": "6GB/128GB CN",
@@ -679,7 +666,7 @@
      "band": "৳25,000 to ৳39,999",
      "band_lo": 25000,
      "band_hi": 40000,
-     "candidates": 108,
+     "candidates": 112,
      "id": "Redmi|turbo 4 pro",
      "name": "Redmi Turbo 4 Pro",
      "configuration": "12GB/256GB",
@@ -738,33 +725,33 @@
    ],
    "method": "A handset is in stock on a date when any shop read that date reports a usable in-stock listing for it. The rate is over handsets in stock on at least one date, and its denominator is the dates their shops were read, not calendar days. A shop that does not publish stock counts for nothing either way.",
    "listed": 1258,
-   "always": 513,
-   "sometimes": 79,
-   "never": 666,
-   "buyable": 592,
-   "always_pct": 87
+   "always": 512,
+   "sometimes": 81,
+   "never": 665,
+   "buyable": 593,
+   "always_pct": 86
   }
  },
  "findings": [
   {
    "section": "changes",
-   "text": "71% of the 2,706 phone listings we read between 6 and 28 October 2026 ended at the price they started at; 332 were cut and 449 raised, for a median change of 0%."
+   "text": "69% of the 2,725 phone listings we read between 6 and 30 October 2026 ended at the price they started at; 366 were cut and 483 raised, for a median change of 0%."
   },
   {
    "section": "channel_gap",
-   "text": "On the identical configuration, the official unit cost a median 7.7% more than the import across the 67 phones sold both ways between 6 and 28 October 2026."
+   "text": "On the identical configuration, the official unit cost a median 7.3% more than the import across the 67 phones sold both ways between 6 and 30 October 2026."
   },
   {
    "section": "cheapest_5g",
-   "text": "The cheapest 5G phone in stock between 6 and 28 October 2026 was the ZTE A76 (4GB/128GB) at ৳13,500."
+   "text": "The cheapest 5G phone in stock between 6 and 30 October 2026 was the ZTE A76 (4GB/128GB) at ৳13,500."
   },
   {
    "section": "drops",
-   "text": "The steepest fall on a phone released in the last 6 months: the Apple iPhone Duo (12GB/256GB, import) went from ৳417,999 to ৳359,999, down 13.9%, between 6 and 28 October 2026."
+   "text": "The steepest fall on a phone released in the last 6 months: the Apple iPhone Duo (12GB/256GB, import) went from ৳417,999 to ৳359,999, down 13.9%, between 6 and 30 October 2026."
   },
   {
    "section": "stock",
-   "text": "Of the 592 handsets in stock at a Bangladeshi shop at some point between 6 and 28 October 2026, 87% were in stock somewhere on every date we read."
+   "text": "Of the 593 handsets in stock at a Bangladeshi shop at some point between 6 and 30 October 2026, 86% were in stock somewhere on every date we read."
   }
  ],
  "provisional": true

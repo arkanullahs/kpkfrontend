@@ -202,11 +202,6 @@
       "permanent": true
     },
     {
-      "source": "/phone/nokia-225-4g-2024",
-      "destination": "/brand/nokia?gone=nokia-225-4g-2024",
-      "permanent": true
-    },
-    {
       "source": "/phone/nokia-5310-ds",
       "destination": "/brand/nokia?gone=nokia-5310-ds",
       "permanent": true
@@ -724,11 +719,6 @@
     {
       "source": "/vs/infinix-gt-30-vs-redmi-note-15",
       "destination": "/phone/infinix-gt-30",
-      "permanent": true
-    },
-    {
-      "source": "/vs/itel-a100c-vs-realme-note-60x",
-      "destination": "/phone/itel-a100c",
       "permanent": true
     },
     {
